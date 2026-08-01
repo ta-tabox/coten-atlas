@@ -5,7 +5,6 @@
 
 ## いま開いているもの
 
-- [ ] S0: 移設・git init・Cowork プロジェクト化（人間） → plan.md S0
 - [ ] S1: Next.js 足場 + 地図 Hello World → plan.md S1
 - [ ] S2: データスキーマ確定 + シード10シリーズ → plan.md S2
 - [ ] S3: テーマ描画（point/polygon + クリック詳細） → plan.md S3
@@ -20,3 +19,6 @@
 
 - 2026-07-14 立ち上げ。fermentary セッションで bootstrap 生成、
   プランを docs/plan.md に正典化（スタック: Next.js static export + MapLibre）
+- 2026-07-14 S0 完了。移設・git init・初回コミット（42ce948）・Cowork 化・
+  fermentary 並置済み。検証セッションで fermentary read/write 疎通確認、
+  ATLAS 行を active に更新
