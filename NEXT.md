@@ -22,6 +22,23 @@ git push
 
 （登録後にここへ番号を書く。登録前は上の「人間へ渡すもの」が唯一の宿題）
 
+## 配布物の未達分（S1 で実行環境が立ってから配る）
+
+2026-08-22 の追随で、前提を満たさない二つを意図的に見送った。
+
+- **coding-standards の機械層**（`biome.json`・`scripts/lint-comments.ts`・
+  `tests/lint-comments.test.ts`）。前提の四つ（`.ts` を直に食える Node・`typescript` の
+  devDependency・`git`・vitest）が package.json ごと未成立。正典は
+  `fermentary/playbooks/coding-standards.md` 配布手順3、配線は
+  `fermentary/tools/coding-standards/README.md`。**検査器とテストは対で配る**。
+  配ったら一度全量を走らせ、**件数と内訳を報告してから別コミットで掃除**する
+- **gh-review のワークフロー二本**（`claude.yml`・`claude-code-review.yml`）。
+  `<!-- FILL -->` は実行環境ブロックと `allowed-tools` で、実在する `mise run check` を
+  見ながらでないと埋められない。`.claude/settings.json` は配布済み。
+  正典は `fermentary/playbooks/gh-review.md`——**人間の担当分**（GitHub App の導入・
+  `CLAUDE_CODE_OAUTH_TOKEN`・ブランチ保護・public 化・陰性テスト用の第三者アカウント）が
+  別節にあるので、着手時に必ず読んで引き渡す
+
 ## 精緻化の状態
 
 - issue へ降りている: **S1〜S3**（草稿 #01〜#06）
@@ -34,3 +51,6 @@ git push
 - 2026-07-14 S0 完了。移設・git init・初回コミット・Cowork 化・fermentary 並置
 - 2026-08-02 台帳を **issue 台帳版へ移行**。`docs/plan.md` を状態を持たない地図へ改訂し、
   S1〜S3 を issue 草稿へ精緻化。テスト = Vitest、判定の口 = `mise run check` を決定
+- 2026-08-22 bootstrap 配布物を正典へ追随（`chore/sync-bootstrap`）。規約の核と skill を
+  現行版へ、CLAUDE.md に規約・gh-review・経緯の受け皿の入口、`.claude/settings.json` を配置。
+  機械層と workflows は前提未達で見送り（上節）
