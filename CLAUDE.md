@@ -37,7 +37,15 @@ RSS 由来の新エピソード追加パイプラインが回り、README がポ
 toolchain 正典: `~/vivarium/fermentary/playbooks/toolchain.md`
 （init・依存追加・環境構築の前に読む）
 
-コーディング規約: @CODING.md（詳細判断は skill `coding-standards`）
+コーディング規約: @CODING.md。**コードを書く前に** skill `coding-standards` を開く
+（言語固有の作法は同スキルの `languages/<lang>.md` にしかない）。
+
+経緯（なぜそう決めたか・採らなかった案・トレードオフ）の受け皿は
+`docs/plan.md` §1 決定事項。ADR は置かない——決定の数が表に収まる規模で、
+別立てにすると地図と決定の二重管理になる。
+
+GitHub 上の Claude レビュー体制: `~/vivarium/fermentary/playbooks/gh-review.md`
+（ワークフローを触る前・public 化の前に読む）
 
 ## プランの正典化
 1セッションに収まらない実装・構築に着手する前に
