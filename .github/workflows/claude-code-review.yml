@@ -1,8 +1,5 @@
 name: Claude Code Review
 
-# 正典は ~/vivarium/fermentary/playbooks/gh-review.md（雛形は fermentary/tools/gh-review/）。
-# コピーは独立進化するが、契約に当たる箇所を変えるなら正典の側を先に直す。
-
 on:
   pull_request:
     # 毎 push で走ると増分のたびに同じ指摘が積むので、synchronize は入れない。
