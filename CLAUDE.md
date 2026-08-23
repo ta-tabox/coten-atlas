@@ -37,7 +37,25 @@ RSS 由来の新エピソード追加パイプラインが回り、README がポ
 toolchain 正典: `~/vivarium/fermentary/playbooks/toolchain.md`
 （init・依存追加・環境構築の前に読む）
 
-コーディング規約: @CODING.md（詳細判断は skill `coding-standards`）
+コーディング規約: @CODING.md。
+**コードを書く前に**、次の二つを開く（レビューやリファクタに限らない。実装・テスト追加・
+バグ修正でも同じ）。
+
+- skill `coding-standards` — 言語固有の作法（JSDoc・import・空行）はそこの
+  `languages/` にしかなく、CODING.md には載っていない
+- skill `karpathy-guidelines` — 過剰実装と巻き込み変更を防ぐ振る舞いの規律。
+  「変更した各行が依頼に辿れるか」で手を止める。
+  この器では**プラグインを導入していない**ので、本体を `.claude/skills/` へ同梱してある。
+  外部由来で、出所は https://github.com/multica-ai/andrej-karpathy-skills の
+  `skills/karpathy-guidelines/SKILL.md`、固定は 2c60614（MIT）。
+  上流の更新は手で取り込む
+
+経緯（なぜそう決めたか・採らなかった案・トレードオフ）の受け皿は
+`docs/plan.md` §1 決定事項。ADR は置かない——決定の数が表に収まる規模で、
+別立てにすると地図と決定の二重管理になる。
+
+GitHub 上の Claude レビュー体制: `~/vivarium/fermentary/playbooks/gh-review.md`
+（ワークフローを触る前・public 化の前に読む）
 
 ## プランの正典化
 1セッションに収まらない実装・構築に着手する前に
