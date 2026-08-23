@@ -24,10 +24,12 @@ RSS 由来の新エピソード追加パイプラインが回り、README がポ
    台帳はこのプロジェクトの状態を fermentary へ伝える唯一の口）
 
 ## git
-署名は fermentary/RULES.md #5 に従う。この器は**公開する**前提。
+署名は fermentary/RULES.md #5 に従う。この器は**ソフトウェアとして公開する**器。
 - **author は人間名義**。Claude も `-c` を付けず素の `git commit` を使う
-  （名義は local config に焼いてある）。機械の痕跡は残さない——AI 支援は自明で、
-  log に残すべきは責任を誰が担ったかの一点。Co-authored-by も付けない。
+  （名義は local config に焼いてある）。責任を負うのは、そのコミットを公開すると
+  決めた人間の側。
+- **`Co-authored-by: Claude <noreply@anthropic.com>` を付ける**。ソフトウェアの
+  利用者に対しては、AI 支援の事実を履歴に明示する。
 - **メッセージ prefix は変更の型**——`feat:` `fix:` `docs:` `refactor:` `chore:`
   `test:`、部位を添えるなら `feat(web):`。**プロジェクト名は名乗らない**
   （このリポジトリが既に答えている。外の器から書き込むときも同じ型を使う）。
