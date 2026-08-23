@@ -14,9 +14,26 @@
 
 terrarium は終わる器。次の3点が揃った時点で閉じる:
 
-1. **公開 URL で地図アプリが動作し、公式配信の全シリーズ（90前後）が地図に載る**
-   （判定は「シリーズ数」——公式一覧の全シリーズが `themes.geojson` に存在し
-   バリデーションを通ること。座標・年代の精度は叩き台品質で可）
+1. **公開 URL で地図アプリが動作し、公式一覧の全シリーズが地図に載る**
+
+   「公式一覧」の定義（#13 で実地確認）:
+
+   - 出典は公式 RSS `https://anchor.fm/s/8c2088c/podcast/rss` の `itunes:season`。
+     番組サイト cotenradio.fm はドメインが失効して第三者の広告サイトに変わっており、
+     coten.co.jp の COTEN RADIO ページも配信基盤へのリンクだけでシリーズを列挙していないので、
+     一覧の正はフィードしか残っていない
+   - 1 シリーズ = `itunes:season` の 1 値と数える
+   - `itunes:season` を持たない回（番外編・特別編・告知）は数えない
+   - `itunes:season` に番外編の通し番号が入った 3 件（115・116・117）も数えない。
+     タイトルが `【番外編＃` で始まることで判別できる
+   - 「COTEN RADIOショート」も独立した season 番号を持つので 1 シリーズとして数える
+   - 2026-08-23 に取得したフィード（`lastBuildDate` は 2026-08-19）では
+     season 1〜66 が欠番なく並び、対象エピソードは 573 件。
+     シリーズは今後も増えるので、閾値を判定する時点のフィードを正とする（66 はその日のスナップショット）
+
+   判定は「シリーズ数」——上の定義で数えた全シリーズが `themes.geojson` に存在し
+   バリデーションを通ること。
+   座標・年代の精度は叩き台品質で可
 2. **`mise run sync` による RSS 由来の新エピソード追加パイプラインが回る**
    （新規取得 → match 割当 → 未割当の inbox 排出まで）
 3. **README がポートフォリオとして提示可能**（設計判断・スクショ・技術スタック）
@@ -34,7 +51,7 @@ terrarium は終わる器。次の3点が揃った時点で閉じる:
 | 歴史地図 | 現代地図で開始。OpenHistoricalMap 連動は S9（後回し） | 古代の網羅性が不完全でリスクが読めないため、MVP と分離 |
 | エピソード取得 | RSS を正とする自動同期（ビルド時スクリプト） | 今後の追加に耐える。詳細は §4 |
 | データ管理 | エピソード=RSS 自動 / テーマ=人間キュレーション の二層分離 | 座標・年代・ジオメトリは自動化できない。自動層と手動層を混ぜると更新のたびに壊れる |
-| 配信リンク | Spotify（エピソード URL または番組 URL + 検索導線） | 基盤未定のため一旦 Spotify。データ側は `links` を配列にして基盤追加に開いておく |
+| 配信リンク | RSS の `<link>`（Spotify のエピソードページ）をそのまま使う。取れない回だけ番組 URL `https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f` + タイトル検索へ落とす | 全 752 件が `podcasters.spotify.com/pod/show/coten/episodes/…`（`creators.spotify.com` へリダイレクト）を持っており、エピソード単位のリンクは RSS だけで賄えるので検索導線は例外扱いでよい。`open.spotify.com/episode/…` はフィードに無く Spotify Web API 無しでは引けないため採らない。データ側は `links` を配列にして基盤追加に開いておく（決定日 2026-08-23、#13） |
 | デプロイ | Vercel 想定（GitHub Pages でも可） | static export なのでどちらでも。ポートフォリオ導線として公開 URL 必須 |
 
 ## 2. データモデル
@@ -128,10 +145,16 @@ data/
 
 ## 4. RSS 同期パイプライン
 
-- feedUrl の取得: Apple Podcasts lookup API
-  `https://itunes.apple.com/lookup?id=1450522865` の `feedUrl` を確認して固定する
-  （S6 冒頭で実施。RSS が Spotify エピソード URL を含まない場合の対応もここで判断——
-  最悪、番組 URL + エピソードタイトル検索への導線で妥協する）
+- feedUrl: `https://anchor.fm/s/8c2088c/podcast/rss`。
+  Apple Podcasts lookup API `https://itunes.apple.com/lookup?id=1450522865` の `feedUrl` を
+  2026-08-23 に実取得した値で、以後はこれを直接叩く
+- フィードの形（#13 で実地確認。パーサはこれを前提にしてよい）:
+  - `guid` は `isPermaLink="false"` の UUID。
+    ただし初期の 5 件だけ `anchor.fm` のエピソード URL が入っており、先頭に空白が付く。
+    突き合わせのキーにする前に trim する
+  - `pubDate` は RFC 822（`Wed, 19 Aug 2026 21:00:00 GMT`）で、全件 GMT 表記
+  - `<link>` は Spotify のエピソードページ、`enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）
+  - シリーズ番号は `itunes:season`、シリーズ内の回は `itunes:episode`
 - `scripts/sync-feed.ts`（mise task `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
   2. 新規エピソードを themes.geojson の各 `match` 正規表現に通して themeId 割当
