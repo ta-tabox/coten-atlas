@@ -30,7 +30,7 @@ terrarium は終わる器。次の3点が揃った時点で閉じる:
 | テスト | **Vitest**（+ React Testing Library） | toolchain 正典は JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない（決定日 2026-08-02） |
 | 機械判定の口 | **`mise run check`** = Biome lint/format + `tsc --noEmit` + `vitest run` | issue の完了条件を一つのコマンドへ集約する。判定の口が複数あると、どれが緑なら閉じてよいかが毎回議論になる（決定日 2026-08-02） |
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | 無料・ベクタタイル・opacity 遷移やスタイル制御の自由度が高い |
-| ベースマップ | OpenFreeMap（キー不要・無料）の淡色スタイル。不足なら Carto 系無料スタイル | POI 不要・地域名程度で足りる要件に合致。淡色はテーマオブジェクトを主役にできる |
+| ベースマップ | OpenFreeMap の positron `https://tiles.openfreemap.org/styles/positron`（API キー不要・リクエスト数無制限・商用可、MIT）。要求 attribution は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` で、スタイルが参照する TileJSON が持つので MapLibre の `AttributionControl` が既定で表示する（`attributionControl: false` を渡さないことが条件）。代替は Carto Positron `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json`（attribution は `© CARTO, © OpenStreetMap contributors`、API キー必須・フェアユース 5M タイルリクエスト/月） | POI 不要・地域名程度で足りる要件に合致。淡色はテーマオブジェクトを主役にできる。キー不要と無制限を手放す理由が他に無いので、Carto へ倒すのは OpenFreeMap の可用性が実際に問題になったときだけ（確認日 2026-08-23） |
 | 歴史地図 | 現代地図で開始。OpenHistoricalMap 連動は S9（後回し） | 古代の網羅性が不完全でリスクが読めないため、MVP と分離 |
 | エピソード取得 | RSS を正とする自動同期（ビルド時スクリプト） | 今後の追加に耐える。詳細は §4 |
 | データ管理 | エピソード=RSS 自動 / テーマ=人間キュレーション の二層分離 | 座標・年代・ジオメトリは自動化できない。自動層と手動層を混ぜると更新のたびに壊れる |
