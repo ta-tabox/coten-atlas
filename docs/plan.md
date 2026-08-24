@@ -30,12 +30,13 @@ terrarium は終わる器。次の3点が揃った時点で閉じる:
 | テスト | **Vitest**（+ React Testing Library） | toolchain 正典は JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない（決定日 2026-08-02） |
 | 機械判定の口 | **`mise run check`** = Biome lint/format + `tsc --noEmit` + `vitest run` | issue の完了条件を一つのコマンドへ集約する。判定の口が複数あると、どれが緑なら閉じてよいかが毎回議論になる（決定日 2026-08-02） |
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | 無料・ベクタタイル・opacity 遷移やスタイル制御の自由度が高い |
-| ベースマップ | OpenFreeMap（キー不要・無料）の淡色スタイル。不足なら Carto 系無料スタイル | POI 不要・地域名程度で足りる要件に合致。淡色はテーマオブジェクトを主役にできる |
+| ベースマップ | OpenFreeMap の positron `https://tiles.openfreemap.org/styles/positron`（API キー不要・リクエスト数無制限・商用可、MIT）。要求 attribution は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` で、スタイルが参照する TileJSON が持つので MapLibre の `AttributionControl` が既定で表示する（`attributionControl: false` を渡さないことが条件）。代替は Carto Positron `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json`（attribution は `© CARTO, © OpenStreetMap contributors`、API キー必須・フェアユース 5M タイルリクエスト/月） | POI 不要・地域名程度で足りる要件に合致。淡色はテーマオブジェクトを主役にできる。キー不要と無制限を手放す理由が他に無いので、Carto へ倒すのは OpenFreeMap の可用性が実際に問題になったときだけ（確認日 2026-08-23） |
 | 歴史地図 | 現代地図で開始。OpenHistoricalMap 連動は S9（後回し） | 古代の網羅性が不完全でリスクが読めないため、MVP と分離 |
 | エピソード取得 | RSS を正とする自動同期（ビルド時スクリプト） | 今後の追加に耐える。詳細は §4 |
 | データ管理 | エピソード=RSS 自動 / テーマ=人間キュレーション の二層分離 | 座標・年代・ジオメトリは自動化できない。自動層と手動層を混ぜると更新のたびに壊れる |
 | 配信リンク | Spotify（エピソード URL または番組 URL + 検索導線） | 基盤未定のため一旦 Spotify。データ側は `links` を配列にして基盤追加に開いておく |
 | デプロイ | **GitHub Pages**（`https://ta-tabox.github.io/coten-atlas/`）。`next.config.ts` に `basePath` と `assetPrefix` = `/coten-atlas` を置く。独自ドメインは当てない | 公開物とコードの管理主体をリポジトリ一つに閉じられ、GitHub App の面と揃う。Vercel は追記ゼロで済む代わりに管理主体が増える（決定日 2026-08-23、#15）。将来ドメインを当てるなら `basePath` を外す改修が要る |
+| 引用と出典 | シリーズ名とエピソードタイトルのみ載せ、番組の説明文は引かない（`summary` は残すが当面は空）。番組名はテキストとしてのみ使い、ロゴ・カバーアート・出演者画像は使わない。非公式である旨・権利の帰属・地図上の整理は独自である旨・公式への導線の4点を、フッタ（短文）と README と `/about` に置く。番組公式 `cotenradio.fm` への導線は配信リンクとは別にフッタへ常時置く。文言の実装は S8（決定日 2026-08-23、#17） | 番組公式に第三者向けの利用規約が無く（公開ページを全列挙して確認。`crew-terms-of-service` は有料会員向けの契約で非会員には及ばない）、許諾も禁止も明示されていないので、線は原則から引くしかない。著作物性が争いになりにくい題号だけを載せ、説明文と画像には触れない。ロゴは出所表示なので公式・提携との誤認を招く |
 
 ## 2. データモデル
 
@@ -164,7 +165,7 @@ Claude の作業と非同期に進む。
 | **S5** | 一覧パネル + 選択同期 | selection の消費者が地図とパネルの二者になって初めて「同期」の設計が要る。単方向で足りるうちは S3 の詳細カードで済む | パネル⇄地図の双方向選択が一致する |
 | **S6** | RSS 同期パイプライン | `match` は themes のプロパティ。スキーマ確定前には書けない（＝ S2 の後）。UI とは独立なので S3〜S5 と並行できる | `mise run sync` が全エピソードを取得し、シード分を自動割当し、残りを inbox へ排出する |
 | **S7** | 全シリーズデータ叩き台 | 入口は S6 が排出した inbox スタブ。手で列挙してから同期を書くと二度手間 | 公式一覧の全シリーズが `themes.geojson` に載りバリデーションを通る（§0 閾値1） |
-| **S8** | 仕上げ + デプロイ + README | 見せるものが揃ってからでないと README の設計判断が書けない | 公開 URL で全機能が動作し README が提示可能（§0 閾値3） |
+| **S8** | 仕上げ + 出典表記 + デプロイ + README | 見せるものが揃ってからでないと README の設計判断が書けない。出典表記は公開と同時に要る——公開してから足すのでは、ポートフォリオとして見られている最中の修正になる | 公開 URL で全機能が動作し、§1「引用と出典」の決定どおりフッタ・README・`/about` が揃い、README が提示可能（§0 閾値3） |
 | **S9** | （任意）OpenHistoricalMap 連動 | MVP のリスクから分離した後回し。着手は S8 の後、意欲があれば | 検証結果と採否をこの表に記録して終わり |
 
 **S7 の分割規約**: 1セッションで終わらない（90前後）。era 順に issue を割る
