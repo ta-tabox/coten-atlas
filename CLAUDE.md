@@ -75,7 +75,7 @@ toolchain 正典: `~/vivarium/fermentary/playbooks/toolchain.md`
 
 **正典からの逸脱（改定規約が明記を要求している）**: 正典は「タスクランナー = mise tasks」
 と定めるが、この器は**タスクを `package.json` の scripts に置き、判定の口を `pnpm check`
-の一本にする**（決定 2026-08-25）。理由は、正典が同じ表で「JS/TS 系の設定の置き場 =
+の一本にする**（決定 2026-08-25。`package.json` は `web/` にあるので、打つ場所も `web/` の中）。理由は、正典が同じ表で「JS/TS 系の設定の置き場 =
 `package.json`」とも定めており、タスクだけを別ファイルへ出すと置き場が二つに割れるから。
 `mise.toml` は `[tools]` だけを持ちランタイム版管理に徹する。**mise task を
 `run = "pnpm check"` の薄いラッパとして残すことも禁**——口が一本に見えて二本ある状態が、
