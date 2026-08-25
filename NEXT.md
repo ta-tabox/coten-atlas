@@ -5,11 +5,6 @@
 
 ## 人間へ渡すもの
 
-**#8**（リポジトリ設定と GitHub App の導入）。
-前提が無く、**今すぐ着手できる宿題**。
-これが済むまで `claude-code-review.yml` は起動しても落ちる。
-PR #30 で実際に赤くなっており、原因は `CLAUDE_CODE_OAUTH_TOKEN` が空であること。
-
 **#14 は実体が済んでいるのに open のまま**。
 ベースマップの決定は PR #20 で `docs/plan.md` §1 に入っている。
 閉じ忘れかどうかを見て閉じる。
@@ -20,12 +15,14 @@ PR #30 で実際に赤くなっており、原因は `CLAUDE_CODE_OAUTH_TOKEN` �
 
 **#9 の本文が実態に追随していない**。
 `check.yml` は自前で書き下ろさず、GitHub App 導入時に生成されるものを雛形にすると 2026-08-25 に決めた。
+その生成物が 2026-08-25 に実際に届いた（下記「済んだもの」参照）ので、#9 の本文は
+「雛形との差分を `gh-review.md` の契約で埋める」作業として書き直しが要る。
 
 ## 開いている issue
 
 - 実装: #2〜#6（S1〜S3）。**#1 が閉じたので #2 から着手できる**
 - 実装（先に降りた束）: #27（S6・RSS 同期）／ #26（S8・GitHub Pages 配信）
-- gh-review: #8（人間・通電）→ #9（Claude・#1 の前提は解けた）→ #10（人間・public 化と実地検証）
+- gh-review: #9（Claude・#8 が閉じて雛形が届いた）→ #10（人間・public 化と実地検証）
 - 検証と決定: #14・#16（人間）。#19（Claude・#3 依存）／ #25（Claude・引用と出典の反映）
 - 配布の未達分: #18（Claude・#1 の前提は解けた）
 
@@ -72,3 +69,11 @@ PR #30 で実際に赤くなっており、原因は `CLAUDE_CODE_OAUTH_TOKEN` �
   `settings.json` の `SessionStart` 配線、`CLAUDE.md` へ縮退モードのブロック。
   mise は `mise.run` へ出られないので npm から入れる（`mise run check` / `mise run dev` を
   リモートでも同じ口にするため）。**リモートでは未検証**——egress の実測は人間が環境を立ててから
+- 2026-08-25 #8 完了・クローズ。`/install-github-app` で GitHub App 導入と
+  `CLAUDE_CODE_OAUTH_TOKEN` の secrets 登録が済んだ。`/install-github-app` は
+  ワークフロー変更を PR #34 として main へ直接マージしており、副作用として `claude-code-review.yml` が
+  GitHub 公式のデフォルト生成物へ上書きされ、`claude.yml`（`@claude` 対話用）が新規に届いた。
+  この生成物は `gh-review.md` の契約から複数逸脱している——`issues` トリガを持つ、
+  `author_association` の絞りが無い、`pull_request` 経路が fork を絞っていない、
+  `timeout-minutes` と `concurrency: cancel-in-progress: false` が無い、
+  `claude.yml` の `allowed-tools` が無指定。**#9 で埋める**

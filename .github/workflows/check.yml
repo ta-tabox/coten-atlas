@@ -1,0 +1,34 @@
+name: Check
+
+# 正典: ~/vivarium/fermentary/playbooks/gh-review.md（契約「実行を縛る」「実行環境と CI」）
+# 中身が器の言語・タスクランナーに依存するので雛形は無く、器ごとに書く。
+# 実行環境は claude.yml と同一にする（レビューする側がビルドもテストも回せないと指摘が机上になる）。
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # PR は連続 push で古い run を捨てる（cancel-in-progress: true）。
+    # main は捨てると直近の commit が緑を持たなくなるので false。
+    concurrency:
+      group: check-${{ github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      # ランタイムは mise で入れる（toolchain.md）。版は mise.toml が持つ。CI に書き下ろさない。
+      - uses: jdx/mise-action@v4
+
+      - run: mise run install
+
+      # 判定の口はこの一本（docs/plan.md §1）。lint / 型 / テストをまとめて回す。
+      - run: mise run check

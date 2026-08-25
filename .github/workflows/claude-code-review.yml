@@ -1,22 +1,26 @@
 name: Claude Code Review
 
+# 雛形の出所: ~/vivarium/fermentary/tools/gh-review/workflows/claude-code-review.yml
+# 正典: ~/vivarium/fermentary/playbooks/gh-review.md
+# <!-- FILL --> の箇所を器に合わせて埋めてある。それ以外は契約なので、変えるなら正典の側を先に直す。
+
 on:
   pull_request:
-    types: [opened, synchronize, ready_for_review, reopened]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
+    # 毎 push で走ると増分のたびに同じ指摘が積むので、synchronize は入れない。
+    # 自動で走らせるのは開いた一度だけ（draft から上げた ready_for_review と、閉じて開き直した reopened も同じ一度に当たる）。
+    # 以後の再レビューは PR コメントの @claude で明示的に呼ぶ。
+    types: [opened, ready_for_review, reopened]
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    # fork からの PR では GitHub が GITHUB_TOKEN を read-only へ降格し、ワークフローが宣言した id-token: write を無視する。
+    # ACTIONS_ID_TOKEN_REQUEST_URL が注入されず OIDC トークンを取れないので、action は Anthropic API へ到達する前に必ず落ちる。
+    # 直しようのない赤い ✗ が残るだけなので、同一リポジトリ由来の PR に限る。
+    # 見るのは author_association でなく head.repo。
+    # シークレットと id-token が渡るかどうかを決めているのは fork かどうかであって、PR を出した人の権限ではない。
+    # step でなく job に置く。
+    # step だけを止めると job は成功で終わり、中身が空の成功と実際にレビューが走った成功を check 一覧で区別できなくなる。
+    if: github.event.pull_request.head.repo.full_name == github.repository
 
     runs-on: ubuntu-latest
     permissions:
@@ -24,10 +28,11 @@ jobs:
       pull-requests: read
       issues: read
       id-token: write
+      actions: read # Claude が PR 上で CI の結果を読むのに要る
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -36,10 +41,20 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          # tag mode は mcp__github_ci__get_workflow_run_details を許可ツールへ自動で載せるので、これが無いと CI サーバの導入だけが飛ぶ。
+          # レビューが CI の緑を確認したうえで書いているのかを区別できなくなるので、claude.yml と同じ二つを揃える。
+          additional_permissions: |
+            actions: read
+
           plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
           plugins: 'code-review@claude-code-plugins'
           prompt: '/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
-          claude_args: '--allowedTools "mcp__github_inline_comment__create_inline_comment"'
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
-
+          # 既定の automation mode は指摘をインラインコメントにしか出さず、指摘がゼロだと何も残さない。
+          # レビューが走ったのか読めずに黙ったのかを外から区別できないので、tag mode を強制してトラッキングコメントへ結果を書かせる。
+          track_progress: true
+          # 言語・文体の指定は prompt でなく system prompt へ置く。prompt の中身はスラッシュコマンドの引数として解釈されうるので、指示が届く保証が無い。
+          # 非対話モードでは allowedTools に無いツールが拒否されるので、差分を読むための git を名指しで開ける（履歴を書き換える綴りは渡さない）。
+          # checkout が fetch-depth: 1 で origin/main を持たないため、origin/main...HEAD の差分には fetch が要る。
+          # 連鎖したコマンドは && で分割して一つずつ照合されるので、fetch を落とすと diff の側が許可されていても前半で止まる。
+          claude_args: '--allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(git merge-base:*),Bash(git rev-parse:*),Bash(git fetch:*)" --append-system-prompt "レビューの本文・要約・インラインコメントはすべて日本語で書く。文体は だ・である調。識別子・ルール名・パス・引用したコードは原文のまま残す。指摘が無い場合も、何を読んで問題無しと判断したかを要約として残す。"'
