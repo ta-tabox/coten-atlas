@@ -34,7 +34,7 @@ terrarium は終わる器。次の3点が揃った時点で閉じる:
    判定は「シリーズ数」——上の定義で数えた全シリーズが `themes.geojson` に存在し
    バリデーションを通ること。
    座標・年代の精度は叩き台品質で可
-2. **`mise run sync` による RSS 由来の新エピソード追加パイプラインが回る**
+2. **`pnpm sync` による RSS 由来の新エピソード追加パイプラインが回る**
    （新規取得 → match 割当 → 未割当の inbox 排出まで）
 3. **README がポートフォリオとして提示可能**（設計判断・スクショ・技術スタック）
 
@@ -45,7 +45,7 @@ terrarium は終わる器。次の3点が揃った時点で閉じる:
 | スタック | Next.js (App Router) + TypeScript、**static export**（`output: 'export'`） | 転職ポートフォリオとして Next.js 習熟を示す（coten-career と接続）。サーバ処理は不要なので実質静的サイト |
 | ツールチェーン | mise + pnpm + Biome | toolchain 正典に従う（`fermentary/playbooks/toolchain.md`） |
 | テスト | **Vitest**（+ React Testing Library） | toolchain 正典は JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない（決定日 2026-08-02） |
-| 機械判定の口 | **`mise run check`** = Biome lint/format + `tsc --noEmit` + `vitest run` | issue の完了条件を一つのコマンドへ集約する。判定の口が複数あると、どれが緑なら閉じてよいかが毎回議論になる（決定日 2026-08-02） |
+| 機械判定の口 | **`pnpm check`** = `tsc --noEmit` → `biome ci .` → `vitest run` → `next build`。並びは安いものから落とす（L0 型 → L1 静的 → L2 ユニット → L3 ビルド） | issue の完了条件を一つのコマンドへ集約する。判定の口が複数あると、どれが緑なら閉じてよいかが毎回議論になる（決定日 2026-08-02）。**口を mise tasks から package.json の scripts へ移した（決定日 2026-08-25）**——toolchain 正典が JS/TS 系の設定の置き場を `package.json` と定めており、タスクだけ別ファイルへ出すと置き場が二つに割れる。`mise.toml` は `[tools]` のみを持ちランタイム版管理に徹し、`run = "pnpm check"` の薄いラッパも置かない（口が一本に見えて二本ある状態が、そもそも避けようとしたもの）。逸脱の記録は `CLAUDE.md`。**`next build` を含める**のは、static export がビルド時にしか壊れない失敗を持つため——判定の口が拾えないと PR は緑のまま公開が落ちる |
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | 無料・ベクタタイル・opacity 遷移やスタイル制御の自由度が高い |
 | ベースマップ | OpenFreeMap の positron `https://tiles.openfreemap.org/styles/positron`（API キー不要・リクエスト数無制限・商用可、MIT）。要求 attribution は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` で、スタイルが参照する TileJSON が持つので MapLibre の `AttributionControl` が既定で表示する（`attributionControl: false` を渡さないことが条件）。代替は Carto Positron `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json`（attribution は `© CARTO, © OpenStreetMap contributors`、API キー必須・フェアユース 5M タイルリクエスト/月） | POI 不要・地域名程度で足りる要件に合致。淡色はテーマオブジェクトを主役にできる。キー不要と無制限を手放す理由が他に無いので、Carto へ倒すのは OpenFreeMap の可用性が実際に問題になったときだけ（確認日 2026-08-23） |
 | 歴史地図 | 現代地図で開始。OpenHistoricalMap 連動は S9（後回し） | 古代の網羅性が不完全でリスクが読めないため、MVP と分離 |
@@ -183,13 +183,13 @@ data/
   - `pubDate` は RFC 822（`Wed, 19 Aug 2026 21:00:00 GMT`）で、全件 GMT 表記
   - `<link>` は Spotify のエピソードページ、`enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）
   - シリーズ番号は `itunes:season`、シリーズ内の回は `itunes:episode`
-- `scripts/sync-feed.ts`（mise task `sync` として登録）:
+- `scripts/sync-feed.ts`（package.json の scripts に `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
   2. 新規エピソードを themes.geojson の各 `match` 正規表現に通して themeId 割当
   3. どのテーマにも合わないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
      （タイトル・guid・推定シリーズ名。座標と年代は空欄=人間+Claude の補正対象）
   4. 結果サマリ（新規 n 件 / 割当 m 件 / 要レビュー k 件）を stdout へ
-- 運用: 当面は手動で `mise run sync` → inbox を見てキュレーション → コミット。
+- 運用: 当面は手動で `pnpm sync` → inbox を見てキュレーション → コミット。
   軌道に乗ったら GitHub Actions の cron で sync + PR 自動作成に昇格（S8 以降の任意課題）
 - 静的サイトなので実行時 fetch はしない。同期は常にビルド前のデータ更新として行う
 
@@ -208,12 +208,12 @@ Claude の作業と非同期に進む。
 
 | ステップ | 内容 | なぜこの順か | 閉じた判定 |
 |---|---|---|---|
-| **S1** | 足場 + ベースマップ表示 | 以降の全ステップが「ビルドが通る器」を前提にする | `mise run check` と静的ビルドが緑で、全画面にベースマップが出る |
+| **S1** | 足場 + ベースマップ表示 | 以降の全ステップが「ビルドが通る器」を前提にする | `pnpm check`（静的ビルドを含む）が緑で、全画面にベースマップが出る |
 | **S2** | データスキーマ確定 + シード10前後 | 描画のスタイル分岐は `kind` に依存し、`kind` の集合はシードを一度作らないと確定しない。未確定の前提の上に描画を積まない | 4 種の `kind` を含むシードがバリデーションを通り、concept 系の置き方が §2 に追記済み |
 | **S3** | テーマ描画 + 詳細カード | データの形が決まって初めてレイヤを書ける | シード全件が地図上に見え、クリックで詳細が開く |
 | **S4** | 時系列フェード（era） | opacity 制御は描画レイヤの**上に載る差分**。レイヤが無いうちは書けない | スライダー操作で同じ場所のテーマが時代に応じて入れ替わる |
 | **S5** | 一覧パネル + 選択同期 + 近接の三つ（§3） | selection の消費者が地図とパネルの二者になって初めて「同期」の設計が要る。単方向で足りるうちは S3 の詳細カードで済む。近接の三つも選択を起点にするので、消費者が揃うここへ同居させる | パネル⇄地図の双方向選択が一致し、関連テーマ行・同時代ハイライト・tag 絞り込みが動く |
-| **S6** | RSS 同期パイプライン | `match` は themes のプロパティ。スキーマ確定前には書けない（＝ S2 の後）。UI とは独立なので S3〜S5 と並行できる | `mise run sync` が全エピソードを取得し、シード分を自動割当し、残りを inbox へ排出する |
+| **S6** | RSS 同期パイプライン | `match` は themes のプロパティ。スキーマ確定前には書けない（＝ S2 の後）。UI とは独立なので S3〜S5 と並行できる | `pnpm sync` が全エピソードを取得し、シード分を自動割当し、残りを inbox へ排出する |
 | **S7** | 全シリーズデータ叩き台 | 入口は S6 が排出した inbox スタブ。手で列挙してから同期を書くと二度手間 | 公式一覧の全シリーズが `themes.geojson` に載りバリデーションを通る（§0 閾値1） |
 | **S8** | 仕上げ + 出典表記 + デプロイ + README | 見せるものが揃ってからでないと README の設計判断が書けない。出典表記は公開と同時に要る——公開してから足すのでは、ポートフォリオとして見られている最中の修正になる | 公開 URL で全機能が動作し、§1「引用と出典」の決定どおりフッタ・README・`/about` が揃い、README が提示可能（§0 閾値3） |
 | **S9** | （任意）OpenHistoricalMap 連動 | MVP のリスクから分離した後回し。着手は S8 の後、意欲があれば | 検証結果と採否をこの表に記録して終わり |

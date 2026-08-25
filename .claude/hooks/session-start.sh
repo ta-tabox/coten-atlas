@@ -1,7 +1,8 @@
 #!/bin/bash
 #
 # リモート環境（Claude Code on the web）のセッション起動フック。
-# 責務は一点——mise の入っていないコンテナで `mise run check` と `mise run dev` が手元と同じ意味を持つところまで組む。
+# 責務は一点——mise の入っていないコンテナで、mise.toml が固定した版の node と pnpm を用意する。
+# タスクは package.json が持つので（判定の口は `pnpm check`）、フックが組むのはその pnpm が立つところまで。
 # 手元は mise が入っている前提なので、このフックはリモートでしか走らない。
 #
 # 置き場の振り分けは fermentary `playbooks/remote-settings-placement.md`。
@@ -55,17 +56,19 @@ main() {
   require_git_author
   install_mise
 
-  # クローンし直された設定ファイルは未信頼の扱いなので、tasks を走らせる前に通す。
+  # クローンし直された設定ファイルは未信頼の扱いなので、mise install の前に通す。
   mise trust "$REPO_ROOT/mise.toml"
 
   # 版の正は mise.toml。node と pnpm はここで置かれるので、フックは読む側にも回らない。
   log "ランタイムと依存を入れる"
-  (cd "$REPO_ROOT" && mise install && mise run install)
+  # pnpm は mise が置いた shim なので、この時点の PATH にはまだ載っていない。
+  # フックは自分の PATH をいじらず mise exec 越しに呼ぶ（活性化はセッション側の仕事）。
+  (cd "$REPO_ROOT" && mise install && mise exec -- pnpm install --frozen-lockfile)
 
   # 第二マウントの口が無い環境なので、不在を毎回宣言する。
   # 宣言が無いと、CLAUDE.md 手順 0 を読んだセッションが不在を異常と受け取って止まる。
   log "fermentary は不在（リモートの既定）。膜へは書き込まない——CLAUDE.md「リモートの縮退モード」"
-  log "準備完了。mise run check が走る"
+  log "準備完了。pnpm check が走る"
 }
 
 main "$@"

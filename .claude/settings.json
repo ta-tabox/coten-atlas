@@ -1,5 +1,5 @@
 {
-  "_comment": "器固有の逸脱: 雛形（fermentary/tools/gh-review/settings.json）と playbooks/remote-settings-placement.md の検査点が allow に置く Bash(git push:*) を、この器では ask に落としている。CLAUDE.md が push を手元の既定で人間のみと定めており、allow へ移すと手元でも無言で push が通って規約と設定が食い違う。リモートでは毎回訊かれる摩擦が残るが、摩擦であって破れではない。判定の口は mise run check の一本（docs/plan.md §1）なので、pnpm の個別スクリプトは名指ししない。",
+  "_comment": "器固有の逸脱: 雛形（fermentary/tools/gh-review/settings.json）と playbooks/remote-settings-placement.md の検査点が allow に置く Bash(git push:*) を、この器では ask に落としている。CLAUDE.md が push を手元の既定で人間のみと定めており、allow へ移すと手元でも無言で push が通って規約と設定が食い違う。リモートでは毎回訊かれる摩擦が残るが、摩擦であって破れではない。判定の口は pnpm check の一本（docs/plan.md §1）。check を構成する個別スクリプトも allow に置く——切り分けのために単体で叩くので、置かないと毎回訊かれるだけの摩擦になる。mise はランタイム版管理として残っており（install / 参照系）、tasks は持たない。",
   "attribution": {
     "commit": "Co-authored-by: Claude <noreply@anthropic.com>",
     "pr": "",
@@ -8,10 +8,11 @@
   "permissions": {
     "allow": [
       "Bash(cd:*)",
-      "Bash(mise run check)",
-      "Bash(mise run lint)",
-      "Bash(mise run format)",
-      "Bash(mise run build)",
+      "Bash(pnpm check)",
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm test)",
+      "Bash(pnpm build)",
       "Bash(mise install)",
       "Bash(mise ls:*)",
       "Bash(mise current:*)",

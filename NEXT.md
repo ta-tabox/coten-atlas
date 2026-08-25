@@ -40,6 +40,17 @@
   **#6 が閉じたら次の束（S4・S5）を割る**（正典: `fermentary/playbooks/planning.md`「精緻化はいつやるか」）。
   S7 を割る単位は `docs/plan.md` §5 の分割規約が持つ
 
+## 膜へ未搬送（リモートセッションで出た素材。次の手元セッションが搬入する）
+
+- **inbox 行き**: PR が競合していると、CI は「落ちる」のではなく**存在しない**。
+  GitHub は `refs/pull/<n>/merge` を作れないと `pull_request` トリガのワークフローを
+  起動しないので、チェック欄が赤ではなく空になる。
+  空の緑（何も走っていない）と本当の緑は PR の画面上で見分けにくい。
+  `mergeable_state` が `dirty` かどうかが判定の口
+- **`gh-review.md` 宛の申し送り**: 「run が作られない」は `check.yml` の欠陥に見えるが、
+  ワークフローが登録済みかは `gh workflow list --all` ではなく実行履歴で確かめた方が早い。
+  観測順として、PR の `mergeable_state` を先に見る一行を「実行環境と CI」節へ足すか諮る
+
 ## 済んだもの
 
 - 2026-07-14 立ち上げ。プランを `docs/plan.md` に正典化（Next.js static export + MapLibre）
@@ -57,13 +68,14 @@
   内訳は実地検証2・未決定の決定4・配布の未達分1。S4 以降は精緻化の規律どおり降ろしていない
 - 2026-08-25 S1 の足場が立った（#1・PR #30）。
   Next.js 16 の static export、Biome、Vitest。
-  判定の口は `mise run check` の一本で、ランタイムは `mise.toml` が node 24 / pnpm 11.21.0 に固定する。
+  判定の口は一本（当初 `mise run check`。2026-08-25 に `pnpm check` へ移した。下記）で、
+  ランタイムは `mise.toml` が node 24 / pnpm 11.21.0 に固定する。
   `basePath` が dev にも効くので、開発サーバで開くのは `/coten-atlas`（`/` は 404）
 - 2026-08-25 リモート実行（Claude Code on the web）の設定を配置。
   `.claude/hooks/session-start.sh`（`CLAUDE_CODE_REMOTE` の門 + `require_git_author` + mise の導入）と
   `settings.json` の `SessionStart` 配線、`CLAUDE.md` へ縮退モードのブロック。
-  mise は `mise.run` へ出られないので npm から入れる（`mise run check` / `mise run dev` を
-  リモートでも同じ口にするため）。**リモートでは未検証**——egress の実測は人間が環境を立ててから
+  mise は `mise.run` へ出られないので npm から入れる（ランタイム版をリモートでも
+  `mise.toml` の固定へ揃えるため。2026-08-25 に理由文を実態へ直した）。**リモートでは未検証**——egress の実測は人間が環境を立ててから
 - 2026-08-25 #8 完了・クローズ。`/install-github-app` で GitHub App 導入と
   `CLAUDE_CODE_OAUTH_TOKEN` の secrets 登録が済んだ。`/install-github-app` は
   ワークフロー変更を PR #34 として main へ直接マージしており、副作用として `claude-code-review.yml` が
@@ -83,3 +95,23 @@
   を対処として追加し、issue #9 のコメントで `@claude` を呼ぶ陽性テストが success で通ることを確認した。
   upstream は 2026-08-25 時点でまだ open のため、この対処は当面残す
   （upstream が直ってから外す作業は fermentary へ還すかは未定）
+- 2026-08-25 **判定の口を mise tasks から pnpm scripts へ移した**。`pnpm check` の一本
+  （`tsc --noEmit` → `biome ci .` → `vitest run` → `next build`。static export は
+  ビルド時にしか壊れない失敗を持つので `next build` を口に含める）。`mise.toml` は
+  `[tools]` だけを持つ。薄いラッパの mise task も置かない。
+  波及先は package.json / mise.toml / CI 二本 / settings.json / session-start.sh /
+  CLAUDE.md / docs/plan.md §1・§0・§4・§5 / PR・issue テンプレ / NEXT.md。
+  toolchain 正典（タスクランナー = mise tasks）からの逸脱は CLAUDE.md に記録し、
+  正典の改定は fermentary/NEXT.md へ諮ってある。
+  **これ以前の記録に出てくる `mise run check` / `mise run sync` は読み替える**
+  CI（PR #38）は最初 run が一つも作られなかった。
+  原因は `check.yml` ではなく main との競合。
+  枝分かれした後に PR #22 が `docs/plan.md` を触ったので PR が `dirty` になり、
+  GitHub が `refs/pull/38/merge` を作れず `pull_request` トリガが起動しない。
+  main を取り込み、S5（#22 の近接の三つ）と S6（`pnpm sync`）の双方を残す形で競合を解いた。
+  `Check` run #7 が緑。
+  node は `mise.toml` の固定どおり 24.19.0 で走り、`pnpm check` の四段が全て通った。
+  PR 本文が「CI の緑をもって node 24 での確認とする」として保留していた分は、これで済んでいる。
+  `claude-code-review.yml` は `types: [opened, ready_for_review, reopened]` なので、
+  この PR では一度も起動していない（`opened` の時点で競合しており、その後の push は `synchronize`）。
+  自動レビューを掛けるなら人間が `ready_for_review` か再オープンで叩く
