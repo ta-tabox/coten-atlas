@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 /**
- * デプロイ先は GitHub Pages（docs/plan.md §1）。
+ * デプロイ先は GitHub Pages（docs/adr/0007-github-pages.md）。
  * `https://ta-tabox.github.io/coten-atlas/` の下に置かれるので、リポジトリ名を basePath に載せないと公開後にアセットが 404 になる。
  */
 const nextConfig: NextConfig = {

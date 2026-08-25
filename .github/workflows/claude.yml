@@ -76,7 +76,7 @@ jobs:
           additional_permissions: |
             actions: read
 
-          # ワイルドカードにしない。判定の口は package.json の check スクリプト一本（docs/plan.md §1）なのでそれだけ名指しする。
+          # ワイルドカードにしない。判定の口は package.json の check スクリプト一本（docs/adr/0009-pnpm-check.md）なのでそれだけ名指しする。
           # 言語・文体の指定は prompt でなく system prompt へ置く（claude-code-review.yml と同じ理由）。
           # 自動レビュー側にだけ入れると、@claude で手動に呼んだときの応答だけ英語で返る非対称が生まれる。二本に同じ指定を置く。
           # 綴りは --allowedTools に揃える（--allowed-tools も通るが、二本で別の綴りを配らない）。

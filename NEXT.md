@@ -1,6 +1,6 @@
 # NEXT — coten-atlas
 
-申し送り専用。**作業単位と状態は GitHub Issues**、順序と規約は `docs/plan.md`（地図）。
+申し送り専用。**作業単位と状態は GitHub Issues**、順序と規約は `ROADMAP.md`（地図）。
 ここに内容を複製しない（複製した瞬間から腐る）。
 
 ## 人間へ渡すもの
@@ -12,7 +12,7 @@
 決めたこと（本文は #39〜#42 が持つ。ここは索引）:
 
 - 文書を**五層**へ割る。`VISION.md`（なぜ）> `ARCHITECTURE.md`（どう）> `HARNESS.md`（検証）> `ROADMAP.md`（順序）、経緯と決定は `docs/adr/`
-- `docs/plan.md` は**撤去**する。地図はルートの `ROADMAP.md` へ（公開する器ではルートの `ls` が目次として働く）
+- 旧プラン一枚は**撤去**する。地図はルートの `ROADMAP.md` へ（公開する器ではルートの `ls` が目次として働く）
 - **ADR を導入する**（#40）。`CLAUDE.md` の「ADR は置かない」は逆へ書き直す。
   1決定1レコード・追記のみ・覆すときは書き換えず supersede
 - アプリ本体を **`web/` サブディレクトリ**へ移す（#39。ルートは器の文書と運用設定に空ける）
@@ -31,7 +31,7 @@ gh-review.md に run の不在を先に疑う一行を足すか諮る。
 概念側は `fermentary/memory/inbox.md` 2026-08-25「コピー配布された規約は、逆流の経路を持たない限り…」。
 
 **#14 は実体が済んでいるのに open のまま**。
-ベースマップの決定は PR #20 で `docs/plan.md` §1 に入っている。
+ベースマップの決定は PR #20 で入っている（現 ADR-0004）。
 閉じ忘れかどうかを見て閉じる。
 
 **#16**（テーマの近接を UI 要件として決める）は PR #22 がレビュー待ち。
@@ -67,13 +67,13 @@ gh-review.md に run の不在を先に疑う一行を足すか諮る。
 - issue へ降りている: **S1〜S3**（#2〜#6）・**S6**（#27）・**S8**（#26）
 - 粗いまま: **S4・S5・S7**、および任意課題の S9。
   **#6 が閉じたら次の束（S4・S5）を割る**（正典: `fermentary/playbooks/planning.md`「精緻化はいつやるか」）。
-  S7 を割る単位は `docs/plan.md` §5 の分割規約が持つ
+  S7 を割る単位は `ROADMAP.md`「順序の理由」末尾の分割規約が持つ
 
 ## 済んだもの
 
-- 2026-07-14 立ち上げ。プランを `docs/plan.md` に正典化（Next.js static export + MapLibre）
+- 2026-07-14 立ち上げ。プランを一枚の地図へ正典化（Next.js static export + MapLibre）
 - 2026-07-14 S0 完了。移設・git init・初回コミット・Cowork 化・fermentary 並置
-- 2026-08-02 台帳を **issue 台帳版へ移行**。`docs/plan.md` を状態を持たない地図へ改訂し、
+- 2026-08-02 台帳を **issue 台帳版へ移行**。プランの地図を状態を持たない形へ改訂し、
   S1〜S3 を issue 草稿へ精緻化。テスト = Vitest、判定の口 = `mise run check` を決定
 - 2026-08-02 ラベル19枚と issue #1〜#6 を登録し、草稿を撤去
 - 2026-08-22 bootstrap 配布物を正典へ追随（`chore/sync-bootstrap`）。規約の核と skill を
@@ -118,13 +118,13 @@ gh-review.md に run の不在を先に疑う一行を足すか諮る。
   ビルド時にしか壊れない失敗を持つので `next build` を口に含める）。`mise.toml` は
   `[tools]` だけを持つ。薄いラッパの mise task も置かない。
   波及先は package.json / mise.toml / CI 二本 / settings.json / session-start.sh /
-  CLAUDE.md / docs/plan.md §1・§0・§4・§5 / PR・issue テンプレ / NEXT.md。
+  CLAUDE.md / プランの地図 §1・§0・§4・§5（現 ADR-0009 / ROADMAP.md / ARCHITECTURE.md）/ PR・issue テンプレ / NEXT.md。
   toolchain 正典（タスクランナー = mise tasks）からの逸脱は CLAUDE.md に記録し、
   正典の改定は fermentary/NEXT.md へ諮ってある。
   **これ以前の記録に出てくる `mise run check` / `mise run sync` は読み替える**
   CI（PR #38）は最初 run が一つも作られなかった。
   原因は `check.yml` ではなく main との競合。
-  枝分かれした後に PR #22 が `docs/plan.md` を触ったので PR が `dirty` になり、
+  枝分かれした後に PR #22 がプランの地図を触ったので PR が `dirty` になり、
   GitHub が `refs/pull/38/merge` を作れず `pull_request` トリガが起動しない。
   main を取り込み、S5（#22 の近接の三つ）と S6（`pnpm sync`）の双方を残す形で競合を解いた。
   `Check` run #7 が緑。
@@ -134,10 +134,19 @@ gh-review.md に run の不在を先に疑う一行を足すか諮る。
   この PR では一度も起動していない（`opened` の時点で競合しており、その後の push は `synchronize`）。
   自動レビューを掛けるなら人間が `ready_for_review` か再オープンで叩く
 - 2026-08-25 器の構成を toiito へ寄せる設計。文書を五層（`VISION` なぜ > `ARCHITECTURE` どう >
-  `HARNESS` 検証 > `ROADMAP` 順序、決定と経緯は `docs/adr/`）へ割る・`docs/plan.md` は撤去して
+  `HARNESS` 検証 > `ROADMAP` 順序、決定と経緯は `docs/adr/`）へ割る・プラン一枚は撤去して
   ルートの `ROADMAP.md` へ・**ADR を導入**・アプリ本体を `web/` 配下へ、を決定し #39〜#42 を登録して草稿を撤去。
   ADR を入れる直接の理由は現物にあった——`mise run check` → `pnpm check` の移設が決定表のセルを
   その場で書き換えており、旧決定の本文は git 履歴にしか残っていない（決定日は 2026-08-02 のまま中身だけ 08-25）。
   fermentary へは4件搬送（配布型の規約の逆流・ADR の playbook 新設・器の骨格の雛形化・gh-review への申し送り）
 - 2026-08-25 リモートセッションの膜素材を搬入。競合した PR で run が生成されない件は
   `fermentary/kb/github-actions.md` へ事実として、契約に足すかは同 `NEXT.md` の搬送行で諮る
+- 2026-08-25 #40 完了。文書を五層へ割り、プラン一枚を撤去した。
+  `docs/adr/`（0001〜0009。0002 は 0009 に supersede されたヘッダ付きで本文を残す）／
+  `ARCHITECTURE.md`（現況）／ `ROADMAP.md`（順序）／ `HARNESS.md`（検証）。
+  `VISION.md` は未作成のまま名前だけ予約してある（#41）。
+  `CLAUDE.md` の「ADR は置かない」は逆へ書き直し、検証と実行環境の記述は `HARNESS.md` へ移した。
+  参照の付け替えで**コメント一行だけ**設定ファイルにも触れている（mise.toml / next.config.ts /
+  CI 二本 / settings.json）——完了条件が「プランへの参照 0 件」なので避けられなかった。
+  #39（web/ 移設）とは `ARCHITECTURE.md`「ディレクトリ構造」節で衝突しうる。
+  こちらは #39 未マージ時点の現物を書いてあるので、追随は #39 側

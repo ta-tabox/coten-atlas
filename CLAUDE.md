@@ -94,9 +94,9 @@ toolchain 正典: `~/vivarium/fermentary/playbooks/toolchain.md`
   `skills/karpathy-guidelines/SKILL.md`、固定は 2c60614（MIT）。
   上流の更新は手で取り込む
 
-経緯（なぜそう決めたか・採らなかった案・トレードオフ）の受け皿は
-`docs/plan.md` §1 決定事項。ADR は置かない——決定の数が表に収まる規模で、
-別立てにすると地図と決定の二重管理になる。
+経緯（なぜそう決めたか・採らなかった案・トレードオフ）の受け皿は `docs/adr/`。
+**1決定1レコード・追記のみ・覆すときは書き換えず supersede**（規約は
+`docs/adr/README.md`）。表に畳むと決定と決定日を別々に上書きできてしまう。
 
 GitHub 上の Claude レビュー体制: `~/vivarium/fermentary/playbooks/gh-review.md`
 （ワークフローを触る前・public 化の前に読む）
@@ -104,8 +104,8 @@ GitHub 上の Claude レビュー体制: `~/vivarium/fermentary/playbooks/gh-rev
 ## プランの正典化
 1セッションに収まらない実装・構築に着手する前に
 `~/vivarium/fermentary/playbooks/planning.md` を読む
-（プランは `docs/plan.md` に正典化し、NEXT.md はポインタに徹する）。
-本プロジェクトのプランは立ち上げ時に `docs/plan.md` へ正典化済み。
+（プランは正典化し、NEXT.md はポインタに徹する）。
+本プロジェクトの順序は `ROADMAP.md` が持つ。
 
 ## 知識区分の膜（正典: ~/vivarium/fermentary/playbooks/membrane.md）
 
