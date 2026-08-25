@@ -1,7 +1,7 @@
 {
   "_comment": "器固有の逸脱: 雛形（fermentary/tools/gh-review/settings.json）が持つ Bash(git push:*) を外している。この器は CLAUDE.md で push・リモート操作を人間のみと定めており、allow に残すと規約と設定が食い違う。判定の口は mise run check の一本（docs/plan.md §1）なので、pnpm の個別スクリプトは名指ししない。",
   "attribution": {
-    "commit": "",
+    "commit": "Co-authored-by: Claude <noreply@anthropic.com>",
     "pr": "",
     "sessionUrl": false
   },
