@@ -11,25 +11,20 @@
 
 **#16**（テーマの近接を UI 要件として決める）は PR #22 がレビュー待ち。
 
-**#10**（public 化と実地検証）は #8 の後。
-
-**#9 の本文が実態に追随していない**。
-`check.yml` は自前で書き下ろさず、GitHub App 導入時に生成されるものを雛形にすると 2026-08-25 に決めた。
-その生成物が 2026-08-25 に実際に届いた（下記「済んだもの」参照）ので、#9 の本文は
-「雛形との差分を `gh-review.md` の契約で埋める」作業として書き直しが要る。
+**#10**（public 化と実地検証）は #9 の後。gh-review 二系統（PR 自動レビュー・`@claude` 対話）とも
+陽性テスト済みなので、着手できる状態にある。
 
 ## 開いている issue
 
 - 実装: #2〜#6（S1〜S3）。**#1 が閉じたので #2 から着手できる**
 - 実装（先に降りた束）: #27（S6・RSS 同期）／ #26（S8・GitHub Pages 配信）
-- gh-review: #9（Claude・#8 が閉じて雛形が届いた）→ #10（人間・public 化と実地検証）
+- gh-review: #10（人間・public 化と実地検証）
 - 検証と決定: #14・#16（人間）。#19（Claude・#3 依存）／ #25（Claude・引用と出典の反映）
 - 配布の未達分: #18（Claude・#1 の前提は解けた）
 
 ## 配布物の未達分（#1 が閉じて前提は解けた）
 
 - **coding-standards の機械層**は #18 へ降ろした
-- gh-review のワークフロー二本は #9 へ降ろした。ただし `check.yml` は上の方針変更が乗る
 
 ## issue にしなかった覚え書き（該当 issue に着手するとき拾う）
 
@@ -77,3 +72,14 @@
   `author_association` の絞りが無い、`pull_request` 経路が fork を絞っていない、
   `timeout-minutes` と `concurrency: cancel-in-progress: false` が無い、
   `claude.yml` の `allowed-tools` が無指定。**#9 で埋める**
+- 2026-08-25 #9 完了・クローズ（PR #35, #36）。`claude.yml` / `claude-code-review.yml` を
+  fermentary の雛形（`author_association` 絞り・fork 絞り・`timeout-minutes`・`concurrency`
+  非対称・`allowed-tools` 名指しを含む契約準拠版）へ置き換え、`check.yml`（`mise run check`
+  一本を CI の判定口にする）を新規追加した。
+  陽性テストの過程で `claude-code-action` 側の既知のリグレッション（native installer が
+  `~/.local/bin` 不在時に「missing or broken」と警告しつつ success を騙り、後続の SDK 実行が
+  ENOENT で落ちる。upstream `anthropics/claude-code-action#1290` と同種、2026-05 にも一度発生し
+  再発した）を実測（rerun でも再現し一過性ではないことを確認）。PR #36 で `mkdir -p ~/.local/bin`
+  を対処として追加し、issue #9 のコメントで `@claude` を呼ぶ陽性テストが success で通ることを確認した。
+  upstream は 2026-08-25 時点でまだ open のため、この対処は当面残す
+  （upstream が直ってから外す作業は fermentary へ還すかは未定）
