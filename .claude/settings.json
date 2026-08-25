@@ -1,5 +1,5 @@
 {
-  "_comment": "器固有の逸脱: 雛形（fermentary/tools/gh-review/settings.json）が持つ Bash(git push:*) を外している。この器は CLAUDE.md で push・リモート操作を人間のみと定めており、allow に残すと規約と設定が食い違う。判定の口は mise run check の一本（docs/plan.md §1）なので、pnpm の個別スクリプトは名指ししない。",
+  "_comment": "器固有の逸脱: 雛形（fermentary/tools/gh-review/settings.json）と playbooks/remote-settings-placement.md の検査点が allow に置く Bash(git push:*) を、この器では ask に落としている。CLAUDE.md が push を手元の既定で人間のみと定めており、allow へ移すと手元でも無言で push が通って規約と設定が食い違う。リモートでは毎回訊かれる摩擦が残るが、摩擦であって破れではない。判定の口は mise run check の一本（docs/plan.md §1）なので、pnpm の個別スクリプトは名指ししない。",
   "attribution": {
     "commit": "Co-authored-by: Claude <noreply@anthropic.com>",
     "pr": "",
@@ -25,6 +25,21 @@
       "Bash(git push --force-with-lease:*)",
       "Bash(git push --delete:*)",
       "Bash(git push --mirror:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh",
+            "timeout": 600,
+            "statusMessage": "リモート環境を準備中"
+          }
+        ]
+      }
     ]
   }
 }

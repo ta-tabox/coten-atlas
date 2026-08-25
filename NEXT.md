@@ -67,3 +67,8 @@ PR #30 で実際に赤くなっており、原因は `CLAUDE_CODE_OAUTH_TOKEN` �
   Next.js 16 の static export、Biome、Vitest。
   判定の口は `mise run check` の一本で、ランタイムは `mise.toml` が node 24 / pnpm 11.21.0 に固定する。
   `basePath` が dev にも効くので、開発サーバで開くのは `/coten-atlas`（`/` は 404）
+- 2026-08-25 リモート実行（Claude Code on the web）の設定を配置。
+  `.claude/hooks/session-start.sh`（`CLAUDE_CODE_REMOTE` の門 + `require_git_author` + mise の導入）と
+  `settings.json` の `SessionStart` 配線、`CLAUDE.md` へ縮退モードのブロック。
+  mise は `mise.run` へ出られないので npm から入れる（`mise run check` / `mise run dev` を
+  リモートでも同じ口にするため）。**リモートでは未検証**——egress の実測は人間が環境を立ててから
