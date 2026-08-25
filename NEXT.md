@@ -40,6 +40,17 @@
   **#6 が閉じたら次の束（S4・S5）を割る**（正典: `fermentary/playbooks/planning.md`「精緻化はいつやるか」）。
   S7 を割る単位は `docs/plan.md` §5 の分割規約が持つ
 
+## 膜へ未搬送（リモートセッションで出た素材。次の手元セッションが搬入する）
+
+- **inbox 行き**: PR が競合していると、CI は「落ちる」のではなく**存在しない**。
+  GitHub は `refs/pull/<n>/merge` を作れないと `pull_request` トリガのワークフローを
+  起動しないので、チェック欄が赤ではなく空になる。
+  空の緑（何も走っていない）と本当の緑は PR の画面上で見分けにくい。
+  `mergeable_state` が `dirty` かどうかが判定の口
+- **`gh-review.md` 宛の申し送り**: 「run が作られない」は `check.yml` の欠陥に見えるが、
+  ワークフローが登録済みかは `gh workflow list --all` ではなく実行履歴で確かめた方が早い。
+  観測順として、PR の `mergeable_state` を先に見る一行を「実行環境と CI」節へ足すか諮る
+
 ## 済んだもの
 
 - 2026-07-14 立ち上げ。プランを `docs/plan.md` に正典化（Next.js static export + MapLibre）
@@ -93,3 +104,14 @@
   toolchain 正典（タスクランナー = mise tasks）からの逸脱は CLAUDE.md に記録し、
   正典の改定は fermentary/NEXT.md へ諮ってある。
   **これ以前の記録に出てくる `mise run check` / `mise run sync` は読み替える**
+  CI（PR #38）は最初 run が一つも作られなかった。
+  原因は `check.yml` ではなく main との競合。
+  枝分かれした後に PR #22 が `docs/plan.md` を触ったので PR が `dirty` になり、
+  GitHub が `refs/pull/38/merge` を作れず `pull_request` トリガが起動しない。
+  main を取り込み、S5（#22 の近接の三つ）と S6（`pnpm sync`）の双方を残す形で競合を解いた。
+  `Check` run #7 が緑。
+  node は `mise.toml` の固定どおり 24.19.0 で走り、`pnpm check` の四段が全て通った。
+  PR 本文が「CI の緑をもって node 24 での確認とする」として保留していた分は、これで済んでいる。
+  `claude-code-review.yml` は `types: [opened, ready_for_review, reopened]` なので、
+  この PR では一度も起動していない（`opened` の時点で競合しており、その後の push は `synchronize`）。
+  自動レビューを掛けるなら人間が `ready_for_review` か再オープンで叩く
