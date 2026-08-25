@@ -19,13 +19,20 @@ jobs:
       group: check-${{ github.ref }}
       cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+    # アプリは web/ の中（#39）。run: のステップだけを web/ で回す。
+    # uses: のアクション（checkout / mise-action）には working-directory が効かないので、
+    # mise-action はリポジトリのルートに居たまま、ルートの mise.toml を読む。
+    defaults:
+      run:
+        working-directory: web
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
-      # ランタイムは mise で入れる（toolchain.md）。版は mise.toml が持つ。CI に書き下ろさない。
+      # ランタイムは mise で入れる（toolchain.md）。版はルートの mise.toml が持つ。CI に書き下ろさない。
       - uses: jdx/mise-action@v4
 
       - run: pnpm install --frozen-lockfile
