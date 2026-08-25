@@ -33,7 +33,36 @@ RSS 由来の新エピソード追加パイプラインが回り、README がポ
 - **メッセージ prefix は変更の型**——`feat:` `fix:` `docs:` `refactor:` `chore:`
   `test:`、部位を添えるなら `feat(web):`。**プロジェクト名は名乗らない**
   （このリポジトリが既に答えている。外の器から書き込むときも同じ型を使う）。
-- push・リモート操作は人間のみ。
+- **手元では** push・リモート操作は人間のみ（リモートの既定は下の「リモートの縮退モード」節）。
+
+## リモートの縮退モード（Claude Code on the web）
+
+このセッションが `CLAUDE_CODE_REMOTE=true` なら、fermentary はマウントされていない。
+**その不在は異常ではなく既定**なので、これを理由に作業を止めない。
+
+- できる: この器の中の実装・文書。
+- できない: fermentary への書き込み全般（`ATLAS.md`・`inbox`・`questions`・
+  `NEXT.md` の搬送メモ）。書き込む先が無いので、やったと報告すれば嘘になる。
+- 膜行きの素材が出たら、この器の `NEXT.md` へ**未搬送**として書き置く。
+  次の手元セッションが膜を通して搬入する。
+- push は Claude が叩いてよい（コンテナは使い捨てで、push しない限り成果が残らない）。
+  **戻せない操作——force push・履歴の書き換え・ブランチやタグの削除——は、
+  その都度人間に諾否を訊く**（fermentary `RULES.md` #5）。
+- commit の committer はコンテナの名義のまま置く（署名が強制されるため）。
+  author は人間名義へ焼く。
+
+環境の準備は `.claude/hooks/session-start.sh` が持つ（`CLAUDE_CODE_REMOTE` で囲ってあるので手元では即 exit する）。
+名義の `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL` だけはクラウド環境の環境変数欄が持ち、
+未設定ならフックがセッションを立てずに止める。
+振り分けの正典は `~/vivarium/fermentary/playbooks/remote-settings-placement.md`。
+
+コンテナの外向き通信は許可制で、環境側から塞ぐ手段が無い（`fermentary/kb/claude-code-web.md`）。
+この器が引き受けている非対称は次のとおりで、いずれも**リモートでは未検証**:
+
+- `mise.run` へは出られないので、フックは mise を npm から入れる。ランタイムの版の正は `mise.toml` のまま
+- ベースマップのタイル `https://tiles.openfreemap.org` はブラウザプレビューから引く先。
+  出られなければ地図の見た目はリモートで確認できない
+- RSS の `https://anchor.fm/...`（S6 の同期）も同じ。出られなければ同期スクリプトはリモートで動かない
 
 ## ツールチェーンと規約
 toolchain 正典: `~/vivarium/fermentary/playbooks/toolchain.md`
