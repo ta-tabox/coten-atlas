@@ -26,7 +26,9 @@ issue の完了条件を一つのコマンドへ集約する。判定の口が�
 ## 帰結
 
 - 0002 は supersede 済みになる（本文は残す）
-- toolchain 正典「タスクランナー = mise tasks」からの逸脱を `CLAUDE.md` に明記する。正典側の改定は fermentary へ諮ってある
+- toolchain 正典「タスクランナー = mise tasks」からの逸脱を明記する。記録の置き場は
+  当初 `CLAUDE.md`、2026-08-25 の五層化で `HARNESS.md`「判定の口」へ移した。
+  正典側の改定は fermentary へ諮ってある
 - `mise.toml` はランタイム版管理（node / pnpm の固定）だけを持つ
 - 波及先は package.json / mise.toml / CI 二本 / `.claude/settings.json` / `session-start.sh` / `CLAUDE.md` / PR・issue テンプレ / `NEXT.md`
 

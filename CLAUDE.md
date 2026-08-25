@@ -3,9 +3,7 @@
 目的: コテンラジオの各シリーズ（テーマ）を世界地図×時系列にマッピングし、
 どの場所・どの時代の話か、どのテーマと近接するかを一望できる Web アプリを作る。
 転職ポートフォリオ（coten-career と接続）として公開する。
-完了条件: 全シリーズをマッピングした地図アプリが公開 URL で動作し、
-RSS 由来の新エピソード追加パイプラインが回り、README がポートフォリオとして
-提示可能な状態になっている。
+完了条件の閾値は `ROADMAP.md` が持つ。
 このプロジェクトは**終わる**。手仕舞いの正典は
 `~/vivarium/fermentary/playbooks/terrarium.md`（収穫掃引 → _closed）。
 人間が「クローズして」と言ったら、正典の手仕舞い手順を読み、Claude 側の担当分
@@ -43,7 +41,7 @@ RSS 由来の新エピソード追加パイプラインが回り、README がポ
 
 ## リモートの縮退モード（Claude Code on the web）
 
-このセッションが `CLAUDE_CODE_REMOTE=true` なら、fermentary はマウントされていない。
+`CLAUDE_CODE_REMOTE=true` なら fermentary はマウントされていない。
 **その不在は異常ではなく既定**なので、これを理由に作業を止めない。
 
 - できる: この器の中の実装・文書。
@@ -51,61 +49,26 @@ RSS 由来の新エピソード追加パイプラインが回り、README がポ
   `NEXT.md` の搬送メモ）。書き込む先が無いので、やったと報告すれば嘘になる。
 - 膜行きの素材が出たら、この器の `NEXT.md` へ**未搬送**として書き置く。
   次の手元セッションが膜を通して搬入する。
-- commit の committer はコンテナの名義のまま置く（署名が強制されるため）。
-  author は人間名義へ焼く。
 
-環境の準備は `.claude/hooks/session-start.sh` が持つ（`CLAUDE_CODE_REMOTE` で囲ってあるので手元では即 exit する）。
-名義の `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL` だけはクラウド環境の環境変数欄が持ち、
-未設定ならフックがセッションを立てずに止める。
-振り分けの正典は `~/vivarium/fermentary/playbooks/remote-settings-placement.md`。
+環境の事実（何が入るか・どこへ出られるか・名義の焼き方）は `HARNESS.md`。
 
-コンテナの外向き通信は許可制で、環境側から塞ぐ手段が無い（`fermentary/kb/claude-code-web.md`）。
-この器が引き受けている非対称は次のとおりで、いずれも**リモートでは未検証**:
+## 開発ハーネス（正典: `HARNESS.md`）
 
-- `mise.run` へは出られないので、フックは mise を npm から入れる。mise が要るのは
-  **ランタイム版管理のため**——`mise.toml` が固定した node と pnpm を立てないと、
-  コンテナ同梱の版で `pnpm check` が走ってしまい、手元と CI と意味が揃わない
-- ベースマップのタイル `https://tiles.openfreemap.org` はブラウザプレビューから引く先。
-  出られなければ地図の見た目はリモートで確認できない
-- RSS の `https://anchor.fm/...`（S6 の同期）も同じ。出られなければ同期スクリプトはリモートで動かない
+心拍は `pnpm check` を回して**緑ならコミット**。判定の口はこの一本だけ。
+**赤のままコミットしない**。
 
-## ツールチェーンと規約
-toolchain 正典: `~/vivarium/fermentary/playbooks/toolchain.md`
-（init・依存追加・環境構築の前に読む）
+## 文書の層（矛盾したら上位が勝つ）
 
-**正典からの逸脱（改定規約が明記を要求している）**: 正典は「タスクランナー = mise tasks」
-と定めるが、この器は**タスクを `package.json` の scripts に置き、判定の口を `pnpm check`
-の一本にする**（決定 2026-08-25）。理由は、正典が同じ表で「JS/TS 系の設定の置き場 =
-`package.json`」とも定めており、タスクだけを別ファイルへ出すと置き場が二つに割れるから。
-`mise.toml` は `[tools]` だけを持ちランタイム版管理に徹する。**mise task を
-`run = "pnpm check"` の薄いラッパとして残すことも禁**——口が一本に見えて二本ある状態が、
-そもそも避けようとしたもの。正典側の改定は fermentary へ諮ってある。
+`VISION.md`（なぜ。**未作成**、#41 が起こす）> `ARCHITECTURE.md`（現況。理由を持たない）
+> `HARNESS.md`（検証・実行環境）> `ROADMAP.md`（順序・完了条件の閾値）。
+決定と経緯は `docs/adr/`——1決定1レコード・**追記のみ**・覆すときは書き換えず supersede
+（規約は同 `README.md`）。`NEXT.md` は引き継ぎだけで、状態と作業単位は GitHub Issues。
 
-コーディング規約: @CODING.md。
-**コードを書く前に**、次の二つを開く（レビューやリファクタに限らない。実装・テスト追加・
-バグ修正でも同じ）。
+**コードを書く前に** `CODING.md` と skill `coding-standards` / `karpathy-guidelines` を開く
+（レビューやリファクタに限らない。言語固有の作法は skill の `languages/` にしかない）。
 
-- skill `coding-standards` — 言語固有の作法（JSDoc・import・空行）はそこの
-  `languages/` にしかなく、CODING.md には載っていない
-- skill `karpathy-guidelines` — 過剰実装と巻き込み変更を防ぐ振る舞いの規律。
-  「変更した各行が依頼に辿れるか」で手を止める。
-  この器では**プラグインを導入していない**ので、本体を `.claude/skills/` へ同梱してある。
-  外部由来で、出所は https://github.com/multica-ai/andrej-karpathy-skills の
-  `skills/karpathy-guidelines/SKILL.md`、固定は 2c60614（MIT）。
-  上流の更新は手で取り込む
-
-経緯（なぜそう決めたか・採らなかった案・トレードオフ）の受け皿は `docs/adr/`。
-**1決定1レコード・追記のみ・覆すときは書き換えず supersede**（規約は
-`docs/adr/README.md`）。表に畳むと決定と決定日を別々に上書きできてしまう。
-
-GitHub 上の Claude レビュー体制: `~/vivarium/fermentary/playbooks/gh-review.md`
-（ワークフローを触る前・public 化の前に読む）
-
-## プランの正典化
-1セッションに収まらない実装・構築に着手する前に
-`~/vivarium/fermentary/playbooks/planning.md` を読む
-（プランは正典化し、NEXT.md はポインタに徹する）。
-本プロジェクトの順序は `ROADMAP.md` が持つ。
+fermentary の playbook をいつ開くか（`toolchain.md` / `planning.md` / `gh-review.md`）は
+`HARNESS.md`「設定の置き場」と `ROADMAP.md`「進め方の横断規約」が持つ。
 
 ## 知識区分の膜（正典: ~/vivarium/fermentary/playbooks/membrane.md）
 

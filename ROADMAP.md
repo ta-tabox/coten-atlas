@@ -36,6 +36,7 @@
 - **1 issue = 1 セッション = 1 PR**。中途半端な feature を残してセッションを跨がない
 - PR 本文に `closes #N` を書く
 - 署名は `CLAUDE.md` の git 節（author は人間名義、`Co-authored-by: Claude`、prefix は変更の型）
+- **1セッションに収まらない実装に着手する前に** `~/vivarium/fermentary/playbooks/planning.md` を読む
 - **サンドボックスから GitHub へ到達できない**セッションがある。issue の登録・状態更新は
   人間の手元（native fs 側）で回す。そのセッションが担うのは草稿の起草と地図の改訂まで
 
