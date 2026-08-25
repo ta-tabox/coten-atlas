@@ -36,6 +36,11 @@ jobs:
         with:
           fetch-depth: 1
 
+      # claude-code-action の native installer は ~/.local/bin が無いと
+      # 「missing or broken」と警告しつつ実体を置かないまま success 扱いになり、
+      # 後続のアクション実行が ENOENT で落ちる（実測: claude.yml で再現、二本とも同じランナー・同じ installer を使うため予防的に揃える）。
+      - run: mkdir -p "$HOME/.local/bin"
+
       - name: Run Claude Code Review
         id: claude-review
         uses: anthropics/claude-code-action@v1
