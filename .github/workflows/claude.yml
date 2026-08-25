@@ -60,6 +60,12 @@ jobs:
 
       - run: mise run install
 
+      # claude-code-action の native installer は ~/.local/bin が無いと
+      # 「missing or broken」と警告しつつ実体を置かないまま success 扱いになり、
+      # 後続のアクション実行が ENOENT で落ちる（実測: このワークフローの初回実行で再現、rerun でも再現）。
+      # ubuntu-latest ランナーにこのディレクトリは既定で無いので、先に作っておく。
+      - run: mkdir -p "$HOME/.local/bin"
+
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@v1
