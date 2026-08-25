@@ -40,20 +40,14 @@ terrarium は終わる器。次の3点が揃った時点で閉じる:
 
 ## 1. 決定事項
 
-| 項目 | 決定 | 理由 |
-|---|---|---|
-| スタック | Next.js (App Router) + TypeScript、**static export**（`output: 'export'`） | 転職ポートフォリオとして Next.js 習熟を示す（coten-career と接続）。サーバ処理は不要なので実質静的サイト |
-| ツールチェーン | mise + pnpm + Biome | toolchain 正典に従う（`fermentary/playbooks/toolchain.md`） |
-| テスト | **Vitest**（+ React Testing Library） | toolchain 正典は JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない（決定日 2026-08-02） |
-| 機械判定の口 | **`pnpm check`** = `tsc --noEmit` → `biome ci .` → `vitest run` → `next build`。並びは安いものから落とす（L0 型 → L1 静的 → L2 ユニット → L3 ビルド） | issue の完了条件を一つのコマンドへ集約する。判定の口が複数あると、どれが緑なら閉じてよいかが毎回議論になる（決定日 2026-08-02）。**口を mise tasks から package.json の scripts へ移した（決定日 2026-08-25）**——toolchain 正典が JS/TS 系の設定の置き場を `package.json` と定めており、タスクだけ別ファイルへ出すと置き場が二つに割れる。`mise.toml` は `[tools]` のみを持ちランタイム版管理に徹し、`run = "pnpm check"` の薄いラッパも置かない（口が一本に見えて二本ある状態が、そもそも避けようとしたもの）。逸脱の記録は `CLAUDE.md`。**`next build` を含める**のは、static export がビルド時にしか壊れない失敗を持つため——判定の口が拾えないと PR は緑のまま公開が落ちる |
-| 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | 無料・ベクタタイル・opacity 遷移やスタイル制御の自由度が高い |
-| ベースマップ | OpenFreeMap の positron `https://tiles.openfreemap.org/styles/positron`（API キー不要・リクエスト数無制限・商用可、MIT）。要求 attribution は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` で、スタイルが参照する TileJSON が持つので MapLibre の `AttributionControl` が既定で表示する（`attributionControl: false` を渡さないことが条件）。代替は Carto Positron `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json`（attribution は `© CARTO, © OpenStreetMap contributors`、API キー必須・フェアユース 5M タイルリクエスト/月） | POI 不要・地域名程度で足りる要件に合致。淡色はテーマオブジェクトを主役にできる。キー不要と無制限を手放す理由が他に無いので、Carto へ倒すのは OpenFreeMap の可用性が実際に問題になったときだけ（確認日 2026-08-23） |
-| 歴史地図 | 現代地図で開始。OpenHistoricalMap 連動は S9（後回し） | 古代の網羅性が不完全でリスクが読めないため、MVP と分離 |
-| エピソード取得 | RSS を正とする自動同期（ビルド時スクリプト） | 今後の追加に耐える。詳細は §4 |
-| データ管理 | エピソード=RSS 自動 / テーマ=人間キュレーション の二層分離 | 座標・年代・ジオメトリは自動化できない。自動層と手動層を混ぜると更新のたびに壊れる |
-| 配信リンク | RSS の `<link>`（Spotify のエピソードページ）をそのまま使う。取れない回だけ番組 URL `https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f` + タイトル検索へ落とす | 全 752 件が `podcasters.spotify.com/pod/show/coten/episodes/…`（`creators.spotify.com` へリダイレクト）を持っており、エピソード単位のリンクは RSS だけで賄えるので検索導線は例外扱いでよい。`open.spotify.com/episode/…` はフィードに無く Spotify Web API 無しでは引けないため採らない。データ側は `links` を配列にして基盤追加に開いておく（決定日 2026-08-23、#13） |
-| デプロイ | **GitHub Pages**（`https://ta-tabox.github.io/coten-atlas/`）。`next.config.ts` に `basePath` と `assetPrefix` = `/coten-atlas` を置く。独自ドメインは当てない | 公開物とコードの管理主体をリポジトリ一つに閉じられ、GitHub App の面と揃う。Vercel は追記ゼロで済む代わりに管理主体が増える（決定日 2026-08-23、#15）。将来ドメインを当てるなら `basePath` を外す改修が要る |
-| 引用と出典 | シリーズ名とエピソードタイトルのみ載せ、番組の説明文は引かない（`summary` は残すが当面は空）。番組名はテキストとしてのみ使い、ロゴ・カバーアート・出演者画像は使わない。非公式である旨・権利の帰属・地図上の整理は独自である旨・公式への導線の4点を、フッタ（短文）と README と `/about` に置く。番組公式 `https://coten.co.jp/services/cotenradio/` への導線は配信リンクとは別にフッタへ常時置く。文言の実装は S8（決定日 2026-08-23、#17） | 番組公式に第三者向けの利用規約が無く（公開ページを全列挙して確認。`crew-terms-of-service` は有料会員向けの契約で非会員には及ばない）、許諾も禁止も明示されていないので、線は原則から引くしかない。著作物性が争いになりにくい題号だけを載せ、説明文と画像には触れない。ロゴは出所表示なので公式・提携との誤認を招く。番組サイト `cotenradio.fm` はドメインが失効して第三者の広告サイトに変わっており、公式への導線に使うと誤誘導になるので、宛先は運営元 COTEN の COTEN RADIO ページにする（#13 で確認、差し替え日 2026-08-25） |
+**この節の本体は `docs/adr/` へ移した。** 1決定1レコード・追記のみ・覆すときは
+書き換えず supersede（規約は `docs/adr/README.md`）。一覧も同 README が持つ。
+
+表をやめたのは、決定と決定日を別々に上書きできてしまうかたちだったから
+（`mise run check` → `pnpm check` の移設が実際にそれをやった。ADR-0002 / ADR-0009）。
+
+ADR にしない3件——ツールチェーン（mise + pnpm + Biome）／ テストランナー = Vitest ／
+エピソード取得を RSS 自動同期にする——は `docs/adr/README.md`「ADR にしないもの」を見る。
 
 ## 2. データモデル
 
