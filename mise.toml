@@ -3,7 +3,7 @@
 # CI 側にランタイム版を書き下ろさない（二重管理にすると、いずれ片方だけが動く）。
 #
 # このファイルは [tools] だけを持つ。タスクは web/package.json の scripts が持ち、
-# 判定の口は `web/` で打つ `pnpm check` の一本（docs/plan.md §1、逸脱の記録は CLAUDE.md）。
+# 判定の口は `web/` で打つ `pnpm check` の一本（docs/plan.md §1、toolchain 正典の「タスクランナー = 器のマニフェスト」）。
 # ここに `run = "pnpm check"` の薄いラッパを置かない——口が一本に見えて二本ある状態になる。
 
 [tools]
