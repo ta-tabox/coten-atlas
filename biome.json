@@ -1,0 +1,17 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"files": {
+		"includes": [
+			"**",
+			"!**/.next",
+			"!**/out",
+			"!**/next-env.d.ts",
+			"!**/.claude"
+		]
+	},
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	}
+}

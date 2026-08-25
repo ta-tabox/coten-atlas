@@ -1,0 +1,33 @@
+# ランタイムとタスクの正典（toolchain 正典: ~/vivarium/fermentary/playbooks/toolchain.md）。
+# 版をここに固定しているので、手元でも CI でも `mise install` の後は同じコマンドが同じ意味を持つ。
+# CI 側にランタイム版を書き下ろさない（二重管理にすると、いずれ片方だけが動く）。
+
+[tools]
+node = "24"
+"npm:pnpm" = "11.21.0"
+
+[tasks.install]
+description = "依存をインストールする（lockfile に従う）"
+run = "pnpm install --frozen-lockfile"
+
+[tasks.dev]
+description = "開発サーバを起動する"
+run = "pnpm next dev"
+
+[tasks.build]
+description = "静的サイトを out/ へ書き出す"
+run = "pnpm next build"
+
+# 判定の口はこの一本（docs/plan.md §1）。
+# issue の完了条件をここへ集約する。
+[tasks.check]
+description = "lint / 型 / テストをまとめて判定する"
+run = [
+  "pnpm biome ci .",
+  "pnpm tsc --noEmit",
+  "pnpm vitest run",
+]
+
+[tasks.test]
+description = "テストを watch で回す"
+run = "pnpm vitest"
