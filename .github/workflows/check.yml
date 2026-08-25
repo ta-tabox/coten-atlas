@@ -28,7 +28,7 @@ jobs:
       # ランタイムは mise で入れる（toolchain.md）。版は mise.toml が持つ。CI に書き下ろさない。
       - uses: jdx/mise-action@v4
 
-      - run: mise run install
+      - run: pnpm install --frozen-lockfile
 
-      # 判定の口はこの一本（docs/plan.md §1）。lint / 型 / テストをまとめて回す。
-      - run: mise run check
+      # 判定の口はこの一本（docs/plan.md §1）。型 / 静的 / ユニット / ビルドをまとめて回す。
+      - run: pnpm check

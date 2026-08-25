@@ -57,13 +57,14 @@
   内訳は実地検証2・未決定の決定4・配布の未達分1。S4 以降は精緻化の規律どおり降ろしていない
 - 2026-08-25 S1 の足場が立った（#1・PR #30）。
   Next.js 16 の static export、Biome、Vitest。
-  判定の口は `mise run check` の一本で、ランタイムは `mise.toml` が node 24 / pnpm 11.21.0 に固定する。
+  判定の口は一本（当初 `mise run check`。2026-08-25 に `pnpm check` へ移した。下記）で、
+  ランタイムは `mise.toml` が node 24 / pnpm 11.21.0 に固定する。
   `basePath` が dev にも効くので、開発サーバで開くのは `/coten-atlas`（`/` は 404）
 - 2026-08-25 リモート実行（Claude Code on the web）の設定を配置。
   `.claude/hooks/session-start.sh`（`CLAUDE_CODE_REMOTE` の門 + `require_git_author` + mise の導入）と
   `settings.json` の `SessionStart` 配線、`CLAUDE.md` へ縮退モードのブロック。
-  mise は `mise.run` へ出られないので npm から入れる（`mise run check` / `mise run dev` を
-  リモートでも同じ口にするため）。**リモートでは未検証**——egress の実測は人間が環境を立ててから
+  mise は `mise.run` へ出られないので npm から入れる（ランタイム版をリモートでも
+  `mise.toml` の固定へ揃えるため。2026-08-25 に理由文を実態へ直した）。**リモートでは未検証**——egress の実測は人間が環境を立ててから
 - 2026-08-25 #8 完了・クローズ。`/install-github-app` で GitHub App 導入と
   `CLAUDE_CODE_OAUTH_TOKEN` の secrets 登録が済んだ。`/install-github-app` は
   ワークフロー変更を PR #34 として main へ直接マージしており、副作用として `claude-code-review.yml` が
@@ -83,3 +84,12 @@
   を対処として追加し、issue #9 のコメントで `@claude` を呼ぶ陽性テストが success で通ることを確認した。
   upstream は 2026-08-25 時点でまだ open のため、この対処は当面残す
   （upstream が直ってから外す作業は fermentary へ還すかは未定）
+- 2026-08-25 **判定の口を mise tasks から pnpm scripts へ移した**。`pnpm check` の一本
+  （`tsc --noEmit` → `biome ci .` → `vitest run` → `next build`。static export は
+  ビルド時にしか壊れない失敗を持つので `next build` を口に含める）。`mise.toml` は
+  `[tools]` だけを持つ。薄いラッパの mise task も置かない。
+  波及先は package.json / mise.toml / CI 二本 / settings.json / session-start.sh /
+  CLAUDE.md / docs/plan.md §1・§0・§4・§5 / PR・issue テンプレ / NEXT.md。
+  toolchain 正典（タスクランナー = mise tasks）からの逸脱は CLAUDE.md に記録し、
+  正典の改定は fermentary/NEXT.md へ諮ってある。
+  **これ以前の記録に出てくる `mise run check` / `mise run sync` は読み替える**

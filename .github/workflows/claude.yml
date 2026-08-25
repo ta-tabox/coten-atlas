@@ -58,7 +58,7 @@ jobs:
       # ランタイムは mise で入れる（toolchain.md）。版は mise.toml が持つ。
       - uses: jdx/mise-action@v4
 
-      - run: mise run install
+      - run: pnpm install --frozen-lockfile
 
       # claude-code-action の native installer は ~/.local/bin が無いと
       # 「missing or broken」と警告しつつ実体を置かないまま success 扱いになり、
@@ -76,8 +76,8 @@ jobs:
           additional_permissions: |
             actions: read
 
-          # ワイルドカードにしない。判定の口は mise.toml の check タスク一本（docs/plan.md §1）なのでそれだけ名指しする。
+          # ワイルドカードにしない。判定の口は package.json の check スクリプト一本（docs/plan.md §1）なのでそれだけ名指しする。
           # 言語・文体の指定は prompt でなく system prompt へ置く（claude-code-review.yml と同じ理由）。
           # 自動レビュー側にだけ入れると、@claude で手動に呼んだときの応答だけ英語で返る非対称が生まれる。二本に同じ指定を置く。
           # 綴りは --allowedTools に揃える（--allowed-tools も通るが、二本で別の綴りを配らない）。
-          claude_args: '--allowedTools "Bash(mise run check)" --append-system-prompt "応答はすべて日本語で書く。文体は だ・である調。識別子・ルール名・パス・引用したコードは原文のまま残す。"'
+          claude_args: '--allowedTools "Bash(pnpm check)" --append-system-prompt "応答はすべて日本語で書く。文体は だ・である調。識別子・ルール名・パス・引用したコードは原文のまま残す。"'
