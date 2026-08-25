@@ -35,8 +35,10 @@ RSS 由来の新エピソード追加パイプラインが回り、README がポ
   （このリポジトリが既に答えている。外の器から書き込むときも同じ型を使う）。
 - **push は Claude が叩いてよい**（手元でもリモートでも）。
   判定は `.claude/settings.json` の `permissions` が持ち、素の `git push` は allow。
-  **戻せない操作——force push・履歴の書き換え・ブランチやタグの削除——は ask** に置いてあるので、
-  その都度人間に諾否を訊く（fermentary `RULES.md` #5）。
+  **戻せない操作——force push・履歴の書き換え・ブランチやタグの削除——は、
+  その都度人間に諾否を訊く**（fermentary `RULES.md` #5）。
+  権限パターンは前方一致で `git push origin --force` のような語順を拾えないので、
+  コマンド全文を見る `.claude/hooks/guard-force-push.sh` が ask へ回す。
   PR の作成とマージは、人間がそう指示したときだけ。
 
 ## リモートの縮退モード（Claude Code on the web）
