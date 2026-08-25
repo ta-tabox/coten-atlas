@@ -24,9 +24,10 @@ L0〜L2 だけでは PR が緑のまま公開が落ちる。
 ## 2. 判定の口
 
 **`pnpm check` の一本**。中身は L0 → L1 → L2 → L3 の順で、安いものから落とす。
+アプリは `web/` 配下なので（#39）、**打つ場所も `web/` の中**。
 
 ```
-pnpm check   # tsc --noEmit → biome ci . → vitest run → next build
+cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next build
 ```
 
 - **赤のままコミットしない。** 心拍は「`pnpm check` → 緑ならコミット」
@@ -40,7 +41,8 @@ pnpm check   # tsc --noEmit → biome ci . → vitest run → next build
 
 **toolchain 正典からの逸脱の記録**（改定規約が明記を要求している）: 正典
 （`~/vivarium/fermentary/playbooks/toolchain.md`）は「タスクランナー = mise tasks」と
-定めるが、この器はタスクを `package.json` の scripts に置く。`mise.toml` は `[tools]`
+定めるが、この器はタスクを `package.json` の scripts に置く（その `package.json` は
+`web/` にあるので、打つ場所も `web/` の中）。`mise.toml` はルートに残って `[tools]`
 だけを持ち、`run = "pnpm check"` の薄いラッパも置かない。理由と範囲は ADR-0009。
 正典側の改定は fermentary へ諮ってある。
 
@@ -54,7 +56,7 @@ pnpm check   # tsc --noEmit → biome ci . → vitest run → next build
 | GitHub への到達 | 到達する | セッションによっては到達しない。issue の登録・状態更新は手元で回す |
 | 外向き通信 | 制限なし | **許可制**（§4） |
 | commit の committer | 人間名義 | コンテナの名義のまま（署名が強制される）。author だけ人間名義へ焼く |
-| 環境の準備 | 不要 | `.claude/hooks/session-start.sh` が mise とランタイムと依存を入れる |
+| 環境の準備 | 不要 | `.claude/hooks/session-start.sh` が mise とランタイムと依存を入れる（依存は `web/` で） |
 
 `session-start.sh` は `CLAUDE_CODE_REMOTE` で囲ってあるので手元では即 exit する。
 `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL` はクラウド環境の環境変数欄が持ち、
@@ -82,8 +84,8 @@ pnpm check   # tsc --noEmit → biome ci . → vitest run → next build
 | `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
 | クラウド環境の環境変数欄 | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義） |
 | `.claude/skills/` | 同梱の規約 skill。プラグインを入れていないので本体を置いてある。`karpathy-guidelines` は外部由来（出所 https://github.com/multica-ai/andrej-karpathy-skills の `skills/karpathy-guidelines/SKILL.md`、固定 2c60614、MIT。上流の更新は手で取り込む） |
-| `mise.toml` | `[tools]` のみ。ランタイム版の固定 |
-| `package.json` | `pnpm check` を含む scripts |
+| `mise.toml`（ルート） | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む |
+| `web/package.json` | `pnpm check` を含む scripts |
 
 振り分けの正典は `~/vivarium/fermentary/playbooks/remote-settings-placement.md`。
 

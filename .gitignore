@@ -1,7 +1,7 @@
-node_modules/
-.next/
-out/
-*.tsbuildinfo
+web/node_modules/
+web/.next/
+web/out/
+web/*.tsbuildinfo
 # dev と build で参照先（`.next/dev/types` と `.next/types`）が書き分けられるので、追跡するとどちらかを回すたびに差分が出る。
-next-env.d.ts
+web/next-env.d.ts
 .DS_Store

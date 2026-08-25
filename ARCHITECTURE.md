@@ -188,6 +188,11 @@ data/
 
 ## 6. ディレクトリ構造
 
+ルートは**器の文書と運用設定**だけを持ち、Next.js アプリは `web/` 配下に隔離する。
+この器は今後 `data/`（人間キュレーション層）と RSS 同期スクリプトを持つので、
+`src/` の隣に `data/` が並ぶと「これは Next.js が読むのか、ビルド前に走る何かなのか」が
+構造から読めなくなる。境界をディレクトリで引けば、その問いが起きる場所そのものが無くなる。
+
 ```
 .
 ├── CLAUDE.md              # セッションの入口（起動語・git・膜）
@@ -197,21 +202,22 @@ data/
 ├── HARNESS.md             # 検証と実行環境
 ├── NEXT.md                # 申し送り（状態は GitHub Issues）
 ├── docs/adr/              # 決定と経緯。1決定1レコード
-├── src/app/               # Next.js App Router
-├── package.json           # 判定の口 `pnpm check` の scripts
-├── next.config.ts         # basePath / assetPrefix（GitHub Pages）
-├── tsconfig.json / biome.json / vitest.config.ts / vitest-setup.ts
 ├── mise.toml              # [tools] のみ。ランタイム版管理
 ├── .github/               # workflows・issue / PR テンプレ
-└── .claude/               # settings・hooks・同梱 skill
+├── .claude/               # settings・hooks・同梱 skill
+└── web/                   # アプリ本体。判定の口 `pnpm check` はこの中で打つ
+    ├── CLAUDE.md          # 空殻2行（正典はルート）
+    ├── src/app/           # Next.js App Router
+    ├── package.json       # `pnpm check` の scripts
+    ├── next.config.ts     # basePath / assetPrefix（GitHub Pages）
+    └── tsconfig.json / biome.json / vitest.config.ts / vitest-setup.ts
 ```
 
-**この節は #39（アプリ本体を `web/` サブディレクトリへ移す）の未マージ時点の姿を書いている。**
-#39 がマージされたら、`src/` とビルド設定一式が `web/` 配下へ移り、ルートは器の文書と
-運用設定だけになる。追随は #39 側で行う。
+`web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
+書き足すのを、先に場所を埋めて防ぐ。正典はルートの `CLAUDE.md` とこの文書。
 
 まだ存在しないもの: `data/`（テーマの GeoJSON と時代区分。S2）、`scripts/sync-feed.ts`（S6）、
-`VISION.md`（#41）。
+`VISION.md`（#41）。`data/` と `scripts/` はアプリの外なので**ルート側**に置く。
 
 ## 7. 意図的にやらないこと
 
