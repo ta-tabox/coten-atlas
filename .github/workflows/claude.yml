@@ -1,34 +1,64 @@
 name: Claude Code
 
+# 雛形の出所: ~/vivarium/fermentary/tools/gh-review/workflows/claude.yml
+# 正典: ~/vivarium/fermentary/playbooks/gh-review.md
+# <!-- FILL --> の箇所を器に合わせて埋めてある。それ以外は契約なので、変えるなら正典の側を先に直す。
+
+# issue 本文は仕様書で、そこに手順として「@claude を呼ぶ」と書くと言及と起動を綴りで区別できないので、issues トリガは持たない。
+# 起動はコメント（issue_comment / pull_request_review_comment / pull_request_review）だけ。
 on:
   issue_comment:
     types: [created]
   pull_request_review_comment:
     types: [created]
-  issues:
-    types: [opened, assigned]
   pull_request_review:
     types: [submitted]
 
 jobs:
   claude:
+    # 公開後は誰でもコメントできるので、リポジトリに招かれた人だけに起動を絞る（絞らないと API 利用料と Actions 分を第三者が自由に燃やせる）。
+    # ただし COLLABORATOR が意味するのは招待されたことだけなので、Read や Triage で招いた相手も通る。
+    # 実権限で弾くには Permission API を引く別ステップが要り、if: の式には書けない。
+    # 招くのは Write 以上だけ、という運用でこの差を埋める。
+    # 見るのは「@claude と書いた本人」の association で、それが載っているオブジェクトは経路ごとに違う。
+    # issue_comment と pull_request_review_comment はコメント側（github.event.comment）、pull_request_review はレビュー側（github.event.review）。
+    # issue_comment で github.event.issue.author_association を見てはいけない。
+    # それは issue を立てた人のもので後から誰がコメントしても変わらないので、OWNER が立てた issue へのコメントが権限を問わず全部通る。
+    # この if: は job 側に置く（ステップに置くとコンテナが起動し、Actions 分を消費させない目的を果たさない）。
     if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
-      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+      (github.event_name == 'issue_comment' &&
+        contains(github.event.comment.body, '@claude') &&
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'pull_request_review_comment' &&
+        contains(github.event.comment.body, '@claude') &&
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'pull_request_review' &&
+        contains(github.event.review.body, '@claude') &&
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.review.author_association))
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: claude-${{ github.event.issue.number || github.event.pull_request.number }}
+      # 同じ issue/PR での連投は直列化する。走っている応答を途中で止めると中途半端なコメントが残るので cancel はしない。
+      cancel-in-progress: false
     permissions:
+      # contents: read で固定する（Actions 経由の Claude はコメントまで。コミットは押させない）。
       contents: read
       pull-requests: read
       issues: read
       id-token: write
-      actions: read # Required for Claude to read CI results on PRs
+      actions: read # Claude が PR 上で CI の結果を読むのに要る
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
+
+      # ランタイムは mise で入れる（toolchain.md）。版は mise.toml が持つ。
+      - uses: jdx/mise-action@v4
+
+      - run: mise run install
 
       - name: Run Claude Code
         id: claude
@@ -36,15 +66,12 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
-          # This is an optional setting that allows Claude to read CI results on PRs
+          # Claude に PR 上の CI 結果を読ませる
           additional_permissions: |
             actions: read
 
-          # Optional: Give a custom prompt to Claude. If this is not specified, Claude will perform the instructions specified in the comment that tagged it.
-          # prompt: 'Update the pull request description to include a summary of changes.'
-
-          # Optional: Add claude_args to customize behavior and configuration
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
-          # claude_args: '--allowed-tools Bash(gh pr *)'
-
+          # ワイルドカードにしない。判定の口は mise.toml の check タスク一本（docs/plan.md §1）なのでそれだけ名指しする。
+          # 言語・文体の指定は prompt でなく system prompt へ置く（claude-code-review.yml と同じ理由）。
+          # 自動レビュー側にだけ入れると、@claude で手動に呼んだときの応答だけ英語で返る非対称が生まれる。二本に同じ指定を置く。
+          # 綴りは --allowedTools に揃える（--allowed-tools も通るが、二本で別の綴りを配らない）。
+          claude_args: '--allowedTools "Bash(mise run check)" --append-system-prompt "応答はすべて日本語で書く。文体は だ・である調。識別子・ルール名・パス・引用したコードは原文のまま残す。"'
