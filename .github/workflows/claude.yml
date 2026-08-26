@@ -49,6 +49,14 @@ jobs:
       id-token: write
       actions: read # Claude が PR 上で CI の結果を読むのに要る
 
+    # アプリは web/ の中（#39）。run: のステップだけを web/ で回す。
+    # uses: のアクション（checkout / mise-action）には working-directory が効かないので、
+    # mise-action はリポジトリのルートに居たまま、ルートの mise.toml を読む。
+    # check.yml と同じ形。判定の口（Bash(pnpm check)）も web/ の中で打たれる。
+    defaults:
+      run:
+        working-directory: web
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -77,7 +85,12 @@ jobs:
             actions: read
 
           # ワイルドカードにしない。判定の口は package.json の check スクリプト一本（docs/plan.md §1）なのでそれだけ名指しする。
+          # 綴りが `pnpm --dir web check` なのは、Claude 自身の cwd がリポジトリのルートだから。
+          # claude-code-action は composite action なので、上の defaults.run.working-directory は
+          # このアクション内部の run: へ継承されない（GitHub Actions の仕様）。cwd を渡す input も無く、
+          # CLI は $GITHUB_WORKSPACE で起動する。素の `pnpm check` はそこで ERR_PNPM_NO_IMPORTER_MANIFEST_FOUND になる。
+          # cd を挟まず一語で済ませるのは、allowedTools が複合コマンドだと `cd` 側にも許可が要るため。
           # 言語・文体の指定は prompt でなく system prompt へ置く（claude-code-review.yml と同じ理由）。
           # 自動レビュー側にだけ入れると、@claude で手動に呼んだときの応答だけ英語で返る非対称が生まれる。二本に同じ指定を置く。
           # 綴りは --allowedTools に揃える（--allowed-tools も通るが、二本で別の綴りを配らない）。
-          claude_args: '--allowedTools "Bash(pnpm check)" --append-system-prompt "応答はすべて日本語で書く。文体は だ・である調。識別子・ルール名・パス・引用したコードは原文のまま残す。"'
+          claude_args: '--allowedTools "Bash(pnpm --dir web check)" --append-system-prompt "応答はすべて日本語で書く。文体は だ・である調。識別子・ルール名・パス・引用したコードは原文のまま残す。判定の口を打つときは web/ の外から `pnpm --dir web check` と綴る——アプリは web/ の中にあり、作業ディレクトリはリポジトリのルートである。"'
