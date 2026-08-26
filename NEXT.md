@@ -54,9 +54,9 @@ coding-standards が3行（いずれも 2026-08-26 の #18 で出た）:
 
 ## 配布物の追随
 
-**未達はいま無い**。`fermentary/playbooks/coding-standards.md` の配布手順は7段とも通っており、
-最後まで残っていた機械層（`web/biome.json` + `web/scripts/lint-comments.ts` + `web/tests/`）は
-2026-08-26 に #18 で入った。
+**未達はいま無い**。
+`fermentary/playbooks/coding-standards.md` の配布手順は7段とも通っている。
+最後まで残っていた機械層（`web/biome.json` + `web/scripts/lint-comments.ts` + `web/tests/`）は 2026-08-26 に #18 で入った。
 
 - **追随は、この器の開発を再開するときにまとめてやる**（2026-08-26 の方針）。
   都度の追随はそこで打ち切りにしたので、放っておけば雛形との乖離は開き続ける。
