@@ -1,0 +1,238 @@
+# ARCHITECTURE — coten-atlas の現況
+
+この器が**いまどうなっているか**を書く。
+
+- **なぜ**は `VISION.md`（未作成。#41 が起こす）
+- **なぜそう決めたか**は `docs/adr/`
+- **順序**は `ROADMAP.md`
+- **検証**は `HARNESS.md`
+
+この文書は理由を持たない。検査は「**過去形の文が無いか**」——過去形が出たら、
+それは `docs/adr/` へ置くべき経緯が逆流している。
+
+## 1. 技術スタック（確定事項）
+
+結論だけを置く。理由は ADR を開く。
+
+| 項目 | 確定 | 根拠 |
+|---|---|---|
+| スタック | Next.js (App Router) + TypeScript、static export（`output: 'export'`） | [ADR-0001](docs/adr/0001-nextjs-static-export.md) |
+| 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-0003](docs/adr/0003-maplibre.md) |
+| ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-0004](docs/adr/0004-openfreemap-positron.md) |
+| データ | エピソード = RSS 自動 / テーマ = 人間キュレーション の二層 | [ADR-0005](docs/adr/0005-two-layer-data.md) |
+| 配信リンク | RSS の `<link>`（Spotify のエピソードページ） | [ADR-0006](docs/adr/0006-rss-link-as-episode-url.md) |
+| デプロイ | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`） | [ADR-0007](docs/adr/0007-github-pages.md) |
+| 引用の範囲 | シリーズ名とエピソードタイトルのみ | [ADR-0008](docs/adr/0008-quote-titles-only.md) |
+| 判定の口 | `pnpm check` の一本 | [ADR-0009](docs/adr/0009-pnpm-check.md) |
+| ツールチェーン | mise + pnpm + Biome | ADR を持たない。toolchain 正典（`fermentary/playbooks/toolchain.md`）に従う。`mise.toml` は `[tools]` のみでランタイム版管理に徹する |
+| テスト | Vitest（+ React Testing Library） | ADR を持たない。toolchain 正典は JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない |
+| エピソード取得 | RSS を正とする自動同期（ビルド前スクリプト） | ADR を持たない。手順は §5 が持つ。今後の追加に耐えるため |
+
+## 2. システム全体像
+
+```
+公式 RSS ──(pnpm sync: ビルド前)──> data/episodes.json ─┐
+                                    └─> data/inbox/     │  未割当スタブ = 人間の入口
+                                                        │
+data/themes.geojson （人間キュレーション）──────────────┤
+data/eras.json      （時代区分）────────────────────────┤
+                                                        v
+                                          Next.js static export (next build)
+                                                        │
+                                                        v
+                              GitHub Pages の静的ファイル一式
+                                                        │
+                                                        v
+                          ブラウザ: MapLibre がテーマを描き、era スライダーが opacity を動かす
+```
+
+実行時 fetch を持たない。RSS の取得は常にビルド前のデータ更新として走る。
+
+## 3. データモデル
+
+### 二層構造
+
+```
+data/
+├── episodes.json        # 自動層。RSS から同期。手で編集しない
+├── themes.geojson       # 手動層。テーマ=キュレーション対象の正典
+├── eras.json            # 時代区分（下記「時系列（era）モデル」）
+└── inbox/               # RSS 同期が排出する「未割当テーマのスタブ」置き場
+```
+
+**episodes.json**（RSS 由来、guid キー）:
+
+```jsonc
+{
+  "syncedAt": "2026-07-14T00:00:00Z",
+  "episodes": [
+    {
+      "guid": "...",            // RSS の guid。差分同期のキー
+      "title": "三国志 徹底解説 #1 ...",
+      "pubDate": "...",
+      "audioUrl": "...",
+      "themeId": "sangokushi",  // マッチャが割当。未割当なら null
+      "links": { "spotify": "https://open.spotify.com/episode/..." }
+    }
+  ]
+}
+```
+
+**themes.geojson**（GeoJSON FeatureCollection。MapLibre に直接食わせる）:
+
+```jsonc
+{
+  "type": "Feature",
+  "geometry": { "type": "Point", "coordinates": [112.5, 34.6] },
+  // Point / Polygon / LineString をテーマの性質で使い分ける
+  // 例: 都市国家=Point、帝国や文明圏=Polygon、遠征や航海=LineString
+  "properties": {
+    "id": "sangokushi",
+    "title": "三国志",
+    "kind": "polygon",              // 描画スタイルの分岐キー
+    "timeRange": { "start": 180, "end": 280 },  // 負値 = BC
+    "summary": "後漢末期から晋の統一まで…",
+    "region": "中国",
+    "match": "^三国志",             // エピソードタイトル割当用の正規表現
+    "links": { "spotify": "https://open.spotify.com/..." },
+    "tags": ["戦乱", "中国"]
+  }
+}
+```
+
+- 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
+- 概念史（お金の歴史・資本主義など）は「場所が一意でない」——主要な舞台を
+  MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする。
+  S2 でシードを作りながら規約を確定し、この節に追記する
+
+### 時系列（era）モデル
+
+年の線形スライダーにしない。密度の違う「ざっくり時代区分」を一次元に並べ、
+スライダーは era 空間を動く（イベントが密な近現代ほど細かく刻む）:
+
+```jsonc
+// data/eras.json
+[
+  { "id": "prehistory", "label": "先史",   "start": -10000, "end": -800 },
+  { "id": "ancient",    "label": "古代",   "start": -800,   "end": 550 },
+  { "id": "medieval",   "label": "中世",   "start": 550,    "end": 1450 },
+  { "id": "earlymodern","label": "近世",   "start": 1450,   "end": 1800 },
+  { "id": "modern19",   "label": "19世紀", "start": 1800,   "end": 1900 },
+  { "id": "modern20a",  "label": "〜WWII", "start": 1900,   "end": 1945 },
+  { "id": "modern20b",  "label": "戦後",   "start": 1945,   "end": 2030 }
+]
+```
+
+- スライダー位置 → era 内を線形補間して「現在窓（年範囲）」を得る
+- テーマの表示 opacity = timeRange と現在窓の重なり率（0..1）を
+  イージングに通した値。窓の端で滑らかにフェードイン/アウトする
+- era の刻みはデータが揃ってから密度に合わせて調整する（S7 の後に見直し）
+
+## 4. UI 構成
+
+- 全画面マップ + 下部に era スライダー（ラベルは era 名、位置は補間年を薄く表示）
+- 左に開閉パネル: 現在窓に表示中のテーマ一覧。クリックで該当オブジェクトを
+  選択（flyTo + ハイライト）。地図側の選択もパネルに同期（単一の selection state）
+- オブジェクトクリック → 詳細カード（summary・年代・エピソード一覧・Spotify リンク）
+- 状態管理は React の範囲で足りる想定（selection / era window / panel 開閉のみ）。
+  外部ライブラリを足す前に本当に要るか問う
+
+### テーマの近接
+
+`CLAUDE.md` の目的にある「どのテーマと近接するか」は、時代・地理・主題という別々の三つの軸を指す。
+軸ごとに扱いを変える。
+
+- **地理の近さは暗黙に満たす**。
+  地図上の位置がそのまま距離を表すので、専用の UI は同じことを二度言うだけになる
+- **時代の近さは era スライダーで暗黙に満たし、選択中のテーマとの重なりだけを明示する**。
+  現在窓に浮かんでいるテーマは同時代だが、窓の端に薄く残っているだけのものと区別が付かない
+- **主題の近さには明示的な UI を置く**。
+  主題は地図にも era スライダーにも現れないので、置かなければ目的の三つ目が満たされない
+
+明示的に足すのは次の三つで、置き場所は S5（`ROADMAP.md`）。
+三つとも選択中のテーマを起点にするので、selection の消費者が揃うステップに同居させる。
+
+- **関連テーマ行**: 詳細カードの末尾に、`tags` を共有するか `region` が同じテーマを数件並べる。
+  クリックで選択がそのテーマへ移る
+- **同時代ハイライト**: 選択中のテーマと `timeRange` が重なるテーマを地図上で強調する。
+  S4 の opacity 制御の上に載る差分で、選択が無いときは何も起きない
+- **tag 絞り込み**: パネルに現在窓の tags を並べ、選んだタグを持つテーマだけを地図とパネルに残す。
+  selection とは別に filter state が一つ増える
+
+近接のためにスキーマは増やさない。
+判定は既存の properties（`tags` / `region` / `timeRange`）だけで行う。
+テーマ間の明示的な関連リンク（`related` のような属性）は、90 前後の全シリーズへ人手で張る費用が S7 に乗るので採らない。
+シードが10件前後の間は関連テーマが 0 件になりうるので、0 件なら行ごと出さない。
+
+## 5. RSS 同期パイプライン
+
+- feedUrl: `https://anchor.fm/s/8c2088c/podcast/rss`。
+  Apple Podcasts lookup API `https://itunes.apple.com/lookup?id=1450522865` の `feedUrl` を
+  2026-08-23 に実取得した値で、以後はこれを直接叩く
+- フィードの形（#13 で実地確認。パーサはこれを前提にしてよい）:
+  - `guid` は `isPermaLink="false"` の UUID。
+    ただし初期の 5 件だけ `anchor.fm` のエピソード URL が入っており、先頭に空白が付く。
+    突き合わせのキーにする前に trim する
+  - `pubDate` は RFC 822（`Wed, 19 Aug 2026 21:00:00 GMT`）で、全件 GMT 表記
+  - `<link>` は Spotify のエピソードページ、`enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）
+  - シリーズ番号は `itunes:season`、シリーズ内の回は `itunes:episode`
+- `scripts/sync-feed.ts`（package.json の scripts に `sync` として登録）:
+  1. RSS を取得し、guid で episodes.json と差分
+  2. 新規エピソードを themes.geojson の各 `match` 正規表現に通して themeId 割当
+  3. どのテーマにも合わないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
+     （タイトル・guid・推定シリーズ名。座標と年代は空欄=人間+Claude の補正対象）
+  4. 結果サマリ（新規 n 件 / 割当 m 件 / 要レビュー k 件）を stdout へ
+- 運用: 当面は手動で `pnpm sync` → inbox を見てキュレーション → コミット。
+  軌道に乗ったら GitHub Actions の cron で sync + PR 自動作成に昇格（S8 以降の任意課題）
+- 静的サイトなので実行時 fetch はしない。同期は常にビルド前のデータ更新として行う
+
+## 6. ディレクトリ構造
+
+ルートは**器の文書と運用設定**だけを持ち、Next.js アプリは `web/` 配下に隔離する。
+この器は今後 `data/`（人間キュレーション層）と RSS 同期スクリプトを持つので、
+`src/` の隣に `data/` が並ぶと「これは Next.js が読むのか、ビルド前に走る何かなのか」が
+構造から読めなくなる。境界をディレクトリで引けば、その問いが起きる場所そのものが無くなる。
+
+```
+.
+├── CLAUDE.md              # セッションの入口（起動語・git・膜）
+├── CODING.md              # コーディング規約
+├── ARCHITECTURE.md        # この文書（現況）
+├── ROADMAP.md             # 順序の地図
+├── HARNESS.md             # 検証と実行環境
+├── NEXT.md                # 申し送り（状態は GitHub Issues）
+├── docs/adr/              # 決定と経緯。1決定1レコード
+├── mise.toml              # [tools] のみ。ランタイム版管理
+├── .github/               # workflows・issue / PR テンプレ
+├── .claude/               # settings・hooks・同梱 skill
+└── web/                   # アプリ本体。判定の口 `pnpm check` はこの中で打つ
+    ├── CLAUDE.md          # 空殻2行（正典はルート）
+    ├── src/app/           # Next.js App Router
+    ├── package.json       # `pnpm check` の scripts
+    ├── next.config.ts     # basePath / assetPrefix（GitHub Pages）
+    └── tsconfig.json / biome.json / vitest.config.ts / vitest-setup.ts
+```
+
+`web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
+書き足すのを、先に場所を埋めて防ぐ。正典はルートの `CLAUDE.md` とこの文書。
+
+まだ存在しないもの: `data/`（テーマの GeoJSON と時代区分。S2）、`scripts/sync-feed.ts`（S6）、
+`VISION.md`（#41）。`data/` と `scripts/` はアプリの外なので**ルート側**に置く。
+
+## 7. 意図的にやらないこと
+
+- **OpenHistoricalMap 連動を MVP に入れない**。S9 の任意課題として分離する（`ROADMAP.md`）
+- **番組の説明文・ロゴ・カバーアートを使わない**（ADR-0008 の帰結）。
+  載せるのはシリーズ名とエピソードタイトルだけ
+- **ユーザ登録・コメント等の動的機能を持たない**。static export の前提（ADR-0001）から外れる
+- **テーマ間の明示的な関連リンク（`related` のような属性）を持たない**（§4）
+- **実行時 fetch を持たない**。同期は常にビルド前（§5）
+
+## 8. 持ち越した開いた問い
+
+構造に関わる未決で、該当 issue に着手するときに解く。
+
+- `data/eras.json` 末尾の `end: 2030` は現在より先。スライダー右端が未来を指してよいかは #3 で決める
+- 一つのエピソードが複数シリーズに跨る回（対談・番外編）と、`match` 正規表現の衝突時の優先順位。
+  #3 が `themeId` を単数 nullable で固定するので、S6 の精緻化のときに突き合わせる
+- モバイルでの振る舞い（全画面マップ + 下部スライダー + 左パネル）の範囲は S8 の精緻化で決める

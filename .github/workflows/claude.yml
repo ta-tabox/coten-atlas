@@ -84,7 +84,7 @@ jobs:
           additional_permissions: |
             actions: read
 
-          # ワイルドカードにしない。判定の口は package.json の check スクリプト一本（docs/plan.md §1）なのでそれだけ名指しする。
+          # ワイルドカードにしない。判定の口は package.json の check スクリプト一本（docs/adr/0009-pnpm-check.md）なのでそれだけ名指しする。
           # 綴りが `pnpm --dir web check` なのは、Claude 自身の cwd がリポジトリのルートだから。
           # claude-code-action は composite action なので、上の defaults.run.working-directory は
           # このアクション内部の run: へ継承されない（GitHub Actions の仕様）。cwd を渡す input も無く、
