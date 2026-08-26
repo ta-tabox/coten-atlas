@@ -1,18 +1,91 @@
 {
-	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-	"files": {
-		"includes": [
-			"**",
-			"!**/.next",
-			"!**/out",
-			"!**/next-env.d.ts",
-			"!**/.claude"
-		]
-	},
-	"vcs": {
-		"enabled": true,
-		"clientKind": "git",
-		"useIgnoreFile": true,
-		"root": ".."
-	}
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "includes": ["**", "!**/.next", "!**/out", "!**/next-env.d.ts"]
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "root": ".."
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "domains": {
+      "test": "recommended",
+      "react": "recommended",
+      "next": "recommended"
+    },
+    "rules": {
+      "style": {
+        "noNestedTernary": "error",
+        "noMultiAssign": "error",
+        "useSingleVarDeclarator": "error",
+        "useBlockStatements": "error",
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "patterns": [
+              {
+                "group": ["./**", "../**", "!./**/*.css", "!../**/*.css"],
+                "message": "import は @ 起点の絶対パスで書く（CODING.md / skill coding-standards）"
+              }
+            ]
+          }
+        }
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": {
+            "maxAllowedComplexity": 15
+          }
+        },
+        "useMaxParams": {
+          "level": "warn",
+          "options": {
+            "max": 3
+          }
+        }
+      },
+      "suspicious": {
+        "useErrorMessage": "error"
+      },
+      "nursery": {
+        "noFloatingPromises": "error"
+      }
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["vitest.config.ts", "scripts/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": "off"
+          }
+        }
+      }
+    }
+  ]
 }

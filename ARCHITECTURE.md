@@ -206,10 +206,12 @@ data/
 ├── .github/               # workflows・issue / PR テンプレ
 ├── .claude/               # settings・hooks・同梱 skill
 └── web/                   # アプリ本体。判定の口 `pnpm check` はこの中で打つ
-    ├── CLAUDE.md          # 空殻2行（正典はルート）
-    ├── src/app/           # Next.js App Router
-    ├── package.json       # `pnpm check` の scripts
-    ├── next.config.ts     # basePath / assetPrefix（GitHub Pages）
+    ├── CLAUDE.md          # 空殻（正典はルート）
+    ├── src/               # Next.js が束ねる範囲。`app/` の構造は App Router の規約
+    ├── scripts/           # `web/` から走らせる補助スクリプト
+    ├── tests/             # `src/` に併置しないテスト
+    ├── package.json       # 依存とタスクの定義
+    ├── next.config.ts     # ビルドと配信の設定（static export / GitHub Pages）
     └── tsconfig.json / biome.json / vitest.config.ts / vitest-setup.ts
 ```
 
@@ -217,7 +219,10 @@ data/
 書き足すのを、先に場所を埋めて防ぐ。正典はルートの `CLAUDE.md` とこの文書。
 
 まだ存在しないもの: `data/`（テーマの GeoJSON と時代区分。S2）、`scripts/sync-feed.ts`（S6）、
-`VISION.md`（#41）。`data/` と `scripts/` はアプリの外なので**ルート側**に置く。
+`VISION.md`（#41）。`data/` とビルド前処理の `scripts/` はアプリの外なので**ルート側**に置く。
+
+`web/scripts/` はこれと別枠になる。`tsconfig.json` の `paths` も vitest の alias も `web/` の中で
+解決するので、`web/` の道具立てに依るスクリプトはルートへ出さず `web/scripts/` に置く。
 
 ## 7. 意図的にやらないこと
 
