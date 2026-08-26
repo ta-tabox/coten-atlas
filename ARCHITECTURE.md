@@ -91,7 +91,7 @@ data/
     "title": "三国志",
     "kind": "polygon",              // 描画スタイルの分岐キー
     "timeRange": { "start": 180, "end": 280 },  // 負値 = BC
-    "summary": "後漢末期から晋の統一まで…",
+    "summary": "",                  // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
     "region": "中国",
     "match": "^三国志",             // エピソードタイトル割当用の正規表現
     "links": { "spotify": "https://open.spotify.com/..." },
