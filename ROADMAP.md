@@ -35,6 +35,9 @@
 - **心拍**: `web/` で `pnpm check`（正典は `HARNESS.md`「判定の口」）
 - **1 issue = 1 セッション = 1 PR**。中途半端な feature を残してセッションを跨がない
 - PR 本文に `closes #N` を書く
+- **マージの直前に `NEXT.md` を追随させる**。
+  閉じる issue を名指した行が残ると、次のセッションが閉じた issue を掴む。
+  `ROADMAP.md` を触るのは順序か規約が変わったときだけで、進捗では触らない（この地図は状態を持たない）
 - 署名は `CLAUDE.md` の git 節（author は人間名義、`Co-authored-by: Claude`、prefix は変更の型）
 - **1セッションに収まらない実装に着手する前に** `~/vivarium/fermentary/playbooks/planning.md` を読む
 - **サンドボックスから GitHub へ到達できない**セッションがある。issue の登録・状態更新は
