@@ -3,8 +3,8 @@
 /**
  * ベースマップを画面いっぱいに描く。
  *
- * MapLibre は window に触るので、この層はブラウザでしか動かない。
- * 読む側が SSR を外す（src/app/page.tsx）。
+ * react-map-gl は maplibre 本体を実行時に動的 import するので、プリレンダでは空のコンテナだけが出る。
+ * この層を `next/dynamic` の `ssr: false` で包む必要は無い。
  * attributionControl は渡さない。
  * OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
  */
