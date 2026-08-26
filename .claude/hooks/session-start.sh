@@ -55,6 +55,14 @@ handoff_shims() {
   local path_line
   path_line="$(mise activate bash --shims)"
 
+  # 下のべき等判定は出力が1行であることに依存する。
+  # grep -F は改行を含むパターンを行ごとの選択肢へ分解するので、複数行になると1行の一致で「追記済み」と読み、残りを落としたまま抜ける。
+  # 黙って PATH を欠けさせるより、渡さずに理由を言って止める。
+  if [ "$(printf '%s\n' "$path_line" | wc -l)" -ne 1 ]; then
+    log "mise activate の出力が1行ではない。PATH を渡さないので、web/ で打つ前に自分で通す"
+    return
+  fi
+
   if [ -z "${CLAUDE_ENV_FILE:-}" ]; then
     log "CLAUDE_ENV_FILE が無いので PATH を渡せない。web/ で打つ前に $path_line を通す"
     return
