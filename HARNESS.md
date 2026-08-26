@@ -48,6 +48,16 @@ cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next bui
 「タスクランナー = mise tasks」と定めていたので逸脱として記録していたが、2026-08-26 の
 改定で「タスクランナー = 器のマニフェスト」が正典になり、逸脱の状態は解消した。
 
+### PR に付く run
+
+`Check` と自動レビューは起動条件が違うので、push の後に待つものを取り違えない。
+
+- **`Check`（`check.yml`）は PR への push ごとに走る**。`pull_request` にフィルタを置いていないので、md 一枚の変更でも回る
+- **自動レビュー（`claude-code-review.yml`）は `opened` / `ready_for_review` / `reopened` でだけ走る**。
+  push は `synchronize` なので拾わず、レビュー指摘へ対応して push しても再レビューは来ない
+- **再レビューが要るなら PR コメントで `@claude` を名指しする**（起動するのは `claude.yml` の側）。
+  人間が `ready_for_review` か再オープンで掛け直す手もあるが、そちらは人間の操作である
+
 ## 3. 実行環境
 
 手元（native fs）とリモート（Claude Code on the web）の二つで走る。差は次のとおり。
