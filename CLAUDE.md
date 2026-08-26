@@ -24,8 +24,14 @@
 ## git
 署名は fermentary/RULES.md #5 に従う。この器は**ソフトウェアとして公開する**器。
 - **author は人間名義**。Claude も `-c` を付けず素の `git commit` を使う
-  （名義は local config に焼いてある）。責任を負うのは、そのコミットを公開すると
-  決めた人間の側。
+  （手元は local config に焼いてある。リモートはクラウド環境の `GIT_AUTHOR_*` が渡し、
+  無ければセッション起動フックが止まる。置き場は `HARNESS.md`「設定の置き場」）。
+  責任を負うのは、そのコミットを公開すると決めた人間の側。
+  **リモートの `git config user.name` は Claude 名義のまま**で、これは直さない。
+  コンテナが署名を強制し、その鍵が `noreply@anthropic.com` に紐づいているので、
+  committer を人間名義にすると GitHub が Unverified を出す。
+  author（責任を誰が担ったか）と committer（実際にコミットを作った者）は別の欄で、
+  片方を実態へ合わせても他方は動かない。
 - **`Co-authored-by: Claude <noreply@anthropic.com>` を付ける**。ソフトウェアの
   利用者に対しては、AI 支援の事実を履歴に明示する。
 - **メッセージ prefix は変更の型**——`feat:` `fix:` `docs:` `refactor:` `chore:`
