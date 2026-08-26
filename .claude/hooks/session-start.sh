@@ -47,6 +47,26 @@ install_mise() {
   npm install -g --silent mise
 }
 
+# セッションのシェルは mise を活性化しないので、放っておくとイメージ同梱の node と pnpm を掴む。
+# mise.toml の固定がフックの中でしか効かない状態になり、`pnpm check` が手元とも CI とも別の版で走る。
+# 渡し口は CLAUDE_ENV_FILE 一つだけ——セッションのツールシェルが読む、追記専用のファイル。
+handoff_shims() {
+  # PATH の行は mise 自身に書かせる。shims の置き場をこちらで綴ると、mise の既定が変わったとき黙って外れる。
+  local path_line
+  path_line="$(mise activate bash --shims)"
+
+  if [ -z "${CLAUDE_ENV_FILE:-}" ]; then
+    log "CLAUDE_ENV_FILE が無いので PATH を渡せない。web/ で打つ前に $path_line を通す"
+    return
+  fi
+
+  # 追記専用なので、resume のたびに同じ行が積まれないことを書く前に見る。
+  # フックのプロセスの PATH には前回の追記が反映されないため、PATH を見ても判定にならない。
+  if ! grep -qxF "$path_line" "$CLAUDE_ENV_FILE" 2> /dev/null; then
+    echo "$path_line" >> "$CLAUDE_ENV_FILE"
+  fi
+}
+
 main() {
   # 手元とリモートを分ける材料はこれだけ（fermentary kb/claude-code-web.md）。
   # 門を先に置けば、同じフックを両方の環境へ配れる。
@@ -63,12 +83,15 @@ main() {
   # 版の正は mise.toml。node と pnpm はここで置かれるので、フックは読む側にも回らない。
   log "ランタイムと依存を入れる"
   # pnpm は mise が置いた shim なので、この時点の PATH にはまだ載っていない。
-  # フックは自分の PATH をいじらず mise exec 越しに呼ぶ（活性化はセッション側の仕事）。
+  # フックは自分の PATH をいじらず mise exec 越しに呼ぶ。
   #
   # mise はルートの mise.toml を、pnpm は web/ の package.json を読む（#39）。
   # 版とアプリで置き場が分かれたので、cd も二つに分かれる。
   (cd "$REPO_ROOT" && mise install)
   (cd "$REPO_ROOT/web" && mise exec -- pnpm install --frozen-lockfile)
+
+  # 固定の版が揃うのはここまででフックの中だけなので、セッションのシェルへも渡す。
+  handoff_shims
 
   # 第二マウントの口が無い環境なので、不在を毎回宣言する。
   # 宣言が無いと、CLAUDE.md 手順 0 を読んだセッションが不在を異常と受け取って止まる。

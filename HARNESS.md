@@ -58,11 +58,19 @@ cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next bui
 | GitHub への到達 | 到達する | セッションによっては到達しない。issue の登録・状態更新は手元で回す |
 | 外向き通信 | 制限なし | **許可制**（§4） |
 | commit の committer | 人間名義 | コンテナの名義のまま（署名が強制される）。author だけ人間名義へ焼く |
-| 環境の準備 | 不要 | `.claude/hooks/session-start.sh` が mise とランタイムと依存を入れる（依存は `web/` で） |
+| 環境の準備 | 不要 | `.claude/hooks/session-start.sh` が mise とランタイムと依存を入れ、shims の PATH をセッションへ渡す（依存は `web/` で） |
+| ランタイムの活性化 | シェルが mise を活性化している | フックが渡した PATH で効く（下記） |
 
 `session-start.sh` は `CLAUDE_CODE_REMOTE` で囲ってあるので手元では即 exit する。
 `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL` はクラウド環境の環境変数欄が持ち、
 未設定ならフックがセッションを立てずに止める。
+
+リモートのシェルは mise を活性化しないので、**フックが shims の PATH を `CLAUDE_ENV_FILE` へ渡す**。
+渡さないと `pnpm check` はイメージ同梱の node と pnpm で走り、`mise.toml` の固定が手元とも CI とも揃わない
+（このとき緑になっても、それは別の版で緑になったという意味しかない）。
+渡し口はこの追記専用ファイルの一つだけで、フックが自分の PATH を書き換えても子プロセスの外へは出ない。
+**効くのは次のセッションから**なので、フックを直した回では確かめられない。
+確かめるのは `node -v` と `pnpm -v` が `mise.toml` の固定と一致するか。
 
 ## 4. コンテナの外向き通信
 
@@ -82,7 +90,7 @@ cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next bui
 | 置き場 | 持つもの |
 |---|---|
 | `.claude/settings.json` | 権限（`permissions`）・`SessionStart` の配線 |
-| `.claude/hooks/session-start.sh` | リモートの環境準備（mise の導入・ランタイム・依存） |
+| `.claude/hooks/session-start.sh` | リモートの環境準備（mise の導入・ランタイム・依存・shims の PATH の受け渡し） |
 | `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
 | クラウド環境の環境変数欄 | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義） |
 | `.claude/skills/` | 同梱の規約 skill。プラグインを入れていないので本体を置いてある。`karpathy-guidelines` は外部由来（出所 https://github.com/multica-ai/andrej-karpathy-skills の `skills/karpathy-guidelines/SKILL.md`、固定 2c60614、MIT。上流の更新は手で取り込む） |
