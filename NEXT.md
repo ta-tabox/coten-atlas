@@ -47,7 +47,8 @@ gh-review.md に run の不在を先に疑う一行を足すか諮る。
   #41（VISION・人間との対話が本体）／ #42（CODING.md 追随・fermentary 待ちで blocked）。
   **#39 と #40 は並行可**——触るファイルが交差しない（前者はビルド設定と `src/`、後者は散文）。
   ただし #40 のコミット2「ディレクトリ構造」節は #39 の結果を書くので、**先にマージされた側に後がついていく**
-- gh-review: #10（人間・public 化と実地検証）
+- gh-review: #10（人間・public 化と実地検証）／ #44（`claude-code-review.yml` の `timeout-minutes` と
+  `concurrency`。**fermentary 待ちで blocked**——一歩目が雛形の照合なので、並置されたセッションでしか判定できない）
 - 検証と決定: #14・#16（人間）。#19（Claude・#3 依存）／ #25（Claude・引用と出典の反映）
 - 配布の未達分: #18（Claude・#1 の前提は解けた）
 
@@ -141,3 +142,16 @@ gh-review.md に run の不在を先に疑う一行を足すか諮る。
   fermentary へは4件搬送（配布型の規約の逆流・ADR の playbook 新設・器の骨格の雛形化・gh-review への申し送り）
 - 2026-08-25 リモートセッションの膜素材を搬入。競合した PR で run が生成されない件は
   `fermentary/kb/github-actions.md` へ事実として、契約に足すかは同 `NEXT.md` の搬送行で諮る
+- 2026-08-25 **push 権限を改定し、force push の門を置いた**（#43）。`Bash(git push:*)` は雛形どおり
+  allow へ戻し、戻せない形だけを `.claude/hooks/guard-force-push.sh`（PreToolUse）が拾って ask へ回す。
+  権限パターンは前方一致なので `git push origin --force` の語順を拾えず、列挙では塞げないため
+  コマンド全文を見るフックにした。CLAUDE.md の push 規則は「git」節へ集約した。
+  **リモートセッションで発火を実測（2026-08-25）**——`git push --force --dry-run origin <branch>` で
+  確認ダイアログが出て（陽性）、素の `git push -u origin <branch>` は訊かれずに通った（陰性）。
+  権限設定はセッション開始時に読まれるので、フックを入れた回のセッションでは確かめられない
+- 2026-08-25 **`claude.yml` の run の大半が `skipped` で終わるのは適切**と判断した。
+  結論と根拠は `docs/plan.md` §1「gh-review の起動の絞り」。ワークフロー側は触っていない——
+  `claude.yml` は雛形の写しで「FILL 以外は契約」と自己宣言しており、コメント一行でも逸脱になる。
+  一般化できる知見だが、契約（`gh-review.md`）側も触っていない。
+  `get_workflow_run_usage` は消費実績の出典に使えない——この器では 335 秒走った success の run も
+  `total_ms: 0` を返すので、`skipped` の 0 と区別が付かない
