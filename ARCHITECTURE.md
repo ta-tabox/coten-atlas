@@ -206,12 +206,12 @@ data/
 ├── .github/               # workflows・issue / PR テンプレ
 ├── .claude/               # settings・hooks・同梱 skill
 └── web/                   # アプリ本体。判定の口 `pnpm check` はこの中で打つ
-    ├── CLAUDE.md          # 空殻2行（正典はルート）
-    ├── src/app/           # Next.js App Router
+    ├── CLAUDE.md          # 空殻（正典はルート）
+    ├── src/               # Next.js が束ねる範囲。`app/` の構造は App Router の規約
     ├── scripts/           # `web/` から走らせる補助スクリプト
     ├── tests/             # `src/` に併置しないテスト
-    ├── package.json       # `pnpm check` の scripts
-    ├── next.config.ts     # basePath / assetPrefix（GitHub Pages）
+    ├── package.json       # 依存とタスクの定義
+    ├── next.config.ts     # ビルドと配信の設定（static export / GitHub Pages）
     └── tsconfig.json / biome.json / vitest.config.ts / vitest-setup.ts
 ```
 
