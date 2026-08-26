@@ -39,12 +39,14 @@ cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next bui
 ランタイムの版は `mise.toml` の `[tools]` が固定する（node / pnpm）。
 固定を立てずに走らせると、手元と CI と意味が揃わない。
 
-**toolchain 正典からの逸脱の記録**（改定規約が明記を要求している）: 正典
-（`~/vivarium/fermentary/playbooks/toolchain.md`）は「タスクランナー = mise tasks」と
-定めるが、この器はタスクを `package.json` の scripts に置く（その `package.json` は
-`web/` にあるので、打つ場所も `web/` の中）。`mise.toml` はルートに残って `[tools]`
-だけを持ち、`run = "pnpm check"` の薄いラッパも置かない。理由と範囲は ADR-0009。
-正典側の改定は fermentary へ諮ってある。
+タスクは `package.json` の scripts が持つ（その `package.json` は `web/` にあるので、
+打つ場所も `web/` の中）。`mise.toml` はルートに残って `[tools]` だけを持ち、
+`run = "pnpm check"` の薄いラッパは置かない——口が一本に見えて二本ある状態が、
+そもそも避けようとしたもの。理由と範囲は ADR-0009。
+
+**これは toolchain 正典からの逸脱ではない。** 決定した 2026-08-25 の時点では正典が
+「タスクランナー = mise tasks」と定めていたので逸脱として記録していたが、2026-08-26 の
+改定で「タスクランナー = 器のマニフェスト」が正典になり、逸脱の状態は解消した。
 
 ## 3. 実行環境
 
@@ -98,3 +100,6 @@ fermentary の playbook のうち、**init・依存追加・環境構築の前**
   ブラウザを立てる層は要件が出てから足す
 - **実 API を自動テストで叩かない**。RSS もタイルサーバも外部の可用性に依存するので、
   テストが外部の都合で赤くなる。取得層はフィクスチャで検証する
+- **`claude.yml` の `on:` を絞らない**。起動の絞りは job 側の `if:` の一本
+  （[ADR-0010](docs/adr/0010-gh-review-trigger-narrowing.md)）。run 一覧に `skipped` が
+  並ぶのは正常なので、異常と読んで調べ直さない

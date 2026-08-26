@@ -45,12 +45,13 @@
 **その不在は異常ではなく既定**なので、これを理由に作業を止めない。
 
 - できる: この器の中の実装・文書。
-- できない: fermentary への書き込み全般（`ATLAS.md`・`inbox`・`questions`・
-  `NEXT.md` の搬送メモ）。書き込む先が無いので、やったと報告すれば嘘になる。
-- 膜行きの素材が出たら、この器の `NEXT.md` へ**未搬送**として書き置く。
-  次の手元セッションが膜を通して搬入する。
+- できない: fermentary への書き込み全般。書き込む先が無いので、
+  やったと報告すれば嘘になる。
+- 膜行きの素材が出たら、**この器のファイルへは書かない**。
+  次の手元セッションへそのまま渡せるプロンプトとして会話へ出し、人間がコピペで運ぶ。
+  他所への依頼を器の中へ書き置くと、運び終えた後も本文が残って器が汚れる。
 
-環境の事実（何が入るか・どこへ出られるか）は `HARNESS.md`。
+環境の事実は `HARNESS.md`。
 
 ## 開発ハーネス（正典: `HARNESS.md`）
 
@@ -61,11 +62,11 @@
 
 `VISION.md`（なぜ。**未作成**、#41 が起こす）> `ARCHITECTURE.md`（現況。理由を持たない）
 > `HARNESS.md`（検証・実行環境）> `ROADMAP.md`（順序・完了条件の閾値）。
-決定と経緯は `docs/adr/`——1決定1レコード・**追記のみ**・覆すときは書き換えず supersede
-（規約は同 `README.md`）。`NEXT.md` は引き継ぎだけで、状態と作業単位は GitHub Issues。
+決定と経緯は `docs/adr/`——1決定1レコード・**追記のみ**・覆すときは supersede
+（規約は同 `README.md`）。`NEXT.md` は引き継ぎだけ。状態と作業単位は GitHub Issues。
 
 **コードを書く前に** `CODING.md` と skill `coding-standards` / `karpathy-guidelines` を開く
-（レビューやリファクタに限らない。言語固有の作法は skill の `languages/` にしかない）。
+（レビューやリファクタに限らない。言語固有の作法は skill の `languages/` のみ）。
 
 fermentary の playbook をいつ開くか（`toolchain.md` / `planning.md` / `gh-review.md`）は
 `HARNESS.md`「設定の置き場」と `ROADMAP.md`「進め方の横断規約」が持つ。
