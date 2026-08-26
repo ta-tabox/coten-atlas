@@ -35,5 +35,4 @@ Next.js (App Router) + TypeScript を static export する。
 
 載せるのはシリーズ名とエピソードタイトルだけで、番組の説明文・ロゴ・カバーアート・出演者画像は使わない（[ADR-0008](docs/adr/0008-quote-titles-only.md)）。
 
-- 番組公式: <https://coten.co.jp/services/cotenradio/>
-- 番組を聴く: <https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f>
+番組公式: <https://coten.co.jp/services/cotenradio/>
