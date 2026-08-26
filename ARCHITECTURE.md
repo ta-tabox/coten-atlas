@@ -208,8 +208,8 @@ data/
 └── web/                   # アプリ本体。判定の口 `pnpm check` はこの中で打つ
     ├── CLAUDE.md          # 空殻2行（正典はルート）
     ├── src/app/           # Next.js App Router
-    ├── scripts/           # `pnpm check` から走る検査器（lint-comments.ts）
-    ├── tests/             # 上の検査器のテスト
+    ├── scripts/           # `web/` から走らせる補助スクリプト
+    ├── tests/             # `src/` に併置しないテスト
     ├── package.json       # `pnpm check` の scripts
     ├── next.config.ts     # basePath / assetPrefix（GitHub Pages）
     └── tsconfig.json / biome.json / vitest.config.ts / vitest-setup.ts
@@ -221,9 +221,8 @@ data/
 まだ存在しないもの: `data/`（テーマの GeoJSON と時代区分。S2）、`scripts/sync-feed.ts`（S6）、
 `VISION.md`（#41）。`data/` とビルド前処理の `scripts/` はアプリの外なので**ルート側**に置く。
 
-`web/scripts/` はこれと別枠になる。判定の口が `web/` に閉じていて `tsconfig.json` の `paths` も
-vitest の alias も `web/` の中で解決するので、`pnpm check` から呼ぶ検査器はルートへ出さず
-`web/scripts/` に置く。
+`web/scripts/` はこれと別枠になる。`tsconfig.json` の `paths` も vitest の alias も `web/` の中で
+解決するので、`web/` の道具立てに依るスクリプトはルートへ出さず `web/scripts/` に置く。
 
 ## 7. 意図的にやらないこと
 
