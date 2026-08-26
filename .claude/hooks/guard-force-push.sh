@@ -13,8 +13,9 @@
 # 判定は「戻せない形か」だけで、それ以外は何も言わず settings.json の判定へ委ねる。
 # 迷ったら ask へ倒す。余計に訊かれるのは摩擦で済むが、素通りは事故になる。
 #
-# 起動条件は settings.json の `if` が持つ（`Bash(git push:*)`）。
-# 塞ぐ穴はちょうどその allow ルールが拾う集合なので、範囲を揃えてある。
+# settings.json の `if` は起動を絞るだけで、判定の責任は持たない。あれは best-effort で、
+# `$( )` やバッククォートを含む行——sleep を待つ until ループのような、git と無縁のもの——では
+# 開いて倒れて起動してくるので、git push かどうかはこのスクリプトの側でも確かめる。
 
 set -euo pipefail
 
@@ -46,6 +47,11 @@ destructive+='|(^|[[:space:]])-[a-zA-Z]*[fd][a-zA-Z]*([[:space:]]|$)'
 destructive+='|(^|[[:space:]])\+[^[:space:]]+:'
 destructive+='|(^|[[:space:]]):[^[:space:]]+'
 
-if grep -qE "$destructive" <<< "$command_line"; then
+# 起動条件が素通しさせた無関係なコマンドは、ここで git push でないことを見て外す。
+# 見ないと、シェルの no-op（`do :; done`）が削除 refspec に化けて、git を呼んでもいない行が ask になる。
+# 過剰に拾う分には ask が増えるだけで済むので、git が push より前に現れる行、で足りる。
+git_push='(^|[[:space:]])git[[:space:]].*push([[:space:]]|$)'
+
+if grep -qE "$git_push" <<< "$command_line" && grep -qE "$destructive" <<< "$command_line"; then
   ask "戻せない push の可能性がある（force / delete / mirror）。fermentary RULES.md #5 により人間の諾否が要る"
 fi
