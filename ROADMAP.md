@@ -32,7 +32,7 @@
 
 ## 進め方の横断規約
 
-- **心拍**: `web/` で `pnpm check` を回し、緑ならコミット。赤のままコミットしない（`HARNESS.md`・ADR-0009）
+- **心拍**: `web/` で `pnpm check`（正典は `HARNESS.md`「判定の口」）
 - **1 issue = 1 セッション = 1 PR**。中途半端な feature を残してセッションを跨がない
 - PR 本文に `closes #N` を書く
 - 署名は `CLAUDE.md` の git 節（author は人間名義、`Co-authored-by: Claude`、prefix は変更の型）

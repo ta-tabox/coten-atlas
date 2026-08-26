@@ -65,7 +65,7 @@
 決定と経緯は `docs/adr/`——1決定1レコード・**追記のみ**・覆すときは supersede
 （規約は同 `README.md`）。`NEXT.md` は引き継ぎだけ。状態と作業単位は GitHub Issues。
 
-**コードを書く前に** `CODING.md` と skill `coding-standards` / `karpathy-guidelines` を開く
+**コードを書く前に** @CODING.md と skill `coding-standards` / `karpathy-guidelines` を開く
 （レビューやリファクタに限らない。言語固有の作法は skill の `languages/` のみ）。
 
 fermentary の playbook をいつ開くか（`toolchain.md` / `planning.md` / `gh-review.md`）は
