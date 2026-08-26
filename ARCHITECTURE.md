@@ -218,13 +218,14 @@ data/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。正典はルートの `CLAUDE.md` とこの文書。
 
-まだ存在しないもの: `data/`（テーマの GeoJSON と時代区分。S2）、`web/scripts/sync-feed.ts`（S6）、
-`VISION.md`（#41）。`data/` はアプリの外なので**ルート側**に置く。
+まだ存在しないもの: `data/`（テーマの GeoJSON と時代区分。S2）、`web/scripts/validate-data.ts`（S2）、
+`web/scripts/sync-feed.ts`（S6）、`VISION.md`（#41）。
+`data/` はアプリの外なので**ルート側**に置く。
 
 `web/scripts/` はこれと別枠になる。`tsconfig.json` の `paths` も vitest の alias も `web/` の中で
 解決するので、`web/` の道具立てに依るスクリプトはルートへ出さず `web/scripts/` に置く。
-RSS 同期もデータ検査も `web/src/` のスキーマとパーサを import し `pnpm` の scripts から走るので、
-ビルド前処理もここに入る。
+RSS 同期（`sync-feed.ts`）もデータ検査（`validate-data.ts`）も `web/src/` のスキーマとパーサを
+import し `pnpm` の scripts から走るので、ビルド前処理もここに入る。
 
 ## 7. 意図的にやらないこと
 
