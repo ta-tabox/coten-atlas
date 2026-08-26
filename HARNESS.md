@@ -66,8 +66,7 @@ cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next bui
 未設定ならフックがセッションを立てずに止める。
 
 リモートのシェルは mise を活性化しないので、**フックが shims の PATH を `CLAUDE_ENV_FILE` へ渡す**。
-渡さないと `pnpm check` はイメージ同梱の node と pnpm で走り、`mise.toml` の固定が手元とも CI とも揃わない
-（このとき緑になっても、それは別の版で緑になったという意味しかない）。
+渡さないと `pnpm check` はイメージ同梱の node と pnpm で走り、`mise.toml` の固定が手元とも CI とも揃わない（このとき緑になっても、それは別の版で緑になったという意味しかない）。
 渡し口はこの追記専用ファイルの一つだけで、フックが自分の PATH を書き換えても子プロセスの外へは出ない。
 **効くのは次のセッションから**なので、フックを直した回では確かめられない。
 確かめるのは `node -v` と `pnpm -v` が `mise.toml` の固定と一致するか。
