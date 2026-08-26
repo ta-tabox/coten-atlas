@@ -47,8 +47,7 @@ gh-review.md に run の不在を先に疑う一行を足すか諮る。
   #41（VISION・人間との対話が本体）／ #42（CODING.md 追随・fermentary 待ちで blocked）。
   **#39 と #40 は並行可**——触るファイルが交差しない（前者はビルド設定と `src/`、後者は散文）。
   ただし #40 のコミット2「ディレクトリ構造」節は #39 の結果を書くので、**先にマージされた側に後がついていく**
-- gh-review: #10（人間・public 化と実地検証）／ #44（`claude-code-review.yml` の `timeout-minutes` と
-  `concurrency`。**fermentary 待ちで blocked**——一歩目が雛形の照合なので、並置されたセッションでしか判定できない）
+- gh-review: #10（人間・public 化と実地検証）
 - 検証と決定: #14・#16（人間）。#19（Claude・#3 依存）／ #25（Claude・引用と出典の反映）
 - 配布の未達分: #18（Claude・#1 の前提は解けた）
 
@@ -155,3 +154,20 @@ gh-review.md に run の不在を先に疑う一行を足すか諮る。
   一般化できる知見だが、契約（`gh-review.md`）側も触っていない。
   `get_workflow_run_usage` は消費実績の出典に使えない——この器では 335 秒走った success の run も
   `total_ms: 0` を返すので、`skipped` の 0 と区別が付かない
+- 2026-08-26 #44 完了・クローズ（PR #49）。`claude-code-review.yml` に `timeout-minutes: 30` と
+  `concurrency`（group は PR 番号、`cancel-in-progress: false`）を置いた。三本とも上限と排他を持つ状態になった。
+  一歩目の照合の結果は**雛形が持っていない**側だったが、写し落としではなく**雛形が正典に追随していない**欠落である
+  ——`gh-review.md`「実行を縛る」は両方を要求しており、`claude.yml` の雛形は持っている。
+  よって器は正典どおり足せばよく、逸脱記録は要らない（ファイル冒頭に断り書き一行だけ置いた。雛形が直ったら消す）。
+  `timeout` を実測（レビュー一本 7分48秒、PR #43）へ寄せず正典の目安 30 に置いたのは、
+  サンプルが一本しか無いことと、器側だけ短くすると雛形との差分をもう一つ抱えることによる。
+  **ワークフローを直す PR には自動レビューが付かない**——`claude-code-action` は走っている
+  ワークフローの内容がデフォルトブランチの版と一致しなければ実行を飛ばす。
+  質が悪いのは、そのスキップが **`success` で終わる**こと（PR #49 の run は 12 秒・緑・コメントゼロ）。
+  run 一覧からはレビュー完走と区別が付かず、判定はログの `Exiting due to workflow validation skip` を見るしかない。
+  **上限が効いていること自体はその run で確認できる**（ワークフローファイルは PR ブランチの版で評価される）が、
+  自動レビューの陽性は**次にレビューが走る PR** まで出せない。次の PR がその実地になる。
+  fermentary へは3件諮った（`fermentary/NEXT.md` の搬送行）: 起動の絞りは job 側の `if:` が唯一 ／
+  雛形の `timeout-minutes`・`concurrency` 欠落 ／「検証の型」がワークフロー変更 PR の陽性不能を扱っていない。
+  事実2件は `fermentary/kb/github-actions.md` へ収録済み（上の validation スキップと、
+  `get_workflow_run_usage` が消費実績の出典に使えないこと）
