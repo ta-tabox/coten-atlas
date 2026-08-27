@@ -49,6 +49,7 @@ v5 固定を続けない理由は、避け続ける限り v6 以降の機能を�
 - `next.config.ts` は `@/` を解決できないので `base-path.ts` を相対で読む。biome の相対 import 禁止からこのファイルを除外している
 - `next build` を直に叩くと worker が配られない。口は `pnpm build`（`pnpm check` 経由）で一本のまま
 - 画面が「attribution だけ乗った空白」になったら、まず worker の取得が 404 になっていないかを疑う
+- source map（`.map`）は複製しない。shared の分だけで 2.4MB あり、配信物として引き合わない。DevTools を開いている間だけ 404 が出るが、実行には効かない
 
 ## 覆る条件
 
