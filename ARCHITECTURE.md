@@ -216,6 +216,7 @@ data/
 └── web/                   # アプリ本体。判定の口 `pnpm check` はこの中で打つ
     ├── CLAUDE.md          # 空殻（正典はルート）
     ├── src/               # Next.js が束ねる範囲。`app/` の構造は App Router の規約
+    ├── public/            # そのまま配信される静的ファイル。中身は生成物なので追跡しない
     ├── scripts/           # `web/` から走らせる補助スクリプト
     ├── tests/             # `src/` に併置しないテスト
     ├── package.json       # 依存とタスクの定義
