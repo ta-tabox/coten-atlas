@@ -21,7 +21,7 @@ export const INITIAL_VIEW_STATE = {
 /**
  * MapLibre がタイルのデコードに使う worker の在り処。
  *
- * バンドラは maplibre の worker を成果物へ含めないので、この器が `public/` へ複製して配る（docs/adr/0012-maplibre-worker-self-hosted.md）。
+ * バンドラは maplibre の worker を成果物へ含めないので、この器が worker とその依存を `public/` へ複製して配る（docs/adr/0012-maplibre-worker-self-hosted.md）。
  * 渡さないと maplibre は自分のチャンク URL からの相対で worker を探し、404 の HTML を掴んで地図だけが描画されなくなる。
  */
 export const MAP_WORKER_URL = `${BASE_PATH}/maplibre-gl-worker.mjs`;

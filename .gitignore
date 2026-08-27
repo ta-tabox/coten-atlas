@@ -3,7 +3,7 @@ web/.next/
 web/out/
 web/*.tsbuildinfo
 # 依存の成果物。`pnpm dev` と `pnpm build` の前段が node_modules から複製する（docs/adr/0012-maplibre-worker-self-hosted.md）。
-web/public/maplibre-gl-worker.mjs
+web/public/maplibre-gl-*.mjs
 # dev と build で参照先（`.next/dev/types` と `.next/types`）が書き分けられるので、追跡するとどちらかを回すたびに差分が出る。
 web/next-env.d.ts
 .DS_Store

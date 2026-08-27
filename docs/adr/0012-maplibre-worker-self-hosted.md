@@ -16,9 +16,13 @@ worker が解決されない理屈は 0011 が持つ。
 
 v6 系を使い、worker はこの器が配る。三点で構成する。
 
-- `pnpm dev` と `pnpm build` の前段（`sync-map-worker`）が `node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs` を `web/public/` へ複製する
+- `pnpm dev` / `pnpm build` / `pnpm test` の前段（`sync-map-worker`）が worker とその依存を `web/public/` へ複製する
 - 複製したファイルは追跡しない（`.gitignore`）
 - 地図コンポーネントへ `workerUrl` で在り処を名指す。URL は `BASE_PATH` から組み立てる
+
+複製するのは `maplibre-gl-worker.mjs` と `maplibre-gl-shared.mjs` の二つ。
+worker は本体と共有するコードを後者へ切り出しており、worker だけを置くと今度は shared が 404 になる。
+揃っているかは `web/tests/map-worker-assets.test.ts` が見る——worker の import 文を読み、参照先が `public/` にあるかを確かめるので、版が上がって依存が増えたときも赤で気付ける。
 
 `BASE_PATH` は `web/src/lib/base-path.ts` が持ち、`next.config.ts` の `basePath` と worker の URL の両方がそこを見る。
 

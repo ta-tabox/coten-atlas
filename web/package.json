@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "sync-map-worker": "mkdir -p public && cp node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs public/",
+    "sync-map-worker": "mkdir -p public && cp node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs node_modules/maplibre-gl/dist/maplibre-gl-shared.mjs public/",
     "predev": "pnpm sync-map-worker",
     "dev": "next dev",
     "prebuild": "pnpm sync-map-worker",
     "build": "next build",
     "typecheck": "tsc --noEmit",
     "lint": "biome ci . && node scripts/lint-comments.ts",
+    "pretest": "pnpm sync-map-worker",
     "test": "vitest run",
     "test:watch": "vitest",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build"
