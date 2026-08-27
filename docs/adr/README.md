@@ -34,8 +34,9 @@
 | [0008](0008-quote-titles-only.md) | 引用は題号に限り、説明文・ロゴ・カバーアートに触れない | 2026-08-23 | 採用 |
 | [0009](0009-pnpm-check.md) | 判定の口を `pnpm check` へ移す（0002 を supersede） | 2026-08-25 | 採用 |
 | [0010](0010-gh-review-trigger-narrowing.md) | gh-review の起動を絞るのは job 側の `if:` の一本にする | 2026-08-25 | 採用 |
-| [0011](0011-maplibre-v5.md) | maplibre-gl は v5 系に固定する | 2026-08-27 | supersede 済み（→ 0012） |
-| [0012](0012-maplibre-worker-self-hosted.md) | MapLibre の worker はこの器が配る（0011 を supersede） | 2026-08-27 | 採用 |
+| [0011](0011-license.md) | コードは MIT、データは CC BY 4.0、番組由来の要素は範囲外と明記する | 2026-08-27 | 採用 |
+| [0012](0012-maplibre-v5.md) | maplibre-gl は v5 系に固定する | 2026-08-27 | supersede 済み（→ 0013） |
+| [0013](0013-maplibre-worker-self-hosted.md) | MapLibre の worker はこの器が配る（0012 を supersede） | 2026-08-27 | 採用 |
 
 ## ADR にしないもの
 
