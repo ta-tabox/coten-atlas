@@ -36,3 +36,14 @@ Next.js (App Router) + TypeScript を static export する。
 載せるのはシリーズ名とエピソードタイトルだけで、番組の説明文・ロゴ・カバーアート・出演者画像は使わない（[ADR-0008](docs/adr/0008-quote-titles-only.md)）。
 
 番組公式: <https://coten.co.jp/services/cotenradio/>
+
+## ライセンス
+
+コードは MIT（[LICENSE](LICENSE)）。
+
+`data/` のキュレーション層（`themes.geojson`・`eras.json`）は CC BY 4.0 で、再利用には帰属表示が要る。
+同じ `data/` でも `episodes.json` は番組の RSS 由来なので、この器のライセンスは及ばない。
+
+シリーズ名・エピソードタイトル・配信リンクも同じく範囲外で、権利は上の「出典と引用の範囲」のとおり制作元に帰属する。
+
+決定と理由は [ADR-0011](docs/adr/0011-license.md)。
