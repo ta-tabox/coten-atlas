@@ -88,10 +88,12 @@ coding-standards が3行（いずれも 2026-08-26 の #18 で出た）:
   `web/src/lib/map-config.ts`（接続先と初期表示位置）と `web/src/components/MapCanvas.tsx`（`<Map>` への配線）を置き、トップページから読む。
   react-map-gl が maplibre 本体を実行時に動的 import するので、**`next/dynamic` の `ssr: false` は使っていない**（issue の指示から外れた判断）。
   プリレンダは window に触らずに通るため `ssr: false` が要らず、入れるとページごとクライアント側へ落ちる（Server Component では渡せないため）。
-  **maplibre-gl は v5 系へ固定した**（ADR-0011）。
-  最初 v6 で出したが実機で地図が描画されず、人間の報告を受けて差し替えた。
+  **MapLibre の worker はこの器が配る**（ADR-0012。ADR-0011 の v5 固定を supersede）。
+  最初 v6 で出したが実機で地図が描画されず、人間の報告を受けて追った。
   v6 は worker を別ファイルで `import.meta.url` からの相対で取りに行き、バンドル後のその URL は Turbopack のチャンクを指すので 404 の HTML が返る。
   worker はタイルのデコードを担うので、無いと attribution だけが乗った空白の画面になる。
+  一度 v5 へ固定して避けたが、新しい版に乗り続ける方を採って v6 へ戻した。
+  配線は三点（`dev`・`build` の前段で `public/` へ複製・複製は追跡しない・`workerUrl` で名指す）で、`BASE_PATH` は `web/src/lib/base-path.ts` が一箇所で持つ。
   **人間の判定（実機の目視）が残っている**。
   **ブラウザプレビューでは地図の描画を検証できない**——ペインのタブが `visibilityState: hidden` のままなので `requestAnimationFrame` が回らず、初回描画も `load` も起きずタイル要求がゼロで止まる。
   この器で地図の描画に触る issue は、機械判定の緑と実機の目視を必ずセットにする。
