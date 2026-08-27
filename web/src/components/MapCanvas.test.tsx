@@ -9,7 +9,11 @@ import { render } from "@testing-library/react";
 import type { MapProps } from "react-map-gl/maplibre";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import MapCanvas from "@/components/MapCanvas";
-import { BASEMAP_STYLE_URL, INITIAL_VIEW_STATE } from "@/lib/map-config";
+import {
+  BASEMAP_STYLE_URL,
+  INITIAL_VIEW_STATE,
+  MAP_WORKER_URL,
+} from "@/lib/map-config";
 
 const map = vi.hoisted(() => vi.fn<(props: MapProps) => null>(() => null));
 
@@ -27,6 +31,14 @@ describe("MapCanvas", () => {
 
     expect(props.mapStyle).toBe(BASEMAP_STYLE_URL);
     expect(props.initialViewState).toEqual(INITIAL_VIEW_STATE);
+  });
+
+  it("worker の在り処を渡す", () => {
+    render(<MapCanvas />);
+
+    const [props] = map.mock.calls[0];
+
+    expect(props.workerUrl).toBe(MAP_WORKER_URL);
   });
 
   it("attributionControl を無効にしない", () => {

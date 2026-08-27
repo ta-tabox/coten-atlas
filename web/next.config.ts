@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { BASE_PATH } from "./src/lib/base-path";
 
 /**
  * デプロイ先は GitHub Pages（docs/adr/0007-github-pages.md）。
@@ -8,8 +9,8 @@ const nextConfig: NextConfig = {
   output: "export",
   // static export では next/image の最適化サーバが居ない。無効化しないとビルドが落ちる。
   images: { unoptimized: true },
-  basePath: "/coten-atlas",
-  assetPrefix: "/coten-atlas",
+  basePath: BASE_PATH,
+  assetPrefix: BASE_PATH,
 };
 
 export default nextConfig;
