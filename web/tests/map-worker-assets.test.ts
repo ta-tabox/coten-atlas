@@ -1,5 +1,8 @@
-// @vitest-environment node
-// 既定の jsdom では import.meta.url が file スキームにならず、ファイルの実体を辿れない。
+/**
+ * @vitest-environment node
+ *
+ * 既定の jsdom では import.meta.url が file スキームにならず、ファイルの実体を辿れない。
+ */
 
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
