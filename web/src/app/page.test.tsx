@@ -2,7 +2,7 @@
  * トップページがベースマップの層を置くことを固定する。
  *
  * MapLibre は WebGL で描くので、jsdom には地図を描画する手立てが無い。
- * ここが見るのは MapCanvas を置いたかどうかまでで、地図が出ているかは実機の目視が持つ（HARNESS.md の L4）。
+ * ここが見るのは MapCanvas を置いたかどうかまでで、地図が出ているかは実機の目視が持つ（HARNESS.md の L5）。
  */
 
 import { render, screen } from "@testing-library/react";
