@@ -37,5 +37,17 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # 判定の口はこの一本（docs/adr/0009-pnpm-check.md）。型 / 静的 / ユニット / ビルドをまとめて回す。
+      # L4 のスモークがヘッドレスの Chromium を立てる（docs/adr/0014-e2e-offline-smoke.md）。
+      # バイナリは 356MB あるので、pnpm-lock.yaml が動くまでは取り直さない。
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('web/pnpm-lock.yaml') }}
+
+      # キャッシュが当たればダウンロードは playwright 自身が飛ばす。
+      # --with-deps の側は毎回要る（システムライブラリはキャッシュに載らない）。
+      - run: pnpm exec playwright install --with-deps chromium
+
+      # 判定の口はこの一本（docs/adr/0009-pnpm-check.md）。型 / 静的 / ユニット / ビルド / スモークをまとめて回す。
       - run: pnpm check
