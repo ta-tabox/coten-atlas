@@ -1,7 +1,8 @@
 /**
- * トップページがベースマップを置くことを固定する。
+ * トップページがベースマップの層を置くことを固定する。
  *
- * MapLibre 本体は jsdom で描画できないので、MapCanvas はモックへ差し替える。
+ * MapLibre は WebGL で描くので、jsdom には地図を描画する手立てが無い。
+ * ここが見るのは MapCanvas を置いたかどうかまでで、地図が出ているかは実機の目視が持つ（HARNESS.md の L4）。
  */
 
 import { render, screen } from "@testing-library/react";
@@ -13,7 +14,7 @@ vi.mock("@/components/MapCanvas", () => ({
 }));
 
 describe("Page", () => {
-  it("ベースマップを描画する", () => {
+  it("MapCanvas を置く", () => {
     render(<Page />);
 
     expect(screen.getByTestId("map-canvas")).toBeInTheDocument();
