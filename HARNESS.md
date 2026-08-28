@@ -12,11 +12,10 @@
 | **L1 静的** | 規約・書式・明らかな誤り | `biome ci .` |
 | **L2 ユニット** | 関数とコンポーネントの振る舞い | `vitest run`（+ React Testing Library、jsdom） |
 | **L3 ビルド** | static export が実際に吐けるか | `next build` |
-| **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法） | ヘッドレスの Chromium で `out/` を開く（**未導入**。#66 が配線する） |
+| **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法） | ヘッドレスの Chromium で `out/` を開く（`node scripts/smoke.ts`） |
 | **L5 人間の目視** | 地図の見た目・スライダーの手触り・実機 | 人間が `pnpm dev` で開く |
 
-L0〜L3 は `pnpm check` の一本にまとまっている（下記）。
-L4 も同じ口へ入るが、**まだ配線されていない**（#66）。
+L0〜L4 は `pnpm check` の一本にまとまっている（下記）。
 **L5 は close を妨げない**——issue の完了条件は機械判定（`pnpm check`）と人間の判定（L5）に
 分かれており、後者が待ち行列になると前者まで止まる（`ROADMAP.md`「完了条件は二本に分ける」）。
 
@@ -30,16 +29,17 @@ L4 を層に持つのは、L3 までがどれも「配信物へ実際に到達�
 
 ## 2. 判定の口
 
-**`pnpm check` の一本**。中身は L0 → L1 → L2 → L3 の順で、安いものから落とす。
+**`pnpm check` の一本**。中身は L0 → L1 → L2 → L3 → L4 の順で、安いものから落とす。
 アプリは `web/` 配下なので（#39）、**打つ場所も `web/` の中**。
 
 ```
-cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next build
+cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next build → smoke
 ```
 
-L4 のスモークはこの連鎖の末尾（`next build` の後）へ入る。
-判定の対象がビルドの出力なので、その前には置けない。
-**まだ配線されていない**（[ADR-0014](docs/adr/0014-e2e-offline-smoke.md) で入れると決めた。#66 が配線する）。
+L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next build` の出力だから。
+その前には置けない。
+ブラウザのバイナリは `pnpm check` が取りに行かない。
+無ければスモークが落ちるので、`pnpm exec playwright install chromium` を一度だけ打つ（356MB あるものを心拍のたびに確かめに行かせない）。
 
 - **赤のままコミットしない。** 心拍は「`pnpm check` → 緑ならコミット」
 - 口を増やさない。切り分けのために個別スクリプトを単体で叩くのは構わないが、
@@ -113,7 +113,7 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
 ## 4. コンテナの外向き通信
 
 リモートのコンテナは外向き通信が許可制で、**環境側から塞ぐ手段が無い**
-（`fermentary/kb/claude-code-web.md`）。この器が引き受けている非対称は次の3件で、
+（`fermentary/kb/claude-code-web.md`）。この器が引き受けている非対称は次の4件で、
 いずれも**リモートでは未検証**（egress の実測は人間が環境を立ててから）。
 
 - **`mise.run`** — 出られないので、フックは mise を npm から入れる。
@@ -122,6 +122,8 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
 - **`https://tiles.openfreemap.org`** — ベースマップのタイル。ブラウザプレビューから引く先。
   出られなければ地図の見た目はリモートで確認できない
 - **`https://anchor.fm/...`** — RSS（S6 の同期）。出られなければ同期スクリプトはリモートで動かない
+- **Playwright の配信元** — L4 のスモークが立てる Chromium のバイナリ。
+  出られなければブラウザを入れられず、リモートでは `pnpm check` がスモークで落ちる
 
 ## 5. 設定の置き場
 
