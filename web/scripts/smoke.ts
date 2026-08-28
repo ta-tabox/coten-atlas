@@ -116,15 +116,32 @@ export function violationsOf(
   return violations;
 }
 
+/** 壊れた percent encoding は null。 */
+function decode(pathname: string): string | null {
+  try {
+    return decodeURIComponent(pathname);
+  } catch {
+    return null;
+  }
+}
+
 /**
  * URL が指すファイルの絶対パスを出す。
  * BASE_PATH の外を指すものと、root の外へ出るものは null。
  *
  * `..` は `path.join` では止まらない。
  * 正規化した結果が root の配下に居ることを確かめるまでが、この関数の仕事である。
+ *
+ * 壊れた percent encoding は投げずに null で返す。
+ * `decodeURIComponent` は `%` 単体で URIError を投げ、リクエストハンドラの中で投げるとスモークが応答を返さずプロセスごと落ちる。
+ * 判定器が判定を返さずに死ぬと、`pnpm check` が緑でも赤でもない形で終わる。
  */
 export function resolveWithinRoot(root: string, url: string): string | null {
-  const decoded = decodeURIComponent(url.split("?")[0]);
+  const decoded = decode(url.split("?")[0]);
+
+  if (decoded === null) {
+    return null;
+  }
 
   if (decoded !== BASE_PATH && !decoded.startsWith(`${BASE_PATH}/`)) {
     return null;

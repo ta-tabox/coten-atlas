@@ -116,6 +116,11 @@ describe("resolveWithinRoot", () => {
     ).toBeNull();
   });
 
+  it("壊れた percent encoding は投げずに null", () => {
+    expect(resolveWithinRoot(ROOT, "/coten-atlas/%")).toBeNull();
+    expect(resolveWithinRoot(ROOT, "/coten-atlas/%zz")).toBeNull();
+  });
+
   it("root の中へ戻る .. は通す", () => {
     expect(resolveWithinRoot(ROOT, "/coten-atlas/a/../index.html")).toBe(
       "/srv/out/index.html",
