@@ -1,8 +1,10 @@
 /**
  * アプリのトップに立つページ。
- * 地図の描画層をまだ持たないので、この段では静的な見出しだけを返す。
+ * 全画面のベースマップだけを置く。
  */
 
+import MapCanvas from "@/components/MapCanvas";
+
 export default function Page() {
-  return <h1>coten-atlas</h1>;
+  return <MapCanvas />;
 }

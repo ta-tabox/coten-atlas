@@ -1,18 +1,22 @@
 /**
- * トップページが描画に成功することを固定する。
- * 見出しが出ることだけを見て、レイアウトや経路の設定は見ない。
+ * トップページがベースマップの層を置くことを固定する。
+ *
+ * MapLibre は WebGL で描くので、jsdom には地図を描画する手立てが無い。
+ * ここが見るのは MapCanvas を置いたかどうかまでで、地図が出ているかは実機の目視が持つ（HARNESS.md の L4）。
  */
 
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import Page from "@/app/page";
 
+vi.mock("@/components/MapCanvas", () => ({
+  default: () => <div data-testid="map-canvas" />,
+}));
+
 describe("Page", () => {
-  it("見出しを描画する", () => {
+  it("MapCanvas を置く", () => {
     render(<Page />);
 
-    expect(
-      screen.getByRole("heading", { name: "coten-atlas" }),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("map-canvas")).toBeInTheDocument();
   });
 });
