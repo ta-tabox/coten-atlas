@@ -5,7 +5,11 @@
  * 実際に事故を捕まえるかは陽性テスト（worker を退避して赤になること）が見る。
  */
 
-import { type PageObservation, violationsOf } from "@scripts/smoke.ts";
+import {
+  type PageObservation,
+  resolveWithinRoot,
+  violationsOf,
+} from "@scripts/smoke.ts";
 import { describe, expect, it } from "vitest";
 
 const HEALTHY: PageObservation = {
@@ -70,5 +74,51 @@ describe("violationsOf", () => {
     };
 
     expect(violationsOf(observation)).toHaveLength(3);
+  });
+});
+
+describe("resolveWithinRoot", () => {
+  const ROOT = "/srv/out";
+
+  it("BASE_PATH の直下を root の下へ写す", () => {
+    expect(resolveWithinRoot(ROOT, "/coten-atlas/index.html")).toBe(
+      "/srv/out/index.html",
+    );
+  });
+
+  it("BASE_PATH ちょうどは root 自身を指す", () => {
+    expect(resolveWithinRoot(ROOT, "/coten-atlas")).toBe("/srv/out");
+  });
+
+  it("クエリを落とす", () => {
+    expect(resolveWithinRoot(ROOT, "/coten-atlas/index.html?v=1")).toBe(
+      "/srv/out/index.html",
+    );
+  });
+
+  it("BASE_PATH の外は null", () => {
+    expect(resolveWithinRoot(ROOT, "/other/index.html")).toBeNull();
+  });
+
+  it("BASE_PATH に前方一致するだけの別のパスは null", () => {
+    expect(resolveWithinRoot(ROOT, "/coten-atlas-evil/index.html")).toBeNull();
+  });
+
+  it("root の外へ出る .. は null", () => {
+    expect(
+      resolveWithinRoot(ROOT, `/coten-atlas/${"../".repeat(20)}etc/hosts`),
+    ).toBeNull();
+  });
+
+  it("percent encoding で隠した .. も null", () => {
+    expect(
+      resolveWithinRoot(ROOT, "/coten-atlas/%2e%2e/%2e%2e/etc/hosts"),
+    ).toBeNull();
+  });
+
+  it("root の中へ戻る .. は通す", () => {
+    expect(resolveWithinRoot(ROOT, "/coten-atlas/a/../index.html")).toBe(
+      "/srv/out/index.html",
+    );
   });
 });

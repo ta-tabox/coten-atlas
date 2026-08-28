@@ -117,20 +117,46 @@ export function violationsOf(
 }
 
 /**
+ * URL が指すファイルの絶対パスを出す。
+ * BASE_PATH の外を指すものと、root の外へ出るものは null。
+ *
+ * `..` は `path.join` では止まらない。
+ * 正規化した結果が root の配下に居ることを確かめるまでが、この関数の仕事である。
+ */
+export function resolveWithinRoot(root: string, url: string): string | null {
+  const decoded = decodeURIComponent(url.split("?")[0]);
+
+  if (decoded !== BASE_PATH && !decoded.startsWith(`${BASE_PATH}/`)) {
+    return null;
+  }
+
+  const rootDir = path.resolve(root);
+  const relative = decoded.slice(BASE_PATH.length) || "/";
+  const resolved = path.resolve(rootDir, `.${relative}`);
+
+  if (resolved !== rootDir && !resolved.startsWith(rootDir + path.sep)) {
+    return null;
+  }
+
+  return resolved;
+}
+
+/**
  * `out/` を BASE_PATH の下へ配信する。
  * ポートは OS に選ばせる。
+ *
+ * ループバックだけへ待ち受ける。
+ * host を渡さないと全インターフェースへ出るので、スモークが走っている間だけ同じ網の相手へ配信物が開く。
  */
 function serveExport(root: string): Promise<http.Server> {
   const server = http.createServer((request, response) => {
-    const url = decodeURIComponent((request.url ?? "/").split("?")[0]);
+    let file = resolveWithinRoot(root, request.url ?? "/");
 
-    if (!url.startsWith(BASE_PATH)) {
-      response.writeHead(404).end("outside basePath");
+    if (file === null) {
+      response.writeHead(404).end("outside export root");
 
       return;
     }
-
-    let file = path.join(root, url.slice(BASE_PATH.length) || "/");
 
     if (fs.existsSync(file) && fs.statSync(file).isDirectory()) {
       file = path.join(file, "index.html");
@@ -149,7 +175,9 @@ function serveExport(root: string): Promise<http.Server> {
     fs.createReadStream(file).pipe(response);
   });
 
-  return new Promise((resolve) => server.listen(0, () => resolve(server)));
+  return new Promise((resolve) =>
+    server.listen(0, "127.0.0.1", () => resolve(server)),
+  );
 }
 
 function portOf(server: http.Server): number {
