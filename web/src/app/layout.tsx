@@ -7,6 +7,7 @@
 // MapLibre の attribution とコントロールは、この CSS が位置と背景を与える。
 // 読み込まないと地図の上に素の文字が乗る。
 import "maplibre-gl/dist/maplibre-gl.css";
+import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
@@ -18,8 +19,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ja">
-      {/* 地図が画面いっぱいに広がるので、body の既定 margin を消す。残すと四辺に縁が出る。 */}
-      <body style={{ margin: 0 }}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
