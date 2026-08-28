@@ -17,6 +17,7 @@
 | 項目 | 確定 | 根拠 |
 |---|---|---|
 | スタック | Next.js (App Router) + TypeScript、static export（`output: 'export'`） | [ADR-0001](docs/adr/0001-nextjs-static-export.md) |
+| スタイル | CSS Modules（`*.module.css` をコンポーネントへ併置）。CSS フレームワークは持たない | [ADR-0015](docs/adr/0015-css-modules.md) |
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-0003](docs/adr/0003-maplibre.md) |
 | ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-0004](docs/adr/0004-openfreemap-positron.md) |
 | データ | エピソード = RSS 自動 / テーマ = 人間キュレーション の二層 | [ADR-0005](docs/adr/0005-two-layer-data.md) |

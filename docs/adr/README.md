@@ -37,6 +37,7 @@
 | [0011](0011-license.md) | コードは MIT、データは CC BY 4.0、番組由来の要素は範囲外と明記する | 2026-08-27 | 採用 |
 | [0012](0012-maplibre-v5.md) | maplibre-gl は v5 系に固定する | 2026-08-27 | supersede 済み（→ 0013） |
 | [0013](0013-maplibre-worker-self-hosted.md) | MapLibre の worker はこの器が配る（0012 を supersede） | 2026-08-27 | 採用 |
+| [0015](0015-css-modules.md) | スタイルは CSS Modules で書き、CSS フレームワークを入れない | 2026-08-28 | 採用 |
 
 ## ADR にしないもの
 
