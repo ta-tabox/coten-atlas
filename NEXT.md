@@ -71,6 +71,7 @@ coding-standards が3行（いずれも 2026-08-26 の #18 で出た）:
 - 一つのエピソードが複数シリーズに跨る回（対談・番外編）と、`match` 正規表現の衝突時の優先順位。
   #3 が `themeId` を単数 nullable で固定するので、S6 の精緻化のときに突き合わせる
 - モバイルでの振る舞い（全画面マップ + 下部スライダー + 左パネル）の範囲は S8 の精緻化で決める
+- **S4 を割るときは [ADR-0015](docs/adr/0015-css-modules.md) の「帰結」を開く**。スタイルの書き方（CSS Modules）と、S4 が `globals.css` のトークンを置く分担をそこが持つ
 
 ## 精緻化の状態
 
@@ -81,6 +82,11 @@ coding-standards が3行（いずれも 2026-08-26 の #18 で出た）:
 
 ## 済んだもの
 
+- 2026-08-28 #65 完了（CSS の書き方）。**CSS Modules で書き、CSS フレームワークは入れない**（[ADR-0015](docs/adr/0015-css-modules.md)）。
+  人間が三択（素の CSS 1 枚 / CSS Modules / Tailwind v4）から選び、適用は「いまから」を採った。
+  設定も依存追加も無いので、導入のための issue は起こさない。
+  S4 が最初の `*.module.css` と `globals.css` のトークンを置いた時点で適用が始まる。
+  `ARCHITECTURE.md`「技術スタック」へ「スタイル」の行を足した。
 - 2026-08-27 #2 完了（S1・ベースマップの全画面表示）。
   `web/src/lib/map-config.ts`（接続先と初期表示位置）と `web/src/components/MapCanvas.tsx`（`<Map>` への配線）を置き、トップページから読む。
   react-map-gl が maplibre 本体を実行時に動的 import するので、**`next/dynamic` の `ssr: false` は使っていない**（issue の指示から外れた判断）。
