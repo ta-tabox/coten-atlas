@@ -7,11 +7,18 @@
 
 import { BASE_PATH } from "@/lib/base-path";
 
-/** キーもリクエスト数の上限も持たない（#14「ベースマップの利用条件と attribution を確定する」で実取得して確認した）。 */
+/**
+ * ベースマップのスタイル定義（MapLibre style spec の JSON）の配信先。
+ * タイルそのものの URL は、このスタイルが参照する TileJSON が持つ。
+ * キーもリクエスト数の上限も持たない（#14「ベースマップの利用条件と attribution を確定する」で実取得して確認した）。
+ */
 export const BASEMAP_STYLE_URL =
   "https://tiles.openfreemap.org/styles/positron";
 
-/** ユーラシアからアフリカまでが一望に入る位置。 */
+/**
+ * 地図を最初に描くときのカメラ位置。
+ * ユーラシアからアフリカまでが一望に入る値を選んである。
+ */
 export const INITIAL_VIEW_STATE = {
   longitude: 20,
   latitude: 30,
