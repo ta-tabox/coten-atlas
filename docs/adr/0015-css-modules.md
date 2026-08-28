@@ -29,6 +29,7 @@ attribution の位置と背景を持つのは `maplibre-gl.css` で、その表�
 - 適用はいまから始める。次にスタイルが増える S4 が、最初の `*.module.css` と `globals.css` のトークンを置く
 
 react-map-gl の `style` prop（`MapCanvas.tsx` の `width` / `height`）はコンテナの寸法を渡すコンポーネント API なので、この決定が禁じるインラインスタイルには当たらない。
+`<Map>` が公開するのは `style?: CSSProperties`（Map container CSS style）だけで `className` を持たないので、寸法を `*.module.css` へ逃がす経路がそもそも無い（`@vis.gl/react-maplibre` 8.1.2 の型で確認した）。
 
 ## 理由
 
