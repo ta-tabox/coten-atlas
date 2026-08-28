@@ -15,7 +15,8 @@
     "test": "vitest run",
     "pretest:watch": "pnpm sync-map-worker",
     "test:watch": "vitest",
-    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build"
+    "smoke": "node scripts/smoke.ts",
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm smoke"
   },
   "dependencies": {
     "maplibre-gl": "^6.6.0",
