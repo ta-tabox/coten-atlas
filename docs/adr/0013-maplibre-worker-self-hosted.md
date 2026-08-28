@@ -16,7 +16,7 @@ worker が解決されない理屈は 0012 が持つ。
 
 v6 系を使い、worker はこの器が配る。三点で構成する。
 
-- `pnpm dev` / `pnpm build` / `pnpm test` の前段（`sync-map-worker`）が worker とその依存を `web/public/` へ複製する
+- `pnpm dev` / `pnpm build` / `pnpm test` が、本体を走らせる前に `sync-map-worker` で worker とその依存を `web/public/` へ複製する
 - 複製したファイルは追跡しない（`.gitignore`）
 - 地図コンポーネントへ `workerUrl` で在り処を名指す。URL は `BASE_PATH` から組み立てる
 
@@ -39,7 +39,8 @@ react-map-gl は `workerUrl` を受け取って `maplibregl.setWorkerUrl()` を�
 
 複製を `postinstall` に置かない。
 pnpm は依存に変化が無い `install` でスクリプトを飛ばすので、「install したのにファイルが無い」状態が起こる。
-`dev` と `build` の前段なら、走らせる口が必ず先に通る。
+走らせる口の側へ置けば、その口を通る限り必ず先に複製される。
+`predev` のような npm の前段フックではなく各スクリプトの本体へ `&&` で繋ぐのは、定義を読めば複製が走ることが見えるようにするため。
 
 v5 固定を続けない理由は、避け続ける限り v6 以降の機能を取れないことと、この配線が三点で閉じることの兼ね合いによる。
 
