@@ -61,8 +61,10 @@ Claude Code のブラウザペインが `visibilityState: hidden` のまま描�
 事故を捕まえるのは 4xx であって画素ではない。
 だから `HARNESS.md`「実 API を自動テストで叩かない」を書き換えずに済み、外部の可用性で CI が赤くなる余地も入らない。
 
-**canvas の存在は判定に使えない。** worker を消した壊れた状態でも `canvas.maplibregl-canvas` は立っていた。
-見るのは canvas が立ったかではなく、viewport の寸法を持ったかである。
+**canvas はこの類の穴を捕まえない。** worker を消した壊れた状態でも `canvas.maplibregl-canvas` は立ち、viewport と同じ寸法を持っていた。
+存在も寸法も、健全な成果物と区別が付かない。
+それでも寸法を判定へ入れるのは、CSS で高さが 0 になる別の失敗に効かせるためである。
+配信物の自足を見るのは 4xx の側だけになる。
 
 ### 採らなかった案
 
