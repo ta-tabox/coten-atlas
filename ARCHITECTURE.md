@@ -8,7 +8,7 @@
 - **検証**は `HARNESS.md`
 
 この文書は理由を持たない。検査は「**過去形の文が無いか**」——過去形が出たら、
-それは `docs/adr/` へ置くべき経緯が逆流している。
+それは `docs/adr/` へ置くべき経緯が混ざり込んでいる。
 
 ## 1. 技術スタック（確定事項）
 
@@ -79,7 +79,7 @@ data/
 }
 ```
 
-**themes.geojson**（GeoJSON FeatureCollection。MapLibre に直接食わせる）:
+**themes.geojson**（GeoJSON FeatureCollection。MapLibre へ直接渡す）:
 
 ```jsonc
 {
@@ -207,7 +207,7 @@ data/
 ├── CLAUDE.md              # セッションの入口（起動語・git・膜）
 ├── CODING.md              # コーディング規約
 ├── ARCHITECTURE.md        # この文書（現況）
-├── ROADMAP.md             # 順序の地図
+├── ROADMAP.md             # 作る順序
 ├── HARNESS.md             # 検証と実行環境
 ├── NEXT.md                # 申し送り（状態は GitHub Issues）
 ├── docs/adr/              # 決定と経緯。1決定1レコード
