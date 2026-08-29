@@ -22,7 +22,7 @@ run 一覧がノイズで埋まるので、`on:` 側で絞るか、bot のコメ
 - `claude.yml` はワークフロー側を触らない。雛形の写しで「FILL 以外は契約」と自己宣言しており、
   コメント一行でも逸脱になる
 - run 一覧に `skipped` が並ぶのは正常。`skipped` を異常と読んで調べ直さない
-- `get_workflow_run_usage` は消費実績の出典に使えない——この器では 335 秒走った success の run も
+- `get_workflow_run_usage` は消費実績の出典に使えない——このリポジトリでは 335 秒走った success の run も
   `total_ms: 0` を返すので、`skipped` の 0 と区別が付かない
 
 ## 覆る条件

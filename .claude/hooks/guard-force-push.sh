@@ -29,7 +29,7 @@ ask() {
   }'
 }
 
-# コマンドを読み出せないときは通さない（fermentary RULES.md #5 は戻せない操作を人間へ渡す）。
+# コマンドを読み出せないときは通さない（戻せない操作は人間が諾否を決める）。
 if ! command -v jq > /dev/null 2>&1; then
   echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"jq が無くコマンドを検査できない"}}'
   exit 0
@@ -53,5 +53,5 @@ destructive+='|(^|[[:space:]]):[^[:space:]]+'
 git_push='(^|[[:space:]])git[[:space:]].*push([[:space:]]|$)'
 
 if grep -qE "$git_push" <<< "$command_line" && grep -qE "$destructive" <<< "$command_line"; then
-  ask "戻せない push の可能性がある（force / delete / mirror）。fermentary RULES.md #5 により人間の諾否が要る"
+  ask "戻せない push の可能性がある（force / delete / mirror）。人間の諾否が要る"
 fi

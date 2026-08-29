@@ -6,7 +6,6 @@
 # フックが組むのはその pnpm が立つところまで。
 # 手元は mise が入っている前提なので、このフックはリモートでしか走らない。
 #
-# 置き場の振り分けは fermentary `playbooks/remote-settings-placement.md`。
 # リポジトリから復元できるものだけがここに来る（名義はクラウド環境の環境変数が持つ）。
 
 set -euo pipefail
@@ -32,11 +31,11 @@ require_git_author() {
   exit 1
 }
 
-# コンテナから mise.run へは出られない（fermentary kb/claude-code-web.md「egress は許可制」）ので、
+# コンテナから mise.run へは出られない（外向き通信が許可制）ので、
 # 公式のインストーラは使わず npm から入れる（jdx/mise が同名で publish している）。
 # イメージに同梱の node は mise.toml の指定と版が違うが、mise 本体を動かすだけなのでそのまま使う。
 #
-# mise 自体の版は固定しない。版を持つファイルがこの器に無く、手元でも環境側の都合で決まっているので、
+# mise 自体の版は固定しない。版を持つファイルがこのリポジトリに無く、手元でも環境側の都合で決まっているので、
 # ここへ書くとリモートだけが宣言を持つ非対称ができる。
 install_mise() {
   if command -v mise > /dev/null 2>&1; then
@@ -76,7 +75,7 @@ handoff_shims() {
 }
 
 main() {
-  # 手元とリモートを分ける材料はこれだけ（fermentary kb/claude-code-web.md）。
+  # 手元とリモートを分ける材料はこれだけ。
   # 門を先に置けば、同じフックを両方の環境へ配れる。
   if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
     exit 0
@@ -101,9 +100,6 @@ main() {
   # 固定の版が揃うのはここまででフックの中だけなので、セッションのシェルへも渡す。
   handoff_shims
 
-  # 第二マウントの口が無い環境なので、不在を毎回宣言する。
-  # 宣言が無いと、CLAUDE.md 手順 0 を読んだセッションが不在を異常と受け取って止まる。
-  log "fermentary は不在（リモートの既定）。膜へは書き込まない——CLAUDE.md「リモートの縮退モード」"
   log "準備完了。web/ で pnpm check が走る"
 }
 

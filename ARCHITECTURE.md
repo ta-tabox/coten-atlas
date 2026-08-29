@@ -1,6 +1,6 @@
 # ARCHITECTURE — coten-atlas の現況
 
-この器が**いまどうなっているか**を書く。
+このプロジェクトが**いまどうなっているか**を書く。
 
 - **なぜ**は `VISION.md`（未作成。#41 が起こす）
 - **なぜそう決めたか**は `docs/adr/`
@@ -25,8 +25,8 @@
 | デプロイ | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`） | [ADR-0007](docs/adr/0007-github-pages.md) |
 | 引用の範囲 | シリーズ名とエピソードタイトルのみ | [ADR-0008](docs/adr/0008-quote-titles-only.md) |
 | 判定の口 | `pnpm check` の一本 | [ADR-0009](docs/adr/0009-pnpm-check.md) |
-| ツールチェーン | mise + pnpm + Biome | ADR を持たない。toolchain 正典（`fermentary/playbooks/toolchain.md`）に従う。`mise.toml` は `[tools]` のみでランタイム版管理に徹する |
-| テスト | Vitest（+ React Testing Library）／ ブラウザを立てる層は Playwright | 単体側は ADR を持たない。toolchain 正典は JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない。ブラウザ側を分ける理由は [ADR-0016](docs/adr/0016-playwright-runner.md) |
+| ツールチェーン | mise + pnpm + Biome | ADR を持たない。このリポジトリの外で決めた既定をそのまま踏襲する。`mise.toml` は `[tools]` のみでランタイム版管理に徹する |
+| テスト | Vitest（+ React Testing Library）／ ブラウザを立てる層は Playwright | 単体側は ADR を持たない。踏襲元の既定が JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない。ブラウザ側を分ける理由は [ADR-0016](docs/adr/0016-playwright-runner.md) |
 | エピソード取得 | RSS を正とする自動同期（ビルド前スクリプト） | ADR を持たない。手順は §5 が持つ。今後の追加に耐えるため |
 
 ## 2. システム全体像
@@ -56,7 +56,7 @@ data/eras.json      （時代区分）──────────────
 ```
 data/
 ├── episodes.json        # 自動層。RSS から同期。手で編集しない
-├── themes.geojson       # 手動層。テーマ=キュレーション対象の正典
+├── themes.geojson       # 手動層。テーマ=キュレーション対象の正
 ├── eras.json            # 時代区分（下記「時系列（era）モデル」）
 └── inbox/               # RSS 同期が排出する「未割当テーマのスタブ」置き場
 ```
@@ -197,14 +197,14 @@ data/
 
 ## 6. ディレクトリ構造
 
-ルートは**器の文書と運用設定**だけを持ち、Next.js アプリは `web/` 配下に隔離する。
-この器は今後 `data/`（人間キュレーション層）と RSS 同期スクリプトを持つので、
+ルートは**プロジェクトの文書と運用設定**だけを持ち、Next.js アプリは `web/` 配下に隔離する。
+このリポジトリは今後 `data/`（人間キュレーション層）と RSS 同期スクリプトを持つので、
 `src/` の隣に `data/` が並ぶと「これは Next.js が読むのか、ビルド前に走る何かなのか」が
 構造から読めなくなる。境界をディレクトリで引けば、その問いが起きる場所そのものが無くなる。
 
 ```
 .
-├── CLAUDE.md              # セッションの入口（起動語・git・膜）
+├── CLAUDE.md              # セッションの入口（規約・git）
 ├── CODING.md              # コーディング規約
 ├── ARCHITECTURE.md        # この文書（現況）
 ├── ROADMAP.md             # 作る順序
@@ -214,7 +214,7 @@ data/
 ├── .github/               # workflows・issue / PR テンプレ
 ├── .claude/               # settings・hooks・同梱 skill
 └── web/                   # アプリ本体。判定の口 `pnpm check` はこの中で打つ
-    ├── CLAUDE.md          # 空殻（正典はルート）
+    ├── CLAUDE.md          # 空殻（本文はルート）
     ├── src/               # Next.js が束ねる範囲。`app/` の構造は App Router の規約
     ├── public/            # そのまま配信される静的ファイル。中身は生成物なので追跡しない
     ├── scripts/           # `web/` から走らせる補助スクリプト
@@ -225,7 +225,7 @@ data/
 ```
 
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
-書き足すのを、先に場所を埋めて防ぐ。正典はルートの `CLAUDE.md` とこの文書。
+書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
 まだ存在しないもの: `data/`（テーマの GeoJSON と時代区分。S2）、`web/scripts/validate-data.ts`（S2）、
 `web/scripts/sync-feed.ts`（S6）、`VISION.md`（#41）。
