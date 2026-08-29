@@ -78,6 +78,26 @@ describe("themeCollectionSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("空の環を持つ多角形を、投げずに落とす", () => {
+    const emptyRing = {
+      ...sangokushi,
+      geometry: { type: "Polygon", coordinates: [[]] },
+    };
+    const result = themeCollectionSchema.safeParse(collectionOf(emptyRing));
+
+    expect(result.success).toBe(false);
+  });
+
+  it("環を 1 つも持たない多角形を落とす", () => {
+    const noRing = {
+      ...sangokushi,
+      geometry: { type: "Polygon", coordinates: [] },
+    };
+    const result = themeCollectionSchema.safeParse(collectionOf(noRing));
+
+    expect(result.success).toBe(false);
+  });
+
   it("閉じていない多角形を落とす", () => {
     const openRing = {
       ...sangokushi,

@@ -51,10 +51,17 @@ const positionSchema = z.tuple([
 /**
  * 多角形の環が閉じているか。
  * GeoJSON は最初と最後の座標が一致することを要求する。
+ *
+ * zod は同じ値に付いた検査を互いに中断しないので、長さが足りない環にもここへ来る。
+ * 空の環では閉じているとも閉じていないとも言えないうえ、長さは `min(4)` が既に落としているので、二重に報せず通す。
  */
 function isClosedRing(ring: readonly (readonly [number, number])[]): boolean {
   const first = ring[0];
   const last = ring[ring.length - 1];
+
+  if (first === undefined || last === undefined) {
+    return true;
+  }
 
   return first[0] === last[0] && first[1] === last[1];
 }
@@ -78,12 +85,14 @@ const geometrySchema = z.discriminatedUnion("type", [
   }),
   z.object({
     type: z.literal("Polygon"),
-    coordinates: z.array(
-      z
-        .array(positionSchema)
-        .min(4)
-        .refine(isClosedRing, { message: "多角形の環が閉じていない" }),
-    ),
+    coordinates: z
+      .array(
+        z
+          .array(positionSchema)
+          .min(4)
+          .refine(isClosedRing, { message: "多角形の環が閉じていない" }),
+      )
+      .min(1),
   }),
 ]);
 
