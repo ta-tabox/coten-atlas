@@ -1,0 +1,9 @@
+[
+  { "id": "prehistory", "label": "先史", "start": -10000, "end": -800 },
+  { "id": "ancient", "label": "古代", "start": -800, "end": 550 },
+  { "id": "medieval", "label": "中世", "start": 550, "end": 1450 },
+  { "id": "earlymodern", "label": "近世", "start": 1450, "end": 1800 },
+  { "id": "modern19", "label": "19世紀", "start": 1800, "end": 1900 },
+  { "id": "modern20a", "label": "〜WWII", "start": 1900, "end": 1945 },
+  { "id": "modern20b", "label": "戦後", "start": 1945, "end": 2030 }
+]
