@@ -209,7 +209,6 @@ data/
 ├── ARCHITECTURE.md        # この文書（現況）
 ├── ROADMAP.md             # 作る順序
 ├── HARNESS.md             # 検証と実行環境
-├── NEXT.md                # 申し送り（状態は GitHub Issues）
 ├── docs/adr/              # 決定と経緯。1決定1レコード
 ├── mise.toml              # [tools] のみ。ランタイム版管理
 ├── .github/               # workflows・issue / PR テンプレ
