@@ -68,12 +68,13 @@ data/
   "syncedAt": "2026-07-14T00:00:00Z",
   "episodes": [
     {
-      "guid": "...",            // RSS の guid。差分同期のキー
+      "guid": "...",            // RSS の guid。差分同期のキー。trim 済み
       "title": "三国志 徹底解説 #1 ...",
-      "pubDate": "...",
+      "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822 からの正規化は同期側
       "audioUrl": "...",
-      "themeId": "sangokushi",  // マッチャが割当。未割当なら null
-      "links": { "spotify": "https://open.spotify.com/episode/..." }
+      "season": 22,             // itunes:season。持たない回（番外編・特別編・告知）は null
+      "themeId": "sangokushi",  // season から割当。未割当なら null（ADR-0018）
+      "links": [{ "platform": "spotify", "url": "https://open.spotify.com/episode/..." }]
     }
   ]
 }
@@ -94,13 +95,19 @@ data/
     "timeRange": { "start": 180, "end": 280 },  // 負値 = BC
     "summary": "",                  // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
     "region": "中国",
-    "match": "^三国志",             // エピソードタイトル割当用の正規表現
-    "links": { "spotify": "https://open.spotify.com/..." },
+    "seasons": [22],                // 割当キー。itunes:season の値（ADR-0018）
+    "links": [{ "platform": "spotify", "url": "https://open.spotify.com/..." }],
     "tags": ["戦乱", "中国"]
   }
 }
 ```
 
+- エピソードとテーマの割当キーは `itunes:season`（[ADR-0018](docs/adr/0018-season-as-assignment-key.md)）。
+  テーマ側が `seasons`、エピソード側が `season` を持つ
+- `links` は `{ platform, url }` の配列で、テーマもエピソードも同じ形。
+  `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む
+- 契約の現物は `web/src/lib/schema/` の zod スキーマが持つ。
+  この節と食い違ったらスキーマが正で、`pnpm check` の `validate` が `data/` 全体をそれに掛ける
 - 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
 - 概念史（お金の歴史・資本主義など）は「場所が一意でない」——主要な舞台を
   MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする。
@@ -184,11 +191,12 @@ data/
     突き合わせのキーにする前に trim する
   - `pubDate` は RFC 822（`Wed, 19 Aug 2026 21:00:00 GMT`）で、全件 GMT 表記
   - `<link>` は Spotify のエピソードページ、`enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）
-  - シリーズ番号は `itunes:season`、シリーズ内の回は `itunes:episode`
+  - シリーズ番号は `itunes:season`。1〜66 が欠番なく並ぶが、752 件中 176 件（番外編・特別編・告知）はこれを持たない
+  - シリーズ内の回は `itunes:episode`。消費する画面が無いので episodes.json へは保存しない（ADR-0018）
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
-  2. 新規エピソードを themes.geojson の各 `match` 正規表現に通して themeId 割当
-  3. どのテーマにも合わないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
+  2. themes.geojson 全件の `seasons` から season → themeId の索引を組み、新規エピソードの `itunes:season` で引いて themeId 割当（ADR-0018）
+  3. どのテーマにも当たらないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
      （タイトル・guid・推定シリーズ名。座標と年代は空欄=人間+Claude の補正対象）
   4. 結果サマリ（新規 n 件 / 割当 m 件 / 要レビュー k 件）を stdout へ
 - 運用: 当面は手動で `pnpm sync` → inbox を見てキュレーション → コミット。

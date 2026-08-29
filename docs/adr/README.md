@@ -44,6 +44,7 @@
 | [0015](0015-css-modules.md) | スタイルは CSS Modules で書き、CSS フレームワークを入れない | 2026-08-28 | 採用 |
 | [0016](0016-playwright-runner.md) | ブラウザを立てる検証は Playwright が回し、Vitest は純関数だけを見る | 2026-08-29 | 採用 |
 | [0017](0017-local-only-instructions.md) | 手元の環境にだけ意味を持つ指示と申し送りは追跡しない | 2026-08-29 | 採用 |
+| [0018](0018-season-as-assignment-key.md) | エピソードとテーマの割当キーを `itunes:season` にする | 2026-08-29 | 採用 |
 
 ## ADR にしないもの
 
