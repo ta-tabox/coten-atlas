@@ -12,22 +12,21 @@
  * 判定に canvas の寸法を入れているのは、CSS で高さが 0 になる失敗に効かせるため。
  * worker が 404 になる形は寸法では捕まらない（壊れていても viewport 大で立つ）ので、そちらは 4xx が見る。
  *
- * 入口は violationsOf（観測から違反を出す純関数）と main（CLI）。
- * CLI は node scripts/smoke.ts [outDir]。
+ * ここが持つのは機構だけで、判定を回すのは `tests/e2e/` の spec である。
+ * 入口は observe（配信物を開いて観測を集める）と violationsOf（観測から違反を出す純関数）。
  */
 
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+import { chromium } from "@playwright/test";
 import { BASE_PATH } from "../src/lib/base-path.ts";
 
 /**
  * 描画領域の大きさ。
  * canvas の寸法と突き合わせる。
  */
-type Viewport = {
+export type Viewport = {
   width: number;
   height: number;
 };
@@ -48,7 +47,7 @@ export type PageObservation = {
   canvasSize: Viewport | null;
 };
 
-const VIEWPORT: Viewport = { width: 1280, height: 800 };
+export const VIEWPORT: Viewport = { width: 1280, height: 800 };
 
 const CONTENT_TYPES: Record<string, string> = {
   ".html": "text/html",
@@ -287,32 +286,4 @@ export async function observe(root: string): Promise<PageObservation> {
     await browser.close();
     server.close();
   }
-}
-
-async function main(argv: string[]): Promise<number> {
-  const root = argv[0] ?? fileURLToPath(new URL("../out", import.meta.url));
-
-  if (!fs.existsSync(path.join(root, "index.html"))) {
-    console.error(`${root} に静的成果物が無い。先に pnpm build を回す。`);
-
-    return 1;
-  }
-
-  const violations = violationsOf(await observe(root));
-
-  for (const violation of violations) {
-    console.error(`  - ${violation}`);
-  }
-
-  console.error(
-    violations.length === 0
-      ? "Smoke passed. 配信物は自足している。"
-      : `Smoke failed. ${violations.length} violations.`,
-  );
-
-  return violations.length === 0 ? 0 : 1;
-}
-
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  process.exit(await main(process.argv.slice(2)));
 }
