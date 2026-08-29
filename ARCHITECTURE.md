@@ -26,7 +26,7 @@
 | 引用の範囲 | シリーズ名とエピソードタイトルのみ | [ADR-0008](docs/adr/0008-quote-titles-only.md) |
 | 判定の口 | `pnpm check` の一本 | [ADR-0009](docs/adr/0009-pnpm-check.md) |
 | ツールチェーン | mise + pnpm + Biome | ADR を持たない。toolchain 正典（`fermentary/playbooks/toolchain.md`）に従う。`mise.toml` は `[tools]` のみでランタイム版管理に徹する |
-| テスト | Vitest（+ React Testing Library） | ADR を持たない。toolchain 正典は JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない |
+| テスト | Vitest（+ React Testing Library）／ ブラウザを立てる層は Playwright | 単体側は ADR を持たない。toolchain 正典は JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない。ブラウザ側を分ける理由は [ADR-0016](docs/adr/0016-playwright-runner.md) |
 | エピソード取得 | RSS を正とする自動同期（ビルド前スクリプト） | ADR を持たない。手順は §5 が持つ。今後の追加に耐えるため |
 
 ## 2. システム全体像

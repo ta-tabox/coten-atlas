@@ -15,5 +15,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./vitest-setup.ts"],
+    // 綴りで分担する。
+    // `.test.ts` が vitest、`.spec.ts` は playwright（playwright.config.ts）。
+    // 既定は *.spec.ts も拾うので、絞らないと playwright の担当分まで走らせる。
+    include: ["**/*.test.?(c|m)[jt]s?(x)"],
   },
 });

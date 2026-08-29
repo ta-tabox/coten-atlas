@@ -15,7 +15,8 @@
     "test": "vitest run",
     "pretest:watch": "pnpm sync-map-worker",
     "test:watch": "vitest",
-    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build"
+    "smoke": "playwright test --project=smoke",
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm smoke"
   },
   "dependencies": {
     "maplibre-gl": "^6.6.0",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",
+    "@playwright/test": "^1.62.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
