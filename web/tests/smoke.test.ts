@@ -1,7 +1,5 @@
 /**
- * L4 スモーク（`scripts/smoke.ts`）の純関数を固定する。
- *
- * 見るのは二つ。
+ * 見るのは `scripts/smoke.ts` の純関数二つ。
  * 観測から違反を出す `violationsOf` と、配信してよいパスを決める `resolveWithinRoot` である。
  * どちらもブラウザを立てずに済むので、ここ（L2）で回す。
  *
