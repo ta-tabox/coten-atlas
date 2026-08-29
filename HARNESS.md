@@ -45,9 +45,12 @@ cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next bui
 L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next build` の出力だから。
 その前には置けない。
 ブラウザを立てるのは L4 だけで、回すのは Playwright である（[ADR-0016](docs/adr/0016-playwright-runner.md)）。
-spec は `web/tests/e2e/`、設定は `web/playwright.config.ts` にある。
+スモークは project `smoke`（`web/tests/smoke/`）で、`pnpm smoke` がそれを名指す。
+操作を伴う E2E を足すときは project をもう一つ並べるので、スモークの範囲は動かない。
+
 新しいテストの置き場は「ブラウザが要るか」で決まる。
-要るなら `tests/e2e/*.spec.ts`、要らないなら `tests/*.test.ts`。
+要るなら `*.spec.ts`、要らないなら `*.test.ts`。
+綴りが担当を決めるので、置き場所より綴りを間違えないほうが効く。
 
 ブラウザのバイナリは `pnpm check` が取りに行かない。
 `pnpm check` は繰り返し打つ口なので、そのたびに 356MB のダウンロードの要否を確かめに行かせない。
