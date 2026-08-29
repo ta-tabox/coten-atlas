@@ -39,6 +39,7 @@
 | [0013](0013-maplibre-worker-self-hosted.md) | MapLibre の worker はこの器が配る（0012 を supersede） | 2026-08-27 | 採用 |
 | [0014](0014-e2e-offline-smoke.md) | E2E を入れる（外部を遮断したスモーク1枚に限る） | 2026-08-28 | 採用 |
 | [0015](0015-css-modules.md) | スタイルは CSS Modules で書き、CSS フレームワークを入れない | 2026-08-28 | 採用 |
+| [0016](0016-playwright-runner.md) | ブラウザを立てる検証は Playwright が回し、Vitest は純関数だけを見る | 2026-08-29 | 採用 |
 
 ## ADR にしないもの
 
@@ -46,7 +47,7 @@
 「技術スタック」の表に置く（同表がそれらの唯一の記載になる）。
 
 - ツールチェーン（mise + pnpm + Biome）——理由の正典は `fermentary/playbooks/toolchain.md`
-- テストランナー = Vitest
+- テストランナー = Vitest（単体のみ。ブラウザを立てる層を分ける判断は [0016](0016-playwright-runner.md) が持つ）
 - エピソード取得を RSS 自動同期にする——手順ごと `ARCHITECTURE.md`「RSS 同期パイプライン」が持つ
 
 歴史地図（OpenHistoricalMap 連動を S9 へ後回し）は**順序の判断**なので `ROADMAP.md` 側。
