@@ -10,6 +10,7 @@
  */
 
 import * as z from "zod";
+import { duplicatesOf } from "./duplicates.ts";
 
 /**
  * 時代区分 1 件。
@@ -39,17 +40,8 @@ export const eraListSchema = z
   .array(eraSchema)
   .min(1)
   .superRefine((eras, ctx) => {
-    const ids = new Set<string>();
-
-    for (const era of eras) {
-      if (ids.has(era.id)) {
-        ctx.addIssue({
-          code: "custom",
-          message: `id が重複している: ${era.id}`,
-        });
-      }
-
-      ids.add(era.id);
+    for (const id of duplicatesOf(eras.map((era) => era.id))) {
+      ctx.addIssue({ code: "custom", message: `id が重複している: ${id}` });
     }
 
     for (const [index, next] of eras.slice(1).entries()) {

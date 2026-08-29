@@ -11,6 +11,7 @@
  */
 
 import * as z from "zod";
+import { duplicatesOf } from "./duplicates.ts";
 import { linkSchema } from "./link.ts";
 
 /**
@@ -123,21 +124,6 @@ export const themeFeatureSchema = z.object({
   geometry: geometrySchema,
   properties: themePropertiesSchema,
 });
-
-/**
- * 同じ値を二度使っている要素を、渡された順のまま拾う。
- * 重複が無ければ空。
- */
-function duplicatesOf<T>(values: readonly T[]): T[] {
-  const seen = new Set<T>();
-
-  return values.filter((value) => {
-    const isRepeat = seen.has(value);
-    seen.add(value);
-
-    return isRepeat;
-  });
-}
 
 /**
  * テーマ全件。

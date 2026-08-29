@@ -13,6 +13,7 @@
  */
 
 import * as z from "zod";
+import { duplicatesOf } from "./duplicates.ts";
 import { linkSchema } from "./link.ts";
 
 /**
@@ -43,17 +44,10 @@ export const episodeCollectionSchema = z
     episodes: z.array(episodeSchema),
   })
   .superRefine((collection, ctx) => {
-    const seen = new Set<string>();
+    const guids = collection.episodes.map((episode) => episode.guid);
 
-    for (const episode of collection.episodes) {
-      if (seen.has(episode.guid)) {
-        ctx.addIssue({
-          code: "custom",
-          message: `guid が重複している: ${episode.guid}`,
-        });
-      }
-
-      seen.add(episode.guid);
+    for (const guid of duplicatesOf(guids)) {
+      ctx.addIssue({ code: "custom", message: `guid が重複している: ${guid}` });
     }
   });
 
