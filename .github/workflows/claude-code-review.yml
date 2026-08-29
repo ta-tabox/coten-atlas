@@ -1,9 +1,8 @@
 name: Claude Code Review
 
-# 雛形の出所: ~/vivarium/fermentary/tools/gh-review/workflows/claude-code-review.yml
-# 正典: ~/vivarium/fermentary/playbooks/gh-review.md
-# <!-- FILL --> の箇所を器に合わせて埋めてある。それ以外は契約なので、変えるなら正典の側を先に直す。
-# `timeout-minutes` と `concurrency` は雛形が持たないが正典（「実行を縛る」）が要求しているので、雛形側の欠落と見て正典に従って足してある（#44）。
+# 共有の雛形からの写しで、`<!-- FILL -->` の箇所をこのリポジトリに合わせて埋めてある。
+# それ以外は複数のリポジトリで揃えている部分なので、変えるなら雛形の側を先に直す。
+# `timeout-minutes` と `concurrency` は雛形が持たないが、実行を縛る規約が要求しているので、雛形側の欠落と見て足してある（#44）。
 
 on:
   pull_request:
@@ -24,7 +23,7 @@ jobs:
     if: github.event.pull_request.head.repo.full_name == github.repository
 
     runs-on: ubuntu-latest
-    # 暴走時の上限。値は正典の目安（gh-review.md「実行を縛る」）。
+    # 暴走時の上限。値は共有の規約が示す目安。
     # 実測はレビュー一本が 7分48秒（PR #43）だが、サンプルが一本しか無いので縮めない。
     timeout-minutes: 30
     # トリガに synchronize が無いので連打は来ない。二重に走るのは開き直しのような稀な経路だけ。

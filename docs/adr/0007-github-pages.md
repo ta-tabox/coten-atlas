@@ -7,7 +7,7 @@
 ## 文脈
 
 static export の成果物をどこから配信するか。
-この器は GitHub App による Claude レビュー体制を既に持っている。
+このリポジトリは GitHub App による Claude レビュー体制を既に持っている。
 
 ## 決定
 

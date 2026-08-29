@@ -25,7 +25,7 @@ export default defineConfig({
   // 落ちたら落ちたままにする。再試行で緑になる層は、緑の意味が薄まる。
   retries: 0,
 
-  // 判定の口は pnpm check の一本なので、失敗を握り潰す報告器を挟まない。
+  // 判定の口は pnpm check の一本なので、失敗を握り潰すレポータを挟まない。
   reporter: [["list"]],
 
   projects: [

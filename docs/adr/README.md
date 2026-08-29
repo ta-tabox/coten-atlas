@@ -1,6 +1,6 @@
 # ADR — 決定と経緯の受け皿
 
-この器の決定は、1決定1レコードでここに置く。
+このリポジトリの決定は、1決定1レコードでここに置く。
 `ARCHITECTURE.md` が持つのは**現況**、`ROADMAP.md` が持つのは**順序**、
 `HARNESS.md` が持つのは**検証**で、**なぜそう決めたか**を持つのはここだけ。
 
@@ -17,6 +17,9 @@
 3. **節は 文脈 / 決定 / 理由（採らなかった案と、それを採らなかった条件）/ 帰結 / 覆る条件**
 4. **書き換えない。** 覆すときは新しい ADR を書き、旧 ADR のヘッダに
    `supersede 済み（→ NNNN）` を足すだけ（**本文は一字も削らない**）
+   - 例外は一度だけ適用した（[0017](0017-local-only-instructions.md)、2026-08-29）。
+     公開に先立ち、外から読んで解けない語彙を全 ADR の本文で置き換えた。
+     動かしたのは語彙だけで、決定・理由・帰結は動かしていない
 5. **「決定」と読めない事柄は ADR にしない。**
    未決の論点は issue、順序は `ROADMAP.md`、現況は `ARCHITECTURE.md`
 
@@ -36,17 +39,18 @@
 | [0010](0010-gh-review-trigger-narrowing.md) | gh-review の起動を絞るのは job 側の `if:` の一本にする | 2026-08-25 | 採用 |
 | [0011](0011-license.md) | コードは MIT、データは CC BY 4.0、番組由来の要素は範囲外と明記する | 2026-08-27 | 採用 |
 | [0012](0012-maplibre-v5.md) | maplibre-gl は v5 系に固定する | 2026-08-27 | supersede 済み（→ 0013） |
-| [0013](0013-maplibre-worker-self-hosted.md) | MapLibre の worker はこの器が配る（0012 を supersede） | 2026-08-27 | 採用 |
+| [0013](0013-maplibre-worker-self-hosted.md) | MapLibre の worker はこのリポジトリが配る（0012 を supersede） | 2026-08-27 | 採用 |
 | [0014](0014-e2e-offline-smoke.md) | E2E を入れる（外部を遮断したスモーク1枚に限る） | 2026-08-28 | 採用 |
 | [0015](0015-css-modules.md) | スタイルは CSS Modules で書き、CSS フレームワークを入れない | 2026-08-28 | 採用 |
 | [0016](0016-playwright-runner.md) | ブラウザを立てる検証は Playwright が回し、Vitest は純関数だけを見る | 2026-08-29 | 採用 |
+| [0017](0017-local-only-instructions.md) | 手元の環境にだけ意味を持つ指示と申し送りは追跡しない | 2026-08-29 | 採用 |
 
 ## ADR にしないもの
 
 次の3件は決定というより既定の踏襲なので、結論だけを `ARCHITECTURE.md`
 「技術スタック」の表に置く（同表がそれらの唯一の記載になる）。
 
-- ツールチェーン（mise + pnpm + Biome）——理由の正典は `fermentary/playbooks/toolchain.md`
+- ツールチェーン（mise + pnpm + Biome）——理由はこのリポジトリの外で決めており、ここでは踏襲するだけ
 - テストランナー = Vitest（単体のみ。ブラウザを立てる層を分ける判断は [0016](0016-playwright-runner.md) が持つ）
 - エピソード取得を RSS 自動同期にする——手順ごと `ARCHITECTURE.md`「RSS 同期パイプライン」が持つ
 

@@ -1,7 +1,7 @@
 # TypeScript / JavaScript への写像
 
 核の原則（CODING.md）を TS のイディオムに落とす。
-toolchain 正典（pnpm / Biome / mise）は `fermentary/playbooks/toolchain.md` が持つ——ここは書き方のみ。
+toolchain（pnpm / Biome / mise）の設定はここでは扱わない。ここは書き方のみ。
 
 ## 不変を既定に
 - `const` を既定。`let` は再代入が本質的なときだけ。`var` は使わない

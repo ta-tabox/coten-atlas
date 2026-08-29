@@ -1,9 +1,9 @@
-# ランタイム版の正典（toolchain 正典: ~/vivarium/fermentary/playbooks/toolchain.md）。
+# ランタイム版の正。
 # 版をここに固定しているので、手元でも CI でも `mise install` の後は同じ pnpm が同じ意味を持つ。
 # CI 側にランタイム版を書き下ろさない（二重管理にすると、いずれ片方だけが動く）。
 #
 # このファイルは [tools] だけを持つ。タスクは web/package.json の scripts が持ち、
-# 判定の口は `web/` で打つ `pnpm check` の一本（docs/adr/0009-pnpm-check.md、正典どおりで逸脱ではない）。
+# 判定の口は `web/` で打つ `pnpm check` の一本（docs/adr/0009-pnpm-check.md）。
 # ここに `run = "pnpm check"` の薄いラッパを置かない——口が一本に見えて二本ある状態になる。
 
 [tools]

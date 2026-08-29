@@ -1,5 +1,5 @@
 {
-  "_comment": "Bash(git push:*) は雛形（fermentary/tools/gh-review/settings.json）どおり allow。force 系と --delete / --mirror は ask にも残すが、権限パターンは前方一致なので git push origin --force のようにフラグが push の直後に来ない語順を拾えない。語順に依存しない判定は PreToolUse フック guard-force-push.sh が持ち、コマンド全文を見て ask へ回す。フックの if を git 全体で絞ってあるのは、コマンド名より細かいパターンが $( ) を含む行を素通しさせて起動する（hooks のドキュメント）ためで、git push:* と書いても絞りにならないから。ask の列挙はフックを切ったときの下限として残してある（CLAUDE.md「git」節・fermentary RULES.md #5）。判定の口は pnpm check の一本（docs/adr/0009-pnpm-check.md）。check を構成する個別スクリプトも allow に置く——切り分けのために単体で叩くので、置かないと毎回訊かれるだけの摩擦になる。mise はランタイム版管理として残っており（install / 参照系）、tasks は持たない。",
+  "_comment": "Bash(git push:*) は共有の雛形どおり allow。force 系と --delete / --mirror は ask にも残すが、権限パターンは前方一致なので git push origin --force のようにフラグが push の直後に来ない語順を拾えない。語順に依存しない判定は PreToolUse フック guard-force-push.sh が持ち、コマンド全文を見て ask へ回す。フックの if を git 全体で絞ってあるのは、コマンド名より細かいパターンが $( ) を含む行を素通しさせて起動する（hooks のドキュメント）ためで、git push:* と書いても絞りにならないから。ask の列挙はフックを切ったときの下限として残してある（CLAUDE.md「git」節）。判定の口は pnpm check の一本（docs/adr/0009-pnpm-check.md）。check を構成する個別スクリプトも allow に置く——切り分けのために単体で叩くので、置かないと毎回訊かれるだけの摩擦になる。mise はランタイム版管理として残っており（install / 参照系）、tasks は持たない。",
   "attribution": {
     "commit": "Co-authored-by: Claude <noreply@anthropic.com>",
     "pr": "",

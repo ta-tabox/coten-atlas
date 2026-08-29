@@ -1,8 +1,7 @@
 name: Claude Code
 
-# 雛形の出所: ~/vivarium/fermentary/tools/gh-review/workflows/claude.yml
-# 正典: ~/vivarium/fermentary/playbooks/gh-review.md
-# <!-- FILL --> の箇所を器に合わせて埋めてある。それ以外は契約なので、変えるなら正典の側を先に直す。
+# 共有の雛形からの写しで、`<!-- FILL -->` の箇所をこのリポジトリに合わせて埋めてある。
+# それ以外は複数のリポジトリで揃えている部分なので、変えるなら雛形の側を先に直す。
 
 # issue 本文は仕様書で、そこに手順として「@claude を呼ぶ」と書くと言及と起動を綴りで区別できないので、issues トリガは持たない。
 # 起動はコメント（issue_comment / pull_request_review_comment / pull_request_review）だけ。
