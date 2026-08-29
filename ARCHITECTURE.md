@@ -135,6 +135,8 @@ data/
 - テーマの表示 opacity = timeRange と現在窓の重なり率（0..1）を
   イージングに通した値。窓の端で滑らかにフェードイン/アウトする
 - era の刻みはデータが揃ってから密度に合わせて調整する（S7 の後に見直し）
+- 末尾の `end` は固定値で、現在年へは追随させない（[ADR-0019](docs/adr/0019-era-right-edge-fixed.md)）。
+  スライダーはテーマが 1 件も浮かばない位置を取りうる
 
 ## 4. UI 構成
 
@@ -217,6 +219,7 @@ data/
 ├── ARCHITECTURE.md        # この文書（現況）
 ├── ROADMAP.md             # 作る順序
 ├── HARNESS.md             # 検証と実行環境
+├── data/                  # 人間キュレーション層と時代区分。アプリの外なのでルート側
 ├── docs/adr/              # 決定と経緯。1決定1レコード
 ├── mise.toml              # [tools] のみ。ランタイム版管理
 ├── .github/               # workflows・issue / PR テンプレ
@@ -235,7 +238,7 @@ data/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
-まだ存在しないもの: `data/`（テーマの GeoJSON と時代区分。S2）、`web/scripts/validate-data.ts`（S2）、
+まだ存在しないもの: `data/themes.geojson`（#4）、`data/episodes.json` と `data/inbox/`（#27）、
 `web/scripts/sync-feed.ts`（S6）、`VISION.md`（#41）。
 `data/` はアプリの外なので**ルート側**に置く。
 
@@ -257,7 +260,7 @@ import し `pnpm` の scripts から走るので、ビルド前処理もここ�
 
 構造に関わる未決で、該当 issue に着手するときに解く。
 
-- `data/eras.json` 末尾の `end: 2030` は現在より先。スライダー右端が未来を指してよいかは #3 で決める
-- 一つのエピソードが複数シリーズに跨る回（対談・番外編）と、`match` 正規表現の衝突時の優先順位。
-  #3 が `themeId` を単数 nullable で固定するので、S6 の精緻化のときに突き合わせる
+- 一つのエピソードが複数シリーズに跨る回（対談・番外編）の見せ方。
+  `themeId` は単数 nullable で、割当キーが season なので、season を持つ回は必ず一つのテーマへ入る（ADR-0018）。
+  跨る回をどちらのテーマの下に見せるかは S6 の精緻化のときに突き合わせる
 - モバイルでの振る舞い（全画面マップ + 下部スライダー + 左パネル）の範囲は S8 の精緻化で決める
