@@ -136,7 +136,7 @@ export function violationsOf(
 
 /**
  * URL のパス部を復号する。
- * 復号できない綴りは投げずに null を返す。
+ * 復号できない文字列は投げずに null を返す。
  *
  * `decodeURIComponent` は `%` 単体のような壊れた percent encoding で URIError を投げる。
  * リクエストハンドラの中で投げるとスモークが応答を返さないままプロセスごと落ち、`pnpm check` が緑でも赤でもない形で終わる。
@@ -194,7 +194,7 @@ export function resolveWithinRoot(root: string, url: string): string | null {
  * `out/` を BASE_PATH の下へ配信するサーバを立て、待ち受けが始まるまで待つ。
  *
  * 返す Promise が解決するのは listen が始まった時点で、リクエストが来たときではない。
- * サーバは閉じるまで居座り、ページが要求する HTML・JS・CSS・worker を何度でも返す。
+ * サーバは閉じるまで動き続け、ページが要求する HTML・JS・CSS・worker を何度でも返す。
  * 閉じるのは observe の finally。
  *
  * ポートは 0 を渡して OS に選ばせる。
