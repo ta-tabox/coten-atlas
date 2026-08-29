@@ -68,6 +68,18 @@ describe("themeCollectionSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("同じ配信基盤のリンクを 2 本持つテーマを落とす", () => {
+    const twoSpotify = themeWith({
+      links: [
+        { platform: "spotify", url: "https://open.spotify.com/show/a" },
+        { platform: "spotify", url: "https://open.spotify.com/show/b" },
+      ],
+    });
+    const result = themeCollectionSchema.safeParse(collectionOf(twoSpotify));
+
+    expect(result.success).toBe(false);
+  });
+
   it("緯度と経度が入れ替わった座標を落とす", () => {
     const swapped = {
       ...sangokushi,

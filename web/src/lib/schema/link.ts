@@ -10,6 +10,7 @@
  */
 
 import * as z from "zod";
+import { duplicatesOf } from "./duplicates.ts";
 
 /**
  * 配信基盤。
@@ -21,6 +22,23 @@ const platformSchema = z.enum(["spotify"]);
 export const linkSchema = z.object({
   platform: platformSchema,
   url: z.url(),
+});
+
+/**
+ * 一つのテーマ、または一つのエピソードが持つ配信リンク全部。
+ *
+ * 同じ基盤のリンクを 2 本持てない。
+ * 消費する側は「この基盤のリンク」を 1 本だけ取り出す前提で書くので、2 本あるとどちらを出すかが呼ぶ側の実装順で決まってしまう。
+ */
+export const linksSchema = z.array(linkSchema).superRefine((links, ctx) => {
+  const platforms = links.map((link) => link.platform);
+
+  for (const platform of duplicatesOf(platforms)) {
+    ctx.addIssue({
+      code: "custom",
+      message: `同じ配信基盤のリンクが 2 本ある: ${platform}`,
+    });
+  }
 });
 
 export type Link = z.infer<typeof linkSchema>;

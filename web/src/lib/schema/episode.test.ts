@@ -64,6 +64,18 @@ describe("episodeSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("同じ配信基盤のリンクを 2 本持つ回を落とす", () => {
+    const result = episodeSchema.safeParse({
+      ...episode,
+      links: [
+        { platform: "spotify", url: "https://open.spotify.com/episode/a" },
+        { platform: "spotify", url: "https://open.spotify.com/episode/b" },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
   it("未知の配信基盤を落とす", () => {
     const result = episodeSchema.safeParse({
       ...episode,

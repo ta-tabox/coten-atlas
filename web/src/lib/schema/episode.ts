@@ -14,7 +14,7 @@
 
 import * as z from "zod";
 import { duplicatesOf } from "./duplicates.ts";
-import { linkSchema } from "./link.ts";
+import { linksSchema } from "./link.ts";
 
 /**
  * エピソード 1 件。
@@ -29,7 +29,7 @@ export const episodeSchema = z.object({
   audioUrl: z.url(),
   season: z.int().positive().nullable(),
   themeId: z.string().trim().min(1).nullable(),
-  links: z.array(linkSchema),
+  links: linksSchema,
 });
 
 /**

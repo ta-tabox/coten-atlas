@@ -12,7 +12,7 @@
 
 import * as z from "zod";
 import { duplicatesOf } from "./duplicates.ts";
-import { linkSchema } from "./link.ts";
+import { linksSchema } from "./link.ts";
 
 /**
  * 描画スタイルの分岐キー。
@@ -114,7 +114,7 @@ export const themePropertiesSchema = z.object({
   summary: z.string(),
   region: z.string().trim().min(1),
   seasons: z.array(z.int().positive()),
-  links: z.array(linkSchema),
+  links: linksSchema,
   tags: z.array(z.string().trim().min(1)),
 });
 
