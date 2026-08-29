@@ -10,9 +10,9 @@
 |---|---|---|
 | **L0 型** | 型が通るか | `tsc --noEmit` |
 | **L1 静的** | 規約・書式・明らかな誤り | `biome ci .` |
-| **L2 ユニット** | 関数とコンポーネントの振る舞い | `vitest run`（+ React Testing Library、jsdom。スモークの観測層だけ Chromium を立てる） |
+| **L2 ユニット** | 関数とコンポーネントの振る舞い | `vitest run`（+ React Testing Library、jsdom） |
 | **L3 ビルド** | static export が実際に吐けるか | `next build` |
-| **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法） | ヘッドレスの Chromium で `out/` を開く（`node scripts/smoke.ts`） |
+| **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法） | ヘッドレスの Chromium で `out/` を開く（`playwright test`） |
 | **人間の目視** | 地図の見た目・スライダーの手触り・実機 | 人間が `pnpm dev` で開く |
 
 L0〜L4 は `pnpm check` の一本にまとまっている（下記）。
@@ -44,9 +44,14 @@ cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next bui
 
 L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next build` の出力だから。
 その前には置けない。
+ブラウザを立てるのは L4 だけで、回すのは Playwright である（[ADR-0016](docs/adr/0016-playwright-runner.md)）。
+spec は `web/tests/e2e/`、設定は `web/playwright.config.ts` にある。
+新しいテストの置き場は「ブラウザが要るか」で決まる。
+要るなら `tests/e2e/*.spec.ts`、要らないなら `tests/*.test.ts`。
+
 ブラウザのバイナリは `pnpm check` が取りに行かない。
 `pnpm check` は繰り返し打つ口なので、そのたびに 356MB のダウンロードの要否を確かめに行かせない。
-入っていないと L2 の一部と L4 が落ちる。
+入っていないと L4 だけが落ちる。
 `pnpm exec playwright install chromium` を一度だけ打つ。
 
 - **赤のままコミットしない。** 心拍は「`pnpm check` → 緑ならコミット」
