@@ -1,16 +1,29 @@
+// @vitest-environment node
+// 既定の jsdom では import.meta.url が file スキームにならず、フィクスチャの実体を辿れない。
+
 /**
- * L4 スモークの判定を固定する。
+ * L4 スモーク（`scripts/smoke.ts`）を固定する。
  *
- * ブラウザを立てる側は観測を集めるだけなので、ここで見るのは観測から違反を出す純関数のほう。
- * 実際に事故を捕まえるかは陽性テスト（worker を退避して赤になること）が見る。
+ * 見るのは三つ。
+ * 観測から違反を出す `violationsOf`、配信するパスを決める `resolveWithinRoot`、そして配信物の欠けを実際に拾えるかを見る `observe` である。
+ *
+ * `observe` の二本だけは Chromium を立て、`tests/fixtures/` の小さな配信物を相手にする。
+ * ここが緑でないと、`violationsOf` がどれだけ正しくても事故が観測へ乗らないまま素通りする。
+ * 実物の `out/` を使う陽性テスト（worker を退避して赤になること）は `pnpm build` を先に要求するので、こちらでは代わりにフィクスチャで同じ形を作る。
  */
 
+import { fileURLToPath } from "node:url";
 import {
+  observe,
   type PageObservation,
   resolveWithinRoot,
   violationsOf,
 } from "@scripts/smoke.ts";
 import { describe, expect, it } from "vitest";
+
+function fixture(name: string): string {
+  return fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url));
+}
 
 const HEALTHY: PageObservation = {
   failedRequests: [],
@@ -125,5 +138,19 @@ describe("resolveWithinRoot", () => {
     expect(resolveWithinRoot(ROOT, "/coten-atlas/a/../index.html")).toBe(
       "/srv/out/index.html",
     );
+  });
+});
+
+describe("observe", () => {
+  it("配信物に欠けがあれば failedRequests に出る", async () => {
+    const observation = await observe(fixture("export-missing-asset"));
+
+    expect(observation.failedRequests).toEqual(["404 /coten-atlas/missing.js"]);
+  });
+
+  it("自足した配信物なら failedRequests は空", async () => {
+    const observation = await observe(fixture("export-self-contained"));
+
+    expect(observation.failedRequests).toEqual([]);
   });
 });
