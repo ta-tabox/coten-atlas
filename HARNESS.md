@@ -10,7 +10,7 @@
 |---|---|---|
 | **L0 型** | 型が通るか | `tsc --noEmit` |
 | **L1 静的** | 規約・書式・明らかな誤り | `biome ci .` |
-| **L2 ユニット** | 関数とコンポーネントの振る舞い | `vitest run`（+ React Testing Library、jsdom） |
+| **L2 ユニット** | 関数とコンポーネントの振る舞い | `vitest run`（+ React Testing Library、jsdom。スモークの観測層だけ Chromium を立てる） |
 | **L3 ビルド** | static export が実際に吐けるか | `next build` |
 | **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法） | ヘッドレスの Chromium で `out/` を開く（`node scripts/smoke.ts`） |
 | **人間の目視** | 地図の見た目・スライダーの手触り・実機 | 人間が `pnpm dev` で開く |
@@ -45,7 +45,9 @@ cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next bui
 L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next build` の出力だから。
 その前には置けない。
 ブラウザのバイナリは `pnpm check` が取りに行かない。
-無ければスモークが落ちるので、`pnpm exec playwright install chromium` を一度だけ打つ（356MB あるものを心拍のたびに確かめに行かせない）。
+`pnpm check` は繰り返し打つ口なので、そのたびに 356MB のダウンロードの要否を確かめに行かせない。
+入っていないと L2 の一部と L4 が落ちる。
+`pnpm exec playwright install chromium` を一度だけ打つ。
 
 - **赤のままコミットしない。** 心拍は「`pnpm check` → 緑ならコミット」
 - 口を増やさない。切り分けのために個別スクリプトを単体で叩くのは構わないが、
