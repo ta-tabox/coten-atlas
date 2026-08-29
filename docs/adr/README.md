@@ -38,6 +38,7 @@
 | [0012](0012-maplibre-v5.md) | maplibre-gl は v5 系に固定する | 2026-08-27 | supersede 済み（→ 0013） |
 | [0013](0013-maplibre-worker-self-hosted.md) | MapLibre の worker はこの器が配る（0012 を supersede） | 2026-08-27 | 採用 |
 | [0014](0014-e2e-offline-smoke.md) | E2E を入れる（外部を遮断したスモーク1枚に限る） | 2026-08-28 | 採用 |
+| [0015](0015-css-modules.md) | スタイルは CSS Modules で書き、CSS フレームワークを入れない | 2026-08-28 | 採用 |
 
 ## ADR にしないもの
 

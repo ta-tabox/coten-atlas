@@ -9,6 +9,8 @@
  * 渡さないと maplibre はバンドル後のチャンク URL からの相対で worker を探し、404 の HTML を掴んで地図だけが描画されなくなる（docs/adr/0013-maplibre-worker-self-hosted.md）。
  * attributionControl は渡さない。
  * OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
+ * style で寸法を渡す。
+ * スタイルは CSS Modules へ寄せる決まりだが（docs/adr/0015-css-modules.md）、MapLibreMap は container の `style` しか公開せず `className` を持たないので、寸法だけはここに残る。
  */
 
 import MapLibreMap from "react-map-gl/maplibre";
