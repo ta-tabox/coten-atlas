@@ -77,6 +77,10 @@ const FIXTURE_STYLE = {
   ],
 };
 
+/**
+ * ブラウザから外へ出るリクエストのうち、横取りする相手を選ぶ glob（Playwright の書式で `**` は任意の階層に当たる）。
+ * ここに当たったものはネットワークへ出ない。
+ */
 const TILE_SERVER_PATTERN = "**://tiles.openfreemap.org/**";
 
 /**
@@ -116,8 +120,14 @@ export function violationsOf(
   return violations;
 }
 
-/** 壊れた percent encoding は null。 */
-function decode(pathname: string): string | null {
+/**
+ * URL のパス部を復号する。
+ * 復号できない綴りは投げずに null を返す。
+ *
+ * `decodeURIComponent` は `%` 単体のような壊れた percent encoding で URIError を投げる。
+ * リクエストハンドラの中で投げるとスモークが応答を返さないままプロセスごと落ち、`pnpm check` が緑でも赤でもない形で終わる。
+ */
+function decodePathname(pathname: string): string | null {
   try {
     return decodeURIComponent(pathname);
   } catch {
@@ -126,31 +136,39 @@ function decode(pathname: string): string | null {
 }
 
 /**
- * URL が指すファイルの絶対パスを出す。
- * BASE_PATH の外を指すものと、root の外へ出るものは null。
+ * 配信してよいファイルの絶対パスを出す。
+ * 配信してはいけないものは null。
  *
- * `..` は `path.join` では止まらない。
- * 正規化した結果が root の配下に居ることを確かめるまでが、この関数の仕事である。
+ * **この関数の役目はパストラバーサルを止めること**。
+ * `path.join` も `path.resolve` も `..` を正規化するだけで root の外へ出ることは防がないので、素通しにすると `/coten-atlas/../../../etc/hosts` が root の外のファイルを配信する。
  *
- * 壊れた percent encoding は投げずに null で返す。
- * `decodeURIComponent` は `%` 単体で URIError を投げ、リクエストハンドラの中で投げるとスモークが応答を返さずプロセスごと落ちる。
- * 判定器が判定を返さずに死ぬと、`pnpm check` が緑でも赤でもない形で終わる。
+ * 引数は別々の空間を指す。
+ * `url` は配信側のパスで `BASE_PATH` を接頭辞に持ち、`root` はファイル側のディレクトリ（`out/` の実体）である。
+ * ここがその二つを繋ぐ唯一の場所なので、境界の判定も全部ここへ置く。
  */
 export function resolveWithinRoot(root: string, url: string): string | null {
-  const decoded = decode(url.split("?")[0]);
+  const decoded = decodePathname(url.split("?")[0]);
 
   if (decoded === null) {
     return null;
   }
 
+  // BASE_PATH ちょうどか、その下（`/` 区切り）だけを受ける。
+  // startsWith(BASE_PATH) だけで見ると、`/coten-atlas-evil/...` という別の名前空間まで自分のものとして扱う。
   if (decoded !== BASE_PATH && !decoded.startsWith(`${BASE_PATH}/`)) {
     return null;
   }
 
   const rootDir = path.resolve(root);
   const relative = decoded.slice(BASE_PATH.length) || "/";
+
+  // 先頭へ `.` を足して相対パスに落とす。
+  // `/etc/passwd` のような絶対パスをそのまま渡すと、path.resolve は rootDir を捨ててそちらを返す。
   const resolved = path.resolve(rootDir, `.${relative}`);
 
+  // 区切り文字まで含めて前方一致を見る。
+  // rootDir だけで見ると `/srv/out-evil` が `/srv/out` の配下として通る。
+  // 区切りを path.sep で書くのは、path.resolve が返すのが実行環境の区切り文字だから。
   if (resolved !== rootDir && !resolved.startsWith(rootDir + path.sep)) {
     return null;
   }
@@ -159,11 +177,17 @@ export function resolveWithinRoot(root: string, url: string): string | null {
 }
 
 /**
- * `out/` を BASE_PATH の下へ配信する。
- * ポートは OS に選ばせる。
+ * `out/` を BASE_PATH の下へ配信するサーバを立て、待ち受けが始まるまで待つ。
  *
- * ループバックだけへ待ち受ける。
- * host を渡さないと全インターフェースへ出るので、スモークが走っている間だけ同じ網の相手へ配信物が開く。
+ * 返す Promise が解決するのは listen が始まった時点で、リクエストが来たときではない。
+ * サーバは閉じるまで居座り、ページが要求する HTML・JS・CSS・worker を何度でも返す。
+ * 閉じるのは observe の finally。
+ *
+ * ポートは 0 を渡して OS に選ばせる。
+ * 固定すると、その番号が塞がっている環境でスモークが立たない。
+ *
+ * **待ち受けはループバックだけに閉じる**。
+ * host を渡さないと全インターフェースへ bind し、同じネットワークに繋がっている別のホストからこのサーバを叩けてしまう。
  */
 function serveExport(root: string): Promise<http.Server> {
   const server = http.createServer((request, response) => {
@@ -211,13 +235,15 @@ function portOf(server: http.Server): number {
  * ページを開いて観測を集める。
  * 判定はしない。
  */
-async function observe(root: string): Promise<PageObservation> {
+export async function observe(root: string): Promise<PageObservation> {
   const server = await serveExport(root);
   const browser = await chromium.launch();
 
   try {
     const page = await browser.newPage({ viewport: VIEWPORT });
 
+    // 外部への通信はここで止まる。
+    // スタイルだけフィクスチャで応答し、タイル・グリフ・スプライトは中断する。
     await page.route(TILE_SERVER_PATTERN, (route) =>
       route.request().url().includes("/styles/")
         ? route.fulfill({
