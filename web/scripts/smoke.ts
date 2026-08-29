@@ -12,14 +12,15 @@
  * 判定に canvas の寸法を入れているのは、CSS で高さが 0 になる失敗に効かせるため。
  * worker が 404 になる形は寸法では捕まらない（壊れていても viewport 大で立つ）ので、そちらは 4xx が見る。
  *
- * ここが持つのは機構だけで、判定を回すのは `tests/e2e/` の spec である。
+ * ここが持つのは機構だけで、判定を回すのは `tests/smoke/` の spec である。
+ * ブラウザの寿命も viewport も Playwright の project が持つので、この層は渡された page を使うだけにする。
  * 入口は observe（配信物を開いて観測を集める）と violationsOf（観測から違反を出す純関数）。
  */
 
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
-import { chromium } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import { BASE_PATH } from "../src/lib/base-path.ts";
 
 /**
@@ -46,8 +47,6 @@ export type PageObservation = {
    */
   canvasSize: Viewport | null;
 };
-
-export const VIEWPORT: Viewport = { width: 1280, height: 800 };
 
 const CONTENT_TYPES: Record<string, string> = {
   ".html": "text/html",
@@ -83,12 +82,28 @@ const FIXTURE_STYLE = {
 const TILE_SERVER_PATTERN = "**://tiles.openfreemap.org/**";
 
 /**
+ * page が実際に使っている viewport を出す。
+ * 設定されていなければ投げる。
+ *
+ * 判定は canvas がこの寸法で立ったかを見るので、既定値で埋めると寸法の検査が黙って無効になる。
+ */
+export function viewportOf(page: Page): Viewport {
+  const viewport = page.viewportSize();
+
+  if (viewport === null) {
+    throw new Error("project の use.viewport が設定されていない");
+  }
+
+  return viewport;
+}
+
+/**
  * 観測から違反の一覧を出す。
  * 空なら緑。
  */
 export function violationsOf(
   observation: PageObservation,
-  viewport: Viewport = VIEWPORT,
+  viewport: Viewport,
 ): string[] {
   const violations: string[] = [];
 
@@ -234,13 +249,13 @@ function portOf(server: http.Server): number {
  * ページを開いて観測を集める。
  * 判定はしない。
  */
-export async function observe(root: string): Promise<PageObservation> {
+export async function observe(
+  page: Page,
+  root: string,
+): Promise<PageObservation> {
   const server = await serveExport(root);
-  const browser = await chromium.launch();
 
   try {
-    const page = await browser.newPage({ viewport: VIEWPORT });
-
     // 外部への通信はここで止まる。
     // スタイルだけフィクスチャで応答し、タイル・グリフ・スプライトは中断する。
     await page.route(TILE_SERVER_PATTERN, (route) =>
@@ -283,7 +298,6 @@ export async function observe(root: string): Promise<PageObservation> {
 
     return { failedRequests, consoleErrors, canvasSize };
   } finally {
-    await browser.close();
     server.close();
   }
 }

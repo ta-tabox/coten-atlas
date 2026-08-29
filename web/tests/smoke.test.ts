@@ -14,6 +14,9 @@ import {
 } from "@scripts/smoke.ts";
 import { describe, expect, it } from "vitest";
 
+/** smoke の project が使う viewport（playwright.config.ts）。 */
+const VIEWPORT = { width: 1280, height: 800 };
+
 const HEALTHY: PageObservation = {
   failedRequests: [],
   consoleErrors: [],
@@ -22,7 +25,7 @@ const HEALTHY: PageObservation = {
 
 describe("violationsOf", () => {
   it("四点そろっていれば違反を出さない", () => {
-    expect(violationsOf(HEALTHY)).toEqual([]);
+    expect(violationsOf(HEALTHY, VIEWPORT)).toEqual([]);
   });
 
   it("同一オリジンへの 4xx を違反にする", () => {
@@ -31,20 +34,22 @@ describe("violationsOf", () => {
       failedRequests: ["404 /coten-atlas/maplibre-gl-worker.mjs"],
     };
 
-    expect(violationsOf(observation)).toHaveLength(1);
-    expect(violationsOf(observation)[0]).toContain("maplibre-gl-worker.mjs");
+    expect(violationsOf(observation, VIEWPORT)).toHaveLength(1);
+    expect(violationsOf(observation, VIEWPORT)[0]).toContain(
+      "maplibre-gl-worker.mjs",
+    );
   });
 
   it("実行時エラーを違反にする", () => {
     const observation = { ...HEALTHY, consoleErrors: ["Uncaught TypeError"] };
 
-    expect(violationsOf(observation)).toEqual([
+    expect(violationsOf(observation, VIEWPORT)).toEqual([
       "実行時エラー: Uncaught TypeError",
     ]);
   });
 
   it("canvas が立たなければ違反にする", () => {
-    expect(violationsOf({ ...HEALTHY, canvasSize: null })).toEqual([
+    expect(violationsOf({ ...HEALTHY, canvasSize: null }, VIEWPORT)).toEqual([
       "地図の canvas が立たなかった",
     ]);
   });
@@ -52,20 +57,22 @@ describe("violationsOf", () => {
   it("canvas の高さが 0 なら違反にする", () => {
     const observation = { ...HEALTHY, canvasSize: { width: 1280, height: 0 } };
 
-    expect(violationsOf(observation)).toHaveLength(1);
-    expect(violationsOf(observation)[0]).toContain("viewport 大でない");
+    expect(violationsOf(observation, VIEWPORT)).toHaveLength(1);
+    expect(violationsOf(observation, VIEWPORT)[0]).toContain(
+      "viewport 大でない",
+    );
   });
 
   it("canvas が viewport より大きいのは違反にしない", () => {
     const retina = { ...HEALTHY, canvasSize: { width: 2560, height: 1600 } };
 
-    expect(violationsOf(retina)).toEqual([]);
+    expect(violationsOf(retina, VIEWPORT)).toEqual([]);
   });
 
   it("canvas が立たなかったときは寸法の違反を重ねない", () => {
     const observation = { ...HEALTHY, canvasSize: null };
 
-    expect(violationsOf(observation)).toHaveLength(1);
+    expect(violationsOf(observation, VIEWPORT)).toHaveLength(1);
   });
 
   it("違反が複数あればすべて出す", () => {
@@ -75,7 +82,7 @@ describe("violationsOf", () => {
       canvasSize: null,
     };
 
-    expect(violationsOf(observation)).toHaveLength(3);
+    expect(violationsOf(observation, VIEWPORT)).toHaveLength(3);
   });
 });
 

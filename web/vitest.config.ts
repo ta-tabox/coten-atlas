@@ -15,8 +15,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./vitest-setup.ts"],
-    // ブラウザを立てる検証は playwright が回す（playwright.config.ts）。
-    // vitest の既定は *.spec.ts も拾うので、外さないと同じ spec を二重に走らせる。
-    exclude: ["node_modules/**", "tests/e2e/**"],
+    // 綴りで分担する。
+    // `.test.ts` が vitest、`.spec.ts` は playwright（playwright.config.ts）。
+    // 既定は *.spec.ts も拾うので、絞らないと playwright の担当分まで走らせる。
+    include: ["**/*.test.?(c|m)[jt]s?(x)"],
   },
 });

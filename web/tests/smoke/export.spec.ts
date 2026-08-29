@@ -7,15 +7,17 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
-import { observe, violationsOf } from "@scripts/smoke";
+import { observe, viewportOf, violationsOf } from "@scripts/smoke";
 
 const EXPORT_ROOT = fileURLToPath(new URL("../../out", import.meta.url));
 
-test("配信物が自足している", async () => {
+test("配信物が自足している", async ({ page }) => {
   expect(
     existsSync(path.join(EXPORT_ROOT, "index.html")),
     `${EXPORT_ROOT} に静的成果物が無い。先に pnpm build を回す。`,
   ).toBe(true);
 
-  expect(violationsOf(await observe(EXPORT_ROOT))).toEqual([]);
+  const observation = await observe(page, EXPORT_ROOT);
+
+  expect(violationsOf(observation, viewportOf(page))).toEqual([]);
 });
