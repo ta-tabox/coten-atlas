@@ -1,29 +1,119 @@
 /* 文字を読むためのページなので、余白と行間をここで自前に持つ。
    globals.css が消している body の margin は地図を全画面にするためのもので、この 1 枚には縁が要る。
-   色と余白のトークンを globals.css は持たないので、値はここが直に書く。 */
+   色と余白のトークンを globals.css は持たないので、値はこのモジュールに閉じた変数が持つ。
+
+   節の切れ目は左の罫線が示す。
+   段落ごとの余白だけで区切ると、どの文がどの節に属するかが縦の距離でしか分からない。 */
 
 .page {
-  max-width: 40rem;
+  --ink: #1b1b1d;
+  --ink-muted: #6a6a72;
+  --rule: #e3e3e0;
+  --link: #1d4ed8;
+
+  box-sizing: border-box;
+  max-width: 38rem;
   margin: 0 auto;
-  padding: 2rem 1.25rem 4rem;
+  padding: 3rem 1.5rem 5rem;
+  color: var(--ink);
   font-family: system-ui, sans-serif;
-  line-height: 1.9;
+  line-height: 1.85;
 }
 
-.page h1 {
-  font-size: 1.5rem;
+.page a {
+  color: var(--link);
+  text-underline-offset: 0.2em;
 }
 
-.page h2 {
-  margin-top: 2.5rem;
-  font-size: 1.125rem;
-}
-
+/* 背景を敷いた「チップ」にしない。
+   文中に 4 回出るので、囲みを付けると囲みの方が文より目立つ。 */
 .page code {
-  font-size: 0.9em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
 }
 
 .back {
-  margin: 0 0 1.5rem;
+  margin-bottom: 2rem;
   font-size: 0.875rem;
+}
+
+.back a {
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+
+.back a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.header {
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.title {
+  margin: 0 0 0.6rem;
+  font-size: 1.6rem;
+  letter-spacing: 0.01em;
+}
+
+.lead {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+}
+
+.section {
+  margin-top: 2.75rem;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--rule);
+}
+
+.heading {
+  margin: 0 0 0.9rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+
+.points {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.points li {
+  position: relative;
+  margin-top: 0.65rem;
+  padding-left: 1.1rem;
+}
+
+/* 行頭の短い横罫が項目の始まりを示す。
+   記号を置くと文の中の中黒（・）と紛れるので、文字を使わない。 */
+.points li::before {
+  content: "";
+  position: absolute;
+  top: 0.9em;
+  left: 0;
+  width: 0.45rem;
+  height: 1px;
+  background: var(--ink-muted);
+}
+
+.official {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  margin: 1.5rem 0 0;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.officialLabel {
+  flex: none;
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
 }
