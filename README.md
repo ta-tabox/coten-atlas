@@ -14,7 +14,7 @@
 
 Next.js (App Router) + TypeScript を static export する。
 地図は MapLibre GL JS、ベースマップは OpenFreeMap positron。
-データはエピソード（RSS から自動同期）とテーマ（人間のキュレーション）の二層に分かれる。
+データはエピソード（RSS から自動同期）とシリーズ（人間のキュレーション）の二層に分かれる。
 ツールチェーンは mise + pnpm + Biome、テストは Vitest。
 
 確定事項の一覧とそれぞれの根拠は [ARCHITECTURE.md](ARCHITECTURE.md) の「技術スタック（確定事項）」にある。
@@ -42,7 +42,7 @@ Next.js (App Router) + TypeScript を static export する。
 
 コードは MIT（[LICENSE](LICENSE)）。
 
-`data/` のキュレーション層（`themes.geojson`・`eras.json`）は CC BY 4.0 で、再利用には帰属表示が要る。
+`data/` のキュレーション層（`series.geojson`・`eras.json`）は CC BY 4.0 で、再利用には帰属表示が要る。
 同じ `data/` でも `episodes.json` は番組の RSS 由来なので、このリポジトリのライセンスは及ばない。
 
 シリーズ名・エピソードタイトル・配信リンクも同じく範囲外で、権利は上の「出典と引用の範囲」のとおり制作元に帰属する。

@@ -12,7 +12,7 @@ const episode = {
   pubDate: "2026-08-19T21:00:00Z",
   audioUrl: "https://anchor.fm/s/8c2088c/podcast/play/12345/episode.mp3",
   season: 22,
-  themeId: "sangokushi",
+  seriesId: "sangokushi",
   links: [
     { platform: "spotify", url: "https://open.spotify.com/episode/abc123" },
   ],
@@ -39,14 +39,14 @@ describe("episodeSchema", () => {
     expect(parsed.guid).toBe("https://anchor.fm/coten/episodes/e000001");
   });
 
-  it("season も themeId も無い回を通す", () => {
+  it("season も seriesId も無い回を通す", () => {
     const parsed = episodeSchema.parse({
       ...episode,
       season: null,
-      themeId: null,
+      seriesId: null,
     });
 
-    expect(parsed.themeId).toBeNull();
+    expect(parsed.seriesId).toBeNull();
   });
 
   it("正規化前の RFC 822 の pubDate を落とす", () => {

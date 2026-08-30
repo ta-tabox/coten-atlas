@@ -2,7 +2,7 @@
  * `data/` の現物が `src/lib/schema/` のスキーマに合っているかを見る。
  *
  * 型検査は `data/` を見ない（`tsconfig.json` の `include` が `web/` 配下しか見ない）ので、JSON がスキーマから外れても型では赤くならない。
- * 人手で書く層（`themes.geojson`・`eras.json`）を持つ以上、書き間違いを機械で拾う場所がどこかに要る。
+ * 人手で書く層（`series.geojson`・`eras.json`）を持つ以上、書き間違いを機械で拾う場所がどこかに要る。
  *
  * ここが読むのは現物だけで、対応表と漏れの判定は `@/lib/schema/data-files` が持つ。
  * jsdom では `import.meta.url` が file URL にならないので、環境を node に指定してある。

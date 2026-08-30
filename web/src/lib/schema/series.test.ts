@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
-  parseThemes,
-  themeCollectionSchema,
+  parseSeries,
+  seriesCollectionSchema,
   timeRangeSchema,
-} from "@/lib/schema/theme";
+} from "@/lib/schema/series";
 
 /** ARCHITECTURE.md「データモデル」の例をそのまま写した 1 件。 */
 const sangokushi = {
@@ -30,52 +30,52 @@ function collectionOf(...features: unknown[]): unknown {
 }
 
 /** 正例の properties を部分的に差し替えた 1 件を作る。 */
-function themeWith(properties: Record<string, unknown>): unknown {
+function seriesWith(properties: Record<string, unknown>): unknown {
   return {
     ...sangokushi,
     properties: { ...sangokushi.properties, ...properties },
   };
 }
 
-describe("themeCollectionSchema", () => {
+describe("seriesCollectionSchema", () => {
   it("ARCHITECTURE の例をそのまま通す", () => {
-    const parsed = parseThemes(collectionOf(sangokushi));
+    const parsed = parseSeries(collectionOf(sangokushi));
 
     expect(parsed.features[0].properties.id).toBe("sangokushi");
   });
 
   it("未知の kind を落とす", () => {
-    const result = themeCollectionSchema.safeParse(
-      collectionOf(themeWith({ kind: "raster" })),
+    const result = seriesCollectionSchema.safeParse(
+      collectionOf(seriesWith({ kind: "raster" })),
     );
 
     expect(result.success).toBe(false);
   });
 
   it("id が重複した 2 件を落とす", () => {
-    const result = themeCollectionSchema.safeParse(
-      collectionOf(sangokushi, themeWith({ season: 23 })),
+    const result = seriesCollectionSchema.safeParse(
+      collectionOf(sangokushi, seriesWith({ season: 23 })),
     );
 
     expect(result.success).toBe(false);
   });
 
-  it("同じ season を 2 テーマが持つと落とす", () => {
-    const result = themeCollectionSchema.safeParse(
-      collectionOf(sangokushi, themeWith({ id: "sangokushi-2" })),
+  it("同じ season を 2 シリーズが持つと落とす", () => {
+    const result = seriesCollectionSchema.safeParse(
+      collectionOf(sangokushi, seriesWith({ id: "sangokushi-2" })),
     );
 
     expect(result.success).toBe(false);
   });
 
-  it("同じ配信基盤のリンクを 2 本持つテーマを落とす", () => {
-    const twoSpotify = themeWith({
+  it("同じ配信基盤のリンクを 2 本持つシリーズを落とす", () => {
+    const twoSpotify = seriesWith({
       links: [
         { platform: "spotify", url: "https://open.spotify.com/show/a" },
         { platform: "spotify", url: "https://open.spotify.com/show/b" },
       ],
     });
-    const result = themeCollectionSchema.safeParse(collectionOf(twoSpotify));
+    const result = seriesCollectionSchema.safeParse(collectionOf(twoSpotify));
 
     expect(result.success).toBe(false);
   });
@@ -85,7 +85,7 @@ describe("themeCollectionSchema", () => {
       ...sangokushi,
       geometry: { type: "Point", coordinates: [34.6, 112.5] },
     };
-    const result = themeCollectionSchema.safeParse(collectionOf(swapped));
+    const result = seriesCollectionSchema.safeParse(collectionOf(swapped));
 
     expect(result.success).toBe(false);
   });
@@ -95,7 +95,7 @@ describe("themeCollectionSchema", () => {
       ...sangokushi,
       geometry: { type: "Polygon", coordinates: [[]] },
     };
-    const result = themeCollectionSchema.safeParse(collectionOf(emptyRing));
+    const result = seriesCollectionSchema.safeParse(collectionOf(emptyRing));
 
     expect(result.success).toBe(false);
   });
@@ -105,7 +105,7 @@ describe("themeCollectionSchema", () => {
       ...sangokushi,
       geometry: { type: "Polygon", coordinates: [] },
     };
-    const result = themeCollectionSchema.safeParse(collectionOf(noRing));
+    const result = seriesCollectionSchema.safeParse(collectionOf(noRing));
 
     expect(result.success).toBe(false);
   });
@@ -125,7 +125,7 @@ describe("themeCollectionSchema", () => {
         ],
       },
     };
-    const result = themeCollectionSchema.safeParse(collectionOf(openRing));
+    const result = seriesCollectionSchema.safeParse(collectionOf(openRing));
 
     expect(result.success).toBe(false);
   });
@@ -151,10 +151,10 @@ describe("timeRangeSchema", () => {
   });
 });
 
-describe("parseThemes", () => {
+describe("parseSeries", () => {
   it("落とした理由を文脈付きで投げる", () => {
     expect(() =>
-      parseThemes(collectionOf(themeWith({ kind: "raster" }))),
-    ).toThrow(/themes/);
+      parseSeries(collectionOf(seriesWith({ kind: "raster" }))),
+    ).toThrow(/series/);
   });
 });

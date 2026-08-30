@@ -1,5 +1,5 @@
 /**
- * テーマ（＝コテンラジオの 1 シリーズ）のスキーマ。
+ * コテンラジオの 1 シリーズのスキーマ。
  * 地図が読む GeoJSON FeatureCollection の形を、実行時に検査できるかたちで持つ。
  *
  * 座標の順は GeoJSON の規定どおり `[経度, 緯度]` で、緯度が先の並びは検査で落ちる。
@@ -7,7 +7,7 @@
  *
  * 描画も RSS 同期もこの形だけを前提にしてよい。
  * 渡された値を検査するだけで `data/` の在り処は呼ぶ側が知るので、ファイルの読み込み口はここが持たない。
- * 入口は parseThemes。
+ * 入口は parseSeries。
  */
 
 import * as z from "zod";
@@ -18,10 +18,10 @@ import { linksSchema } from "@/lib/schema/link";
  * 描画スタイルの分岐キー。
  * `concept`（概念史）は場所が一意に決まらないものを控えめに描くための区分である。
  */
-export const themeKindSchema = z.enum(["point", "polygon", "line", "concept"]);
+export const seriesKindSchema = z.enum(["point", "polygon", "line", "concept"]);
 
 /**
- * テーマが扱う年代の範囲。
+ * シリーズが扱う年代の範囲。
  * 負値は紀元前を指す。
  */
 export const timeRangeSchema = z
@@ -65,10 +65,10 @@ function isClosedRing(ring: readonly (readonly [number, number])[]): boolean {
 }
 
 /**
- * テーマを地図のどこへ、どんな図形で置くか。
+ * シリーズを地図のどこへ、どんな図形で置くか。
  * GeoJSON の `geometry` そのもので、型は仕様の 4 種だけを手で写したもの（ライブラリの型は引いていない）。
  *
- * 使い分けはテーマの性質で決まる。
+ * 使い分けはシリーズの性質で決まる。
  * 都市国家は Point、帝国や文明圏は Polygon、遠征や航海は LineString、場所が散る概念史は MultiPoint を使う。
  */
 const geometrySchema = z.discriminatedUnion("type", [
@@ -98,18 +98,18 @@ const geometrySchema = z.discriminatedUnion("type", [
 ]);
 
 /**
- * テーマ 1 件が持つ属性。
+ * シリーズ 1 件が持つ属性。
  *
  * `season` が割当キーで、`itunes:season` の値を持つ（docs/adr/0018-season-as-assignment-key.md）。
- * 1 テーマ = 1 シリーズ = `itunes:season` の 1 値で、束ねない。
+ * 1 シリーズ = `itunes:season` の 1 値で、束ねない。
  * `ROADMAP.md` の完了判定がシリーズ数を数えて全件がここに在るかを見るので、束ねると feature 数とシリーズ数が一致しなくなる。
  *
  * `summary` は自前の要約を入れる欄で、番組の説明文は引かないので当面は空である（docs/adr/0008-quote-titles-only.md）。
  */
-export const themePropertiesSchema = z.object({
+export const seriesPropertiesSchema = z.object({
   id: z.string().trim().min(1),
   title: z.string().trim().min(1),
-  kind: themeKindSchema,
+  kind: seriesKindSchema,
   timeRange: timeRangeSchema,
   summary: z.string(),
   region: z.string().trim().min(1),
@@ -118,24 +118,24 @@ export const themePropertiesSchema = z.object({
   tags: z.array(z.string().trim().min(1)),
 });
 
-/** テーマ 1 件。 */
-export const themeFeatureSchema = z.object({
+/** シリーズ 1 件。 */
+export const seriesFeatureSchema = z.object({
   type: z.literal("Feature"),
   geometry: geometrySchema,
-  properties: themePropertiesSchema,
+  properties: seriesPropertiesSchema,
 });
 
 /**
- * テーマ全件。
+ * シリーズ全件。
  * MapLibre へそのまま渡せる GeoJSON FeatureCollection である。
  *
  * `id` と `season` の重複をここで落とす。
- * `id` はエピソードが指す先の鍵で、`season` は同期が組む season → themeId の索引の鍵なので、どちらも重複すると引いた先が一つに定まらない。
+ * `id` はエピソードが指す先の鍵で、`season` は同期が組む season → seriesId の索引の鍵なので、どちらも重複すると引いた先が一つに定まらない。
  */
-export const themeCollectionSchema = z
+export const seriesCollectionSchema = z
   .object({
     type: z.literal("FeatureCollection"),
-    features: z.array(themeFeatureSchema),
+    features: z.array(seriesFeatureSchema),
   })
   .superRefine((collection, ctx) => {
     const properties = collection.features.map((feature) => feature.properties);
@@ -149,26 +149,26 @@ export const themeCollectionSchema = z
     for (const season of duplicatesOf(seasons)) {
       ctx.addIssue({
         code: "custom",
-        message: `season が複数のテーマに割り当てられている: ${season}`,
+        message: `season が複数のシリーズに割り当てられている: ${season}`,
       });
     }
   });
 
-export type ThemeKind = z.infer<typeof themeKindSchema>;
+export type SeriesKind = z.infer<typeof seriesKindSchema>;
 export type TimeRange = z.infer<typeof timeRangeSchema>;
-export type Theme = z.infer<typeof themeFeatureSchema>;
-export type ThemeCollection = z.infer<typeof themeCollectionSchema>;
+export type Series = z.infer<typeof seriesFeatureSchema>;
+export type SeriesCollection = z.infer<typeof seriesCollectionSchema>;
 
 /**
- * テーマ全件を検査して返す。
+ * シリーズ全件を検査して返す。
  * 合わなければ、どの要素のどこが合わないかを添えて投げる。
  */
-export function parseThemes(input: unknown): ThemeCollection {
-  const parsed = themeCollectionSchema.safeParse(input);
+export function parseSeries(input: unknown): SeriesCollection {
+  const parsed = seriesCollectionSchema.safeParse(input);
 
   if (!parsed.success) {
     throw new Error(
-      `themes がスキーマに合わない\n${z.prettifyError(parsed.error)}`,
+      `series がスキーマに合わない\n${z.prettifyError(parsed.error)}`,
     );
   }
 

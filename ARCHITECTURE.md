@@ -20,7 +20,7 @@
 | スタイル | CSS Modules（`*.module.css` をコンポーネントへ併置）。CSS フレームワークは持たない | [ADR-0015](docs/adr/0015-css-modules.md) |
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-0003](docs/adr/0003-maplibre.md) |
 | ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-0004](docs/adr/0004-openfreemap-positron.md) |
-| データ | エピソード = RSS 自動 / テーマ = 人間キュレーション の二層 | [ADR-0005](docs/adr/0005-two-layer-data.md) |
+| データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-0005](docs/adr/0005-two-layer-data.md) |
 | 配信リンク | RSS の `<link>`（Spotify のエピソードページ） | [ADR-0006](docs/adr/0006-rss-link-as-episode-url.md) |
 | デプロイ | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`） | [ADR-0007](docs/adr/0007-github-pages.md) |
 | 引用の範囲 | シリーズ名とエピソードタイトルのみ | [ADR-0008](docs/adr/0008-quote-titles-only.md) |
@@ -35,7 +35,7 @@
 公式 RSS ──(pnpm sync: ビルド前)──> data/episodes.json ─┐
                                     └─> data/inbox/     │  未割当スタブ = 人間の入口
                                                         │
-data/themes.geojson （人間キュレーション）──────────────┤
+data/series.geojson （人間キュレーション）──────────────┤
 data/eras.json      （時代区分）────────────────────────┤
                                                         v
                                           Next.js static export (next build)
@@ -44,7 +44,7 @@ data/eras.json      （時代区分）──────────────
                               GitHub Pages の静的ファイル一式
                                                         │
                                                         v
-                          ブラウザ: MapLibre がテーマを描き、era スライダーが opacity を動かす
+                          ブラウザ: MapLibre がシリーズを描き、era スライダーが opacity を動かす
 ```
 
 実行時 fetch を持たない。RSS の取得は常にビルド前のデータ更新として走る。
@@ -56,9 +56,9 @@ data/eras.json      （時代区分）──────────────
 ```
 data/
 ├── episodes.json        # 自動層。RSS から同期。手で編集しない
-├── themes.geojson       # 手動層。テーマ=キュレーション対象の正
+├── series.geojson       # 手動層。シリーズ=キュレーション対象の正
 ├── eras.json            # 時代区分（下記「時系列（era）モデル」）
-└── inbox/               # RSS 同期が排出する「未割当テーマのスタブ」置き場
+└── inbox/               # RSS 同期が排出する「未割当シリーズのスタブ」置き場
 ```
 
 **episodes.json**（RSS 由来、guid キー）:
@@ -73,20 +73,20 @@ data/
       "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822 からの正規化は同期側
       "audioUrl": "...",
       "season": 22,             // itunes:season。持たない回（番外編・特別編・告知）は null
-      "themeId": "sangokushi",  // season から割当。未割当なら null（ADR-0018）
+      "seriesId": "sangokushi",  // season から割当。未割当なら null（ADR-0018）
       "links": [{ "platform": "spotify", "url": "https://open.spotify.com/episode/..." }]
     }
   ]
 }
 ```
 
-**themes.geojson**（GeoJSON FeatureCollection。MapLibre へ直接渡す）:
+**series.geojson**（GeoJSON FeatureCollection。MapLibre へ直接渡す）:
 
 ```jsonc
 {
   "type": "Feature",
   "geometry": { "type": "Point", "coordinates": [112.5, 34.6] },
-  // Point / Polygon / LineString をテーマの性質で使い分ける
+  // Point / Polygon / LineString をシリーズの性質で使い分ける
   // 例: 都市国家=Point、帝国や文明圏=Polygon、遠征や航海=LineString
   "properties": {
     "id": "sangokushi",
@@ -102,11 +102,11 @@ data/
 }
 ```
 
-- **1 テーマ = 1 シリーズ = `itunes:season` の 1 値**。
-  `CLAUDE.md` の「各シリーズ（テーマ）」がこの同一視で、`ROADMAP.md` の完了判定もシリーズ数を数える
-- エピソードとテーマの割当キーは `itunes:season`（[ADR-0018](docs/adr/0018-season-as-assignment-key.md)）。
-  テーマ側もエピソード側も `season` を持ち、テーマ側は必須、エピソード側は持たない回があるので nullable
-- `links` は `{ platform, url }` の配列で、テーマもエピソードも同じ形。
+- **1 シリーズ = `itunes:season` の 1 値**。
+  `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
+- エピソードとシリーズの割当キーは `itunes:season`（[ADR-0018](docs/adr/0018-season-as-assignment-key.md)）。
+  シリーズ側もエピソード側も `season` を持ち、シリーズ側は必須、エピソード側は持たない回があるので nullable
+- `links` は `{ platform, url }` の配列で、シリーズもエピソードも同じ形。
   `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。
   この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける
@@ -134,7 +134,7 @@ data/
 ```
 
 - スライダー位置 → era 内を線形補間して「現在窓（年範囲）」を得る
-- テーマの表示 opacity = timeRange と現在窓の重なり率（0..1）を
+- シリーズの表示 opacity = timeRange と現在窓の重なり率（0..1）を
   イージングに通した値。窓の端で滑らかにフェードイン/アウトする
 - era の刻みはデータが揃ってから密度に合わせて調整する（S7 の後に見直し）
 - 区間は `start` を含み `end` を含まない半開区間で、境目の年は後ろの era に属する
@@ -144,7 +144,7 @@ data/
 ## 4. UI 構成
 
 - 全画面マップ + 下部に era スライダー（ラベルは era 名、位置は補間年を薄く表示）
-- 左に開閉パネル: 現在窓に表示中のテーマ一覧。クリックで該当オブジェクトを
+- 左に開閉パネル: 現在窓に表示中のシリーズ一覧。クリックで該当オブジェクトを
   選択（flyTo + ハイライト）。地図側の選択もパネルに同期（単一の selection state）
 - オブジェクトクリック → 詳細カード（summary・年代・エピソード一覧・Spotify リンク）
 - 状態管理は React の範囲で足りる想定（selection / era window / panel 開閉のみ）。
@@ -158,32 +158,32 @@ data/
   物理的な置き場所（画面下端の常設か、スライダー脇の小さな帰属＋リンクか）は
   全画面マップの制約次第なので S8 で決める
 
-### テーマの近接
+### シリーズの近接
 
-`CLAUDE.md` の目的にある「どのテーマと近接するか」は、時代・地理・主題という別々の三つの軸を指す。
+`CLAUDE.md` の目的にある「どのシリーズと近接するか」は、時代・地理・主題という別々の三つの軸を指す。
 軸ごとに扱いを変える。
 
 - **地理の近さは暗黙に満たす**。
   地図上の位置がそのまま距離を表すので、専用の UI は同じことを二度言うだけになる
-- **時代の近さは era スライダーで暗黙に満たし、選択中のテーマとの重なりだけを明示する**。
-  現在窓に浮かんでいるテーマは同時代だが、窓の端に薄く残っているだけのものと区別が付かない
+- **時代の近さは era スライダーで暗黙に満たし、選択中のシリーズとの重なりだけを明示する**。
+  現在窓に浮かんでいるシリーズは同時代だが、窓の端に薄く残っているだけのものと区別が付かない
 - **主題の近さには明示的な UI を置く**。
   主題は地図にも era スライダーにも現れないので、置かなければ目的の三つ目が満たされない
 
 明示的に足すのは次の三つで、置き場所は S5（`ROADMAP.md`）。
-三つとも選択中のテーマを起点にするので、selection の消費者が揃うステップに同居させる。
+三つとも選択中のシリーズを起点にするので、selection の消費者が揃うステップに同居させる。
 
-- **関連テーマ行**: 詳細カードの末尾に、`tags` を共有するか `region` が同じテーマを数件並べる。
-  クリックで選択がそのテーマへ移る
-- **同時代ハイライト**: 選択中のテーマと `timeRange` が重なるテーマを地図上で強調する。
+- **関連シリーズ行**: 詳細カードの末尾に、`tags` を共有するか `region` が同じシリーズを数件並べる。
+  クリックで選択がそのシリーズへ移る
+- **同時代ハイライト**: 選択中のシリーズと `timeRange` が重なるシリーズを地図上で強調する。
   S4 の opacity 制御の上に載る差分で、選択が無いときは何も起きない
-- **tag 絞り込み**: パネルに現在窓の tags を並べ、選んだタグを持つテーマだけを地図とパネルに残す。
+- **tag 絞り込み**: パネルに現在窓の tags を並べ、選んだタグを持つシリーズだけを地図とパネルに残す。
   selection とは別に filter state が一つ増える
 
 近接のためにスキーマは増やさない。
 判定は既存の properties（`tags` / `region` / `timeRange`）だけで行う。
-テーマ間の明示的な関連リンク（`related` のような属性）は、90 前後の全シリーズへ人手で張る費用が S7 に乗るので採らない。
-シードが10件前後の間は関連テーマが 0 件になりうるので、0 件なら行ごと出さない。
+シリーズ間の明示的な関連リンク（`related` のような属性）は、90 前後の全シリーズへ人手で張る費用が S7 に乗るので採らない。
+シードが10件前後の間は関連シリーズが 0 件になりうるので、0 件なら行ごと出さない。
 
 ## 5. RSS 同期パイプライン
 
@@ -200,8 +200,8 @@ data/
   - シリーズ内の回は `itunes:episode`。消費する画面が無いので episodes.json へは保存しない（ADR-0018）
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
-  2. themes.geojson 全件の `season` から season → themeId の索引を組み、新規エピソードの `itunes:season` で引いて themeId 割当（ADR-0018）
-  3. どのテーマにも当たらないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
+  2. series.geojson 全件の `season` から season → seriesId の索引を組み、新規エピソードの `itunes:season` で引いて seriesId 割当（ADR-0018）
+  3. どのシリーズにも当たらないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
      （タイトル・guid・推定シリーズ名。座標と年代は空欄=人間+Claude の補正対象）
   4. 結果サマリ（新規 n 件 / 割当 m 件 / 要レビュー k 件）を stdout へ
 - 運用: 当面は手動で `pnpm sync` → inbox を見てキュレーション → コミット。
@@ -241,7 +241,7 @@ data/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
-まだ存在しないもの: `data/themes.geojson`（#4）、`data/episodes.json` と `data/inbox/`（#27）、
+まだ存在しないもの: `data/series.geojson`（#4）、`data/episodes.json` と `data/inbox/`（#27）、
 `web/scripts/sync-feed.ts`（S6）、`VISION.md`（#41）。
 `data/` はアプリの外なので**ルート側**に置く。
 
@@ -257,7 +257,7 @@ RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを impo
 - **番組の説明文・ロゴ・カバーアートを使わない**（ADR-0008 の帰結）。
   載せるのはシリーズ名とエピソードタイトルだけ
 - **ユーザ登録・コメント等の動的機能を持たない**。static export の前提（ADR-0001）から外れる
-- **テーマ間の明示的な関連リンク（`related` のような属性）を持たない**（§4）
+- **シリーズ間の明示的な関連リンク（`related` のような属性）を持たない**（§4）
 - **実行時 fetch を持たない**。同期は常にビルド前（§5）
 
 ## 8. 持ち越した開いた問い
@@ -265,6 +265,6 @@ RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを impo
 構造に関わる未決で、該当 issue に着手するときに解く。
 
 - 一つのエピソードが複数シリーズに跨る回（対談・番外編）の見せ方。
-  `themeId` は単数 nullable で、割当キーが season なので、season を持つ回は必ず一つのテーマへ入る（ADR-0018）。
-  跨る回をどちらのテーマの下に見せるかは S6 の精緻化のときに突き合わせる
+  `seriesId` は単数 nullable で、割当キーが season なので、season を持つ回は必ず一つのシリーズへ入る（ADR-0018）。
+  跨る回をどちらのシリーズの下に見せるかは S6 の精緻化のときに突き合わせる
 - モバイルでの振る舞い（全画面マップ + 下部スライダー + 左パネル）の範囲は S8 の精緻化で決める
