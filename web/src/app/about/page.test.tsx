@@ -2,7 +2,7 @@
  * ADR-0008 の4点と ADR-0011 のライセンスの範囲が、文言としてページに載っているかを固定する。
  * どの語を落とすと表記が成り立たなくなるかを、観点ごとに 1 本ずつ置く。
  *
- * 見るのは文言だけで、`out/about/index.html` として書き出されるかは L4 の `tests/smoke/about.spec.ts` が見る。
+ * 見るのは文言だけで、`out/about.html` として書き出され、開けるかどうかは L4 の `tests/smoke/about.spec.ts` が見る。
  */
 
 import { render, screen } from "@testing-library/react";
