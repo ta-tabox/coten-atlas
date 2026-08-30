@@ -59,6 +59,12 @@ type InboxEntry = {
   link: string;
 };
 
+/** フィードの 1 件と、それに決まったシリーズ。 */
+type Assignment = {
+  item: FeedItem;
+  seriesId: string | null;
+};
+
 /**
  * RSS を取ってくる。
  * 応答が 2xx でなければ投げる。
@@ -167,6 +173,47 @@ function warnDisappeared(items: FeedItem[], knownGuids: Set<string>): void {
 }
 
 /**
+ * 同じ日に既に出してある inbox を読む。
+ * 無ければ空。
+ *
+ * 読めない中身なら投げる。
+ * 人間がまだ判定していない一覧なので、壊れているときに黙って空で上書きすると作業が消える。
+ */
+function readInbox(file: string): InboxEntry[] {
+  if (!fs.existsSync(file)) {
+    return [];
+  }
+
+  const existing = JSON.parse(fs.readFileSync(file, "utf8")) as {
+    episodes?: unknown;
+  };
+
+  if (!Array.isArray(existing.episodes)) {
+    throw new Error(`inbox の中身を読めない: ${file}`);
+  }
+
+  return existing.episodes as InboxEntry[];
+}
+
+/**
+ * その日の inbox へ未割当の回を足す。
+ *
+ * 既にある同じ日の一覧へ継ぎ足す。
+ * 1 日に 2 度走らせたとき、丸ごと書き換えると 1 度目に出した未判定の回が消える。
+ */
+function writeInbox(syncedAt: string, unassigned: Assignment[]): void {
+  const file = path.join(INBOX_DIR, `${syncedAt.slice(0, 10)}.json`);
+  const existing = readInbox(file);
+  const known = new Set(existing.map((entry) => entry.guid));
+  const added = unassigned
+    .map(({ item }) => toInboxEntry(item))
+    .filter((entry) => !known.has(entry.guid));
+
+  writeJson(file, { syncedAt, episodes: [...existing, ...added] });
+  console.log(`inbox: ${path.relative(process.cwd(), file)}`);
+}
+
+/**
  * 取得から書き出しまでを通す。
  * 数え上げたサマリを標準出力へ書く。
  */
@@ -178,10 +225,19 @@ async function main(): Promise<void> {
   warnDisappeared(items, knownGuids);
 
   const syncedAt = new Date().toISOString();
-  const assignments = items.map((item) => ({
+  const assignments: Assignment[] = items.map((item) => ({
     item,
     seriesId: assignSeriesId(item, series),
   }));
+
+  const added = assignments.filter(({ item }) => !knownGuids.has(item.guid));
+  const unassigned = added.filter(({ seriesId }) => seriesId === null);
+
+  // inbox を先に書く。
+  // episodes.json を先に書くと、その後で落ちたときに guid だけが既知になり、未判定のまま二度と出てこない回ができる。
+  if (unassigned.length > 0) {
+    writeInbox(syncedAt, unassigned);
+  }
 
   writeJson(
     EPISODES_FILE,
@@ -192,19 +248,6 @@ async function main(): Promise<void> {
       ),
     }),
   );
-
-  const added = assignments.filter(({ item }) => !knownGuids.has(item.guid));
-  const unassigned = added.filter(({ seriesId }) => seriesId === null);
-
-  if (unassigned.length > 0) {
-    const inboxFile = path.join(INBOX_DIR, `${syncedAt.slice(0, 10)}.json`);
-
-    writeJson(inboxFile, {
-      syncedAt,
-      episodes: unassigned.map(({ item }) => toInboxEntry(item)),
-    });
-    console.log(`inbox: ${path.relative(process.cwd(), inboxFile)}`);
-  }
 
   console.log(
     `フィード ${items.length} 件 / 新規 ${added.length} 件 / 割当 ${added.length - unassigned.length} 件 / 要レビュー ${unassigned.length} 件`,
