@@ -51,7 +51,7 @@ jobs:
     # アプリは web/ の中（#39）。run: のステップだけを web/ で回す。
     # uses: のアクション（checkout / mise-action）には working-directory が効かないので、
     # mise-action はリポジトリのルートに居たまま、ルートの mise.toml を読む。
-    # check.yml と同じ形。判定の口（Bash(pnpm check)）も web/ の中で打たれる。
+    # check.yml と同じ形。
     defaults:
       run:
         working-directory: web
