@@ -16,7 +16,7 @@ const sangokushi = {
     timeRange: { start: 180, end: 280 },
     summary: "",
     region: "中国",
-    seasons: [22],
+    season: 22,
     links: [
       { platform: "spotify", url: "https://open.spotify.com/show/sangokushi" },
     ],
@@ -54,7 +54,7 @@ describe("themeCollectionSchema", () => {
 
   it("id が重複した 2 件を落とす", () => {
     const result = themeCollectionSchema.safeParse(
-      collectionOf(sangokushi, themeWith({ seasons: [23] })),
+      collectionOf(sangokushi, themeWith({ season: 23 })),
     );
 
     expect(result.success).toBe(false);

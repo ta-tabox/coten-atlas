@@ -26,8 +26,8 @@
 
 **割当キーを `itunes:season` にする。**
 
-1. `themePropertiesSchema` は `seasons: number[]` を持つ。
-   1 テーマが複数の season を束ねる場合に備えて配列にする
+1. `themePropertiesSchema` は `season: number` を持つ。
+   **1 テーマ = 1 シリーズ = `itunes:season` の 1 値**で、束ねない
 2. `match` を `themePropertiesSchema` から外す。
    割当キーを二つ持たない
 3. `episodeSchema` は `season: number | null` を持つ。
@@ -39,6 +39,11 @@
 **season を正にした理由**: 配信元が付ける番号なので、表記の揺れから独立している。
 割当は season → themeId の索引を引くだけになり、`assignThemeId` が分岐を持たない。
 
+**1 テーマ = 1 season にした理由**: このリポジトリが既に二箇所でそう宣言している。
+`CLAUDE.md` は目的を「コテンラジオの各シリーズ（テーマ）を世界地図×時系列にマッピング」と書き、シリーズとテーマを同一視している。
+`ROADMAP.md` の完了判定は「1 シリーズ = `itunes:season` の 1 値と数える」と定義したうえで「全シリーズが `themes.geojson` に存在し」を閾値に置く。
+束ねられる形にすると、feature 数とシリーズ数が一致しなくなり、この閾値が機械で数えられなくなる。
+
 採らなかった案:
 
 - **`match` を正のまま残す** — 表記の揺れに追随して正規表現を書き続ける費用が、恒常的にかかる。
@@ -49,6 +54,9 @@
   番外編を受けるのは ADR-0005 の人間キュレーション層＝inbox だと元の設計が既に決めているので、機械で拾いにいく理由が無い
 - **両方を持たせて衝突を検出する** — 検出できても、どちらが勝つかの規則は別に要る。
   規則を足すだけで、決めることは減らない
+- **`seasons: number[]` で束ねられるようにする** — 1 つの話題が複数 season に跨る回に備えられる。
+  ただし備えるだけで、いま束ねたい実例が無い。
+  上の完了判定が数えられなくなる代償のほうが先に来る
 
 **`itunes:episode` を持たせなかった理由**: いま消費する画面が無い。
 詳細カードのエピソード一覧（S3）は `pubDate` で並べれば足りる。
@@ -56,19 +64,21 @@
 
 ## 帰結
 
-- `ARCHITECTURE.md` §3 の `themes.geojson` から `match` が消え、`seasons` が入る。
+- `ARCHITECTURE.md` §3 の `themes.geojson` から `match` が消え、`season` が入る。
   同 §5 の同期手順 2 は正規表現でなく season の索引を引く
 - #27 の `assignThemeId` は season → themeId の索引を引く。
-  索引は `themes.geojson` 全件の `seasons` から組む
-- #4 のシードは `seasons` を埋める。
+  索引は `themes.geojson` 全件の `season` から組む
+- #4 のシードは `season` を 1 つ埋める。
   テーマ名から season 番号を引き当てる作業が人手で要る（フィードの `itunes:season` とタイトルの対応を見る）
+- feature 数がそのままシリーズ数になるので、`ROADMAP.md` の完了判定は features を数えれば足りる
 - `itunes:season` を持たない 176 件は必ず inbox へ落ちる。
   人間が拾うか捨てるかを決める
-- テーマを season より細かい単位で切れなくなる。
-  1 つの season を 2 テーマへ割ることは、この割当キーでは表現できない
+- テーマを season より細かい単位でも粗い単位でも切れなくなる。
+  1 つの season を 2 テーマへ割ることも、2 つの season を 1 テーマへ束ねることも、この割当キーでは表現できない
 
 ## 覆る条件
 
 season を持たない回のうち、テーマへ機械割当したいものが実際に出てきたとき。
 1 つの season を複数テーマへ割る必要が出たとき（そのときは割当キーがエピソード単位へ降りる）。
+複数 season を 1 テーマへ束ねたい実例が出たとき（そのときは `ROADMAP.md` の完了判定も一緒に見直す）。
 配信元が season 番号を振り直したとき。

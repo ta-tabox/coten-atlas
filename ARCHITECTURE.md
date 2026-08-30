@@ -95,15 +95,17 @@ data/
     "timeRange": { "start": 180, "end": 280 },  // 負値 = BC
     "summary": "",                  // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
     "region": "中国",
-    "seasons": [22],                // 割当キー。itunes:season の値（ADR-0018）
+    "season": 22,                   // 割当キー。itunes:season の値（ADR-0018）
     "links": [{ "platform": "spotify", "url": "https://open.spotify.com/..." }],
     "tags": ["戦乱", "中国"]
   }
 }
 ```
 
+- **1 テーマ = 1 シリーズ = `itunes:season` の 1 値**。
+  `CLAUDE.md` の「各シリーズ（テーマ）」がこの同一視で、`ROADMAP.md` の完了判定もシリーズ数を数える
 - エピソードとテーマの割当キーは `itunes:season`（[ADR-0018](docs/adr/0018-season-as-assignment-key.md)）。
-  テーマ側が `seasons`、エピソード側が `season` を持つ
+  テーマ側もエピソード側も `season` を持ち、テーマ側は必須、エピソード側は持たない回があるので nullable
 - `links` は `{ platform, url }` の配列で、テーマもエピソードも同じ形。
   `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む
 - 契約の現物は `web/src/lib/schema/` の zod スキーマが持つ。
@@ -197,7 +199,7 @@ data/
   - シリーズ内の回は `itunes:episode`。消費する画面が無いので episodes.json へは保存しない（ADR-0018）
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
-  2. themes.geojson 全件の `seasons` から season → themeId の索引を組み、新規エピソードの `itunes:season` で引いて themeId 割当（ADR-0018）
+  2. themes.geojson 全件の `season` から season → themeId の索引を組み、新規エピソードの `itunes:season` で引いて themeId 割当（ADR-0018）
   3. どのテーマにも当たらないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
      （タイトル・guid・推定シリーズ名。座標と年代は空欄=人間+Claude の補正対象）
   4. 結果サマリ（新規 n 件 / 割当 m 件 / 要レビュー k 件）を stdout へ

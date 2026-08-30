@@ -97,9 +97,9 @@ const geometrySchema = z.discriminatedUnion("type", [
 /**
  * テーマ 1 件が持つ属性。
  *
- * `seasons` が割当キーで、`itunes:season` の値を持つ（docs/adr/0018-season-as-assignment-key.md）。
- * 1 テーマが複数 season を束ねるので配列にしてある。
- * キュレーション前は空でよく、そのときそのテーマにはエピソードが 1 件も付かない。
+ * `season` が割当キーで、`itunes:season` の値を持つ（docs/adr/0018-season-as-assignment-key.md）。
+ * 1 テーマ = 1 シリーズ = `itunes:season` の 1 値で、束ねない。
+ * `ROADMAP.md` の完了判定がシリーズ数を数えて全件がここに在るかを見るので、束ねると feature 数とシリーズ数が一致しなくなる。
  *
  * `summary` は自前の要約を入れる欄で、番組の説明文は引かないので当面は空である（docs/adr/0008-quote-titles-only.md）。
  */
@@ -110,7 +110,7 @@ export const themePropertiesSchema = z.object({
   timeRange: timeRangeSchema,
   summary: z.string(),
   region: z.string().trim().min(1),
-  seasons: z.array(z.int().positive()),
+  season: z.int().positive(),
   links: linksSchema,
   tags: z.array(z.string().trim().min(1)),
 });
@@ -126,8 +126,8 @@ export const themeFeatureSchema = z.object({
  * テーマ全件。
  * MapLibre へそのまま渡せる GeoJSON FeatureCollection である。
  *
- * `id` と `seasons` の重複をここで落とす。
- * `id` はエピソードが指す先の鍵で、`seasons` は同期が組む season → themeId の索引の鍵なので、どちらも重複すると引いた先が一つに定まらない。
+ * `id` と `season` の重複をここで落とす。
+ * `id` はエピソードが指す先の鍵で、`season` は同期が組む season → themeId の索引の鍵なので、どちらも重複すると引いた先が一つに定まらない。
  */
 export const themeCollectionSchema = z
   .object({
@@ -141,7 +141,7 @@ export const themeCollectionSchema = z
       ctx.addIssue({ code: "custom", message: `id が重複している: ${id}` });
     }
 
-    const seasons = properties.flatMap((property) => property.seasons);
+    const seasons = properties.map((property) => property.season);
 
     for (const season of duplicatesOf(seasons)) {
       ctx.addIssue({
