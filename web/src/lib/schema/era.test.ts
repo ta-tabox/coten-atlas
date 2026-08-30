@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { eraListSchema, parseEras } from "@/lib/schema/era";
+import { ERA_END_PRESENT, eraListSchema, parseEras } from "@/lib/schema/era";
 
 /** ARCHITECTURE.md「時系列（era）モデル」の 7 区分をそのまま写したもの。 */
 const eras = [
@@ -9,7 +9,7 @@ const eras = [
   { id: "earlymodern", label: "近世", start: 1450, end: 1800 },
   { id: "modern19", label: "19世紀", start: 1800, end: 1900 },
   { id: "modern20a", label: "〜WWII", start: 1900, end: 1945 },
-  { id: "modern20b", label: "戦後", start: 1945, end: 2030 },
+  { id: "modern20b", label: "戦後", start: 1945, end: ERA_END_PRESENT },
 ];
 
 describe("eraListSchema", () => {
@@ -52,6 +52,23 @@ describe("eraListSchema", () => {
     const result = eraListSchema.safeParse(duplicated);
 
     expect(result.success).toBe(false);
+  });
+
+  it("終わっていない区間の後ろに区間があれば落とす", () => {
+    const trailing = [
+      { id: "ancient", label: "古代", start: -800, end: ERA_END_PRESENT },
+      { id: "medieval", label: "中世", start: 550, end: 1450 },
+    ];
+
+    expect(eraListSchema.safeParse(trailing).success).toBe(false);
+  });
+
+  it("終わっていない区間には幅の検査を掛けない", () => {
+    const onlyOne = [
+      { id: "modern", label: "現代", start: 1945, end: ERA_END_PRESENT },
+    ];
+
+    expect(eraListSchema.safeParse(onlyOne).success).toBe(true);
   });
 
   it("空の列を落とす", () => {

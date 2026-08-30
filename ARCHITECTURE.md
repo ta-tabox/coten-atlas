@@ -129,7 +129,7 @@ data/
   { "id": "earlymodern","label": "近世",   "start": 1450,   "end": 1800 },
   { "id": "modern19",   "label": "19世紀", "start": 1800,   "end": 1900 },
   { "id": "modern20a",  "label": "〜WWII", "start": 1900,   "end": 1945 },
-  { "id": "modern20b",  "label": "戦後",   "start": 1945,   "end": 2030 }
+  { "id": "modern20b",  "label": "戦後",   "start": 1945,   "end": "present" }
 ]
 ```
 
@@ -137,8 +137,9 @@ data/
 - テーマの表示 opacity = timeRange と現在窓の重なり率（0..1）を
   イージングに通した値。窓の端で滑らかにフェードイン/アウトする
 - era の刻みはデータが揃ってから密度に合わせて調整する（S7 の後に見直し）
-- 末尾の `end` は固定値で、現在年へは追随させない（[ADR-0019](docs/adr/0019-era-right-edge-fixed.md)）。
-  スライダーはテーマが 1 件も浮かばない位置を取りうる
+- 区間は `start` を含み `end` を含まない半開区間で、境目の年は後ろの era に属する
+- **終わっていない era の `end` には年を書かず `"present"` を置く**（[ADR-0019](docs/adr/0019-era-open-end.md)）。
+  置けるのは末尾だけで、スライダーの右端に当たる年は描画のときに決まる（決め方は S4）
 
 ## 4. UI 構成
 

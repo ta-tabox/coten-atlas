@@ -45,7 +45,7 @@
 | [0016](0016-playwright-runner.md) | ブラウザを立てる検証は Playwright が回し、Vitest は純関数だけを見る | 2026-08-29 | 採用 |
 | [0017](0017-local-only-instructions.md) | 手元の環境にだけ意味を持つ指示と申し送りは追跡しない | 2026-08-29 | 採用 |
 | [0018](0018-season-as-assignment-key.md) | エピソードとテーマの割当キーを `itunes:season` にする | 2026-08-29 | 採用 |
-| [0019](0019-era-right-edge-fixed.md) | era 列の右端を固定値に置き、現在年へ追随させない | 2026-08-29 | 採用 |
+| [0019](0019-era-open-end.md) | 終わっていない era の `end` は年を書かず、印を置く | 2026-08-29 | 採用 |
 
 ## ADR にしないもの
 
