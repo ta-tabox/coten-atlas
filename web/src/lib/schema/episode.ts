@@ -16,13 +16,16 @@ import * as z from "zod";
 import { duplicatesOf } from "@/lib/duplicates";
 import { linksSchema } from "@/lib/schema/link";
 
-/**
- * エピソード 1 件。
- *
- * `guid` は RSS が各回に付ける識別子（globally unique identifier）で、綴りはフィード側の要素名をそのまま使っている。
- * UUID には固定できず、747 件は UUID だが 5 件は anchor.fm のエピソード URL で、形式が混在している。
- */
+/** エピソード 1 件。 */
 export const episodeSchema = z.object({
+  /**
+   * RSS 2.0 の `<guid>` 要素。
+   * globally unique identifier の頭字で、フィードの中で各回を一意に指す文字列を意味する。
+   * 綴りを開かずに置いているのは、同期側が読む要素名と一致していないと対応を追う手間が増えるため。
+   *
+   * 同期はこれを鍵に既存の episodes.json と突き合わせる。
+   * 747 件は UUID だが 5 件は anchor.fm のエピソード URL なので、UUID には固定できない。
+   */
   guid: z.string().trim().min(1),
   title: z.string().trim().min(1),
   pubDate: z.iso.datetime(),
