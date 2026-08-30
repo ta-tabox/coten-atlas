@@ -13,8 +13,8 @@
  */
 
 import * as z from "zod";
-import { duplicatesOf } from "./duplicates.ts";
-import { linksSchema } from "./link.ts";
+import { duplicatesOf } from "@/lib/schema/duplicates";
+import { linksSchema } from "@/lib/schema/link";
 
 /**
  * エピソード 1 件。

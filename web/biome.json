@@ -78,12 +78,7 @@
   },
   "overrides": [
     {
-      "includes": [
-        "vitest.config.ts",
-        "next.config.ts",
-        "scripts/**",
-        "src/lib/schema/**"
-      ],
+      "includes": ["vitest.config.ts", "next.config.ts", "scripts/**"],
       "linter": {
         "rules": {
           "style": {

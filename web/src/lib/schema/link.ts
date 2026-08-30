@@ -10,7 +10,7 @@
  */
 
 import * as z from "zod";
-import { duplicatesOf } from "./duplicates.ts";
+import { duplicatesOf } from "@/lib/schema/duplicates";
 
 /**
  * 配信基盤。
