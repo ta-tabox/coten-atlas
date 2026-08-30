@@ -34,6 +34,13 @@ import {
  */
 const FEED_URL = "https://anchor.fm/s/8c2088c/podcast/rss";
 
+/**
+ * 取得を諦めるまでの時間。
+ * 応答を返さない配信元に当たったとき、待ち続けると同期が終わりも失敗もしない状態で止まる。
+ * 実測で 7.2 MB を 2 秒弱で引けているので、桁が二つ違えば異常と見てよい。
+ */
+const FETCH_TIMEOUT_MS = 60_000;
+
 /** データ層の置き場。 */
 const DATA_DIR = fileURLToPath(new URL("../../data", import.meta.url));
 
@@ -57,7 +64,9 @@ type InboxEntry = {
  * 応答が 2xx でなければ投げる。
  */
 async function fetchFeed(url: string): Promise<string> {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
 
   if (!response.ok) {
     throw new Error(
