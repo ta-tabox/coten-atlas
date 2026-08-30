@@ -6,7 +6,7 @@
  * フィードの `pubDate` は RFC 822 で来るので、ISO 8601 へ直すのは同期側の仕事になる。
  * `guid` も同じで、初期の 5 件は先頭に空白が付いた URL なので、突き合わせのキーにする前に trim する。
  *
- * `season` が割当キーで、`themeId` はそれを引いた結果である（docs/adr/0018-season-as-assignment-key.md）。
+ * `season` が割当キーで、`seriesId` はそれを引いた結果である（docs/adr/0018-season-as-assignment-key.md）。
  * どちらも持たない回（番外編・特別編・告知）があるので null を許す。
  *
  * 入口は parseEpisodes。
@@ -31,7 +31,7 @@ export const episodeSchema = z.object({
   pubDate: z.iso.datetime(),
   audioUrl: z.url(),
   season: z.int().positive().nullable(),
-  themeId: z.string().trim().min(1).nullable(),
+  seriesId: z.string().trim().min(1).nullable(),
   links: linksSchema,
 });
 
