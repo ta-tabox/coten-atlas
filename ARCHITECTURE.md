@@ -112,8 +112,15 @@ data/
   この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける
 - 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
 - 概念史（お金の歴史・資本主義など）は「場所が一意でない」——主要な舞台を
-  MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする。
-  S2 でシードを作りながら規約を確定し、この節に追記する
+  MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする
+
+**概念史の geometry は、舞台を地点で数えられるかで分ける。**
+数えられるなら MultiPoint を使う。
+「世界三大宗教」は開祖が三人いるので、話がブッダガヤ・エルサレム・メッカという特定の地点へ落ちる。
+数えられないなら代表 Polygon を使う。
+「お金の歴史」は同じ仕組みが各地で独立に立ち上がるので、地点を挙げると挙げた場所だけが舞台に見える。
+geometry が Polygon でも `kind` は `"concept"` のままにする。
+`"polygon"` を与えると場所が一意に決まるシリーズと同じ濃さで描かれ、控えめに描くための区分そのものが無くなる。
 
 ### 時系列（era）モデル
 
@@ -241,7 +248,7 @@ data/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
-まだ存在しないもの: `data/series.geojson`（#4）、`data/episodes.json` と `data/inbox/`（#27）、
+まだ存在しないもの: `data/episodes.json` と `data/inbox/`（#27）、
 `web/scripts/sync-feed.ts`（S6）、`VISION.md`（#41）。
 `data/` はアプリの外なので**ルート側**に置く。
 
