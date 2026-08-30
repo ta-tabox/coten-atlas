@@ -5,11 +5,10 @@
 
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
-import { observe, viewportOf, violationsOf } from "@scripts/smoke";
+import { exportRoot, observe, viewportOf, violationsOf } from "@scripts/smoke";
 
-const EXPORT_ROOT = fileURLToPath(new URL("../../out", import.meta.url));
+const EXPORT_ROOT = exportRoot();
 
 test("配信物が自足している", async ({ page }) => {
   expect(
