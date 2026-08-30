@@ -1,5 +1,5 @@
 /**
- * エピソード（＝番組の 1 回）の契約。
+ * エピソード（＝番組の 1 回）のスキーマ。
  * RSS から同期した自動層の形を持つ（docs/adr/0005-two-layer-data.md）。
  *
  * ここが検査するのは**正規化後**の形である。
@@ -19,8 +19,8 @@ import { linksSchema } from "@/lib/schema/link";
 /**
  * エピソード 1 件。
  *
- * `guid` は UUID に固定できない。
- * 747 件は UUID だが 5 件は anchor.fm のエピソード URL で、形式が混在している。
+ * `guid` は RSS が各回に付ける識別子（globally unique identifier）で、綴りはフィード側の要素名をそのまま使っている。
+ * UUID には固定できず、747 件は UUID だが 5 件は anchor.fm のエピソード URL で、形式が混在している。
  */
 export const episodeSchema = z.object({
   guid: z.string().trim().min(1),

@@ -1,5 +1,5 @@
 /**
- * テーマ（＝コテンラジオの 1 シリーズ）の契約。
+ * テーマ（＝コテンラジオの 1 シリーズ）のスキーマ。
  * 地図が読む GeoJSON FeatureCollection の形を、実行時に検査できるかたちで持つ。
  *
  * 座標の順は GeoJSON の規定どおり `[経度, 緯度]` で、緯度が先の並びは検査で落ちる。
@@ -65,7 +65,10 @@ function isClosedRing(ring: readonly (readonly [number, number])[]): boolean {
 }
 
 /**
- * テーマが取りうる形。
+ * テーマを地図のどこへ、どんな図形で置くか。
+ * GeoJSON の `geometry` そのもので、型は仕様の 4 種だけを手で写したもの（ライブラリの型は引いていない）。
+ *
+ * 使い分けはテーマの性質で決まる。
  * 都市国家は Point、帝国や文明圏は Polygon、遠征や航海は LineString、場所が散る概念史は MultiPoint を使う。
  */
 const geometrySchema = z.discriminatedUnion("type", [
