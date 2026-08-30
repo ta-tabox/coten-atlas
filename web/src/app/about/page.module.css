@@ -1,0 +1,29 @@
+/* 文字を読むためのページなので、余白と行間をここで自前に持つ。
+   globals.css が消している body の margin は地図を全画面にするためのもので、この 1 枚には縁が要る。
+   色と余白のトークンを globals.css は持たないので、値はここが直に書く。 */
+
+.page {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  font-family: system-ui, sans-serif;
+  line-height: 1.9;
+}
+
+.page h1 {
+  font-size: 1.5rem;
+}
+
+.page h2 {
+  margin-top: 2.5rem;
+  font-size: 1.125rem;
+}
+
+.page code {
+  font-size: 0.9em;
+}
+
+.back {
+  margin: 0 0 1.5rem;
+  font-size: 0.875rem;
+}
