@@ -10,7 +10,7 @@
 |---|---|---|
 | **L0 型** | 型が通るか | `tsc --noEmit` |
 | **L1 静的** | 規約・書式・明らかな誤り | `biome ci .` |
-| **L2 ユニット** | 関数とコンポーネントの振る舞い | `vitest run`（+ React Testing Library、jsdom） |
+| **L2 ユニット** | 関数とコンポーネントの振る舞いと、`data/` の現物がスキーマに合うか | `vitest run`（+ React Testing Library、jsdom） |
 | **L3 ビルド** | static export が実際に吐けるか | `next build` |
 | **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法） | ヘッドレスの Chromium で `out/` を開く（`playwright test`） |
 | **人間の目視** | 地図の見た目・スライダーの手触り・実機 | 人間が `pnpm dev` で開く |
@@ -24,6 +24,13 @@ issue の完了条件は機械判定（`pnpm check`）と人間の判定に分�
 
 [ADR-0014](docs/adr/0014-e2e-offline-smoke.md) は人間の目視を L5 と呼んでいる。
 ADR は追記のみで本文を書き換えないので、決定した時点の呼び名がそのまま残る（`docs/adr/README.md` の規約 4）。
+
+`data/` の検査が L2 に居るのは、検査器が `web/src/lib/schema/` の zod スキーマそのもので、それを保証するのが同じ層の反例テストだから。
+層を分けると、赤が出たときに「データが壊れている」のか「スキーマが壊れている」のかを人間が切り分けることになる。
+型検査は `data/` を見ない（`tsconfig.json` の `include` が `web/` 配下しか見ない）ので、ここで拾わないとどの層にも掛からない。
+`data/` の検査は `web/tests/data.test.ts` で、綴りが `*.test.ts` なので `pnpm test` が拾う。
+足すと同じ検査が二度走るので、連鎖へ別の段としては足さない。
+`pnpm validate:data` はその 1 本だけを名指す切り分け用で、「これが緑なら閉じてよい」と言えるのは変わらず `pnpm check` だけである。
 
 L3 を層に持つのは static export の性質による。ビルド時にしか壊れない失敗があり、
 L0〜L2 だけでは PR が緑のまま公開が落ちる。

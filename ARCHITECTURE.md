@@ -68,12 +68,13 @@ data/
   "syncedAt": "2026-07-14T00:00:00Z",
   "episodes": [
     {
-      "guid": "...",            // RSS の guid。差分同期のキー
+      "guid": "...",            // RSS の guid。差分同期のキー。trim 済み
       "title": "三国志 徹底解説 #1 ...",
-      "pubDate": "...",
+      "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822 からの正規化は同期側
       "audioUrl": "...",
-      "themeId": "sangokushi",  // マッチャが割当。未割当なら null
-      "links": { "spotify": "https://open.spotify.com/episode/..." }
+      "season": 22,             // itunes:season。持たない回（番外編・特別編・告知）は null
+      "themeId": "sangokushi",  // season から割当。未割当なら null（ADR-0018）
+      "links": [{ "platform": "spotify", "url": "https://open.spotify.com/episode/..." }]
     }
   ]
 }
@@ -94,13 +95,21 @@ data/
     "timeRange": { "start": 180, "end": 280 },  // 負値 = BC
     "summary": "",                  // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
     "region": "中国",
-    "match": "^三国志",             // エピソードタイトル割当用の正規表現
-    "links": { "spotify": "https://open.spotify.com/..." },
+    "season": 22,                   // 割当キー。itunes:season の値（ADR-0018）
+    "links": [{ "platform": "spotify", "url": "https://open.spotify.com/..." }],
     "tags": ["戦乱", "中国"]
   }
 }
 ```
 
+- **1 テーマ = 1 シリーズ = `itunes:season` の 1 値**。
+  `CLAUDE.md` の「各シリーズ（テーマ）」がこの同一視で、`ROADMAP.md` の完了判定もシリーズ数を数える
+- エピソードとテーマの割当キーは `itunes:season`（[ADR-0018](docs/adr/0018-season-as-assignment-key.md)）。
+  テーマ側もエピソード側も `season` を持ち、テーマ側は必須、エピソード側は持たない回があるので nullable
+- `links` は `{ platform, url }` の配列で、テーマもエピソードも同じ形。
+  `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む
+- スキーマの現物は `web/src/lib/schema/` の zod が持つ。
+  この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける
 - 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
 - 概念史（お金の歴史・資本主義など）は「場所が一意でない」——主要な舞台を
   MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする。
@@ -120,7 +129,7 @@ data/
   { "id": "earlymodern","label": "近世",   "start": 1450,   "end": 1800 },
   { "id": "modern19",   "label": "19世紀", "start": 1800,   "end": 1900 },
   { "id": "modern20a",  "label": "〜WWII", "start": 1900,   "end": 1945 },
-  { "id": "modern20b",  "label": "戦後",   "start": 1945,   "end": 2030 }
+  { "id": "modern20b",  "label": "戦後",   "start": 1945,   "end": "present" }
 ]
 ```
 
@@ -128,6 +137,9 @@ data/
 - テーマの表示 opacity = timeRange と現在窓の重なり率（0..1）を
   イージングに通した値。窓の端で滑らかにフェードイン/アウトする
 - era の刻みはデータが揃ってから密度に合わせて調整する（S7 の後に見直し）
+- 区間は `start` を含み `end` を含まない半開区間で、境目の年は後ろの era に属する
+- **終わっていない era の `end` には年を書かず `"present"` を置く**（[ADR-0019](docs/adr/0019-era-open-end.md)）。
+  置けるのは末尾だけで、スライダーの右端に当たる年は描画のときに決まる（決め方は S4）
 
 ## 4. UI 構成
 
@@ -184,11 +196,12 @@ data/
     突き合わせのキーにする前に trim する
   - `pubDate` は RFC 822（`Wed, 19 Aug 2026 21:00:00 GMT`）で、全件 GMT 表記
   - `<link>` は Spotify のエピソードページ、`enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）
-  - シリーズ番号は `itunes:season`、シリーズ内の回は `itunes:episode`
+  - シリーズ番号は `itunes:season`。1〜66 が欠番なく並ぶが、752 件中 176 件（番外編・特別編・告知）はこれを持たない
+  - シリーズ内の回は `itunes:episode`。消費する画面が無いので episodes.json へは保存しない（ADR-0018）
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
-  2. 新規エピソードを themes.geojson の各 `match` 正規表現に通して themeId 割当
-  3. どのテーマにも合わないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
+  2. themes.geojson 全件の `season` から season → themeId の索引を組み、新規エピソードの `itunes:season` で引いて themeId 割当（ADR-0018）
+  3. どのテーマにも当たらないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
      （タイトル・guid・推定シリーズ名。座標と年代は空欄=人間+Claude の補正対象）
   4. 結果サマリ（新規 n 件 / 割当 m 件 / 要レビュー k 件）を stdout へ
 - 運用: 当面は手動で `pnpm sync` → inbox を見てキュレーション → コミット。
@@ -209,6 +222,7 @@ data/
 ├── ARCHITECTURE.md        # この文書（現況）
 ├── ROADMAP.md             # 作る順序
 ├── HARNESS.md             # 検証と実行環境
+├── data/                  # 人間キュレーション層と時代区分。アプリの外なのでルート側
 ├── docs/adr/              # 決定と経緯。1決定1レコード
 ├── mise.toml              # [tools] のみ。ランタイム版管理
 ├── .github/               # workflows・issue / PR テンプレ
@@ -227,14 +241,15 @@ data/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
-まだ存在しないもの: `data/`（テーマの GeoJSON と時代区分。S2）、`web/scripts/validate-data.ts`（S2）、
+まだ存在しないもの: `data/themes.geojson`（#4）、`data/episodes.json` と `data/inbox/`（#27）、
 `web/scripts/sync-feed.ts`（S6）、`VISION.md`（#41）。
 `data/` はアプリの外なので**ルート側**に置く。
 
 `web/scripts/` はこれと別枠になる。`tsconfig.json` の `paths` も vitest の alias も `web/` の中で
 解決するので、`web/` の道具立てに依るスクリプトはルートへ出さず `web/scripts/` に置く。
-RSS 同期（`sync-feed.ts`）もデータ検査（`validate-data.ts`）も `web/src/` のスキーマとパーサを
-import し `pnpm` の scripts から走るので、ビルド前処理もここに入る。
+RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを import し `pnpm` の scripts から走るので、
+ビルド前処理もここに入る。
+`data/` の検査はスクリプトを持たず、`web/tests/data.test.ts` が L2 で回す（`HARNESS.md`）。
 
 ## 7. 意図的にやらないこと
 
@@ -249,7 +264,7 @@ import し `pnpm` の scripts から走るので、ビルド前処理もここ�
 
 構造に関わる未決で、該当 issue に着手するときに解く。
 
-- `data/eras.json` 末尾の `end: 2030` は現在より先。スライダー右端が未来を指してよいかは #3 で決める
-- 一つのエピソードが複数シリーズに跨る回（対談・番外編）と、`match` 正規表現の衝突時の優先順位。
-  #3 が `themeId` を単数 nullable で固定するので、S6 の精緻化のときに突き合わせる
+- 一つのエピソードが複数シリーズに跨る回（対談・番外編）の見せ方。
+  `themeId` は単数 nullable で、割当キーが season なので、season を持つ回は必ず一つのテーマへ入る（ADR-0018）。
+  跨る回をどちらのテーマの下に見せるかは S6 の精緻化のときに突き合わせる
 - モバイルでの振る舞い（全画面マップ + 下部スライダー + 左パネル）の範囲は S8 の精緻化で決める

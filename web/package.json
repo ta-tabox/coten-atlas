@@ -15,6 +15,7 @@
     "test": "vitest run",
     "pretest:watch": "pnpm sync-map-worker",
     "test:watch": "vitest",
+    "validate:data": "vitest run tests/data.test.ts",
     "smoke": "playwright test --project=smoke",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm smoke"
   },
@@ -23,7 +24,8 @@
     "next": "^16.3.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-map-gl": "^8.1.2"
+    "react-map-gl": "^8.1.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",
