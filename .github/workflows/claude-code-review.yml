@@ -2,7 +2,6 @@ name: Claude Code Review
 
 # 共有の雛形からの写しで、`<!-- FILL -->` の箇所をこのリポジトリに合わせて埋めてある。
 # それ以外は複数のリポジトリで揃えている部分なので、変えるなら雛形の側を先に直す。
-# `timeout-minutes` と `concurrency` は雛形が持たないが、実行を縛る規約が要求しているので、雛形側の欠落と見て足してある（#44）。
 
 on:
   pull_request:
@@ -23,13 +22,13 @@ jobs:
     if: github.event.pull_request.head.repo.full_name == github.repository
 
     runs-on: ubuntu-latest
-    # 暴走時の上限。値は共有の規約が示す目安。
-    # 実測はレビュー一本が 7分48秒（PR #43）だが、サンプルが一本しか無いので縮めない。
     timeout-minutes: 30
-    # トリガに synchronize が無いので連打は来ない。二重に走るのは開き直しのような稀な経路だけ。
-    # 走っている応答を途中で止めるとトラッキングコメントが中途半端に残るので、cancel はしない。
     concurrency:
+      # group は claude.yml と分ける。
+      # 同じ PR で @claude と自動レビューが同時に動いても、それぞれ自分のトラッキングコメントを持つので踏み合わない。
       group: claude-review-${{ github.event.pull_request.number }}
+      # 同じ PR での多重起動は直列化する。
+      # 走っている応答を途中で殺すと中途半端なトラッキングコメントが残り、レビューが走ったのか黙ったのかが読めなくなる。
       cancel-in-progress: false
     permissions:
       contents: read
