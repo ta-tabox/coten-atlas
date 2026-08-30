@@ -1,0 +1,271 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [131.399, 34.408] },
+      "properties": {
+        "id": "yoshida-shoin",
+        "title": "吉田松陰",
+        "kind": "point",
+        "timeRange": { "start": 1830, "end": 1859 },
+        "summary": "",
+        "region": "日本",
+        "season": 1,
+        "links": [
+          {
+            "platform": "spotify",
+            "url": "https://podcasters.spotify.com/pod/show/coten/episodes/1-1-COTEN-RADIO-1-e30roe"
+          }
+        ],
+        "tags": ["人物", "幕末", "日本"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [22.431, 37.075] },
+      "properties": {
+        "id": "sparta",
+        "title": "スパルタ",
+        "kind": "point",
+        "timeRange": { "start": -700, "end": -371 },
+        "summary": "",
+        "region": "ギリシア",
+        "season": 2,
+        "links": [
+          {
+            "platform": "spotify",
+            "url": "https://podcasters.spotify.com/pod/show/coten/episodes/2-1COTEN-RADIO-1-e30rst"
+          }
+        ],
+        "tags": ["都市国家", "古代", "ギリシア"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPoint",
+        "coordinates": [
+          [84.992, 24.696],
+          [35.214, 31.768],
+          [39.826, 21.423]
+        ]
+      },
+      "properties": {
+        "id": "sekai-sandai-shukyo",
+        "title": "世界三大宗教",
+        "kind": "concept",
+        "timeRange": { "start": -560, "end": 632 },
+        "summary": "",
+        "region": "ユーラシア",
+        "season": 7,
+        "links": [
+          {
+            "platform": "spotify",
+            "url": "https://podcasters.spotify.com/pod/show/coten/episodes/7-1-COTEN-RADIO-1-e4d5hg"
+          }
+        ],
+        "tags": ["宗教", "概念史"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [13.405, 52.52] },
+      "properties": {
+        "id": "hitler",
+        "title": "ヒトラー",
+        "kind": "point",
+        "timeRange": { "start": 1889, "end": 1945 },
+        "summary": "",
+        "region": "ドイツ",
+        "season": 8,
+        "links": [
+          {
+            "platform": "spotify",
+            "url": "https://podcasters.spotify.com/pod/show/coten/episodes/8-1-COTEN-RADIO-1-e4ost4"
+          }
+        ],
+        "tags": ["人物", "20世紀", "ドイツ"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [22.525, 40.76],
+          [27.05, 40.2],
+          [36.18, 36.85],
+          [35.2, 33.27],
+          [29.919, 31.2],
+          [43.35, 36.4],
+          [44.421, 32.536],
+          [52.891, 29.936],
+          [66.898, 36.758],
+          [73.73, 32.93]
+        ]
+      },
+      "properties": {
+        "id": "alexandros",
+        "title": "アレクサンドロス",
+        "kind": "line",
+        "timeRange": { "start": -356, "end": -323 },
+        "summary": "",
+        "region": "地中海〜西アジア",
+        "season": 11,
+        "links": [
+          {
+            "platform": "spotify",
+            "url": "https://podcasters.spotify.com/pod/show/coten/episodes/11-1---COTEN-RADIO-1-e8un23"
+          }
+        ],
+        "tags": ["人物", "遠征", "古代"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-10, 10],
+            [120, 10],
+            [120, 60],
+            [-10, 60],
+            [-10, 10]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "okane-no-rekishi",
+        "title": "お金の歴史",
+        "kind": "concept",
+        "timeRange": { "start": -600, "end": 2020 },
+        "summary": "",
+        "region": "ユーラシア",
+        "season": 12,
+        "links": [
+          {
+            "platform": "spotify",
+            "url": "https://podcasters.spotify.com/pod/show/coten/episodes/12-1--HAPPYCOTEN-RADIO-1-e9mumn"
+          }
+        ],
+        "tags": ["経済", "概念史"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [108.94, 34.342],
+          [102.634, 37.928],
+          [89.184, 42.947],
+          [82.962, 41.717],
+          [66.96, 39.627],
+          [67.826, 34.825],
+          [72.83, 33.74],
+          [85.444, 25.136]
+        ]
+      },
+      "properties": {
+        "id": "genjo-sanzo",
+        "title": "三蔵法師 玄奘",
+        "kind": "line",
+        "timeRange": { "start": 602, "end": 664 },
+        "summary": "",
+        "region": "中央アジア〜インド",
+        "season": 13,
+        "links": [
+          {
+            "platform": "spotify",
+            "url": "https://podcasters.spotify.com/pod/show/coten/episodes/13-1--COTEN-RADIO-1-eabid2"
+          }
+        ],
+        "tags": ["人物", "仏教", "旅"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-125, 25],
+            [-70, 25],
+            [-70, 49],
+            [-125, 49],
+            [-125, 25]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "america-kaitakushi",
+        "title": "アメリカ開拓史",
+        "kind": "polygon",
+        "timeRange": { "start": 1607, "end": 1890 },
+        "summary": "",
+        "region": "北アメリカ",
+        "season": 15,
+        "links": [
+          {
+            "platform": "spotify",
+            "url": "https://podcasters.spotify.com/pod/show/coten/episodes/15-1--COTEN-RADIO-1-ed0uus"
+          }
+        ],
+        "tags": ["開拓", "近代", "アメリカ"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [19, 32],
+            [48, 32],
+            [48, 45],
+            [19, 45],
+            [19, 32]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "osman-teikoku",
+        "title": "オスマン帝国",
+        "kind": "polygon",
+        "timeRange": { "start": 1299, "end": 1922 },
+        "summary": "",
+        "region": "西アジア〜バルカン",
+        "season": 18,
+        "links": [
+          {
+            "platform": "spotify",
+            "url": "https://podcasters.spotify.com/pod/show/coten/episodes/18-1--600COTEN-RADIO-1-ehsu79"
+          }
+        ],
+        "tags": ["帝国", "イスラーム", "中世"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [29.919, 31.2] },
+      "properties": {
+        "id": "cleopatra",
+        "title": "クレオパトラ",
+        "kind": "point",
+        "timeRange": { "start": -69, "end": -30 },
+        "summary": "",
+        "region": "エジプト",
+        "season": 33,
+        "links": [
+          {
+            "platform": "spotify",
+            "url": "https://podcasters.spotify.com/pod/show/coten/episodes/33-1-COTEN-RADIO--1-e1n6e58"
+          }
+        ],
+        "tags": ["人物", "古代", "エジプト"]
+      }
+    }
+  ]
+}
