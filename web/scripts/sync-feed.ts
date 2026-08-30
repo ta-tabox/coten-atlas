@@ -103,19 +103,24 @@ function readSeries(): SeriesCollection {
 }
 
 /**
- * 前回までに書いた `episodes.json` の guid を集める。
+ * 前回までに書いた `episodes.json` を、guid から seriesId を引ける形で読む。
  * まだ無ければ空で、フィード全件が新着になる。
+ *
+ * 割当まで持つのは、前回あった割当が外れたことを見るため。
+ * guid の有無だけでは、割当が null へ後退した回と元から未割当の回を見分けられない。
  */
-function readKnownGuids(): Set<string> {
+function readPreviousAssignments(): Map<string, string | null> {
   if (!fs.existsSync(EPISODES_FILE)) {
-    return new Set();
+    return new Map();
   }
 
-  const known = parseEpisodes(
+  const previous = parseEpisodes(
     JSON.parse(fs.readFileSync(EPISODES_FILE, "utf8")),
   );
 
-  return new Set(known.episodes.map((episode) => episode.guid));
+  return new Map(
+    previous.episodes.map((episode) => [episode.guid, episode.seriesId]),
+  );
 }
 
 /**
@@ -161,13 +166,40 @@ function writeJson(file: string, value: unknown): void {
  * `episodes.json` は毎回組み直すので、フィードが一部しか返さなかった日には黙って回が消える。
  * 消えること自体を止めはしないが、気付ける形にはしておく。
  */
-function warnDisappeared(items: FeedItem[], knownGuids: Set<string>): void {
+function warnDisappeared(
+  items: FeedItem[],
+  previous: Map<string, string | null>,
+): void {
   const present = new Set(items.map((item) => item.guid));
-  const disappeared = [...knownGuids].filter((guid) => !present.has(guid));
+  const disappeared = [...previous.keys()].filter((guid) => !present.has(guid));
 
   if (disappeared.length > 0) {
     console.error(
       `前回あった ${disappeared.length} 件がフィードに無い: ${disappeared.join(", ")}`,
+    );
+  }
+}
+
+/**
+ * 前回は付いていた seriesId が外れた回を報せる。
+ *
+ * inbox へ出すのは新着だけなので、既に見送った回の割当が外れても人間の手元には現れない。
+ * `series.geojson` から season を消したり書き換えたりすると起きるので、黙って直すと地図からその回が消えたことに気付けない。
+ */
+function warnLostAssignments(
+  assignments: Assignment[],
+  previous: Map<string, string | null>,
+): void {
+  const lost = assignments.filter(
+    ({ item, seriesId }) =>
+      seriesId === null && (previous.get(item.guid) ?? null) !== null,
+  );
+
+  if (lost.length > 0) {
+    console.error(
+      `前回付いていた seriesId が外れた回が ${lost.length} 件ある: ${lost
+        .map(({ item }) => item.guid)
+        .join(", ")}`,
     );
   }
 }
@@ -220,9 +252,9 @@ function writeInbox(syncedAt: string, unassigned: Assignment[]): void {
 async function main(): Promise<void> {
   const items = parseFeed(await fetchFeed(FEED_URL));
   const series = readSeries();
-  const knownGuids = readKnownGuids();
+  const previous = readPreviousAssignments();
 
-  warnDisappeared(items, knownGuids);
+  warnDisappeared(items, previous);
 
   const syncedAt = new Date().toISOString();
   const assignments: Assignment[] = items.map((item) => ({
@@ -230,7 +262,9 @@ async function main(): Promise<void> {
     seriesId: assignSeriesId(item, series),
   }));
 
-  const added = assignments.filter(({ item }) => !knownGuids.has(item.guid));
+  warnLostAssignments(assignments, previous);
+
+  const added = assignments.filter(({ item }) => !previous.has(item.guid));
   const unassigned = added.filter(({ seriesId }) => seriesId === null);
 
   // inbox を先に書く。
