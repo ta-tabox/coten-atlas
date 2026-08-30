@@ -16,6 +16,7 @@
     "pretest:watch": "pnpm sync-map-worker",
     "test:watch": "vitest",
     "validate:data": "vitest run tests/data.test.ts",
+    "sync": "node --import ./scripts/register-src-alias.ts scripts/sync-feed.ts",
     "smoke": "playwright test --project=smoke",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm smoke"
   },
