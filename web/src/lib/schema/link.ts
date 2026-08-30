@@ -4,9 +4,6 @@
  *
  * `platform` を enum に閉じてあるので、配信基盤が増えたときに直す場所はここだけになる。
  * 生の URL 文字列へ緩めると、増えた基盤を見分ける手が消える。
- *
- * このディレクトリのスキーマは互いを相対パスで参照する。
- * `scripts/validate-data.ts` を素の node が実行し、node は tsconfig の `@/` を解決しないため（biome.json の overrides が同じ範囲を免除している）。
  */
 
 import * as z from "zod";

@@ -244,8 +244,9 @@ data/
 
 `web/scripts/` はこれと別枠になる。`tsconfig.json` の `paths` も vitest の alias も `web/` の中で
 解決するので、`web/` の道具立てに依るスクリプトはルートへ出さず `web/scripts/` に置く。
-RSS 同期（`sync-feed.ts`）もデータ検査（`validate-data.ts`）も `web/src/` のスキーマとパーサを
-import し `pnpm` の scripts から走るので、ビルド前処理もここに入る。
+RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを import し `pnpm` の scripts から走るので、
+ビルド前処理もここに入る。
+`data/` の検査はスクリプトを持たず、`web/tests/data.test.ts` が L2 で回す（`HARNESS.md`）。
 
 ## 7. 意図的にやらないこと
 
