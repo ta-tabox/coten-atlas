@@ -2,8 +2,8 @@
    globals.css が消している body の margin は地図を全画面にするためのもので、この 1 枚には縁が要る。
    色と余白のトークンを globals.css は持たないので、値はこのモジュールに閉じた変数が持つ。
 
-   節の切れ目は左の罫線が示す。
-   段落ごとの余白だけで区切ると、どの文がどの節に属するかが縦の距離でしか分からない。 */
+   規則は入れ子で書き、DOM の構造をそのまま写す。
+   平坦に並べると、どの要素がどの入れ物の中でだけ効くのかが、クラス名の綴りからしか読めない。 */
 
 .page {
   --ink: #1b1b1d;
@@ -18,66 +18,66 @@
   color: var(--ink);
   font-family: system-ui, sans-serif;
   line-height: 1.85;
-}
 
-.page a {
-  color: var(--link);
-  text-underline-offset: 0.2em;
-}
+  a {
+    color: var(--link);
+    text-underline-offset: 0.2em;
+  }
 
-/* 背景を敷いた「チップ」にしない。
-   文中に 4 回出るので、囲みを付けると囲みの方が文より目立つ。 */
-.page code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.85em;
+  /* 背景を敷いた「チップ」にしない。
+     文中に 4 回出るので、囲みを付けると囲みの方が文より目立つ。 */
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85em;
+  }
 }
 
 .back {
   margin-bottom: 2rem;
   font-size: 0.875rem;
-}
 
-.back a {
-  color: var(--ink-muted);
-  text-decoration: none;
-}
+  a {
+    color: var(--ink-muted);
+    text-decoration: none;
 
-.back a:hover {
-  color: var(--ink);
-  text-decoration: underline;
+    &:hover {
+      color: var(--ink);
+      text-decoration: underline;
+    }
+  }
 }
 
 .header {
   padding-bottom: 1.75rem;
   border-bottom: 1px solid var(--rule);
-}
 
-.title {
-  margin: 0 0 0.6rem;
-  font-size: 1.6rem;
-  letter-spacing: 0.01em;
-}
+  .title {
+    margin: 0 0 0.6rem;
+    font-size: 1.6rem;
+    letter-spacing: 0.01em;
+  }
 
-.lead {
-  margin: 0;
-  color: var(--ink-muted);
-  font-size: 0.95rem;
+  .lead {
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+  }
 }
 
 .section {
   margin-top: 2.75rem;
   padding-left: 1.25rem;
   border-left: 2px solid var(--rule);
-}
 
-.heading {
-  margin: 0 0 0.9rem;
-  font-size: 1.05rem;
-  letter-spacing: 0.04em;
-}
+  .heading {
+    margin: 0 0 0.9rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+  }
 
-.statement {
-  margin: 0.85rem 0 0;
+  .statement {
+    margin: 0.85rem 0 0;
+  }
 }
 
 .linkRow {
@@ -89,36 +89,33 @@
   border: 1px solid var(--rule);
   border-radius: 6px;
   font-size: 0.95rem;
-}
 
-.linkLabel {
-  flex: none;
-  color: var(--ink-muted);
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-}
+  .linkLabel {
+    flex: none;
+    color: var(--ink-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+  }
 
-.linkRow a {
-  display: inline-flex;
-  gap: 0.4rem;
-  align-items: center;
-}
+  a {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
 
-/* 寸法は em で持つ。
-   px で固定すると、リンクの文字サイズを変えたときにアイコンだけ取り残される。
-   色は svg 側の currentColor がリンクから継ぐ。 */
-.icon {
-  width: 1.05em;
-  height: 1.05em;
-  flex: none;
-  align-self: flex-start;
-  margin-top: 0.4em;
-}
+  /* 寸法は em で持つ。
+     px で固定すると、リンクの文字サイズを変えたときにアイコンだけ取り残される。 */
+  .icon {
+    width: 1.05em;
+    height: 1.05em;
+    flex: none;
+    align-self: flex-start;
+    margin-top: 0.4em;
+  }
 
-/* 幅が狭いとリンクが 2 行に折れ、ラベルと横並びのままでは箱の中が窮屈になる。
-   ラベルを上へ出して 1 行分の幅を全部リンクへ渡す。 */
-@media (max-width: 30rem) {
-  .linkRow {
+  /* 幅が狭いとリンクが 2 行に折れ、ラベルと横並びのままでは箱の中が窮屈になる。
+     ラベルを上へ出して 1 行分の幅を全部リンクへ渡す。 */
+  @media (max-width: 30rem) {
     flex-direction: column;
     gap: 0.3rem;
     align-items: flex-start;
