@@ -76,31 +76,11 @@
   letter-spacing: 0.04em;
 }
 
-.points {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.statement {
+  margin: 0.85rem 0 0;
 }
 
-.points li {
-  position: relative;
-  margin-top: 0.65rem;
-  padding-left: 1.1rem;
-}
-
-/* 行頭の短い横罫が項目の始まりを示す。
-   記号を置くと文の中の中黒（・）と紛れるので、文字を使わない。 */
-.points li::before {
-  content: "";
-  position: absolute;
-  top: 0.9em;
-  left: 0;
-  width: 0.45rem;
-  height: 1px;
-  background: var(--ink-muted);
-}
-
-.official {
+.linkRow {
   display: flex;
   gap: 0.75rem;
   align-items: baseline;
@@ -111,9 +91,36 @@
   font-size: 0.95rem;
 }
 
-.officialLabel {
+.linkLabel {
   flex: none;
   color: var(--ink-muted);
   font-size: 0.8rem;
   letter-spacing: 0.04em;
+}
+
+.linkRow a {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+/* 寸法は em で持つ。
+   px で固定すると、リンクの文字サイズを変えたときにアイコンだけ取り残される。
+   色は svg 側の currentColor がリンクから継ぐ。 */
+.icon {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+  align-self: flex-start;
+  margin-top: 0.4em;
+}
+
+/* 幅が狭いとリンクが 2 行に折れ、ラベルと横並びのままでは箱の中が窮屈になる。
+   ラベルを上へ出して 1 行分の幅を全部リンクへ渡す。 */
+@media (max-width: 30rem) {
+  .linkRow {
+    flex-direction: column;
+    gap: 0.3rem;
+    align-items: flex-start;
+  }
 }
