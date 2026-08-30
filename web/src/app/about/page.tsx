@@ -11,7 +11,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import styles from "./page.module.css";
+import styles from "@/app/about/page.module.css";
 
 export const metadata: Metadata = {
   title: "このサイトについて | coten-atlas",
