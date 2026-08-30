@@ -108,8 +108,8 @@ data/
   テーマ側もエピソード側も `season` を持ち、テーマ側は必須、エピソード側は持たない回があるので nullable
 - `links` は `{ platform, url }` の配列で、テーマもエピソードも同じ形。
   `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む
-- 契約の現物は `web/src/lib/schema/` の zod スキーマが持つ。
-  この節と食い違ったらスキーマが正で、`pnpm check` の `validate` が `data/` 全体をそれに掛ける
+- スキーマの現物は `web/src/lib/schema/` の zod が持つ。
+  この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける
 - 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
 - 概念史（お金の歴史・資本主義など）は「場所が一意でない」——主要な舞台を
   MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする。
