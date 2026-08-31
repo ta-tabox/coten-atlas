@@ -12,7 +12,7 @@ const sparta = {
   properties: {
     id: "sparta",
     title: "スパルタ",
-    kind: "point",
+    kind: "place",
     timeRange: { start: -900, end: -200 },
     summary: "",
     region: "ギリシア",

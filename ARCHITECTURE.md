@@ -99,7 +99,7 @@ data/
       "properties": {
         "id": "sparta",
         "title": "スパルタ",
-        "kind": "point",                              // 描画スタイルの分岐キー
+        "kind": "place",                              // 描画スタイルの分岐キー
         "timeRange": { "start": -900, "end": -200 },  // 負値 = BC
         "summary": "",         // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
         "region": "ギリシア",
@@ -124,8 +124,9 @@ data/
   `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む。
   エピソード側は RSS の `<link>` を入れる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）が、
   **シリーズ側が何を指すかは未決定**——配信側にシリーズ単位のページが無い（#13 の実測）
-- `kind` は描画スタイルの分岐キーで、`geometry.type` とは独立に持つ。
-  両者の対応をどこまで縛るかは、4 種を実データに当てる S2（#4）で決める
+- `kind` は `place`（場所が一意に決まる）と `concept`（決まらない）の 2 値（[ADR-0023](docs/adr/0023-kind-place-or-concept.md)）。
+  図形による分岐は持たない。
+  それは `geometry.type` が表し、MapLibre の `['geometry-type']` が直接読む
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。

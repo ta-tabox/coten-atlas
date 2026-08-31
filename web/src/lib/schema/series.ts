@@ -17,9 +17,9 @@ import { linksSchema } from "@/lib/schema/link";
 
 /**
  * 描画スタイルの分岐キー。
- * `concept`（概念史）は場所が一意に決まらないものを控えめに描くための区分である。
+ * 図形の違いは `geometry.type` が表すので、ここは場所が一意に決まるかどうかだけを分ける（docs/adr/0023-kind-place-or-concept.md）。
  */
-export const seriesKindSchema = z.enum(["point", "polygon", "line", "concept"]);
+export const seriesKindSchema = z.enum(["place", "concept"]);
 
 /**
  * シリーズが扱う年代の範囲。
@@ -55,7 +55,7 @@ export const seriesPropertiesSchema = z.object({
 
   /**
    * 描画スタイルの分岐キー。
-   * `geometry.type` とは独立に持つ（縛り方は #4 が決める）。
+   * `concept` は場所が一意に決まらないもので、控えめに描く（docs/adr/0023-kind-place-or-concept.md）。
    */
   kind: seriesKindSchema,
 
