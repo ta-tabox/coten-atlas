@@ -11,6 +11,9 @@
  * OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
  * style で寸法を渡す。
  * スタイルは Tailwind のユーティリティで書く決まりだが（docs/adr/0021-tailwind-v4.md）、MapLibreMap は container の `style` しか公開せず `className` を持たないので、寸法だけはここに残る。
+ * built-in control（Navigation・Scale 等）はここへ足さない。
+ * MapLibre が吐く DOM は `maplibre-gl.css` が素のカスケードで押さえており、レイヤに入った Tailwind のユーティリティが負けるので、当てても効かない（docs/adr/0022-map-dom-boundary.md）。
+ * 地図の上に置くものは React 側の overlay として書く。
  */
 
 import MapLibreMap from "react-map-gl/maplibre";

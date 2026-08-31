@@ -2,7 +2,7 @@
 
 - **状態**: 採用
 - **決定日**: 2026-08-31
-- **関係する ADR**: 0001、0004、0014、0015
+- **関係する ADR**: 0001、0004、0014、0015、0022
 
 ## 文脈
 
@@ -31,6 +31,8 @@ CSS Modules のままだと外部ツールの出力は毎回クラス名の読�
 - `globals.css` の `body { margin: 0 }` は削る。preflight が同じことをする
 - `MapCanvas` の `style` prop（寸法）は残す。`MapLibreMap` が `className` を公開していないので、逃がす先が無い（0015 に記載）
 - `*.module.css` は置かない
+
+MapLibre が吐く DOM との境界は [0022](0022-map-dom-boundary.md) が持つ。
 
 ## 理由
 
