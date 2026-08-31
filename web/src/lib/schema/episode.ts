@@ -27,10 +27,41 @@ export const episodeSchema = z.object({
    * 747 件は UUID だが 5 件は anchor.fm のエピソード URL なので、UUID には固定できない。
    */
   guid: z.string().trim().min(1),
+
+  /**
+   * 番組が付けた各回の題号。
+   * 詳細カードのエピソード一覧に並ぶ文字列で、番組から引いてよいのはここまでである（docs/adr/0008-quote-titles-only.md）。
+   * フィードの綴りをそのまま持ち、ここからシリーズ名を抽出しない。
+   * `【COTEN RADIO ○○編N】` が基本形だが、実際の綴りは 3 通りに破れている（#13 の実測）。
+   */
   title: z.string().trim().min(1),
+
+  /**
+   * 配信日時。
+   * 詳細カードのエピソード一覧はこれで並べる。
+   * 並べ替えがこれで足りるので、シリーズ内の回番号（`itunes:episode`）は持たない（docs/adr/0018-season-as-assignment-key.md）。
+   */
   pubDate: z.iso.datetime(),
+
+  /**
+   * どのシリーズの回かを決める割当キー。
+   * `itunes:season` の値である。
+   * 番外編・特別編・告知はこれを持たないので、null の回はどのシリーズにも割り当てず inbox へ排出する。
+   */
   season: z.int().positive().nullable(),
+
+  /**
+   * `season` をシリーズ側の索引で引いた結果。
+   * 詳細カードがシリーズから各回を引くときの鍵になる。
+   * 引けなかった回は null で、拾うか捨てるかを人間が決める。
+   */
   seriesId: z.string().trim().min(1).nullable(),
+
+  /**
+   * 配信ページへの導線。
+   * RSS の `<link>` が入る（docs/adr/0006-rss-link-as-episode-url.md）。
+   * 詳細カードの「Spotify で聴く」がこの 1 本を指す。
+   */
   links: linksSchema,
 });
 

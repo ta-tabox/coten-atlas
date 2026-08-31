@@ -99,22 +99,68 @@ const geometrySchema = z.discriminatedUnion("type", [
 
 /**
  * シリーズ 1 件が持つ属性。
- *
- * `season` が割当キーで、`itunes:season` の値を持つ（docs/adr/0018-season-as-assignment-key.md）。
- * 1 シリーズ = `itunes:season` の 1 値で、束ねない。
- * `ROADMAP.md` の完了判定がシリーズ数を数えて全件がここに在るかを見るので、束ねると feature 数とシリーズ数が一致しなくなる。
- *
- * `summary` は自前の要約を入れる欄で、番組の説明文は引かないので当面は空である（docs/adr/0008-quote-titles-only.md）。
+ * 地図の描画・一覧パネル・詳細カード・RSS 同期の全部がここを読む。
  */
 export const seriesPropertiesSchema = z.object({
+  /**
+   * シリーズを一意に指す鍵。
+   * エピソードの `seriesId` が指す先で、同期が組む season の索引ではこれが値になる。
+   */
   id: z.string().trim().min(1),
+
+  /**
+   * シリーズ名。
+   * 地図のラベル・一覧パネル・詳細カードの見出しに出る。
+   * 番組から引いてよいのは題号までなので、ここと `episodeSchema` の `title` が引用の全部である（docs/adr/0008-quote-titles-only.md）。
+   */
   title: z.string().trim().min(1),
+
+  /**
+   * 描画スタイルの分岐キー。
+   * 地図がどの図形をどう塗るかをこれで決める。
+   * `geometry.type` とは独立に持ち、両者の対応をどこまで縛るかは S2（#4）が 4 種を実データに当てて決める。
+   */
   kind: seriesKindSchema,
+
+  /**
+   * シリーズが扱う年代の範囲。
+   * era スライダーの現在窓との重なり率が、そのまま地図上の表示 opacity になる。
+   */
   timeRange: timeRangeSchema,
+
+  /**
+   * 詳細カードに出す自前の要約。
+   * 番組の説明文は引かないので当面は空である（docs/adr/0008-quote-titles-only.md）。
+   */
   summary: z.string(),
+
+  /**
+   * 大まかな地域名。
+   * 詳細カードの関連シリーズ行が、`tags` と並べてこれを近さの判定に読む。
+   */
   region: z.string().trim().min(1),
+
+  /**
+   * エピソードとの割当キー。
+   * `itunes:season` の値である（docs/adr/0018-season-as-assignment-key.md）。
+   * 同期はシリーズ全件のこの値から season → seriesId の索引を組む。
+   * `ROADMAP.md` の完了判定がシリーズ数を数えるので、1 シリーズ = 1 値で束ねない。
+   * 束ねると feature 数とシリーズ数が一致しなくなる。
+   */
   season: z.int().positive(),
+
+  /**
+   * 配信ページへの導線。
+   * 配信側にシリーズ単位のページが無いので、ここが何を指すかは決まっていない（当面は空）。
+   * エピソード側の `links` は RSS の `<link>` で埋まる。
+   */
   links: linksSchema,
+
+  /**
+   * 主題のラベル。
+   * 主題の近さは地図にも era スライダーにも現れないので、これだけが表す。
+   * 読むのは詳細カードの関連シリーズ行と、パネルの tag 絞り込みである。
+   */
   tags: z.array(z.string().trim().min(1)),
 });
 
