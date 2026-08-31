@@ -10,7 +10,6 @@ const episode = {
   guid: "0f9d4b52-1f3a-4c9e-9b7a-2f1c8d6e5a40",
   title: "【COTEN RADIO 三国志編1】黄巾の乱",
   pubDate: "2026-08-19T21:00:00Z",
-  audioUrl: "https://anchor.fm/s/8c2088c/podcast/play/12345/episode.mp3",
   season: 22,
   seriesId: "sangokushi",
   links: [

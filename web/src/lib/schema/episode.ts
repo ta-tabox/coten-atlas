@@ -29,7 +29,6 @@ export const episodeSchema = z.object({
   guid: z.string().trim().min(1),
   title: z.string().trim().min(1),
   pubDate: z.iso.datetime(),
-  audioUrl: z.url(),
   season: z.int().positive().nullable(),
   seriesId: z.string().trim().min(1).nullable(),
   links: linksSchema,

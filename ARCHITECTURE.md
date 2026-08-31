@@ -74,7 +74,6 @@ data/
       // フィードの綴りをそのまま持つ。シリーズ名をここから抽出しない（表記が揺れている。#13 の実測）
       "title": "【66-10】五賢帝時代はじまる！…【COTEN RADIO 帝政ローマ編10】",
       "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822（フィードは全件 GMT）からの正規化は同期側
-      "audioUrl": "https://anchor.fm/s/8c2088c/podcast/play/122753786/…",  // enclosure の url
       "season": 66,              // itunes:season。持たない回（番外編・特別編・告知）は null
       "seriesId": "teisei-roma",  // season から割当。未割当なら null（ADR-0018）
       // RSS の <link>。エピソード単位の Spotify ページで、open.spotify.com/episode/… はフィードに無い
@@ -231,7 +230,9 @@ data/
     ただし初期の 5 件だけ `anchor.fm` のエピソード URL が入っており、先頭に空白が付く。
     突き合わせのキーにする前に trim する
   - `pubDate` は RFC 822（`Wed, 19 Aug 2026 21:00:00 GMT`）で、全件 GMT 表記
-  - `<link>` は Spotify のエピソードページ、`enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）
+  - `<link>` は Spotify のエピソードページで、これが配信リンクになる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）
+  - `enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）。
+    音声を再生する画面が無いので episodes.json へは保存しない
   - シリーズ番号は `itunes:season`。1〜66 が欠番なく並ぶが、752 件中 176 件（番外編・特別編・告知）はこれを持たない
   - シリーズ内の回は `itunes:episode`。消費する画面が無いので episodes.json へは保存しない（ADR-0018）
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:
