@@ -4,6 +4,7 @@
  *
  * `platform` を enum に閉じてあるので、配信基盤が増えたときに直す場所はここだけになる。
  * 生の URL 文字列へ緩めると、増えた基盤を見分ける手が消える。
+ * 表示名などの欄を黙って受けると、増えた形が検査に映らないので、スキーマに無いキーは落とす。
  */
 
 import * as z from "zod";
@@ -16,7 +17,7 @@ import { duplicatesOf } from "@/lib/duplicates";
 const platformSchema = z.enum(["spotify"]);
 
 /** 配信リンク 1 本。 */
-export const linkSchema = z.object({
+export const linkSchema = z.strictObject({
   platform: platformSchema,
 
   /** その基盤でこの回、またはこのシリーズを開くページの URL。 */

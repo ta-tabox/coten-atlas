@@ -32,13 +32,22 @@ describe("episodeSchema", () => {
     expect(parsed.season).toBe(66);
   });
 
-  it("guid の前後の空白を落として受ける", () => {
+  it("trim 済みなら URL 形式の guid も通す", () => {
     const parsed = episodeSchema.parse({
+      ...episode,
+      guid: "https://anchor.fm/coten/episodes/e000001",
+    });
+
+    expect(parsed.guid).toBe("https://anchor.fm/coten/episodes/e000001");
+  });
+
+  it("前後に空白の付いた guid を落とす", () => {
+    const result = episodeSchema.safeParse({
       ...episode,
       guid: " https://anchor.fm/coten/episodes/e000001",
     });
 
-    expect(parsed.guid).toBe("https://anchor.fm/coten/episodes/e000001");
+    expect(result.success).toBe(false);
   });
 
   it("season も seriesId も無い回を通す", () => {
@@ -49,6 +58,12 @@ describe("episodeSchema", () => {
     });
 
     expect(parsed.seriesId).toBeNull();
+  });
+
+  it("season の無い回に seriesId が付いていれば落とす", () => {
+    const result = episodeSchema.safeParse({ ...episode, season: null });
+
+    expect(result.success).toBe(false);
   });
 
   it("正規化前の RFC 822 の pubDate を落とす", () => {
@@ -77,6 +92,30 @@ describe("episodeSchema", () => {
         {
           platform: "spotify",
           url: "https://podcasters.spotify.com/pod/show/coten/episodes/b",
+        },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("スキーマに無いキーを持つ回を落とす", () => {
+    const result = episodeSchema.safeParse({
+      ...episode,
+      audioUrl: "https://anchor.fm/x.mp3",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("スキーマに無いキーを持つリンクを落とす", () => {
+    const result = episodeSchema.safeParse({
+      ...episode,
+      links: [
+        {
+          platform: "spotify",
+          url: "https://podcasters.spotify.com/pod/show/coten/episodes/a",
+          label: "Spotify で聴く",
         },
       ],
     });

@@ -45,6 +45,15 @@ describe("eraListSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("スキーマに無いキーを持つ区間を落とす", () => {
+    const annotated = eras.map((era) =>
+      era.id === "medieval" ? { ...era, note: "諸説ある" } : era,
+    );
+    const result = eraListSchema.safeParse(annotated);
+
+    expect(result.success).toBe(false);
+  });
+
   it("id が重複していれば落とす", () => {
     const duplicated = eras.map((era) =>
       era.id === "medieval" ? { ...era, id: "ancient" } : era,

@@ -9,11 +9,14 @@
  * 最後の era だけは `end` に `ERA_END_PRESENT` を置ける。
  * まだ終わっていない時代へ終わりの年を書くと、その年が来たときに確かめ直す作業が残る。
  *
+ * 手書きの書き間違いは黙って捨てられるとどこにも映らないので、スキーマに無いキーは落とす。
+ *
  * 入口は parseEras。
  */
 
 import * as z from "zod";
 import { duplicatesOf } from "@/lib/duplicates";
+import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
 /**
  * まだ終わっていないことを表す `end` の値。
@@ -32,11 +35,11 @@ const eraEndSchema = z.union([z.int(), z.literal(ERA_END_PRESENT)]);
  * 幅の検査が効くのは `end` が年のときだけで、終わっていない区間はどの年より後ろにも伸びうる。
  */
 export const eraSchema = z
-  .object({
-    id: z.string().trim().min(1),
+  .strictObject({
+    id: trimmedNonEmptyStringSchema,
 
     /** スライダーに出す時代の名前。 */
-    label: z.string().trim().min(1),
+    label: trimmedNonEmptyStringSchema,
 
     /** 区間の始まりの年（この年を含む）。 */
     start: z.int(),

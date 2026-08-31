@@ -8,6 +8,16 @@ describe("geometrySchema", () => {
     expect(geometrySchema.safeParse(swapped).success).toBe(false);
   });
 
+  it("スキーマに無いメンバーを持つ geometry を落とす", () => {
+    const withBbox = {
+      type: "Point",
+      coordinates: [22.43, 37.07],
+      bbox: [22, 37, 23, 38],
+    };
+
+    expect(geometrySchema.safeParse(withBbox).success).toBe(false);
+  });
+
   it("空の環を持つ多角形を、投げずに落とす", () => {
     const emptyRing = { type: "Polygon", coordinates: [[]] };
 
@@ -34,6 +44,64 @@ describe("geometrySchema", () => {
     };
 
     expect(geometrySchema.safeParse(openRing).success).toBe(false);
+  });
+
+  it("閉じていない環を含む MultiPolygon を落とす", () => {
+    const openSecond = {
+      type: "MultiPolygon",
+      coordinates: [
+        [
+          [
+            [110, 30],
+            [115, 30],
+            [115, 35],
+            [110, 30],
+          ],
+        ],
+        [
+          [
+            [10, 40],
+            [15, 40],
+            [15, 45],
+            [10, 44],
+          ],
+        ],
+      ],
+    };
+
+    expect(geometrySchema.safeParse(openSecond).success).toBe(false);
+  });
+
+  it("面を 1 つも持たない MultiPolygon を落とす", () => {
+    const empty = { type: "MultiPolygon", coordinates: [] };
+
+    expect(geometrySchema.safeParse(empty).success).toBe(false);
+  });
+
+  it("全部の環が閉じた MultiPolygon を通す", () => {
+    const twoIslands = {
+      type: "MultiPolygon",
+      coordinates: [
+        [
+          [
+            [110, 30],
+            [115, 30],
+            [115, 35],
+            [110, 30],
+          ],
+        ],
+        [
+          [
+            [10, 40],
+            [15, 40],
+            [15, 45],
+            [10, 40],
+          ],
+        ],
+      ],
+    };
+
+    expect(geometrySchema.safeParse(twoIslands).success).toBe(true);
   });
 
   it("環が閉じていれば通す", () => {

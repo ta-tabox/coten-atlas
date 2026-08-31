@@ -7,16 +7,21 @@
  */
 
 /**
- * 同じ値を二度以上使っている要素を、渡された順のまま拾う。
+ * 二度以上使われている値を、重複と分かった順に返す。
+ * 出現の数だけ返すと検査の報告が同じ指摘で埋まるので、同じ値は 1 回しか返さない。
  * 重複が無ければ空。
  */
 export function duplicatesOf<T>(values: readonly T[]): T[] {
   const seen = new Set<T>();
+  const duplicates = new Set<T>();
 
-  return values.filter((value) => {
-    const isRepeat = seen.has(value);
+  for (const value of values) {
+    if (seen.has(value)) {
+      duplicates.add(value);
+    }
+
     seen.add(value);
+  }
 
-    return isRepeat;
-  });
+  return [...duplicates];
 }

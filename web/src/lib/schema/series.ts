@@ -4,6 +4,7 @@
  *
  * 年は西暦の整数で、負値が紀元前を表す（0 年は暦に存在しないが、区別しても得るものが無いので許す）。
  * geometry の形そのものは `geojson.ts` が持つ。
+ * zod の既定は未知のキーを黙って捨て、手書きの書き間違いや規約外の欄の混入がどこにも映らないので、スキーマに無いキーは落とす。
  *
  * 描画も RSS 同期もこの形だけを前提にしてよい。
  * 渡された値を検査するだけで `data/` の在り処は呼ぶ側が知るので、ファイルの読み込み口はここが持たない。
@@ -14,6 +15,7 @@ import * as z from "zod";
 import { duplicatesOf } from "@/lib/duplicates";
 import { geometrySchema } from "@/lib/schema/geojson";
 import { linksSchema } from "@/lib/schema/link";
+import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
 /**
  * 描画スタイルの分岐キー。
@@ -24,9 +26,11 @@ export const seriesKindSchema = z.enum(["place", "concept"]);
 /**
  * シリーズが扱う年代の範囲。
  * 負値は紀元前を指す。
+ * start == end の 1 年の出来事を表せるよう、両端を含む閉区間とする。
+ * era の区間は半開（end を含まない）なので、重なりを判定する側は端の扱いを混同しない。
  */
 export const seriesTimeRangeSchema = z
-  .object({
+  .strictObject({
     start: z.int(),
     end: z.int(),
   })
@@ -43,15 +47,15 @@ export const seriesTimeRangeSchema = z
  * シリーズ 1 件が持つ属性。
  * 地図の描画・一覧パネル・詳細カード・RSS 同期の全部がここを読む。
  */
-export const seriesPropertiesSchema = z.object({
+export const seriesPropertiesSchema = z.strictObject({
   /** エピソードの `seriesId` が指す先。 */
-  id: z.string().trim().min(1),
+  id: trimmedNonEmptyStringSchema,
 
   /**
    * シリーズ名。
    * 番組から引いてよいのは題号までなので、説明文をここへ入れない（docs/adr/0008-quote-titles-only.md）。
    */
-  title: z.string().trim().min(1),
+  title: trimmedNonEmptyStringSchema,
 
   /**
    * 描画スタイルの分岐キー。
@@ -75,7 +79,7 @@ export const seriesPropertiesSchema = z.object({
    * 大まかな地域名。
    * `tags` と並べて、近接の判定（関連シリーズ行）が読む。
    */
-  region: z.string().trim().min(1),
+  region: trimmedNonEmptyStringSchema,
 
   /**
    * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
@@ -93,11 +97,11 @@ export const seriesPropertiesSchema = z.object({
    * 主題のラベル。
    * 主題の近さは地図にも era スライダーにも現れないので、これだけが表す。
    */
-  tags: z.array(z.string().trim().min(1)),
+  tags: z.array(trimmedNonEmptyStringSchema),
 });
 
 /** シリーズ 1 件。 */
-export const seriesFeatureSchema = z.object({
+export const seriesFeatureSchema = z.strictObject({
   /** GeoJSON が geometry と properties の対に要求する固定値。 */
   type: z.literal("Feature"),
 
@@ -118,7 +122,7 @@ export const seriesFeatureSchema = z.object({
  * `id` はエピソードが指す先の鍵で、`season` は同期が組む season → seriesId の索引の鍵なので、どちらも重複すると引いた先が一つに定まらない。
  */
 export const seriesCollectionSchema = z
-  .object({
+  .strictObject({
     type: z.literal("FeatureCollection"),
     features: z.array(seriesFeatureSchema),
   })
@@ -141,6 +145,7 @@ export const seriesCollectionSchema = z
 
 export type Series = z.infer<typeof seriesFeatureSchema>;
 export type SeriesCollection = z.infer<typeof seriesCollectionSchema>;
+export type SeriesTimeRange = z.infer<typeof seriesTimeRangeSchema>;
 
 /**
  * シリーズ全件を検査して返す。

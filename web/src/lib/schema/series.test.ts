@@ -50,6 +50,14 @@ describe("seriesCollectionSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("スキーマに無いキーを持つ properties を落とす", () => {
+    const result = seriesCollectionSchema.safeParse(
+      collectionOf(seriesWith({ related: ["athens"] })),
+    );
+
+    expect(result.success).toBe(false);
+  });
+
   it("id が重複した 2 件を落とす", () => {
     const result = seriesCollectionSchema.safeParse(
       collectionOf(sparta, seriesWith({ season: 3 })),

@@ -94,13 +94,13 @@ data/
     {
       "type": "Feature",  // GeoJSON が geometry と properties の対に要求する固定値
       "geometry": { "type": "Point", "coordinates": [22.43, 37.07] },
-      // Point / MultiPoint / Polygon / LineString をシリーズの性質で使い分ける
-      // 例: 都市国家=Point、帝国や文明圏=Polygon、遠征や航海=LineString、場所が散る概念史=MultiPoint
+      // Point / MultiPoint / Polygon / MultiPolygon / LineString をシリーズの性質で使い分ける
+      // 例: 都市国家=Point、帝国や文明圏=Polygon（飛び地があれば MultiPolygon）、遠征や航海=LineString、場所が散る概念史=MultiPoint
       "properties": {
         "id": "sparta",
         "title": "スパルタ",
         "kind": "place",                              // 描画スタイルの分岐キー
-        "timeRange": { "start": -900, "end": -200 },  // 負値 = BC
+        "timeRange": { "start": -900, "end": -200 },  // 両端を含む閉区間。負値 = BC
         "summary": "",         // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
         "region": "ギリシア",
         "season": 2,           // 割当キー。itunes:season の値（ADR-0018）
@@ -130,7 +130,8 @@ data/
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。
-  この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける
+  この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける。
+  ファイル単体の検査に加えて、ファイルをまたぐ整合——`episodes.json` の `seriesId` が `series.geojson` の実在する id と season を指すか、`series.geojson` の `timeRange` が `eras.json` の era 空間と重なるか——も同じテストが見る（`web/src/lib/schema/references.ts`）
 - 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
 - 概念史（お金の歴史・資本主義など）は「場所が一意でない」——主要な舞台を
   MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする。
