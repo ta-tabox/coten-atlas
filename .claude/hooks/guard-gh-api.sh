@@ -55,7 +55,7 @@ if grep -qE '/(actions|dependabot|codespaces)/secrets' <<< "$command_line"; then
 fi
 
 # 既存を書き換える／消すメソッドは、対象を問わず戻せない。
-if grep -qE '(^|[[:space:]])(-X|--method)[[:space:]]+(PATCH|PUT|DELETE)([[:space:]]|$)' <<< "$command_line"; then
+if grep -qiE '(^|[[:space:]])(-X|--method)[[:space:]]+(PATCH|PUT|DELETE)([[:space:]]|$)' <<< "$command_line"; then
   ask "既存を書き換えるか消す api 呼び出しである。人間の諾否が要る"
   exit 0
 fi
@@ -64,7 +64,7 @@ fi
 # `-f query=` は読み取りの query にも付くので、フィールドの有無では判定できない。
 if grep -qE '(^|[[:space:]])graphql([[:space:]]|$)' <<< "$command_line"; then
   if grep -qE 'mutation[[:space:]]*[({]' <<< "$command_line"; then
-    if ! grep -qE '(resolve|unresolve)ReviewThread' <<< "$command_line" \
+    if ! grep -qE 'mutation[[:space:]]*[({][[:space:]]*(resolve|unresolve)ReviewThread' <<< "$command_line" \
       || grep -qiE '(delete|remove|transfer|archive|secret)' <<< "$command_line"; then
       ask "レビュースレッドの resolve 以外の mutation である。人間の諾否が要る"
     fi
@@ -74,12 +74,21 @@ fi
 
 # ここから先は REST。
 # `gh api` はフィールドを渡すと自動で POST になるので、メソッドを書かない書き込みも拾う。
-writes='(^|[[:space:]])(-X|--method)[[:space:]]+(POST|post)([[:space:]]|$)'
+writes='(^|[[:space:]])(-X|--method)[[:space:]]+POST([[:space:]]|$)'
 writes+='|(^|[[:space:]])(-f|-F|--field|--raw-field|--input)([[:space:]]|=)'
 
-if grep -qE "$writes" <<< "$command_line"; then
-  # コメントと返信だけは戻せる側に置く（`gh issue comment` が allow なのと同じ層）。
-  if ! grep -qE '/(comments|replies)([[:space:]"'"'"'/]|$)' <<< "$command_line"; then
+# コメントと返信だけは戻せる側に置く（`gh issue comment` が allow なのと同じ層）。
+#
+# 見るのはエンドポイントの位置だけで、コマンド全体を探さない。
+# 全体を探すと、フィールドの値がたまたま `/comments` を含むだけで別の書き込みが素通りする
+# （`gh api repos/o/r/issues -f title="see /comments"` は issue の作成である）。
+# エンドポイントは `gh api` の直後か、メソッド指定を挟んだ直後にしか来ない。
+comment_endpoint='(^|[[:space:]])gh[[:space:]]+api[[:space:]]+'
+comment_endpoint+='((-X|--method)[[:space:]]+[A-Za-z]+[[:space:]]+)?'
+comment_endpoint+='[^-[:space:]][^[:space:]]*/(comments|replies)([[:space:]]|$)'
+
+if grep -qiE "$writes" <<< "$command_line"; then
+  if ! grep -qE "$comment_endpoint" <<< "$command_line"; then
     ask "コメント投稿以外の書き込みである。人間の諾否が要る"
   fi
 fi
