@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   parseSeries,
   seriesCollectionSchema,
-  timeRangeSchema,
+  seriesTimeRangeSchema,
 } from "@/lib/schema/series";
 
 /** ARCHITECTURE.md「データモデル」の例をそのまま写した 1 件。 */
@@ -135,21 +135,21 @@ describe("seriesCollectionSchema", () => {
   });
 });
 
-describe("timeRangeSchema", () => {
+describe("seriesTimeRangeSchema", () => {
   it("紀元前を負値で受ける", () => {
-    const parsed = timeRangeSchema.parse({ start: -800, end: -146 });
+    const parsed = seriesTimeRangeSchema.parse({ start: -800, end: -146 });
 
     expect(parsed.start).toBe(-800);
   });
 
   it("start と end が同じ年でも受ける", () => {
-    expect(timeRangeSchema.safeParse({ start: 1600, end: 1600 }).success).toBe(
-      true,
-    );
+    expect(
+      seriesTimeRangeSchema.safeParse({ start: 1600, end: 1600 }).success,
+    ).toBe(true);
   });
 
   it("start が end より後なら落とす", () => {
-    const result = timeRangeSchema.safeParse({ start: 280, end: 180 });
+    const result = seriesTimeRangeSchema.safeParse({ start: 280, end: 180 });
 
     expect(result.success).toBe(false);
   });

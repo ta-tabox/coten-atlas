@@ -24,7 +24,7 @@ export const seriesKindSchema = z.enum(["point", "polygon", "line", "concept"]);
  * シリーズが扱う年代の範囲。
  * 負値は紀元前を指す。
  */
-export const timeRangeSchema = z
+export const seriesTimeRangeSchema = z
   .object({
     start: z.int(),
     end: z.int(),
@@ -126,7 +126,7 @@ export const seriesPropertiesSchema = z.object({
    * シリーズが扱う年代の範囲。
    * era スライダーの現在窓との重なり率が、そのまま地図上の表示 opacity になる。
    */
-  timeRange: timeRangeSchema,
+  timeRange: seriesTimeRangeSchema,
 
   /**
    * 詳細カードに出す自前の要約。
