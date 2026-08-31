@@ -61,7 +61,7 @@ export const seriesPropertiesSchema = z.object({
 
   /**
    * シリーズが扱う年代の範囲。
-   * era スライダーの現在窓との重なり率が、そのまま表示 opacity になる。
+   * era スライダーの現在窓との重なり率（0..1）をイージングに通した値が、表示 opacity になる。
    */
   timeRange: seriesTimeRangeSchema,
 
