@@ -26,7 +26,8 @@ export const episodeSchema = z.object({
 
   /**
    * 各回の題号。
-   * 綴りが 3 通りに揺れているので、ここからシリーズ名を抽出しない。
+   * 基本形は `【COTEN RADIO 宗教改革編2】` だが、`編` の欠落・回番号でなく前後編・開き括弧の欠落で崩れる（#13 の実測）。
+   * ここからシリーズ名を抽出せず、割当は `itunes:season` で行う（docs/adr/0018-season-as-assignment-key.md）。
    */
   title: z.string().trim().min(1),
 
