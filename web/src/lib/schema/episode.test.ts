@@ -51,6 +51,12 @@ describe("episodeSchema", () => {
     expect(parsed.seriesId).toBeNull();
   });
 
+  it("season の無い回に seriesId が付いていれば落とす", () => {
+    const result = episodeSchema.safeParse({ ...episode, season: null });
+
+    expect(result.success).toBe(false);
+  });
+
   it("正規化前の RFC 822 の pubDate を落とす", () => {
     const result = episodeSchema.safeParse({
       ...episode,

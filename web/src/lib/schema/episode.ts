@@ -17,38 +17,48 @@ import { duplicatesOf } from "@/lib/duplicates";
 import { linksSchema } from "@/lib/schema/link";
 
 /** エピソード 1 件。 */
-export const episodeSchema = z.object({
-  /**
-   * 差分同期が突き合わせに使う RSS の `<guid>`。
-   * 大半は UUID だが、初期の 5 件だけ `<guid> https://anchor.fm/coten/episodes/94COTEN-RADIO-ebu6ld</guid>` のように先頭へ空白の付いた URL が来る（#13 の実測）。
-   */
-  guid: z.string().trim().min(1),
+export const episodeSchema = z
+  .object({
+    /**
+     * 差分同期が突き合わせに使う RSS の `<guid>`。
+     * 大半は UUID だが、初期の 5 件だけ `<guid> https://anchor.fm/coten/episodes/94COTEN-RADIO-ebu6ld</guid>` のように先頭へ空白の付いた URL が来る（#13 の実測）。
+     */
+    guid: z.string().trim().min(1),
 
-  /**
-   * 各回の題号。
-   * 基本形は `【COTEN RADIO 宗教改革編2】` だが、`編` の欠落・回番号でなく前後編・開き括弧の欠落で崩れる（#13 の実測）。
-   * ここからシリーズ名を抽出せず、割当は `itunes:season` で行う（docs/adr/0018-season-as-assignment-key.md）。
-   */
-  title: z.string().trim().min(1),
+    /**
+     * 各回の題号。
+     * 基本形は `【COTEN RADIO 宗教改革編2】` だが、`編` の欠落・回番号でなく前後編・開き括弧の欠落で崩れる（#13 の実測）。
+     * ここからシリーズ名を抽出せず、割当は `itunes:season` で行う（docs/adr/0018-season-as-assignment-key.md）。
+     */
+    title: z.string().trim().min(1),
 
-  /**
-   * エピソード一覧の並び順。
-   * これで足りるので `itunes:episode` は持たない（docs/adr/0018-season-as-assignment-key.md）。
-   */
-  pubDate: z.iso.datetime(),
+    /**
+     * エピソード一覧の並び順。
+     * これで足りるので `itunes:episode` は持たない（docs/adr/0018-season-as-assignment-key.md）。
+     */
+    pubDate: z.iso.datetime(),
 
-  /**
-   * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
-   * 番外編・特別編・告知は持たないので、null の回は inbox へ回る。
-   */
-  season: z.int().positive().nullable(),
+    /**
+     * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
+     * 番外編・特別編・告知は持たないので、null の回は inbox へ回る。
+     */
+    season: z.int().positive().nullable(),
 
-  /** `season` をシリーズ側の索引で引いた結果。 */
-  seriesId: z.string().trim().min(1).nullable(),
+    /** `season` をシリーズ側の索引で引いた結果。 */
+    seriesId: z.string().trim().min(1).nullable(),
 
-  /** RSS の `<link>` が入る（docs/adr/0006-rss-link-as-episode-url.md）。 */
-  links: linksSchema,
-});
+    /** RSS の `<link>` が入る（docs/adr/0006-rss-link-as-episode-url.md）。 */
+    links: linksSchema,
+  })
+  .superRefine((episode, ctx) => {
+    // seriesId は season を索引で引いた結果なので、season の無い回に割当は存在しえない。
+    if (episode.season === null && episode.seriesId !== null) {
+      ctx.addIssue({
+        code: "custom",
+        message: `season が無いのに seriesId が割り当たっている（seriesId=${episode.seriesId}）`,
+      });
+    }
+  });
 
 /**
  * エピソード全件。
