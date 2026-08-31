@@ -145,6 +145,7 @@ export const seriesCollectionSchema = z
 
 export type Series = z.infer<typeof seriesFeatureSchema>;
 export type SeriesCollection = z.infer<typeof seriesCollectionSchema>;
+export type SeriesTimeRange = z.infer<typeof seriesTimeRangeSchema>;
 
 /**
  * シリーズ全件を検査して返す。
