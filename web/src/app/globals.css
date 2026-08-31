@@ -1,5 +1,11 @@
-/* 地図が画面いっぱいに広がるので、body の既定 margin を消す。
-   残すと四辺に縁が出る。 */
-body {
-  margin: 0;
-}
+/* サイト全体に効く唯一の CSS。
+   Tailwind v4 を読み込み、デザイントークンの置き場を兼ねる（docs/adr/0021-tailwind-v4.md）。
+
+   body の margin を消す規則はここに要らない。
+   Tailwind の preflight が担う。
+
+   色・余白・重なり順のトークンは、この下の `@theme` へ置く。
+   最初に使う画面が現れた時点で書き始める。
+   いま置くと、使う側が無いまま値だけが正になる。 */
+
+@import "tailwindcss";

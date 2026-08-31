@@ -1,5 +1,5 @@
 {
-  "_comment": "Bash(git push:*) は共有の雛形どおり allow。force 系と --delete / --mirror は ask にも残すが、権限パターンは前方一致なので git push origin --force のようにフラグが push の直後に来ない語順を拾えない。語順に依存しない判定は PreToolUse フック guard-force-push.sh が持ち、コマンド全文を見て ask へ回す。フックの if を git 全体で絞ってあるのは、コマンド名より細かいパターンが $( ) を含む行を素通しさせて起動する（hooks のドキュメント）ためで、git push:* と書いても絞りにならないから。ask の列挙はフックを切ったときの下限として残してある（CLAUDE.md「git」節）。判定の口は pnpm check の一本（docs/adr/0009-pnpm-check.md）。check を構成する個別スクリプトも allow に置く——切り分けのために単体で叩くので、置かないと毎回訊かれるだけの摩擦になる。mise はランタイム版管理として残っており（install / 参照系）、tasks は持たない。",
+  "_comment": "Bash(git push:*) は共有の雛形どおり allow。force 系と --delete / --mirror は ask にも残すが、権限パターンは前方一致なので git push origin --force のようにフラグが push の直後に来ない語順を拾えない。語順に依存しない判定は PreToolUse フック guard-force-push.sh が持ち、コマンド全文を見て ask へ回す。フックの if を git 全体で絞ってあるのは、コマンド名より細かいパターンが $( ) を含む行を素通しさせて起動する（hooks のドキュメント）ためで、git push:* と書いても絞りにならないから。ask の列挙はフックを切ったときの下限として残してある（CLAUDE.md「git」節）。判定の口は pnpm check の一本（docs/adr/0009-pnpm-check.md）。check を構成する個別スクリプトも allow に置く——切り分けのために単体で叩くので、置かないと毎回訊かれるだけの摩擦になる。mise はランタイム版管理として残っており（install / 参照系）、tasks は持たない。gh は雛形どおり全器共通の三層で配る——読み取り・起票・コメント・close までが allow、merge と release が ask、repo の削除／編集と secret と auth が deny。切り分けの理由は CLAUDE.md「git」節が持つ。gh api だけは綴りが一つしか無く、前方一致では読み取りと書き込みを分けられない。全部を ask にするとレビューの読み取りや返信——gh issue comment が allow なのと同じ「戻せるコメント」——まで毎回訊かれるので、コマンド全文を見る PreToolUse フック guard-gh-api.sh が戻せない書き込みだけを ask へ回す。素通しするのは読み取り・コメント投稿・レビュースレッドの resolve の三つ。ask に DELETE を二綴り残してあるのはフックを切ったときの下限で、語順に依存しない判定はフックが持つ（雛形からの逸脱。CLAUDE.md「git」節に記録がある）。",
   "attribution": {
     "commit": "Co-authored-by: Claude <noreply@anthropic.com>",
     "pr": "",
@@ -18,14 +18,42 @@
       "Bash(mise current:*)",
       "Bash(mise where:*)",
       "Bash(pnpm install)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr comment:*)",
+      "Bash(gh pr close:*)",
+      "Bash(gh pr reopen:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh issue comment:*)",
+      "Bash(gh issue close:*)",
+      "Bash(gh issue reopen:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh api:*)"
     ],
     "ask": [
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
       "Bash(git push --force-with-lease:*)",
       "Bash(git push --delete:*)",
-      "Bash(git push --mirror:*)"
+      "Bash(git push --mirror:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh release:*)",
+      "Bash(gh api -X DELETE:*)",
+      "Bash(gh api --method DELETE:*)"
+    ],
+    "deny": [
+      "Bash(gh repo delete:*)",
+      "Bash(gh repo edit:*)",
+      "Bash(gh secret:*)",
+      "Bash(gh auth:*)"
     ]
   },
   "hooks": {
@@ -37,6 +65,12 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-force-push.sh",
             "if": "Bash(git:*)",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-gh-api.sh",
+            "if": "Bash(gh:*)",
             "timeout": 5
           }
         ]

@@ -16,7 +16,7 @@ function series(id: string, season: number): Series {
     properties: {
       id,
       title: id,
-      kind: "point",
+      kind: "place",
       timeRange: { start: -27, end: 180 },
       summary: "",
       region: "ヨーロッパ",

@@ -41,12 +41,14 @@
 | [0012](0012-maplibre-v5.md) | maplibre-gl は v5 系に固定する | 2026-08-27 | supersede 済み（→ 0013） |
 | [0013](0013-maplibre-worker-self-hosted.md) | MapLibre の worker はこのリポジトリが配る（0012 を supersede） | 2026-08-27 | 採用 |
 | [0014](0014-e2e-offline-smoke.md) | E2E を入れる（外部を遮断したスモーク1枚に限る） | 2026-08-28 | 採用 |
-| [0015](0015-css-modules.md) | スタイルは CSS Modules で書き、CSS フレームワークを入れない | 2026-08-28 | 採用 |
+| [0015](0015-css-modules.md) | スタイルは CSS Modules で書き、CSS フレームワークを入れない | 2026-08-28 | supersede 済み（→ 0021） |
 | [0016](0016-playwright-runner.md) | ブラウザを立てる検証は Playwright が回し、Vitest は純関数だけを見る | 2026-08-29 | 採用 |
 | [0017](0017-local-only-instructions.md) | 手元の環境にだけ意味を持つ指示と申し送りは追跡しない | 2026-08-29 | 採用 |
 | [0018](0018-season-as-assignment-key.md) | エピソードとテーマの割当キーを `itunes:season` にする | 2026-08-29 | 採用 |
 | [0019](0019-era-open-end.md) | 終わっていない era の `end` は年を書かず、印を置く | 2026-08-29 | 採用 |
 | [0020](0020-series-rename.md) | 地図の 1 エントリの呼び名を `series` にする | 2026-08-30 | 採用 |
+| [0021](0021-tailwind-v4.md) | スタイルを Tailwind v4 で書く（0015 を supersede） | 2026-08-31 | 採用 |
+| [0022](0022-map-dom-boundary.md) | 地図の上に載せるものは React 側で書き、MapLibre の DOM は canvas と attribution に限る | 2026-08-31 | 採用 |
 
 **0019 までのレコードは `テーマ` の語で書かれている。**
 地図の 1 エントリの呼び名を [0020](0020-series-rename.md) で `series`（シリーズ）へ揃えたので、それより前のレコードにある「テーマ」は「シリーズ」と読む。

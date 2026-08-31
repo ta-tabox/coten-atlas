@@ -127,14 +127,14 @@ function readPreviousAssignments(): Map<string, string | null> {
  * フィードの 1 件を `episodes.json` の 1 件へ直す。
  *
  * `link` は Spotify のエピソードページである（docs/adr/0006-rss-link-as-episode-url.md）。
- * `episodeNumber` と `durationSec` は読む先が無いので落とす（docs/adr/0018-season-as-assignment-key.md）。
+ * `audioUrl`・`episodeNumber`・`durationSec` はスキーマに欄が無いので落とす。
+ * `episodeSchema` は未知のキーを捨てずに落とすので、足すと `parseEpisodes` が赤になる。
  */
 function toEpisode(item: FeedItem, seriesId: string | null): Episode {
   return {
     guid: item.guid,
     title: item.title,
     pubDate: item.pubDate,
-    audioUrl: item.audioUrl,
     season: item.season,
     seriesId,
     links: [{ platform: "spotify", url: item.link }],

@@ -20,8 +20,20 @@
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { Page } from "@playwright/test";
 import { BASE_PATH } from "../src/lib/base-path.ts";
+
+/**
+ * `next build` が吐いた静的成果物の置き場。
+ * 配信するディレクトリを知っているのはこの層なので、spec ごとに綴り直さない。
+ *
+ * 定数でなく関数なのは、L2 の `tests/smoke.test.ts` がこのモジュールを jsdom で読むため。
+ * jsdom の `import.meta.url` は file スキームにならないので、読み込み時に解決すると、純関数を見るだけのテストがそこで落ちる。
+ */
+export function exportRoot(): string {
+  return fileURLToPath(new URL("../out", import.meta.url));
+}
 
 /**
  * 描画領域の大きさ。
@@ -248,10 +260,14 @@ function portOf(server: http.Server): number {
 /**
  * ページを開いて観測を集める。
  * 判定はしない。
+ *
+ * `pagePath` は BASE_PATH の下の綴り。
+ * この層のサーバはディレクトリにしか index.html を補わないので、トップ以外は拡張子まで綴る。
  */
 export async function observe(
   page: Page,
   root: string,
+  pagePath = "/",
 ): Promise<PageObservation> {
   const server = await serveExport(root);
 
@@ -284,9 +300,12 @@ export async function observe(
       }
     });
 
-    await page.goto(`http://localhost:${portOf(server)}${BASE_PATH}/`, {
-      waitUntil: "networkidle",
-    });
+    await page.goto(
+      `http://localhost:${portOf(server)}${BASE_PATH}${pagePath}`,
+      {
+        waitUntil: "networkidle",
+      },
+    );
 
     const canvasSize = await page.evaluate(() => {
       const canvas = document.querySelector("canvas.maplibregl-canvas");
