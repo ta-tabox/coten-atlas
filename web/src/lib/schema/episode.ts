@@ -20,7 +20,7 @@ import { linksSchema } from "@/lib/schema/link";
 export const episodeSchema = z.object({
   /**
    * 差分同期が突き合わせに使う RSS の `<guid>`。
-   * 5 件だけ UUID でなく URL で、先頭に空白が付く。
+   * 大半は UUID だが、初期の 5 件だけ `<guid> https://anchor.fm/coten/episodes/94COTEN-RADIO-ebu6ld</guid>` のように先頭へ空白の付いた URL が来る（#13 の実測）。
    */
   guid: z.string().trim().min(1),
 
