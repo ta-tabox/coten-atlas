@@ -25,7 +25,7 @@ export const episodeSchema = z.object({
   guid: z.string().trim().min(1),
 
   /**
-   * 番組から引いてよいのは題号まで（docs/adr/0008-quote-titles-only.md）。
+   * 各回の題号。
    * 綴りが 3 通りに揺れているので、ここからシリーズ名を抽出しない。
    */
   title: z.string().trim().min(1),

@@ -47,7 +47,10 @@ export const seriesPropertiesSchema = z.object({
   /** エピソードの `seriesId` が指す先。 */
   id: z.string().trim().min(1),
 
-  /** 番組から引いてよいのは題号まで（docs/adr/0008-quote-titles-only.md）。 */
+  /**
+   * シリーズ名。
+   * 番組から引いてよいのは題号までなので、説明文をここへ入れない（docs/adr/0008-quote-titles-only.md）。
+   */
   title: z.string().trim().min(1),
 
   /**
@@ -56,13 +59,22 @@ export const seriesPropertiesSchema = z.object({
    */
   kind: seriesKindSchema,
 
-  /** era スライダーの現在窓との重なり率が、そのまま表示 opacity になる。 */
+  /**
+   * シリーズが扱う年代の範囲。
+   * era スライダーの現在窓との重なり率が、そのまま表示 opacity になる。
+   */
   timeRange: seriesTimeRangeSchema,
 
-  /** 番組の説明文は引かないので、当面は空である（docs/adr/0008-quote-titles-only.md）。 */
+  /**
+   * 自前で書く要約。
+   * 番組の説明文を引かない代わりに置いた欄なので、書かれるまでは空である（docs/adr/0008-quote-titles-only.md）。
+   */
   summary: z.string(),
 
-  /** `tags` と並べて、近接の判定（関連シリーズ行）が読む。 */
+  /**
+   * 大まかな地域名。
+   * `tags` と並べて、近接の判定（関連シリーズ行）が読む。
+   */
   region: z.string().trim().min(1),
 
   /**
@@ -71,12 +83,15 @@ export const seriesPropertiesSchema = z.object({
    */
   season: z.int().positive(),
 
-  /** 配信側にシリーズ単位のページが無いので、指す先は未決定（当面は空）。 */
+  /**
+   * 配信ページへの導線。
+   * 配信側にシリーズ単位のページが無いので、指す先は未決定である（当面は空）。
+   */
   links: linksSchema,
 
   /**
-   * 主題の近さを表す唯一の欄。
-   * 関連シリーズ行と tag 絞り込みが読む。
+   * 主題のラベル。
+   * 主題の近さは地図にも era スライダーにも現れないので、これだけが表す。
    */
   tags: z.array(z.string().trim().min(1)),
 });
@@ -86,7 +101,10 @@ export const seriesFeatureSchema = z.object({
   /** GeoJSON が geometry と properties の対に要求する固定値。 */
   type: z.literal("Feature"),
 
-  /** 図形の使い分けは `ARCHITECTURE.md` §3 が持つ。 */
+  /**
+   * 地図のどこに、どんな図形で置くか。
+   * 使い分けは `ARCHITECTURE.md` §3 が持つ。
+   */
   geometry: geometrySchema,
 
   properties: seriesPropertiesSchema,
