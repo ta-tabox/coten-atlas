@@ -130,7 +130,8 @@ data/
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。
-  この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける
+  この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける。
+  ファイル単体の検査に加えて、`episodes.json` の `seriesId` が `series.geojson` の実在する id と season を指すかも同じテストが見る（`web/src/lib/schema/references.ts`）
 - 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
 - 概念史（お金の歴史・資本主義など）は「場所が一意でない」——主要な舞台を
   MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする。
