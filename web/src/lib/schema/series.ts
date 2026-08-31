@@ -2,8 +2,9 @@
  * コテンラジオの 1 シリーズのスキーマ。
  * 地図が読む GeoJSON FeatureCollection の形を、実行時に検査できるかたちで持つ。
  *
- * 座標の順は GeoJSON の規定どおり `[経度, 緯度]` で、緯度が先の並びは検査で落ちる。
  * 年は西暦の整数で、負値が紀元前を表す（0 年は暦に存在しないが、区別しても得るものが無いので許す）。
+ * geometry の形そのものは `geojson.ts` が持つ。
+ * zod の既定は未知のキーを黙って捨て、手書きの書き間違いや規約外の欄の混入がどこにも映らないので、スキーマに無いキーは落とす。
  *
  * 描画も RSS 同期もこの形だけを前提にしてよい。
  * 渡された値を検査するだけで `data/` の在り処は呼ぶ側が知るので、ファイルの読み込み口はここが持たない。
@@ -12,20 +13,24 @@
 
 import * as z from "zod";
 import { duplicatesOf } from "@/lib/duplicates";
+import { geometrySchema } from "@/lib/schema/geojson";
 import { linksSchema } from "@/lib/schema/link";
+import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
 /**
  * 描画スタイルの分岐キー。
- * `concept`（概念史）は場所が一意に決まらないものを控えめに描くための区分である。
+ * 図形の違いは `geometry.type` が表すので、ここは場所が一意に決まるかどうかだけを分ける（docs/adr/0023-kind-place-or-concept.md）。
  */
-export const seriesKindSchema = z.enum(["point", "polygon", "line", "concept"]);
+export const seriesKindSchema = z.enum(["place", "concept"]);
 
 /**
  * シリーズが扱う年代の範囲。
  * 負値は紀元前を指す。
+ * start == end の 1 年の出来事を表せるよう、両端を含む閉区間とする。
+ * era の区間は半開（end を含まない）なので、重なりを判定する側は端の扱いを混同しない。
  */
-export const timeRangeSchema = z
-  .object({
+export const seriesTimeRangeSchema = z
+  .strictObject({
     start: z.int(),
     end: z.int(),
   })
@@ -39,89 +44,73 @@ export const timeRangeSchema = z
   });
 
 /**
- * 経度・緯度の対。
- *
- * 範囲を検査するのは、緯度と経度を入れ替えた座標を落とすため。
- * 入れ替えても両方が範囲に収まる土地（緯度・経度とも ±90 の内側）はこれをすり抜けるので、目視の代わりにはならない。
- */
-const positionSchema = z.tuple([
-  z.number().min(-180).max(180),
-  z.number().min(-90).max(90),
-]);
-
-/**
- * 多角形の環が閉じているか。
- * GeoJSON は最初と最後の座標が一致することを要求する。
- *
- * 長さが 4 以上あることを前提にしてよい。
- * 手前の `min(4)` が `abort: true` を持つので、足りない環はここへ来ない。
- * 外すと空の環で添字が undefined になり、safeParse が結果を返さずに投げる。
- */
-function isClosedRing(ring: readonly (readonly [number, number])[]): boolean {
-  const first = ring[0];
-  const last = ring[ring.length - 1];
-
-  return first[0] === last[0] && first[1] === last[1];
-}
-
-/**
- * シリーズを地図のどこへ、どんな図形で置くか。
- * GeoJSON の `geometry` そのもので、型は仕様の 4 種だけを手で写したもの（ライブラリの型は引いていない）。
- *
- * 使い分けはシリーズの性質で決まる。
- * 都市国家は Point、帝国や文明圏は Polygon、遠征や航海は LineString、場所が散る概念史は MultiPoint を使う。
- */
-const geometrySchema = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal("Point"),
-    coordinates: positionSchema,
-  }),
-  z.object({
-    type: z.literal("MultiPoint"),
-    coordinates: z.array(positionSchema).min(1),
-  }),
-  z.object({
-    type: z.literal("LineString"),
-    coordinates: z.array(positionSchema).min(2),
-  }),
-  z.object({
-    type: z.literal("Polygon"),
-    coordinates: z
-      .array(
-        z
-          .array(positionSchema)
-          .min(4, { abort: true })
-          .refine(isClosedRing, { message: "多角形の環が閉じていない" }),
-      )
-      .min(1),
-  }),
-]);
-
-/**
  * シリーズ 1 件が持つ属性。
- *
- * `season` が割当キーで、`itunes:season` の値を持つ（docs/adr/0018-season-as-assignment-key.md）。
- * 1 シリーズ = `itunes:season` の 1 値で、束ねない。
- * `ROADMAP.md` の完了判定がシリーズ数を数えて全件がここに在るかを見るので、束ねると feature 数とシリーズ数が一致しなくなる。
- *
- * `summary` は自前の要約を入れる欄で、番組の説明文は引かないので当面は空である（docs/adr/0008-quote-titles-only.md）。
+ * 地図の描画・一覧パネル・詳細カード・RSS 同期の全部がここを読む。
  */
-export const seriesPropertiesSchema = z.object({
-  id: z.string().trim().min(1),
-  title: z.string().trim().min(1),
+export const seriesPropertiesSchema = z.strictObject({
+  /** エピソードの `seriesId` が指す先。 */
+  id: trimmedNonEmptyStringSchema,
+
+  /**
+   * シリーズ名。
+   * 番組から引いてよいのは題号までなので、説明文をここへ入れない（docs/adr/0008-quote-titles-only.md）。
+   */
+  title: trimmedNonEmptyStringSchema,
+
+  /**
+   * 描画スタイルの分岐キー。
+   * `concept` は場所が一意に決まらないもので、控えめに描く（docs/adr/0023-kind-place-or-concept.md）。
+   */
   kind: seriesKindSchema,
-  timeRange: timeRangeSchema,
+
+  /**
+   * シリーズが扱う年代の範囲。
+   * era スライダーの現在窓との重なり率（0..1）をイージングに通した値が、表示 opacity になる。
+   */
+  timeRange: seriesTimeRangeSchema,
+
+  /**
+   * 自前で書く要約。
+   * 番組の説明文を引かない代わりに置いた欄なので、書かれるまでは空である（docs/adr/0008-quote-titles-only.md）。
+   */
   summary: z.string(),
-  region: z.string().trim().min(1),
+
+  /**
+   * 大まかな地域名。
+   * `tags` と並べて、近接の判定（関連シリーズ行）が読む。
+   */
+  region: trimmedNonEmptyStringSchema,
+
+  /**
+   * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
+   * 1 シリーズ = 1 値で、複数を束ねない。
+   */
   season: z.int().positive(),
+
+  /**
+   * 配信ページへの導線。
+   * 配信側にシリーズ単位のページが無いので、指す先は未決定である（当面は空）。
+   */
   links: linksSchema,
-  tags: z.array(z.string().trim().min(1)),
+
+  /**
+   * 主題のラベル。
+   * 主題の近さは地図にも era スライダーにも現れないので、これだけが表す。
+   */
+  tags: z.array(trimmedNonEmptyStringSchema),
 });
 
 /** シリーズ 1 件。 */
-export const seriesFeatureSchema = z.object({
+export const seriesFeatureSchema = z.strictObject({
+  /** GeoJSON が geometry と properties の対に要求する固定値。 */
   type: z.literal("Feature"),
+
+  /**
+   * 地図のどこに、どんな図形で置くか。
+   * 使い分けは `ARCHITECTURE.md` §3 が持つ。
+   */
   geometry: geometrySchema,
+
   properties: seriesPropertiesSchema,
 });
 
@@ -133,7 +122,7 @@ export const seriesFeatureSchema = z.object({
  * `id` はエピソードが指す先の鍵で、`season` は同期が組む season → seriesId の索引の鍵なので、どちらも重複すると引いた先が一つに定まらない。
  */
 export const seriesCollectionSchema = z
-  .object({
+  .strictObject({
     type: z.literal("FeatureCollection"),
     features: z.array(seriesFeatureSchema),
   })
@@ -154,10 +143,9 @@ export const seriesCollectionSchema = z
     }
   });
 
-export type SeriesKind = z.infer<typeof seriesKindSchema>;
-export type TimeRange = z.infer<typeof timeRangeSchema>;
 export type Series = z.infer<typeof seriesFeatureSchema>;
 export type SeriesCollection = z.infer<typeof seriesCollectionSchema>;
+export type SeriesTimeRange = z.infer<typeof seriesTimeRangeSchema>;
 
 /**
  * シリーズ全件を検査して返す。

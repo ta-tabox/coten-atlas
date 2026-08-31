@@ -26,6 +26,18 @@
   権限パターンは前方一致で `git push origin --force` のような語順を拾えないので、
   コマンド全文を見る `.claude/hooks/guard-force-push.sh` が ask へ回す。
   PR の作成とマージは、人間がそう指示したときだけ。
+- **`gh` の実行権は「戻せるか」で三層に切る**。
+  読み取り・起票・コメント・close までが allow——どれも reopen や編集で戻る。
+  `gh pr merge`・`gh release` は ask。
+  merge を分けたのは、main への push が本番デプロイや migration を起こしうるので、戻る操作の側に入らないため。
+  `gh repo delete`・`gh repo edit`・`gh secret`・`gh auth` は deny。
+  承認を挟めば通る類ではなくエージェントの仕事でもないので、プロンプトごと落としてある。
+  ただし deny が効くのは綴りにだけで、`gh api -X PATCH repos/…` は `gh repo edit` を経由せず同じ操作へ届く。
+  そこを受け止めるのが `.claude/hooks/guard-gh-api.sh` である。
+  `gh api` は綴りが一つしか無く、前方一致では読み取りと書き込みを分けられないので、コマンド全文を見て戻せない書き込みだけを ask へ回す。
+  素通しするのは読み取り・コメント投稿・レビュースレッドの resolve の三つで、どれも `gh issue comment` が allow なのと同じ「戻せる」層に当たる。
+  雛形は `gh api` を丸ごと ask にしており、その形だとレビューの往復で読み取りまで毎回訊かれるので、**ここは全器共通の雛形から逸脱している**。
+  層の基準は操作が戻せるかどうかなので、綴りの都合で層をまたいでいた分を切り直した。
 
 ## 開発ハーネス（本文は `HARNESS.md`）
 

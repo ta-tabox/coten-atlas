@@ -2,25 +2,23 @@ import { describe, expect, it } from "vitest";
 import {
   parseSeries,
   seriesCollectionSchema,
-  timeRangeSchema,
+  seriesTimeRangeSchema,
 } from "@/lib/schema/series";
 
 /** ARCHITECTURE.md「データモデル」の例をそのまま写した 1 件。 */
-const sangokushi = {
+const sparta = {
   type: "Feature",
-  geometry: { type: "Point", coordinates: [112.5, 34.6] },
+  geometry: { type: "Point", coordinates: [22.43, 37.07] },
   properties: {
-    id: "sangokushi",
-    title: "三国志",
-    kind: "polygon",
-    timeRange: { start: 180, end: 280 },
+    id: "sparta",
+    title: "スパルタ",
+    kind: "place",
+    timeRange: { start: -900, end: -200 },
     summary: "",
-    region: "中国",
-    season: 22,
-    links: [
-      { platform: "spotify", url: "https://open.spotify.com/show/sangokushi" },
-    ],
-    tags: ["戦乱", "中国"],
+    region: "ギリシア",
+    season: 2,
+    links: [],
+    tags: ["古代", "ギリシア"],
   },
 };
 
@@ -32,16 +30,16 @@ function collectionOf(...features: unknown[]): unknown {
 /** 正例の properties を部分的に差し替えた 1 件を作る。 */
 function seriesWith(properties: Record<string, unknown>): unknown {
   return {
-    ...sangokushi,
-    properties: { ...sangokushi.properties, ...properties },
+    ...sparta,
+    properties: { ...sparta.properties, ...properties },
   };
 }
 
 describe("seriesCollectionSchema", () => {
   it("ARCHITECTURE の例をそのまま通す", () => {
-    const parsed = parseSeries(collectionOf(sangokushi));
+    const parsed = parseSeries(collectionOf(sparta));
 
-    expect(parsed.features[0].properties.id).toBe("sangokushi");
+    expect(parsed.features[0].properties.id).toBe("sparta");
   });
 
   it("未知の kind を落とす", () => {
@@ -52,9 +50,17 @@ describe("seriesCollectionSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("スキーマに無いキーを持つ properties を落とす", () => {
+    const result = seriesCollectionSchema.safeParse(
+      collectionOf(seriesWith({ related: ["athens"] })),
+    );
+
+    expect(result.success).toBe(false);
+  });
+
   it("id が重複した 2 件を落とす", () => {
     const result = seriesCollectionSchema.safeParse(
-      collectionOf(sangokushi, seriesWith({ season: 23 })),
+      collectionOf(sparta, seriesWith({ season: 3 })),
     );
 
     expect(result.success).toBe(false);
@@ -62,7 +68,7 @@ describe("seriesCollectionSchema", () => {
 
   it("同じ season を 2 シリーズが持つと落とす", () => {
     const result = seriesCollectionSchema.safeParse(
-      collectionOf(sangokushi, seriesWith({ id: "sangokushi-2" })),
+      collectionOf(sparta, seriesWith({ id: "sparta-2" })),
     );
 
     expect(result.success).toBe(false);
@@ -71,81 +77,37 @@ describe("seriesCollectionSchema", () => {
   it("同じ配信基盤のリンクを 2 本持つシリーズを落とす", () => {
     const twoSpotify = seriesWith({
       links: [
-        { platform: "spotify", url: "https://open.spotify.com/show/a" },
-        { platform: "spotify", url: "https://open.spotify.com/show/b" },
+        {
+          platform: "spotify",
+          url: "https://podcasters.spotify.com/pod/show/coten/episodes/a",
+        },
+        {
+          platform: "spotify",
+          url: "https://podcasters.spotify.com/pod/show/coten/episodes/b",
+        },
       ],
     });
     const result = seriesCollectionSchema.safeParse(collectionOf(twoSpotify));
 
     expect(result.success).toBe(false);
   });
-
-  it("緯度と経度が入れ替わった座標を落とす", () => {
-    const swapped = {
-      ...sangokushi,
-      geometry: { type: "Point", coordinates: [34.6, 112.5] },
-    };
-    const result = seriesCollectionSchema.safeParse(collectionOf(swapped));
-
-    expect(result.success).toBe(false);
-  });
-
-  it("空の環を持つ多角形を、投げずに落とす", () => {
-    const emptyRing = {
-      ...sangokushi,
-      geometry: { type: "Polygon", coordinates: [[]] },
-    };
-    const result = seriesCollectionSchema.safeParse(collectionOf(emptyRing));
-
-    expect(result.success).toBe(false);
-  });
-
-  it("環を 1 つも持たない多角形を落とす", () => {
-    const noRing = {
-      ...sangokushi,
-      geometry: { type: "Polygon", coordinates: [] },
-    };
-    const result = seriesCollectionSchema.safeParse(collectionOf(noRing));
-
-    expect(result.success).toBe(false);
-  });
-
-  it("閉じていない多角形を落とす", () => {
-    const openRing = {
-      ...sangokushi,
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [110, 30],
-            [115, 30],
-            [115, 35],
-            [110, 35],
-          ],
-        ],
-      },
-    };
-    const result = seriesCollectionSchema.safeParse(collectionOf(openRing));
-
-    expect(result.success).toBe(false);
-  });
 });
 
-describe("timeRangeSchema", () => {
+describe("seriesTimeRangeSchema", () => {
   it("紀元前を負値で受ける", () => {
-    const parsed = timeRangeSchema.parse({ start: -800, end: -146 });
+    const parsed = seriesTimeRangeSchema.parse({ start: -800, end: -146 });
 
     expect(parsed.start).toBe(-800);
   });
 
   it("start と end が同じ年でも受ける", () => {
-    expect(timeRangeSchema.safeParse({ start: 1600, end: 1600 }).success).toBe(
-      true,
-    );
+    expect(
+      seriesTimeRangeSchema.safeParse({ start: 1600, end: 1600 }).success,
+    ).toBe(true);
   });
 
   it("start が end より後なら落とす", () => {
-    const result = timeRangeSchema.safeParse({ start: 280, end: 180 });
+    const result = seriesTimeRangeSchema.safeParse({ start: 280, end: 180 });
 
     expect(result.success).toBe(false);
   });
