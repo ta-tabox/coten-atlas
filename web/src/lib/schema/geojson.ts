@@ -23,12 +23,9 @@ const positionSchema = z.tuple([
 ]);
 
 /**
- * 多角形の環が閉じているか。
- * GeoJSON は最初と最後の座標が一致することを要求する。
- *
- * 長さが 4 以上あることを前提にしてよい。
- * 手前の `min(4)` が `abort: true` を持つので、足りない環はここへ来ない。
- * 外すと空の環で添字が undefined になり、safeParse が結果を返さずに投げる。
+ * 環が閉じているか。
+ * Polygon は環の最初と最後の座標が一致することを要求する。
+ * 手前の `min(4, { abort: true })` が短い環を止めるので、空の配列はここへ来ない。
  */
 function isClosedRing(ring: readonly (readonly [number, number])[]): boolean {
   const first = ring[0];
@@ -37,32 +34,46 @@ function isClosedRing(ring: readonly (readonly [number, number])[]): boolean {
   return first[0] === last[0] && first[1] === last[1];
 }
 
+/** 閉じた環 1 本。 */
+const ringSchema = z
+  .array(positionSchema)
+  .min(4, { abort: true })
+  .refine(isClosedRing, { message: "多角形の環が閉じていない" });
+
+/** 1 地点。 */
+const pointSchema = z.object({
+  type: z.literal("Point"),
+  coordinates: positionSchema,
+});
+
+/** 散らばった複数の地点。 */
+const multiPointSchema = z.object({
+  type: z.literal("MultiPoint"),
+  coordinates: z.array(positionSchema).min(1),
+});
+
+/** 順に繋いだ経路。 */
+const lineStringSchema = z.object({
+  type: z.literal("LineString"),
+  coordinates: z.array(positionSchema).min(2),
+});
+
+/**
+ * 環で囲んだ面。
+ * 最初の環が外周で、2 つ目以降は穴を表す。
+ */
+const polygonSchema = z.object({
+  type: z.literal("Polygon"),
+  coordinates: z.array(ringSchema).min(1),
+});
+
 /**
  * 図形の種類と座標の対。
  * 4 種のうちどれを使うかは、置く対象の性質を知っている側が決める。
  */
 export const geometrySchema = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal("Point"),
-    coordinates: positionSchema,
-  }),
-  z.object({
-    type: z.literal("MultiPoint"),
-    coordinates: z.array(positionSchema).min(1),
-  }),
-  z.object({
-    type: z.literal("LineString"),
-    coordinates: z.array(positionSchema).min(2),
-  }),
-  z.object({
-    type: z.literal("Polygon"),
-    coordinates: z
-      .array(
-        z
-          .array(positionSchema)
-          .min(4, { abort: true })
-          .refine(isClosedRing, { message: "多角形の環が閉じていない" }),
-      )
-      .min(1),
-  }),
+  pointSchema,
+  multiPointSchema,
+  lineStringSchema,
+  polygonSchema,
 ]);
