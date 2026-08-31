@@ -26,6 +26,8 @@ export const seriesKindSchema = z.enum(["place", "concept"]);
 /**
  * シリーズが扱う年代の範囲。
  * 負値は紀元前を指す。
+ * start == end の 1 年の出来事を表せるよう、両端を含む閉区間とする。
+ * era の区間は半開（end を含まない）なので、重なりを判定する側は端の扱いを混同しない。
  */
 export const seriesTimeRangeSchema = z
   .strictObject({

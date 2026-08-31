@@ -100,7 +100,7 @@ data/
         "id": "sparta",
         "title": "スパルタ",
         "kind": "place",                              // 描画スタイルの分岐キー
-        "timeRange": { "start": -900, "end": -200 },  // 負値 = BC
+        "timeRange": { "start": -900, "end": -200 },  // 両端を含む閉区間。負値 = BC
         "summary": "",         // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
         "region": "ギリシア",
         "season": 2,           // 割当キー。itunes:season の値（ADR-0018）
