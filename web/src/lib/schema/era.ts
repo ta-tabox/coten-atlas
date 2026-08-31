@@ -16,6 +16,7 @@
 
 import * as z from "zod";
 import { duplicatesOf } from "@/lib/duplicates";
+import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
 /**
  * まだ終わっていないことを表す `end` の値。
@@ -35,10 +36,10 @@ const eraEndSchema = z.union([z.int(), z.literal(ERA_END_PRESENT)]);
  */
 export const eraSchema = z
   .strictObject({
-    id: z.string().trim().min(1),
+    id: trimmedNonEmptyStringSchema,
 
     /** スライダーに出す時代の名前。 */
-    label: z.string().trim().min(1),
+    label: trimmedNonEmptyStringSchema,
 
     /** 区間の始まりの年（この年を含む）。 */
     start: z.int(),

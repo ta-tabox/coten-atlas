@@ -32,13 +32,22 @@ describe("episodeSchema", () => {
     expect(parsed.season).toBe(66);
   });
 
-  it("guid の前後の空白を落として受ける", () => {
+  it("trim 済みなら URL 形式の guid も通す", () => {
     const parsed = episodeSchema.parse({
+      ...episode,
+      guid: "https://anchor.fm/coten/episodes/e000001",
+    });
+
+    expect(parsed.guid).toBe("https://anchor.fm/coten/episodes/e000001");
+  });
+
+  it("前後に空白の付いた guid を落とす", () => {
+    const result = episodeSchema.safeParse({
       ...episode,
       guid: " https://anchor.fm/coten/episodes/e000001",
     });
 
-    expect(parsed.guid).toBe("https://anchor.fm/coten/episodes/e000001");
+    expect(result.success).toBe(false);
   });
 
   it("season も seriesId も無い回を通す", () => {

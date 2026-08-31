@@ -2,9 +2,10 @@
  * エピソード（＝番組の 1 回）のスキーマ。
  * RSS から同期した自動層の形を持つ（docs/adr/0005-two-layer-data.md）。
  *
- * ここが検査するのは**正規化後**の形である。
- * フィードの `pubDate` は RFC 822 で来るので、ISO 8601 へ直すのは同期側の仕事になる。
- * `guid` も同じで、初期の 5 件は先頭に空白が付いた URL なので、突き合わせのキーにする前に trim する。
+ * ここが検査するのは**正規化後**の形で、正規化そのものは同期側の仕事である。
+ * フィードの `pubDate` は RFC 822 で来るので、ISO 8601 へ直してから書く。
+ * `guid` は初期の 5 件が先頭に空白の付いた URL なので、突き合わせのキーにする前に trim して書く。
+ * 未正規化の値をここで直して受けると同期側の破れが見えなくなるので、直さずに落とす。
  *
  * `season` が割当キーで、`seriesId` はそれを引いた結果である（docs/adr/0018-season-as-assignment-key.md）。
  * どちらも持たない回（番外編・特別編・告知）があるので null を許す。
@@ -17,6 +18,7 @@
 import * as z from "zod";
 import { duplicatesOf } from "@/lib/duplicates";
 import { linksSchema } from "@/lib/schema/link";
+import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
 /** エピソード 1 件。 */
 export const episodeSchema = z
@@ -25,14 +27,14 @@ export const episodeSchema = z
      * 差分同期が突き合わせに使う RSS の `<guid>`。
      * 大半は UUID だが、初期の 5 件だけ `<guid> https://anchor.fm/coten/episodes/94COTEN-RADIO-ebu6ld</guid>` のように先頭へ空白の付いた URL が来る（#13 の実測）。
      */
-    guid: z.string().trim().min(1),
+    guid: trimmedNonEmptyStringSchema,
 
     /**
      * 各回の題号。
      * 基本形は `【COTEN RADIO 宗教改革編2】` だが、`編` の欠落・回番号でなく前後編・開き括弧の欠落で崩れる（#13 の実測）。
      * ここからシリーズ名を抽出せず、割当は `itunes:season` で行う（docs/adr/0018-season-as-assignment-key.md）。
      */
-    title: z.string().trim().min(1),
+    title: trimmedNonEmptyStringSchema,
 
     /**
      * エピソード一覧の並び順。
@@ -47,7 +49,7 @@ export const episodeSchema = z
     season: z.int().positive().nullable(),
 
     /** `season` をシリーズ側の索引で引いた結果。 */
-    seriesId: z.string().trim().min(1).nullable(),
+    seriesId: trimmedNonEmptyStringSchema.nullable(),
 
     /** RSS の `<link>` が入る（docs/adr/0006-rss-link-as-episode-url.md）。 */
     links: linksSchema,
