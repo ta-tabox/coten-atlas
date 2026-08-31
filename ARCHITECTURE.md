@@ -122,8 +122,8 @@ data/
   シリーズ側もエピソード側も `season` を持ち、シリーズ側は必須、エピソード側は持たない回があるので nullable
 - `links` は `{ platform, url }` の配列で、シリーズもエピソードも同じ形。
   `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む。
-  エピソード側は RSS の `<link>` を入れる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）が、
-  **シリーズ側が何を指すかは未決定**——配信側にシリーズ単位のページが無い（#13 の実測）
+  エピソード側は RSS の `<link>` を入れる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）。
+  配信側にシリーズ単位のページが無いので、**シリーズ側が何を指すかは未決定**である（#13 の実測）
 - `kind` は `place`（場所が一意に決まる）と `concept`（決まらない）の 2 値（[ADR-0023](docs/adr/0023-kind-place-or-concept.md)）。
   図形による分岐は持たない。
   それは `geometry.type` が表し、MapLibre の `['geometry-type']` が直接読む
