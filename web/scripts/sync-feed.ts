@@ -154,10 +154,19 @@ function toInboxEntry(item: FeedItem): InboxEntry {
 /**
  * JSON を末尾の改行付きで書く。
  * 生成物も人間が読む差分に出るので、整形して書く。
+ *
+ * 同じディレクトリへ一時ファイルを書いてから rename する。
+ * 書き込みの途中で落ちると、直接書いていた場合は中途半端な JSON がその名前で残る。
+ * inbox は人間がまだ判定していない一覧なので、壊れた状態で残ると書く順序で守ったはずの作業がそこで消える。
  */
 function writeJson(file: string, value: unknown): void {
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
+
+  // rename が atomic なのは同じファイルシステムの上だけなので、一時ファイルを別の場所へ置かない。
+  const temporary = `${file}.tmp`;
+
+  fs.writeFileSync(temporary, `${JSON.stringify(value, null, 2)}\n`);
+  fs.renameSync(temporary, file);
 }
 
 /**
@@ -205,6 +214,23 @@ function warnLostAssignments(
 }
 
 /**
+ * ファイルを読んで JSON として解釈する。
+ * 綴りが壊れていれば、どのファイルかを添えて投げる。
+ *
+ * `JSON.parse` が投げる SyntaxError は位置しか言わない。
+ * inbox は日付ごとに増えるので、名前が無いとどれを直せばよいか分からない。
+ */
+function parseJsonFile(file: string): { episodes?: unknown } {
+  const text = fs.readFileSync(file, "utf8");
+
+  try {
+    return JSON.parse(text);
+  } catch (cause) {
+    throw new Error(`JSON として読めない: ${file}`, { cause });
+  }
+}
+
+/**
  * 同じ日に既に出してある inbox を読む。
  * 無ければ空。
  *
@@ -216,9 +242,7 @@ function readInbox(file: string): InboxEntry[] {
     return [];
   }
 
-  const existing = JSON.parse(fs.readFileSync(file, "utf8")) as {
-    episodes?: unknown;
-  };
+  const existing = parseJsonFile(file);
 
   if (!Array.isArray(existing.episodes)) {
     throw new Error(`inbox の中身を読めない: ${file}`);
@@ -232,6 +256,9 @@ function readInbox(file: string): InboxEntry[] {
  *
  * 既にある同じ日の一覧へ継ぎ足す。
  * 1 日に 2 度走らせたとき、丸ごと書き換えると 1 度目に出した未判定の回が消える。
+ *
+ * 人間が解決した回をここから消すことはしない。
+ * これは日付ごとの記録であって未割当の現在値ではないので、いま何が未割当かは episodes.json の seriesId が持つ。
  */
 function writeInbox(syncedAt: string, unassigned: Assignment[]): void {
   const file = path.join(INBOX_DIR, `${syncedAt.slice(0, 10)}.json`);
