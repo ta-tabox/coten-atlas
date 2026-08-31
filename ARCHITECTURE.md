@@ -17,7 +17,8 @@
 | 項目 | 確定 | 根拠 |
 |---|---|---|
 | スタック | Next.js (App Router) + TypeScript、static export（`output: 'export'`） | [ADR-0001](docs/adr/0001-nextjs-static-export.md) |
-| スタイル | CSS Modules（`*.module.css` をコンポーネントへ併置）。CSS フレームワークは持たない | [ADR-0015](docs/adr/0015-css-modules.md) |
+| スタイル | Tailwind v4（`globals.css` が `@import "tailwindcss"` と `@theme` のトークンを持つ）。`*.module.css` は持たない | [ADR-0021](docs/adr/0021-tailwind-v4.md) |
+| 地図の DOM 境界 | overlay は React + Tailwind。MapLibre 由来の DOM は canvas コンテナと attribution だけ | [ADR-0022](docs/adr/0022-map-dom-boundary.md) |
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-0003](docs/adr/0003-maplibre.md) |
 | ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-0004](docs/adr/0004-openfreemap-positron.md) |
 | データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-0005](docs/adr/0005-two-layer-data.md) |
@@ -149,6 +150,7 @@ data/
 - オブジェクトクリック → 詳細カード（summary・年代・エピソード一覧・Spotify リンク）
 - 状態管理は React の範囲で足りる想定（selection / era window / panel 開閉のみ）。
   外部ライブラリを足す前に本当に要るか問う
+- 地図の上に載る overlay は React + Tailwind で書く。MapLibre 由来の DOM は canvas コンテナと attribution だけで、Popup も built-in control も使わない（[ADR-0022](docs/adr/0022-map-dom-boundary.md)）
 
 地図の画面のほかに、出典表記の置き場を二つ持つ。
 何を載せるかは ADR-0008 が持つ。
@@ -235,7 +237,7 @@ data/
     ├── tests/             # `src/` に併置しないテスト
     ├── package.json       # 依存とタスクの定義
     ├── next.config.ts     # ビルドと配信の設定（static export / GitHub Pages）
-    └── tsconfig.json / biome.json / vitest.config.ts / vitest-setup.ts
+    └── tsconfig.json / biome.json / postcss.config.mjs / vitest.config.ts / vitest-setup.ts
 ```
 
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
