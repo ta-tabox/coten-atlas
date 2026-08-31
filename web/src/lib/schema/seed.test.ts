@@ -2,10 +2,10 @@
  * `data/series.geojson` のシードが S2 の狙いを満たしているかを見る。
  *
  * 見るのはスキーマが見ない観点だけである。
- * 現物が `seriesCollectionSchema` を通ることと `id`・`season` が一意であることは `tests/data.test.ts` とスキーマ自身が既に落とすので、ここでは数えない。
+ * 現物が `seriesCollectionSchema` を通ること、`id`・`season` の一意性、`timeRange` が era 空間と重なることは `tests/data.test.ts` が既に落とすので、ここでは数えない。
  *
- * 描画のスタイル分岐は `kind` に依存し、その集合は実データを一度作らないと確定しない（`ROADMAP.md` の S2）。
- * 4 種が現物に揃っていなければ、スタイルの分岐は実例を持たない枝を書くことになる。
+ * 描画は `kind` の 2 値で濃さを分ける（docs/adr/0023-kind-place-or-concept.md）。
+ * 片方しか現物に無いと、分岐の一方は実例を持たないまま描画のステップへ渡る。
  *
  * jsdom では `import.meta.url` が file URL にならないので、環境を node に指定してある。
  *
@@ -32,7 +32,7 @@ const SERIES_FILE = fileURLToPath(
 /**
  * シードとして数える件数の幅。
  * ちょうどの数を固定すると 1 件足すたびにここを直すだけの作業が出るので、幅で持つ。
- * 下限は 4 種の kind を出したうえで地理と時代が散っていると言える数で、上限を超えたものはもう叩き台ではなく、この検査が守っている前提の外にある。
+ * 下限は地理と時代が散っていると言えるだけの数で、上限を超えたものはもう叩き台ではなく、この検査が守っている前提の外にある。
  */
 const SEED_COUNT = { min: 8, max: 12 };
 
@@ -42,7 +42,7 @@ function seedSeries(): SeriesCollection {
 }
 
 describe("data/series.geojson のシード", () => {
-  it("kind 4 種がすべて出現する", () => {
+  it("kind の 2 値がどちらも出現する", () => {
     const appeared = new Set(
       seedSeries().features.map((feature) => feature.properties.kind),
     );
