@@ -16,7 +16,11 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { DATA_VALIDATORS, unvalidatedNames } from "@/lib/schema/data-files";
 import { parseEpisodes } from "@/lib/schema/episode";
-import { brokenSeriesReferences } from "@/lib/schema/references";
+import { parseEras } from "@/lib/schema/era";
+import {
+  brokenSeriesReferences,
+  seriesOutsideEraSpace,
+} from "@/lib/schema/references";
 import { parseSeries } from "@/lib/schema/series";
 
 /**
@@ -55,6 +59,7 @@ describe("data/", () => {
 
   const episodesFile = path.join(DATA_DIR, "episodes.json");
   const seriesFile = path.join(DATA_DIR, "series.geojson");
+  const erasFile = path.join(DATA_DIR, "eras.json");
 
   // 片方でも無いうちは、ファイルをまたぐ参照がまだ生まれていない。
   it.skipIf(!fs.existsSync(episodesFile) || !fs.existsSync(seriesFile))(
@@ -68,6 +73,19 @@ describe("data/", () => {
       );
 
       expect(brokenSeriesReferences(episodes, series)).toEqual([]);
+    },
+  );
+
+  // series.geojson が無いうちは、era 空間と突き合わせる相手が居ない。
+  it.skipIf(!fs.existsSync(seriesFile) || !fs.existsSync(erasFile))(
+    "series.geojson の timeRange が eras.json の era 空間と重なる",
+    () => {
+      const series = parseSeries(
+        JSON.parse(fs.readFileSync(seriesFile, "utf8")),
+      );
+      const eras = parseEras(JSON.parse(fs.readFileSync(erasFile, "utf8")));
+
+      expect(seriesOutsideEraSpace(series, eras)).toEqual([]);
     },
   );
 });
