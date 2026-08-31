@@ -11,16 +11,22 @@
 
 import * as z from "zod";
 
+const longitudeSchema = z
+  .number()
+  .min(-180, { message: "経度が -180..180 の外にある" })
+  .max(180, { message: "経度が -180..180 の外にある" });
+
+const latitudeSchema = z
+  .number()
+  .min(-90, { message: "緯度が -90..90 の外にある" })
+  .max(90, { message: "緯度が -90..90 の外にある" });
+
 /**
  * 経度・緯度の対。
- *
- * 範囲を検査するのは、緯度と経度を入れ替えた座標を落とすため。
- * 入れ替えても両方が範囲に収まる土地（緯度・経度とも ±90 の内側）はこれをすり抜けるので、目視の代わりにはならない。
+ * 経度が先なのは GeoJSON の規定で、入れ替えた座標は範囲の検査で落ちる。
+ * ただし入れ替えても両方が範囲に収まる土地（緯度・経度とも ±90 の内側）はすり抜けるので、目視の代わりにはならない。
  */
-const positionSchema = z.tuple([
-  z.number().min(-180).max(180),
-  z.number().min(-90).max(90),
-]);
+const positionSchema = z.tuple([longitudeSchema, latitudeSchema]);
 
 /**
  * 環が閉じているか。
