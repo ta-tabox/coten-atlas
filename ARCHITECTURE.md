@@ -94,8 +94,8 @@ data/
     {
       "type": "Feature",  // GeoJSON が geometry と properties の対に要求する固定値
       "geometry": { "type": "Point", "coordinates": [22.43, 37.07] },
-      // Point / MultiPoint / Polygon / LineString をシリーズの性質で使い分ける
-      // 例: 都市国家=Point、帝国や文明圏=Polygon、遠征や航海=LineString、場所が散る概念史=MultiPoint
+      // Point / MultiPoint / Polygon / MultiPolygon / LineString をシリーズの性質で使い分ける
+      // 例: 都市国家=Point、帝国や文明圏=Polygon（飛び地があれば MultiPolygon）、遠征や航海=LineString、場所が散る概念史=MultiPoint
       "properties": {
         "id": "sparta",
         "title": "スパルタ",

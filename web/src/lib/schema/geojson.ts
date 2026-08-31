@@ -1,6 +1,6 @@
 /**
  * GeoJSON の geometry の形。
- * この器が使う 4 種を、仕様（RFC 7946）から手で写したもの（ライブラリの型は引いていない）。
+ * この器が使う 5 種を、仕様（RFC 7946）から手で写したもの（ライブラリの型は引いていない）。
  *
  * 座標の順は GeoJSON の規定どおり `[経度, 緯度]` で、緯度が先の並びは検査で落ちる。
  * 仕様は列挙に無いメンバー（foreign members）を許すが、この器のデータでは書き間違いの検出を優先し、スキーマに無いメンバーは落とす。
@@ -75,12 +75,22 @@ const polygonSchema = z.strictObject({
 });
 
 /**
+ * 飛び地のある面。
+ * 要素の一つずつが Polygon と同じ環の列で、外周と穴の並びも同じ。
+ */
+const multiPolygonSchema = z.strictObject({
+  type: z.literal("MultiPolygon"),
+  coordinates: z.array(z.array(ringSchema).min(1)).min(1),
+});
+
+/**
  * 図形の種類と座標の対。
- * 4 種のうちどれを使うかは、置く対象の性質を知っている側が決める。
+ * 5 種のうちどれを使うかは、置く対象の性質を知っている側が決める。
  */
 export const geometrySchema = z.discriminatedUnion("type", [
   pointSchema,
   multiPointSchema,
   lineStringSchema,
   polygonSchema,
+  multiPolygonSchema,
 ]);

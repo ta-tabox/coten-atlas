@@ -46,6 +46,64 @@ describe("geometrySchema", () => {
     expect(geometrySchema.safeParse(openRing).success).toBe(false);
   });
 
+  it("閉じていない環を含む MultiPolygon を落とす", () => {
+    const openSecond = {
+      type: "MultiPolygon",
+      coordinates: [
+        [
+          [
+            [110, 30],
+            [115, 30],
+            [115, 35],
+            [110, 30],
+          ],
+        ],
+        [
+          [
+            [10, 40],
+            [15, 40],
+            [15, 45],
+            [10, 44],
+          ],
+        ],
+      ],
+    };
+
+    expect(geometrySchema.safeParse(openSecond).success).toBe(false);
+  });
+
+  it("面を 1 つも持たない MultiPolygon を落とす", () => {
+    const empty = { type: "MultiPolygon", coordinates: [] };
+
+    expect(geometrySchema.safeParse(empty).success).toBe(false);
+  });
+
+  it("全部の環が閉じた MultiPolygon を通す", () => {
+    const twoIslands = {
+      type: "MultiPolygon",
+      coordinates: [
+        [
+          [
+            [110, 30],
+            [115, 30],
+            [115, 35],
+            [110, 30],
+          ],
+        ],
+        [
+          [
+            [10, 40],
+            [15, 40],
+            [15, 45],
+            [10, 40],
+          ],
+        ],
+      ],
+    };
+
+    expect(geometrySchema.safeParse(twoIslands).success).toBe(true);
+  });
+
   it("環が閉じていれば通す", () => {
     const closedRing = {
       type: "Polygon",
