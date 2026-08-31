@@ -90,6 +90,30 @@ describe("episodeSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("スキーマに無いキーを持つ回を落とす", () => {
+    const result = episodeSchema.safeParse({
+      ...episode,
+      audioUrl: "https://anchor.fm/x.mp3",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("スキーマに無いキーを持つリンクを落とす", () => {
+    const result = episodeSchema.safeParse({
+      ...episode,
+      links: [
+        {
+          platform: "spotify",
+          url: "https://podcasters.spotify.com/pod/show/coten/episodes/a",
+          label: "Spotify で聴く",
+        },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
   it("未知の配信基盤を落とす", () => {
     const result = episodeSchema.safeParse({
       ...episode,

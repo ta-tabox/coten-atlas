@@ -9,6 +9,8 @@
  * `season` が割当キーで、`seriesId` はそれを引いた結果である（docs/adr/0018-season-as-assignment-key.md）。
  * どちらも持たない回（番外編・特別編・告知）があるので null を許す。
  *
+ * 同期側がスキーマ外の欄を書いても、黙って捨てられると気付く場所が無いので、スキーマに無いキーは落とす。
+ *
  * 入口は parseEpisodes。
  */
 
@@ -18,7 +20,7 @@ import { linksSchema } from "@/lib/schema/link";
 
 /** エピソード 1 件。 */
 export const episodeSchema = z
-  .object({
+  .strictObject({
     /**
      * 差分同期が突き合わせに使う RSS の `<guid>`。
      * 大半は UUID だが、初期の 5 件だけ `<guid> https://anchor.fm/coten/episodes/94COTEN-RADIO-ebu6ld</guid>` のように先頭へ空白の付いた URL が来る（#13 の実測）。
@@ -67,7 +69,7 @@ export const episodeSchema = z
  * 差分同期はこれを鍵に既存と突き合わせるので、重複すると同じ回が二度書かれたのか別の回なのかを見分けられない。
  */
 export const episodeCollectionSchema = z
-  .object({
+  .strictObject({
     syncedAt: z.iso.datetime(),
     episodes: z.array(episodeSchema),
   })

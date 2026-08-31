@@ -3,6 +3,7 @@
  * この器が使う 4 種を、仕様（RFC 7946）から手で写したもの（ライブラリの型は引いていない）。
  *
  * 座標の順は GeoJSON の規定どおり `[経度, 緯度]` で、緯度が先の並びは検査で落ちる。
+ * 仕様は列挙に無いメンバー（foreign members）を許すが、この器のデータでは書き間違いの検出を優先し、スキーマに無いメンバーは落とす。
  *
  * ここが持つのは外部仕様の写しだけである。
  * どのシリーズをどの図形で置くかという判断は持たない。
@@ -47,19 +48,19 @@ const ringSchema = z
   .refine(isClosedRing, { message: "多角形の環が閉じていない" });
 
 /** 1 地点。 */
-const pointSchema = z.object({
+const pointSchema = z.strictObject({
   type: z.literal("Point"),
   coordinates: positionSchema,
 });
 
 /** 散らばった複数の地点。 */
-const multiPointSchema = z.object({
+const multiPointSchema = z.strictObject({
   type: z.literal("MultiPoint"),
   coordinates: z.array(positionSchema).min(1),
 });
 
 /** 順に繋いだ経路。 */
-const lineStringSchema = z.object({
+const lineStringSchema = z.strictObject({
   type: z.literal("LineString"),
   coordinates: z.array(positionSchema).min(2),
 });
@@ -68,7 +69,7 @@ const lineStringSchema = z.object({
  * 環で囲んだ面。
  * 最初の環が外周で、2 つ目以降は穴を表す。
  */
-const polygonSchema = z.object({
+const polygonSchema = z.strictObject({
   type: z.literal("Polygon"),
   coordinates: z.array(ringSchema).min(1),
 });

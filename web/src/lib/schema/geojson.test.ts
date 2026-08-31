@@ -8,6 +8,16 @@ describe("geometrySchema", () => {
     expect(geometrySchema.safeParse(swapped).success).toBe(false);
   });
 
+  it("スキーマに無いメンバーを持つ geometry を落とす", () => {
+    const withBbox = {
+      type: "Point",
+      coordinates: [22.43, 37.07],
+      bbox: [22, 37, 23, 38],
+    };
+
+    expect(geometrySchema.safeParse(withBbox).success).toBe(false);
+  });
+
   it("空の環を持つ多角形を、投げずに落とす", () => {
     const emptyRing = { type: "Polygon", coordinates: [[]] };
 
