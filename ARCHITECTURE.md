@@ -66,16 +66,19 @@ data/
 
 ```jsonc
 {
-  "syncedAt": "2026-07-14T00:00:00Z",
+  "syncedAt": "2026-08-23T00:00:00Z",
   "episodes": [
     {
-      "guid": "...",            // RSS の guid。差分同期のキー。trim 済み
-      "title": "三国志 徹底解説 #1 ...",
-      "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822 からの正規化は同期側
-      "audioUrl": "...",
-      "season": 22,             // itunes:season。持たない回（番外編・特別編・告知）は null
-      "seriesId": "sangokushi",  // season から割当。未割当なら null（ADR-0018）
-      "links": [{ "platform": "spotify", "url": "https://open.spotify.com/episode/..." }]
+      // RSS の guid。差分同期のキー。747 件は UUID だが 5 件は先頭に空白の付いた URL なので trim して持つ
+      "guid": "4d80b4a3-deee-41f3-8045-d06ade19132f",
+      // フィードの綴りをそのまま持つ。シリーズ名をここから抽出しない（表記が揺れている。#13 の実測）
+      "title": "【66-10】五賢帝時代はじまる！…【COTEN RADIO 帝政ローマ編10】",
+      "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822（フィードは全件 GMT）からの正規化は同期側
+      "audioUrl": "https://anchor.fm/s/8c2088c/podcast/play/122753786/…",  // enclosure の url
+      "season": 66,              // itunes:season。持たない回（番外編・特別編・告知）は null
+      "seriesId": "teisei-roma",  // season から割当。未割当なら null（ADR-0018）
+      // RSS の <link>。エピソード単位の Spotify ページで、open.spotify.com/episode/… はフィードに無い
+      "links": [{ "platform": "spotify", "url": "https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q" }]
     }
   ]
 }
@@ -83,25 +86,36 @@ data/
 
 **series.geojson**（GeoJSON FeatureCollection。MapLibre へ直接渡す）:
 
+ファイル全体が 1 つの FeatureCollection で、シリーズ 1 件が `features` の 1 要素に当たる。
+
 ```jsonc
 {
-  "type": "Feature",
-  "geometry": { "type": "Point", "coordinates": [112.5, 34.6] },
-  // Point / Polygon / LineString をシリーズの性質で使い分ける
-  // 例: 都市国家=Point、帝国や文明圏=Polygon、遠征や航海=LineString
-  "properties": {
-    "id": "sangokushi",
-    "title": "三国志",
-    "kind": "polygon",              // 描画スタイルの分岐キー
-    "timeRange": { "start": 180, "end": 280 },  // 負値 = BC
-    "summary": "",                  // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
-    "region": "中国",
-    "season": 22,                   // 割当キー。itunes:season の値（ADR-0018）
-    "links": [{ "platform": "spotify", "url": "https://open.spotify.com/..." }],
-    "tags": ["戦乱", "中国"]
-  }
+  "type": "FeatureCollection",  // ファイル全体を包む器。MapLibre のソースへそのまま渡す
+  "features": [
+    {
+      "type": "Feature",  // GeoJSON が geometry と properties の対に要求する固定値
+      "geometry": { "type": "Point", "coordinates": [22.43, 37.07] },
+      // Point / MultiPoint / Polygon / LineString をシリーズの性質で使い分ける
+      // 例: 都市国家=Point、帝国や文明圏=Polygon、遠征や航海=LineString、場所が散る概念史=MultiPoint
+      "properties": {
+        "id": "sparta",
+        "title": "スパルタ",
+        "kind": "point",                              // 描画スタイルの分岐キー
+        "timeRange": { "start": -900, "end": -200 },  // 負値 = BC
+        "summary": "",         // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
+        "region": "ギリシア",
+        "season": 2,           // 割当キー。itunes:season の値（ADR-0018）
+        "links": [],           // シリーズ単位の配信ページは存在しないので、何を指すかは未決定
+        "tags": ["古代", "ギリシア"]
+      }
+    }
+    // 以下、1 シリーズ = 1 Feature が並ぶ
+  ]
 }
 ```
+
+`season` と `title` の対応は**フィードが正**で、実測の一覧は #13 のコメントが持つ（2026-08-23 時点で 1〜66 が欠番なく並ぶ）。
+上の `2` はスパルタで、この一覧から引いた値である。
 
 - **1 シリーズ = `itunes:season` の 1 値**。
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
@@ -184,7 +198,7 @@ data/
 
 近接のためにスキーマは増やさない。
 判定は既存の properties（`tags` / `region` / `timeRange`）だけで行う。
-シリーズ間の明示的な関連リンク（`related` のような属性）は、90 前後の全シリーズへ人手で張る費用が S7 に乗るので採らない。
+シリーズ間の明示的な関連リンク（`related` のような属性）は、全シリーズ（2026-08-23 時点で 66 件）へ人手で張る費用が S7 に乗るので採らない。
 シードが10件前後の間は関連シリーズが 0 件になりうるので、0 件なら行ごと出さない。
 
 ## 5. RSS 同期パイプライン
