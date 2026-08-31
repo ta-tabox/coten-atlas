@@ -2,8 +2,8 @@
  * コテンラジオの 1 シリーズのスキーマ。
  * 地図が読む GeoJSON FeatureCollection の形を、実行時に検査できるかたちで持つ。
  *
- * 座標の順は GeoJSON の規定どおり `[経度, 緯度]` で、緯度が先の並びは検査で落ちる。
  * 年は西暦の整数で、負値が紀元前を表す（0 年は暦に存在しないが、区別しても得るものが無いので許す）。
+ * geometry の形そのものは `geojson.ts` が持つ。
  *
  * 描画も RSS 同期もこの形だけを前提にしてよい。
  * 渡された値を検査するだけで `data/` の在り処は呼ぶ側が知るので、ファイルの読み込み口はここが持たない。
@@ -12,6 +12,7 @@
 
 import * as z from "zod";
 import { duplicatesOf } from "@/lib/duplicates";
+import { geometrySchema } from "@/lib/schema/geojson";
 import { linksSchema } from "@/lib/schema/link";
 
 /**
@@ -37,65 +38,6 @@ export const seriesTimeRangeSchema = z
       });
     }
   });
-
-/**
- * 経度・緯度の対。
- *
- * 範囲を検査するのは、緯度と経度を入れ替えた座標を落とすため。
- * 入れ替えても両方が範囲に収まる土地（緯度・経度とも ±90 の内側）はこれをすり抜けるので、目視の代わりにはならない。
- */
-const positionSchema = z.tuple([
-  z.number().min(-180).max(180),
-  z.number().min(-90).max(90),
-]);
-
-/**
- * 多角形の環が閉じているか。
- * GeoJSON は最初と最後の座標が一致することを要求する。
- *
- * 長さが 4 以上あることを前提にしてよい。
- * 手前の `min(4)` が `abort: true` を持つので、足りない環はここへ来ない。
- * 外すと空の環で添字が undefined になり、safeParse が結果を返さずに投げる。
- */
-function isClosedRing(ring: readonly (readonly [number, number])[]): boolean {
-  const first = ring[0];
-  const last = ring[ring.length - 1];
-
-  return first[0] === last[0] && first[1] === last[1];
-}
-
-/**
- * シリーズを地図のどこへ、どんな図形で置くか。
- * GeoJSON の `geometry` そのもので、型は仕様の 4 種だけを手で写したもの（ライブラリの型は引いていない）。
- *
- * 使い分けはシリーズの性質で決まる。
- * 都市国家は Point、帝国や文明圏は Polygon、遠征や航海は LineString、場所が散る概念史は MultiPoint を使う。
- */
-const geometrySchema = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal("Point"),
-    coordinates: positionSchema,
-  }),
-  z.object({
-    type: z.literal("MultiPoint"),
-    coordinates: z.array(positionSchema).min(1),
-  }),
-  z.object({
-    type: z.literal("LineString"),
-    coordinates: z.array(positionSchema).min(2),
-  }),
-  z.object({
-    type: z.literal("Polygon"),
-    coordinates: z
-      .array(
-        z
-          .array(positionSchema)
-          .min(4, { abort: true })
-          .refine(isClosedRing, { message: "多角形の環が閉じていない" }),
-      )
-      .min(1),
-  }),
-]);
 
 /**
  * シリーズ 1 件が持つ属性。
@@ -166,8 +108,15 @@ export const seriesPropertiesSchema = z.object({
 
 /** シリーズ 1 件。 */
 export const seriesFeatureSchema = z.object({
+  /** GeoJSON が geometry と properties の対に要求する固定値。 */
   type: z.literal("Feature"),
+
+  /**
+   * シリーズを地図のどこへ、どんな図形で置くか。
+   * 都市国家は Point、帝国や文明圏は Polygon、遠征や航海は LineString、場所が散る概念史は MultiPoint を使う。
+   */
   geometry: geometrySchema,
+
   properties: seriesPropertiesSchema,
 });
 

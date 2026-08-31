@@ -83,56 +83,6 @@ describe("seriesCollectionSchema", () => {
 
     expect(result.success).toBe(false);
   });
-
-  it("緯度と経度が入れ替わった座標を落とす", () => {
-    const swapped = {
-      ...sparta,
-      geometry: { type: "Point", coordinates: [34.6, 112.5] },
-    };
-    const result = seriesCollectionSchema.safeParse(collectionOf(swapped));
-
-    expect(result.success).toBe(false);
-  });
-
-  it("空の環を持つ多角形を、投げずに落とす", () => {
-    const emptyRing = {
-      ...sparta,
-      geometry: { type: "Polygon", coordinates: [[]] },
-    };
-    const result = seriesCollectionSchema.safeParse(collectionOf(emptyRing));
-
-    expect(result.success).toBe(false);
-  });
-
-  it("環を 1 つも持たない多角形を落とす", () => {
-    const noRing = {
-      ...sparta,
-      geometry: { type: "Polygon", coordinates: [] },
-    };
-    const result = seriesCollectionSchema.safeParse(collectionOf(noRing));
-
-    expect(result.success).toBe(false);
-  });
-
-  it("閉じていない多角形を落とす", () => {
-    const openRing = {
-      ...sparta,
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [110, 30],
-            [115, 30],
-            [115, 35],
-            [110, 35],
-          ],
-        ],
-      },
-    };
-    const result = seriesCollectionSchema.safeParse(collectionOf(openRing));
-
-    expect(result.success).toBe(false);
-  });
 });
 
 describe("seriesTimeRangeSchema", () => {
