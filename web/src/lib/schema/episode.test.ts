@@ -7,14 +7,16 @@ import {
 
 /** #13 で実地確認したフィードの形を、正規化後のかたちへ直した 1 件。 */
 const episode = {
-  guid: "0f9d4b52-1f3a-4c9e-9b7a-2f1c8d6e5a40",
-  title: "【COTEN RADIO 三国志編1】黄巾の乱",
+  guid: "4d80b4a3-deee-41f3-8045-d06ade19132f",
+  title: "【66-10】五賢帝時代はじまる！【COTEN RADIO 帝政ローマ編10】",
   pubDate: "2026-08-19T21:00:00Z",
-  audioUrl: "https://anchor.fm/s/8c2088c/podcast/play/12345/episode.mp3",
-  season: 22,
-  seriesId: "sangokushi",
+  season: 66,
+  seriesId: "teisei-roma",
   links: [
-    { platform: "spotify", url: "https://open.spotify.com/episode/abc123" },
+    {
+      platform: "spotify",
+      url: "https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q",
+    },
   ],
 };
 
@@ -27,7 +29,7 @@ describe("episodeSchema", () => {
   it("正規化後の 1 件を通す", () => {
     const parsed = episodeSchema.parse(episode);
 
-    expect(parsed.season).toBe(22);
+    expect(parsed.season).toBe(66);
   });
 
   it("guid の前後の空白を落として受ける", () => {
@@ -68,8 +70,14 @@ describe("episodeSchema", () => {
     const result = episodeSchema.safeParse({
       ...episode,
       links: [
-        { platform: "spotify", url: "https://open.spotify.com/episode/a" },
-        { platform: "spotify", url: "https://open.spotify.com/episode/b" },
+        {
+          platform: "spotify",
+          url: "https://podcasters.spotify.com/pod/show/coten/episodes/a",
+        },
+        {
+          platform: "spotify",
+          url: "https://podcasters.spotify.com/pod/show/coten/episodes/b",
+        },
       ],
     });
 

@@ -18,6 +18,8 @@ const platformSchema = z.enum(["spotify"]);
 /** 配信リンク 1 本。 */
 export const linkSchema = z.object({
   platform: platformSchema,
+
+  /** その基盤でこの回、またはこのシリーズを開くページの URL。 */
   url: z.url(),
 });
 

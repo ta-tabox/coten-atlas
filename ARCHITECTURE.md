@@ -66,16 +66,18 @@ data/
 
 ```jsonc
 {
-  "syncedAt": "2026-07-14T00:00:00Z",
+  "syncedAt": "2026-08-23T00:00:00Z",
   "episodes": [
     {
-      "guid": "...",            // RSS の guid。差分同期のキー。trim 済み
-      "title": "三国志 徹底解説 #1 ...",
-      "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822 からの正規化は同期側
-      "audioUrl": "...",
-      "season": 22,             // itunes:season。持たない回（番外編・特別編・告知）は null
-      "seriesId": "sangokushi",  // season から割当。未割当なら null（ADR-0018）
-      "links": [{ "platform": "spotify", "url": "https://open.spotify.com/episode/..." }]
+      // RSS の guid。差分同期のキー。747 件は UUID だが 5 件は先頭に空白の付いた URL なので trim して持つ
+      "guid": "4d80b4a3-deee-41f3-8045-d06ade19132f",
+      // フィードの綴りをそのまま持つ。シリーズ名をここから抽出しない（表記が揺れている。#13 の実測）
+      "title": "【66-10】五賢帝時代はじまる！…【COTEN RADIO 帝政ローマ編10】",
+      "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822（フィードは全件 GMT）からの正規化は同期側
+      "season": 66,              // itunes:season。持たない回（番外編・特別編・告知）は null
+      "seriesId": "teisei-roma",  // season から割当。未割当なら null（ADR-0018）
+      // RSS の <link>。エピソード単位の Spotify ページで、open.spotify.com/episode/… はフィードに無い
+      "links": [{ "platform": "spotify", "url": "https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q" }]
     }
   ]
 }
@@ -83,32 +85,50 @@ data/
 
 **series.geojson**（GeoJSON FeatureCollection。MapLibre へ直接渡す）:
 
+ファイル全体が 1 つの FeatureCollection で、シリーズ 1 件が `features` の 1 要素に当たる。
+
 ```jsonc
 {
-  "type": "Feature",
-  "geometry": { "type": "Point", "coordinates": [112.5, 34.6] },
-  // Point / Polygon / LineString をシリーズの性質で使い分ける
-  // 例: 都市国家=Point、帝国や文明圏=Polygon、遠征や航海=LineString
-  "properties": {
-    "id": "sangokushi",
-    "title": "三国志",
-    "kind": "polygon",              // 描画スタイルの分岐キー
-    "timeRange": { "start": 180, "end": 280 },  // 負値 = BC
-    "summary": "",                  // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
-    "region": "中国",
-    "season": 22,                   // 割当キー。itunes:season の値（ADR-0018）
-    "links": [{ "platform": "spotify", "url": "https://open.spotify.com/..." }],
-    "tags": ["戦乱", "中国"]
-  }
+  "type": "FeatureCollection",  // ファイル全体を包む器。MapLibre のソースへそのまま渡す
+  "features": [
+    {
+      "type": "Feature",  // GeoJSON が geometry と properties の対に要求する固定値
+      "geometry": { "type": "Point", "coordinates": [22.43, 37.07] },
+      // Point / MultiPoint / Polygon / LineString をシリーズの性質で使い分ける
+      // 例: 都市国家=Point、帝国や文明圏=Polygon、遠征や航海=LineString、場所が散る概念史=MultiPoint
+      "properties": {
+        "id": "sparta",
+        "title": "スパルタ",
+        "kind": "place",                              // 描画スタイルの分岐キー
+        "timeRange": { "start": -900, "end": -200 },  // 負値 = BC
+        "summary": "",         // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
+        "region": "ギリシア",
+        "season": 2,           // 割当キー。itunes:season の値（ADR-0018）
+        "links": [],           // シリーズ単位の配信ページは存在しないので、何を指すかは未決定
+        "tags": ["古代", "ギリシア"]
+      }
+    }
+    // 以下、1 シリーズ = 1 Feature が並ぶ
+  ]
 }
 ```
+
+`season` と `title` の対応は**フィードが正**で、実測の一覧は #13 のコメントが持つ（2026-08-23 時点で 1〜66 が欠番なく並ぶ）。
+上の `2` はスパルタで、この一覧から引いた値である。
 
 - **1 シリーズ = `itunes:season` の 1 値**。
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
 - エピソードとシリーズの割当キーは `itunes:season`（[ADR-0018](docs/adr/0018-season-as-assignment-key.md)）。
   シリーズ側もエピソード側も `season` を持ち、シリーズ側は必須、エピソード側は持たない回があるので nullable
 - `links` は `{ platform, url }` の配列で、シリーズもエピソードも同じ形。
-  `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む
+  `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む。
+  エピソード側は RSS の `<link>` を入れる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）。
+  配信側にシリーズ単位のページが無いので、**シリーズ側が何を指すかは未決定**である（#13 の実測）
+- `kind` は `place`（場所が一意に決まる）と `concept`（決まらない）の 2 値（[ADR-0023](docs/adr/0023-kind-place-or-concept.md)）。
+  図形による分岐は持たない。
+  それは `geometry.type` が表し、MapLibre の `['geometry-type']` が直接読む
+- `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
+  近接のためにスキーマを増やさないので、この二つが判定の材料になる
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。
   この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける
 - 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
@@ -118,11 +138,11 @@ data/
 
 ### 時系列（era）モデル
 
-年の線形スライダーにしない。密度の違う「ざっくり時代区分」を一次元に並べ、
-スライダーは era 空間を動く（イベントが密な近現代ほど細かく刻む）:
+スライダーは年を等間隔に刻まない。
+`eras.json` が持つ時代区分を**一区間ずつ等幅**に並べた一次元の空間（以下 era 空間）の上を動く。
 
 ```jsonc
-// data/eras.json
+// data/eras.json — この 7 区間が era 空間を 7 等分する
 [
   { "id": "prehistory", "label": "先史",   "start": -10000, "end": -800 },
   { "id": "ancient",    "label": "古代",   "start": -800,   "end": 550 },
@@ -134,13 +154,27 @@ data/
 ]
 ```
 
-- スライダー位置 → era 内を線形補間して「現在窓（年範囲）」を得る
-- シリーズの表示 opacity = timeRange と現在窓の重なり率（0..1）を
-  イージングに通した値。窓の端で滑らかにフェードイン/アウトする
-- era の刻みはデータが揃ってから密度に合わせて調整する（S7 の後に見直し）
-- 区間は `start` を含み `end` を含まない半開区間で、境目の年は後ろの era に属する
+**era 空間の一点から西暦の年へ**——どの区間に居るかで era を選び、その中を `start` から `end` へ線形補間する。
+区間の 4 割の位置が指す年は、19 世紀（1800〜1900）なら 1840 年、先史（-10000〜-800）なら -6320 年になる。
+
+区間ごとに年の幅が違うまま等幅で並べるので、**スライダーを同じだけ動かしても進む年数が era ごとに変わる**。
+先史は 9200 年幅、19 世紀は 100 年幅なので、この二つの間では 92 倍違う。
+これが「イベントが密な近現代ほど細かく刻む」の中身で、年を等間隔に刻んだ場合との差でもある。
+
+- 区間は `start` を含み `end` を含まない半開区間で、境目の年は後ろの era に属する（1450 年は「近世」であって「中世」ではない）
+- 隣り合う区間は接していなければならない（前の `end` = 次の `start`）。
+  隙間があるとそこを指した位置に対応する年が無く、重なりがあると同じ年が二箇所から指される。
+  検査は `eraListSchema` が持つ
 - **終わっていない era の `end` には年を書かず `"present"` を置く**（[ADR-0019](docs/adr/0019-era-open-end.md)）。
-  置けるのは末尾だけで、スライダーの右端に当たる年は描画のときに決まる（決め方は S4）
+  置けるのは末尾だけで、この区間を補間するには右端に当たる年が要る。決め方は S4
+- era の刻みはデータが揃ってから密度に合わせて調整する（S7 の後に見直し）
+
+**年からシリーズの opacity へ**——スライダーが指すのは 1 点だが、シリーズは `timeRange` という幅を持つので、点と幅は直接比べられない。
+そこで点の周りに幅を持つ**現在窓**（年範囲）を取り、`timeRange` との重なり率（0..1）をイージングに通した値を opacity にする。
+窓の端で滑らかにフェードイン / アウトする。
+
+- **現在窓の幅は未決定**（S4 の決定）。
+  幅が決まらないと重なり率が決まらず、opacity も決まらない
 
 ## 4. UI 構成
 
@@ -184,7 +218,7 @@ data/
 
 近接のためにスキーマは増やさない。
 判定は既存の properties（`tags` / `region` / `timeRange`）だけで行う。
-シリーズ間の明示的な関連リンク（`related` のような属性）は、90 前後の全シリーズへ人手で張る費用が S7 に乗るので採らない。
+シリーズ間の明示的な関連リンク（`related` のような属性）は、全シリーズ（2026-08-23 時点で 66 件）へ人手で張る費用が S7 に乗るので採らない。
 シードが10件前後の間は関連シリーズが 0 件になりうるので、0 件なら行ごと出さない。
 
 ## 5. RSS 同期パイプライン
@@ -197,7 +231,9 @@ data/
     ただし初期の 5 件だけ `anchor.fm` のエピソード URL が入っており、先頭に空白が付く。
     突き合わせのキーにする前に trim する
   - `pubDate` は RFC 822（`Wed, 19 Aug 2026 21:00:00 GMT`）で、全件 GMT 表記
-  - `<link>` は Spotify のエピソードページ、`enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）
+  - `<link>` は Spotify のエピソードページで、これが配信リンクになる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）
+  - `enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）。
+    音声を再生する画面が無いので episodes.json へは保存しない
   - シリーズ番号は `itunes:season`。1〜66 が欠番なく並ぶが、752 件中 176 件（番外編・特別編・告知）はこれを持たない
   - シリーズ内の回は `itunes:episode`。消費する画面が無いので episodes.json へは保存しない（ADR-0018）
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:

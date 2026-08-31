@@ -19,19 +19,34 @@ import { linksSchema } from "@/lib/schema/link";
 /** エピソード 1 件。 */
 export const episodeSchema = z.object({
   /**
-   * RSS 2.0 の `<guid>` 要素。
-   * globally unique identifier の頭字で、フィードの中で各回を一意に指す文字列を意味する。
-   * 綴りを開かずに置いているのは、同期側が読む要素名と一致していないと対応を追う手間が増えるため。
-   *
-   * 同期はこれを鍵に既存の episodes.json と突き合わせる。
-   * 747 件は UUID だが 5 件は anchor.fm のエピソード URL なので、UUID には固定できない。
+   * 差分同期が突き合わせに使う RSS の `<guid>`。
+   * 大半は UUID だが、初期の 5 件だけ `<guid> https://anchor.fm/coten/episodes/94COTEN-RADIO-ebu6ld</guid>` のように先頭へ空白の付いた URL が来る（#13 の実測）。
    */
   guid: z.string().trim().min(1),
+
+  /**
+   * 各回の題号。
+   * 基本形は `【COTEN RADIO 宗教改革編2】` だが、`編` の欠落・回番号でなく前後編・開き括弧の欠落で崩れる（#13 の実測）。
+   * ここからシリーズ名を抽出せず、割当は `itunes:season` で行う（docs/adr/0018-season-as-assignment-key.md）。
+   */
   title: z.string().trim().min(1),
+
+  /**
+   * エピソード一覧の並び順。
+   * これで足りるので `itunes:episode` は持たない（docs/adr/0018-season-as-assignment-key.md）。
+   */
   pubDate: z.iso.datetime(),
-  audioUrl: z.url(),
+
+  /**
+   * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
+   * 番外編・特別編・告知は持たないので、null の回は inbox へ回る。
+   */
   season: z.int().positive().nullable(),
+
+  /** `season` をシリーズ側の索引で引いた結果。 */
   seriesId: z.string().trim().min(1).nullable(),
+
+  /** RSS の `<link>` が入る（docs/adr/0006-rss-link-as-episode-url.md）。 */
   links: linksSchema,
 });
 
