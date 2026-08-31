@@ -44,64 +44,39 @@ export const seriesTimeRangeSchema = z
  * 地図の描画・一覧パネル・詳細カード・RSS 同期の全部がここを読む。
  */
 export const seriesPropertiesSchema = z.object({
-  /**
-   * シリーズを一意に指す鍵。
-   * エピソードの `seriesId` が指す先で、同期が組む season の索引ではこれが値になる。
-   */
+  /** エピソードの `seriesId` が指す先。 */
   id: z.string().trim().min(1),
 
-  /**
-   * シリーズ名。
-   * 地図のラベル・一覧パネル・詳細カードの見出しに出る。
-   * 番組から引いてよいのは題号までなので、ここと `episodeSchema` の `title` が引用の全部である（docs/adr/0008-quote-titles-only.md）。
-   */
+  /** 番組から引いてよいのは題号まで（docs/adr/0008-quote-titles-only.md）。 */
   title: z.string().trim().min(1),
 
   /**
    * 描画スタイルの分岐キー。
-   * 地図がどの図形をどう塗るかをこれで決める。
-   * `geometry.type` とは独立に持ち、両者の対応をどこまで縛るかは S2（#4）が 4 種を実データに当てて決める。
+   * `geometry.type` とは独立に持つ（縛り方は #4 が決める）。
    */
   kind: seriesKindSchema,
 
-  /**
-   * シリーズが扱う年代の範囲。
-   * era スライダーの現在窓との重なり率が、そのまま地図上の表示 opacity になる。
-   */
+  /** era スライダーの現在窓との重なり率が、そのまま表示 opacity になる。 */
   timeRange: seriesTimeRangeSchema,
 
-  /**
-   * 詳細カードに出す自前の要約。
-   * 番組の説明文は引かないので当面は空である（docs/adr/0008-quote-titles-only.md）。
-   */
+  /** 番組の説明文は引かないので、当面は空である（docs/adr/0008-quote-titles-only.md）。 */
   summary: z.string(),
 
-  /**
-   * 大まかな地域名。
-   * 詳細カードの関連シリーズ行が、`tags` と並べてこれを近さの判定に読む。
-   */
+  /** `tags` と並べて、近接の判定（関連シリーズ行）が読む。 */
   region: z.string().trim().min(1),
 
   /**
-   * エピソードとの割当キー。
-   * `itunes:season` の値である（docs/adr/0018-season-as-assignment-key.md）。
-   * 同期はシリーズ全件のこの値から season → seriesId の索引を組む。
-   * `ROADMAP.md` の完了判定がシリーズ数を数えるので、1 シリーズ = 1 値で束ねない。
-   * 束ねると feature 数とシリーズ数が一致しなくなる。
+   * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
+   * 1 シリーズ = 1 値で、複数を束ねない。
    */
   season: z.int().positive(),
 
-  /**
-   * 配信ページへの導線。
-   * 配信側にシリーズ単位のページが無いので、ここが何を指すかは決まっていない（当面は空）。
-   * エピソード側の `links` は RSS の `<link>` で埋まる。
-   */
+  /** 配信側にシリーズ単位のページが無いので、指す先は未決定（当面は空）。 */
   links: linksSchema,
 
   /**
-   * 主題のラベル。
-   * 主題の近さは地図にも era スライダーにも現れないので、これだけが表す。
-   * 読むのは詳細カードの関連シリーズ行と、パネルの tag 絞り込みである。
+   * 主題の近さを表す唯一の欄。
+   * 関連シリーズ行と tag 絞り込みが読む。
    */
   tags: z.array(z.string().trim().min(1)),
 });
@@ -111,10 +86,7 @@ export const seriesFeatureSchema = z.object({
   /** GeoJSON が geometry と properties の対に要求する固定値。 */
   type: z.literal("Feature"),
 
-  /**
-   * シリーズを地図のどこへ、どんな図形で置くか。
-   * 都市国家は Point、帝国や文明圏は Polygon、遠征や航海は LineString、場所が散る概念史は MultiPoint を使う。
-   */
+  /** 図形の使い分けは `ARCHITECTURE.md` §3 が持つ。 */
   geometry: geometrySchema,
 
   properties: seriesPropertiesSchema,

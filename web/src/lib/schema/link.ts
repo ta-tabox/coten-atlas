@@ -17,16 +17,9 @@ const platformSchema = z.enum(["spotify"]);
 
 /** 配信リンク 1 本。 */
 export const linkSchema = z.object({
-  /**
-   * どの配信基盤のリンクか。
-   * 読み出す側はこれで 1 本を選ぶ。
-   */
   platform: platformSchema,
 
-  /**
-   * その基盤でこの回、またはこのシリーズを開くページの URL。
-   * 詳細カードの「Spotify で聴く」の飛び先になる。
-   */
+  /** その基盤でこの回、またはこのシリーズを開くページの URL。 */
   url: z.url(),
 });
 

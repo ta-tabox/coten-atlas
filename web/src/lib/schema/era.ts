@@ -33,16 +33,9 @@ const eraEndSchema = z.union([z.int(), z.literal(ERA_END_PRESENT)]);
  */
 export const eraSchema = z
   .object({
-    /**
-     * 区間を一意に指す鍵。
-     * スライダーがいまどの era に居るかを覚える値でもある。
-     */
     id: z.string().trim().min(1),
 
-    /**
-     * スライダーに出す時代の名前。
-     * 読み手に見せる文字列なので、鍵である `id` とは別に持つ。
-     */
+    /** スライダーに出す時代の名前。 */
     label: z.string().trim().min(1),
 
     /** 区間の始まりの年（この年を含む）。 */
@@ -50,8 +43,7 @@ export const eraSchema = z
 
     /**
      * 区間の終わりの年（この年を含まない）。
-     * 境目の年は必ず後ろの era に属する（1450 年は「近世」であって「中世」ではない）。
-     * まだ終わっていない末尾の区間だけ `ERA_END_PRESENT` を置ける。
+     * 末尾の区間だけ `ERA_END_PRESENT` を置ける。
      */
     end: eraEndSchema,
   })
