@@ -17,7 +17,7 @@
 | 項目 | 確定 | 根拠 |
 |---|---|---|
 | スタック | Next.js (App Router) + TypeScript、static export（`output: 'export'`） | [ADR-0001](docs/adr/0001-nextjs-static-export.md) |
-| スタイル | CSS Modules（`*.module.css` をコンポーネントへ併置）。CSS フレームワークは持たない | [ADR-0015](docs/adr/0015-css-modules.md) |
+| スタイル | Tailwind v4（`globals.css` が `@import "tailwindcss"` と `@theme` のトークンを持つ）。`*.module.css` は持たない | [ADR-0021](docs/adr/0021-tailwind-v4.md) |
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-0003](docs/adr/0003-maplibre.md) |
 | ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-0004](docs/adr/0004-openfreemap-positron.md) |
 | データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-0005](docs/adr/0005-two-layer-data.md) |
@@ -235,7 +235,7 @@ data/
     ├── tests/             # `src/` に併置しないテスト
     ├── package.json       # 依存とタスクの定義
     ├── next.config.ts     # ビルドと配信の設定（static export / GitHub Pages）
-    └── tsconfig.json / biome.json / vitest.config.ts / vitest-setup.ts
+    └── tsconfig.json / biome.json / postcss.config.mjs / vitest.config.ts / vitest-setup.ts
 ```
 
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
