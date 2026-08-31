@@ -154,8 +154,6 @@ export const seriesCollectionSchema = z
     }
   });
 
-export type SeriesKind = z.infer<typeof seriesKindSchema>;
-export type TimeRange = z.infer<typeof timeRangeSchema>;
 export type Series = z.infer<typeof seriesFeatureSchema>;
 export type SeriesCollection = z.infer<typeof seriesCollectionSchema>;
 

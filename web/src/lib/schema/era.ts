@@ -82,7 +82,6 @@ export const eraListSchema = z
     }
   });
 
-export type EraEnd = z.infer<typeof eraEndSchema>;
 export type Era = z.infer<typeof eraSchema>;
 export type EraList = z.infer<typeof eraListSchema>;
 
