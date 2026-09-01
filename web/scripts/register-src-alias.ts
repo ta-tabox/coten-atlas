@@ -5,10 +5,10 @@
  * `src/` の中は互いを `@/lib/...` で指しているので、この別名を教えないとスクリプトからアプリのソースを呼べない。
  *
  * 拡張子を補うのも同じ理由である。
- * `@/lib/duplicates` のように綴られた import を Node はそのままファイル名として探しにいく。
+ * `@/lib/duplicates` のように拡張子を持たない import を Node はそのままファイル名として探しにいく。
  *
  * 使うのは `node --import` の引数としてで、直接呼ぶ関数は持たない。
- * scripts 自身がアプリのソースを指すときは相対パスで綴る（`../src/...`）ので、ここが要るのはソース側の綴りのためだけである。
+ * scripts 自身がアプリのソースを指すときは相対パスで書く（`../src/...`）ので、ここが要るのはソース側の書き方のためだけである。
  */
 
 import fs from "node:fs";
@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 /** `@/` が指す先。 */
 const SRC_DIR = new URL("../src/", import.meta.url);
 
-/** 綴りに拡張子が無いときに試す順。 */
+/** import に拡張子が無いときに試す順。 */
 const SOURCE_EXTENSIONS = [".ts", ".tsx"];
 
 /**
