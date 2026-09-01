@@ -120,6 +120,9 @@ data/
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
 - エピソードとシリーズの割当キーは `itunes:season`（[ADR-0018](docs/adr/0018-season-as-assignment-key.md)）。
   シリーズ側もエピソード側も `season` を持ち、シリーズ側は必須、エピソード側は持たない回があるので nullable
+- `id` はシリーズ名のローマ字を kebab-case にした手書きの値で、フィードから機械で決まる値ではない。
+  同じ綴りを二つのシリーズが要求したら、どちらかを変える。
+  重複は `seriesCollectionSchema` が落とし、変えた後に残る古い参照は `references.ts` が落とすので、黙って壊れることは無い
 - `links` は `{ platform, url }` の配列で、シリーズもエピソードも同じ形。
   `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む。
   エピソード側は RSS の `<link>` を入れる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）。
