@@ -2,7 +2,7 @@
  * `data/series.geojson` のシードが S2 の狙いを満たしているかを見る。
  *
  * 見るのはスキーマが見ない観点だけである。
- * 現物が `seriesCollectionSchema` を通ること、`id`・`season` の一意性、`timeRange` が era 空間と重なることは `tests/data.test.ts` が既に落とすので、ここでは数えない。
+ * 現物が `seriesCollectionSchema` を通ること、`id`・`season` の一意性、`timeRange` が era 空間と重なることは隣の `data.test.ts` が既に落とすので、ここでは数えない。
  *
  * 描画は `kind` の 2 値で濃さを分ける（docs/adr/0023-kind-place-or-concept.md）。
  * 片方しか現物に無いと、分岐の一方は実例を持たないまま描画のステップへ渡る。
@@ -23,10 +23,11 @@ import {
 
 /**
  * シードの現物。
- * リポジトリのルート直下で、`web/` の外にある。
+ * `data/` はリポジトリのルート直下で `web/` の外にあり、`tsconfig.json` の別名は `web/` の中しか解決しないので、辿る手は相対パスしか無い。
+ * 段数を数え間違えても型では赤くならないため、隣の `data.test.ts` と同じ深さに置いて同じ綴りにしてある。
  */
 const SERIES_FILE = fileURLToPath(
-  new URL("../../../../data/series.geojson", import.meta.url),
+  new URL("../../data/series.geojson", import.meta.url),
 );
 
 /**
