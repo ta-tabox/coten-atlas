@@ -4,8 +4,9 @@
  * 見るのはスキーマが見ない観点だけである。
  * 現物が `seriesCollectionSchema` を通ること、`id`・`season` の一意性、`timeRange` が era 空間と重なることは隣の `data.test.ts` が既に落とすので、ここでは数えない。
  *
- * 描画は `kind` の 2 値で濃さを分ける（docs/adr/0023-kind-place-or-concept.md）。
- * 片方しか現物に無いと、分岐の一方は実例を持たないまま描画のステップへ渡る。
+ * 描画は `kind` の 2 値で濃さを分け、`geometry.type` で図形を分ける（docs/adr/0023-kind-place-or-concept.md）。
+ * 分岐の枝に対応する現物が無いと、その枝は一度も描かれないまま描画のステップへ渡り、見た目の検証からも漏れる。
+ * どちらの値域もスキーマから引くので、値が増えたときに実例を持たない枝が黙って生まれることは無い。
  *
  * jsdom では `import.meta.url` が file URL にならないので、環境を node に指定してある。
  *
@@ -15,6 +16,7 @@
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { GEOMETRY_TYPES } from "@/lib/schema/geojson";
 import {
   parseSeries,
   type SeriesCollection,
@@ -49,6 +51,14 @@ describe("data/series.geojson のシード", () => {
     );
 
     expect([...appeared].sort()).toEqual([...seriesKindSchema.options].sort());
+  });
+
+  it("geometry の 5 種がすべて出現する", () => {
+    const appeared = new Set(
+      seedSeries().features.map((feature) => feature.geometry.type),
+    );
+
+    expect([...appeared].sort()).toEqual([...GEOMETRY_TYPES].sort());
   });
 
   it("件数が 10 件前後ある", () => {
