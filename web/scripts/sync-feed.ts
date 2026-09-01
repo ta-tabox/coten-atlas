@@ -1,8 +1,9 @@
 /**
  * 公式 RSS を引いて `data/episodes.json` を書き直し、シリーズへ割り当てられなかった新着を `data/inbox/` へ出す。
  *
- * ここが持つのは取得と入出力と組み立てで、フィードの読み方（`src/lib/feed/parse.ts`）と割当の規則（同 `assign.ts`）は持たない。
- * 判定の要る部分を外へ出してあるので、この層はネットワークとファイルを触る手順だけになる。
+ * ここが持つのは同期の段取りだけである。
+ * フィードの読み方は `src/lib/feed/parse.ts`、割当の規則は同 `assign.ts`、JSON の読み書きは `json-file.ts` が持つ。
+ * どのファイルをどの順で読み書きするかを決めるのがこの層の仕事で、その順序は main を上から読めば追える。
  *
  * `episodes.json` はフィードから毎回組み直す。
  * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.geojson` の現状から引き直す（docs/adr/0005-two-layer-data.md）。
@@ -19,6 +20,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { readJsonFile, writeJsonFile } from "@scripts/json-file";
 import { assignSeriesId } from "@/lib/feed/assign";
 import { type FeedItem, parseFeed } from "@/lib/feed/parse";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
@@ -86,39 +88,38 @@ async function fetchFeed(url: string): Promise<string> {
 }
 
 /**
- * `series.geojson` を読む。
- * まだ無ければ空の FeatureCollection を返し、全件が inbox へ落ちる。
+ * 人間が書いたシリーズ一覧を読む。
+ * 割当はこの中身から season の索引を組んで引くので、ここに無い season のエピソードはどれも inbox へ回る。
  *
- * 無いことを失敗にしない。
- * シリーズを人間が書き始める前でも、このスクリプトが inbox を出せることがその入口になる。
+ * ファイルがまだ無い日は、失敗にせず空のシリーズ一覧として扱う。
+ * シリーズを 1 件も書いていない段階でこのスクリプトが inbox を出せることが、人間がシリーズを書き始める入口になる。
  */
-function readSeries(): SeriesCollection {
-  if (!fs.existsSync(SERIES_FILE)) {
+function readSeries(file: string): SeriesCollection {
+  if (!fs.existsSync(file)) {
     console.error(
-      `${path.relative(process.cwd(), SERIES_FILE)} がまだ無いので、全件を未割当として扱う`,
+      `${path.relative(process.cwd(), file)} がまだ無いので、全件を未割当として扱う`,
     );
 
     return { type: "FeatureCollection", features: [] };
   }
 
-  return parseSeries(JSON.parse(fs.readFileSync(SERIES_FILE, "utf8")));
+  return parseSeries(readJsonFile(file));
 }
 
 /**
- * 前回までに書いた `episodes.json` を、guid から seriesId を引ける形で読む。
- * まだ無ければ空で、フィード全件が新着になる。
+ * 前回の同期が書き出したエピソード一覧を読み、guid から seriesId を引ける対応表にして返す。
+ * ファイルがまだ無い初回は空の対応表になり、フィードの全件が新着として扱われる。
  *
- * 割当まで持つのは、前回あった割当が外れたことを見るため。
- * guid の有無だけでは、割当が null へ後退した回と元から未割当の回を見分けられない。
+ * この対応表には二つの役目がある。
+ * 鍵（guid）の有無が「その回が新着か」を決め、値（seriesId）が「前回付いていた割当が外れていないか」を決める。
+ * 鍵だけでは、割当が null へ後退した回と元から未割当だった回を見分けられない。
  */
-function readPreviousAssignments(): Map<string, string | null> {
-  if (!fs.existsSync(EPISODES_FILE)) {
+function readPreviousAssignments(file: string): Map<string, string | null> {
+  if (!fs.existsSync(file)) {
     return new Map();
   }
 
-  const previous = parseEpisodes(
-    JSON.parse(fs.readFileSync(EPISODES_FILE, "utf8")),
-  );
+  const previous = parseEpisodes(readJsonFile(file));
 
   return new Map(
     previous.episodes.map((episode) => [episode.guid, episode.seriesId]),
@@ -151,24 +152,6 @@ function toInboxEntry(item: FeedItem): InboxEntry {
     season: item.season,
     link: item.link,
   };
-}
-
-/**
- * JSON を末尾の改行付きで書く。
- * 生成物も人間が読む差分に出るので、整形して書く。
- *
- * 同じディレクトリへ一時ファイルを書いてから rename する。
- * 書き込みの途中で落ちると、直接書いていた場合は中途半端な JSON がその名前で残る。
- * inbox は人間がまだ判定していない一覧なので、壊れた状態で残ると書く順序で守ったはずの作業がそこで消える。
- */
-function writeJson(file: string, value: unknown): void {
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-
-  // rename が atomic なのは同じファイルシステムの上だけなので、一時ファイルを別の場所へ置かない。
-  const temporary = `${file}.tmp`;
-
-  fs.writeFileSync(temporary, `${JSON.stringify(value, null, 2)}\n`);
-  fs.renameSync(temporary, file);
 }
 
 /**
@@ -216,35 +199,18 @@ function warnLostAssignments(
 }
 
 /**
- * ファイルを読んで JSON として解釈する。
- * 構文が壊れていれば、どのファイルかを添えて投げる。
+ * 同じ日に既に出してある inbox のエントリを読む。
+ * ファイルが無ければ空。
  *
- * `JSON.parse` が投げる SyntaxError は位置しか言わない。
- * inbox は日付ごとに増えるので、名前が無いとどれを直せばよいか分からない。
- */
-function parseJsonFile(file: string): { episodes?: unknown } {
-  const text = fs.readFileSync(file, "utf8");
-
-  try {
-    return JSON.parse(text);
-  } catch (cause) {
-    throw new Error(`JSON として読めない: ${file}`, { cause });
-  }
-}
-
-/**
- * 同じ日に既に出してある inbox を読む。
- * 無ければ空。
- *
- * 読めない中身なら投げる。
- * 人間がまだ判定していない一覧なので、壊れているときに黙って空で上書きすると作業が消える。
+ * 期待した形でなければ例外を投げて同期ごと止める。
+ * 人間がまだ判定していないエントリの置き場なので、読めないからと空で上書きすると、そこに並んでいたエントリが消える。
  */
 function readInbox(file: string): InboxEntry[] {
   if (!fs.existsSync(file)) {
     return [];
   }
 
-  const existing = parseJsonFile(file);
+  const existing = readJsonFile(file) as { episodes?: unknown };
 
   if (!Array.isArray(existing.episodes)) {
     throw new Error(`inbox の中身を読めない: ${file}`);
@@ -262,15 +228,19 @@ function readInbox(file: string): InboxEntry[] {
  * 人間が解決した回をここから消すことはしない。
  * これは日付ごとの記録であって未割当の現在値ではないので、いま何が未割当かは episodes.json の seriesId が持つ。
  */
-function writeInbox(syncedAt: string, unassigned: Assignment[]): void {
-  const file = path.join(INBOX_DIR, `${syncedAt.slice(0, 10)}.json`);
+function writeInbox(
+  directory: string,
+  syncedAt: string,
+  unassigned: Assignment[],
+): void {
+  const file = path.join(directory, `${syncedAt.slice(0, 10)}.json`);
   const existing = readInbox(file);
   const known = new Set(existing.map((entry) => entry.guid));
   const added = unassigned
     .map(({ item }) => toInboxEntry(item))
     .filter((entry) => !known.has(entry.guid));
 
-  writeJson(file, { syncedAt, episodes: [...existing, ...added] });
+  writeJsonFile(file, { syncedAt, episodes: [...existing, ...added] });
   console.log(`inbox: ${path.relative(process.cwd(), file)}`);
 }
 
@@ -298,8 +268,8 @@ async function main(): Promise<void> {
   assertDataDir();
 
   const items = parseFeed(await fetchFeed(FEED_URL));
-  const series = readSeries();
-  const previous = readPreviousAssignments();
+  const series = readSeries(SERIES_FILE);
+  const previous = readPreviousAssignments(EPISODES_FILE);
 
   warnDisappeared(items, previous);
 
@@ -317,10 +287,10 @@ async function main(): Promise<void> {
   // inbox を先に書く。
   // episodes.json を先に書くと、その後で落ちたときに guid だけが既知になり、未判定のまま二度と出てこない回ができる。
   if (unassigned.length > 0) {
-    writeInbox(syncedAt, unassigned);
+    writeInbox(INBOX_DIR, syncedAt, unassigned);
   }
 
-  writeJson(
+  writeJsonFile(
     EPISODES_FILE,
     parseEpisodes({
       syncedAt,
