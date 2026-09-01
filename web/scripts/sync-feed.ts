@@ -19,14 +19,10 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { assignSeriesId } from "../src/lib/feed/assign.ts";
-import { type FeedItem, parseFeed } from "../src/lib/feed/parse.ts";
-import { type Episode, parseEpisodes } from "../src/lib/schema/episode.ts";
-import {
-  parseSeries,
-  type SeriesCollection,
-} from "../src/lib/schema/series.ts";
+import { assignSeriesId } from "@/lib/feed/assign";
+import { type FeedItem, parseFeed } from "@/lib/feed/parse";
+import { type Episode, parseEpisodes } from "@/lib/schema/episode";
+import { parseSeries, type SeriesCollection } from "@/lib/schema/series";
 
 /**
  * 公式 RSS の在り処。
@@ -41,8 +37,14 @@ const FEED_URL = "https://anchor.fm/s/8c2088c/podcast/rss";
  */
 const FETCH_TIMEOUT_MS = 60_000;
 
-/** データ層の置き場。 */
-const DATA_DIR = fileURLToPath(new URL("../../data", import.meta.url));
+/**
+ * データ層の置き場。
+ *
+ * `pnpm sync` の作業ディレクトリ（`web/`）から辿る。
+ * このファイルは `dist/` へ出力してから走るので、`import.meta.url` から辿ると出力先の深さの分だけずれた場所を指す。
+ * 実行の入口が `pnpm sync` の一本なので、pnpm が保証する作業ディレクトリの方が動かない。
+ */
+const DATA_DIR = path.resolve(process.cwd(), "../data");
 
 const EPISODES_FILE = path.join(DATA_DIR, "episodes.json");
 const SERIES_FILE = path.join(DATA_DIR, "series.geojson");
@@ -273,10 +275,28 @@ function writeInbox(syncedAt: string, unassigned: Assignment[]): void {
 }
 
 /**
+ * `data/` を指せていることを確かめる。
+ *
+ * 作業ディレクトリが違うと、書き出しは黙って別の場所へ `data/` を作り、755 件をそこへ置く。
+ * `eras.json` は追跡されていて必ず在るので、これが無い場所は `data/` ではない。
+ */
+function assertDataDir(): void {
+  if (fs.existsSync(path.join(DATA_DIR, "eras.json"))) {
+    return;
+  }
+
+  throw new Error(
+    `data/ が見つからない: ${DATA_DIR}（pnpm sync は web/ から走らせる）`,
+  );
+}
+
+/**
  * 取得から書き出しまでを通す。
  * 数え上げたサマリを標準出力へ書く。
  */
 async function main(): Promise<void> {
+  assertDataDir();
+
   const items = parseFeed(await fetchFeed(FEED_URL));
   const series = readSeries();
   const previous = readPreviousAssignments();

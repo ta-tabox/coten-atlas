@@ -83,7 +83,7 @@
   },
   "overrides": [
     {
-      "includes": ["vitest.config.ts", "next.config.ts", "scripts/**"],
+      "includes": ["vitest.config.ts", "next.config.ts", "scripts/smoke.ts"],
       "linter": {
         "rules": {
           "style": {
