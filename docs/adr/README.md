@@ -50,6 +50,7 @@
 | [0021](0021-tailwind-v4.md) | スタイルを Tailwind v4 で書く（0015 を supersede） | 2026-08-31 | 採用 |
 | [0022](0022-map-dom-boundary.md) | 地図の上に載せるものは React 側で書き、MapLibre の DOM は canvas と attribution に限る | 2026-08-31 | 採用 |
 | [0023](0023-kind-place-or-concept.md) | `kind` は geometry から導けない差だけを持つ | 2026-08-31 | 採用 |
+| [0024](0024-map-feature-carries-key-only.md) | 地図から返る feature は鍵の運搬に限り、シリーズの属性は `data/` を読んだ値から引く | 2026-09-01 | 採用 |
 
 **0019 までのレコードは `テーマ` の語で書かれている。**
 地図の 1 エントリの呼び名を [0020](0020-series-rename.md) で `series`（シリーズ）へ揃えたので、それより前のレコードにある「テーマ」は「シリーズ」と読む。
