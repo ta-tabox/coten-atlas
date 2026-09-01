@@ -50,7 +50,7 @@ install_mise() {
 # mise.toml の固定がフックの中でしか効かない状態になり、`pnpm check` が手元とも CI とも別の版で走る。
 # 渡し口はセッションのツールシェルが読む追記専用ファイル CLAUDE_ENV_FILE の一つだけ。
 handoff_shims() {
-  # shims の置き場をこちらで綴ると mise の既定が変わったとき黙って外れるので、PATH の行は mise 自身に書かせる。
+  # shims の置き場をこちらで書くと mise の既定が変わったとき黙って外れるので、PATH の行は mise 自身に書かせる。
   local path_line
   path_line="$(mise activate bash --shims)"
 

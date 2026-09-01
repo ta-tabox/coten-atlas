@@ -71,7 +71,7 @@ data/
     {
       // RSS の guid。差分同期のキー。747 件は UUID だが 5 件は先頭に空白の付いた URL なので trim して持つ
       "guid": "4d80b4a3-deee-41f3-8045-d06ade19132f",
-      // フィードの綴りをそのまま持つ。シリーズ名をここから抽出しない（表記が揺れている。#13 の実測）
+      // フィードの文字列をそのまま持つ。シリーズ名をここから抽出しない（表記が揺れている。#13 の実測）
       "title": "【66-10】五賢帝時代はじまる！…【COTEN RADIO 帝政ローマ編10】",
       "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822（フィードは全件 GMT）からの正規化は同期側
       "season": 66,              // itunes:season。持たない回（番外編・特別編・告知）は null
@@ -120,6 +120,9 @@ data/
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
 - エピソードとシリーズの割当キーは `itunes:season`（[ADR-0018](docs/adr/0018-season-as-assignment-key.md)）。
   シリーズ側もエピソード側も `season` を持ち、シリーズ側は必須、エピソード側は持たない回があるので nullable
+- `id` はシリーズ名のローマ字を kebab-case にした手書きの値で、フィードから機械で決まる値ではない。
+  同じ値を二つのシリーズが要求したら、どちらかを変える。
+  重複は `seriesCollectionSchema` が落とし、変えた後に残る古い参照は `references.ts` が落とすので、黙って壊れることは無い
 - `links` は `{ platform, url }` の配列で、シリーズもエピソードも同じ形。
   `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む。
   エピソード側は RSS の `<link>` を入れる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）。
@@ -134,8 +137,15 @@ data/
   ファイル単体の検査に加えて、ファイルをまたぐ整合——`episodes.json` の `seriesId` が `series.geojson` の実在する id と season を指すか、`series.geojson` の `timeRange` が `eras.json` の era 空間と重なるか——も同じテストが見る（`web/src/lib/schema/references.ts`）
 - 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
 - 概念史（お金の歴史・資本主義など）は「場所が一意でない」——主要な舞台を
-  MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする。
-  S2 でシードを作りながら規約を確定し、この節に追記する
+  MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする
+
+**概念史の geometry は、舞台を地点で数えられるかで分ける。**
+数えられるなら MultiPoint を使う。
+「世界三大宗教」は開祖が三人いるので、話がブッダガヤ・エルサレム・メッカという特定の地点へ落ちる。
+数えられないなら代表 Polygon を使う。
+「お金の歴史」は同じ仕組みが各地で独立に立ち上がるので、地点を挙げると挙げた場所だけが舞台に見える。
+どちらの形でも `kind` は `concept` のままにする。
+「帝政ローマ」の版図と「お金の歴史」の代表範囲は同じ Polygon で書かれ、両者を隔てるのは `kind` だけなので、`place` を与えると控えめに描く手掛かりが消える。
 
 ### 時系列（era）モデル
 
@@ -176,6 +186,40 @@ data/
 
 - **現在窓の幅は未決定**（S4 の決定）。
   幅が決まらないと重なり率が決まらず、opacity も決まらない
+
+### 配り方
+
+シリーズはビルド時に取り込み、エピソードは `public/` へ複製して実行時に取ってくる。
+初期表示に要るのは地図へ置く点だけで、エピソード一覧は詳細カードを開くまで要らないので、初期ロードへ載せる範囲をシリーズに限る。
+
+| ファイル | 件数 | バイト数 | 数字の出所 |
+|---|---|---|---|
+| `series.geojson` | 10（シード） | 5,436 | 現物の実測 |
+| `series.geojson` | 90（完了時） | 約 47 KB | 1 件 538 B からの外挿 |
+| `episodes.json` | 754（2026-08-23 のフィード） | 約 327 KB（gzip 約 34 KB） | スキーマと件数からの見積り |
+| `episodes.json` | 1000 | 約 434 KB（gzip 約 45 KB） | 上を伸ばした値 |
+
+`episodes.json` の現物はまだ無いので、その 2 行は `episodeSchema` の欄から組んだ見積りである。
+シードの 1 件は 415 B（Point）から 1,046 B（MultiPolygon）まで散るので、538 B は図形の内訳込みの平均である。
+`summary` を 1 件 80 字ずつ埋めると `series.geojson` は 90 件で約 68 KB へ増える。
+
+- **シリーズは Server Component が `node:fs` で読む**。
+  `data/` はルート側にあって `web/tsconfig.json` の `include` の外で、`resolveJsonModule` が効くのは `.json` だけなので、`.geojson` を素の `import` では読めない。
+  `fs` なら解決の設定が要らず、`web/tests/data.test.ts` と同じ読み口になる。
+  static export では `next build` の中でしか走らないので、公開後にファイルを触る口は残らない
+- **エピソードは `public/data/episodes.json` を fetch する**。
+  `data/` は `web/` の外にあって `public/` へ入らないので、ビルドの前に複製する手順が要る。
+  worker の複製（`web/package.json` の `sync-map-worker`）と同じ形で `predev` / `prebuild` へ繋ぐ
+- **fetch の URL には `BASE_PATH` を付ける**。
+  GitHub Pages はリポジトリ名を挟んだ場所へ配信するので、`/data/episodes.json` は公開後に 404 になる
+- **どちらの読み込み口も `parseSeries` / `parseEpisodes` を通す**。
+  `fs` で読んだ値も fetch した値も型を持たないので、検査を外すと `as` で型を名乗ることになる。
+  ビルド時の検査（`web/tests/data.test.ts`）が見るのは `data/` の現物だけなので、複製し損ねた・404 の HTML を掴んだ、は実行時にしか映らない
+- `vitest.config.ts` に手当ては要らない。
+  どちらの口も `fs` と `fetch` で読み、`.geojson` を import しない
+- §7 の「実行時 fetch を持たない」が指すのは RSS の取得で、自分で配った静的 JSON を引くことではない（#92 が文言を絞る）
+- 読み込み口の現物はまだ無い。
+  シリーズ側は #5（S3: kind ごとのレイヤでシリーズを描画する）、エピソード側は複製の手順ごと #6（S3: シリーズクリックで詳細カードを開く）が書く
 
 ## 4. UI 構成
 
@@ -281,7 +325,7 @@ data/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
-まだ存在しないもの: `data/series.geojson`（#4）、`data/episodes.json` と `data/inbox/`（#27）、
+まだ存在しないもの: `data/episodes.json` と `data/inbox/`（#27）、
 `web/scripts/sync-feed.ts`（S6）、`VISION.md`（#41）。
 `data/` はアプリの外なので**ルート側**に置く。
 
@@ -308,3 +352,6 @@ RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを impo
   `seriesId` は単数 nullable で、割当キーが season なので、season を持つ回は必ず一つのシリーズへ入る（ADR-0018）。
   跨る回をどちらのシリーズの下に見せるかは S6 の精緻化のときに突き合わせる
 - モバイルでの振る舞い（全画面マップ + 下部スライダー + 左パネル）の範囲は S8 の精緻化で決める
+- `series.timeRange` が era 空間からはみ出しても、いまは赤くならない。
+  検査は入っている（`web/src/lib/schema/references.ts` の `seriesOutsideEraSpace`）が、見るのは**重なるかどうかだけ**で、収まっているかは見ていない。
+  era 空間の外へ伸びる `timeRange` を書けてしまうので、S4 を割るときに現在窓の幅と一緒に拾う

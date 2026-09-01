@@ -3,7 +3,7 @@ name: Claude Code
 # 共有の雛形からの写しで、`<!-- FILL -->` の箇所をこのリポジトリに合わせて埋めてある。
 # それ以外は複数のリポジトリで揃えている部分なので、変えるなら雛形の側を先に直す。
 
-# issue 本文は仕様書で、そこに手順として「@claude を呼ぶ」と書くと言及と起動を綴りで区別できないので、issues トリガは持たない。
+# issue 本文は仕様書で、そこに手順として「@claude を呼ぶ」と書くと言及と起動を文字列で区別できないので、issues トリガは持たない。
 # 起動はコメント（issue_comment / pull_request_review_comment / pull_request_review）だけ。
 on:
   issue_comment:
@@ -97,7 +97,7 @@ jobs:
             actions: read
 
           # ワイルドカードにしない。判定の口は package.json の check スクリプト一本（docs/adr/0009-pnpm-check.md）なのでそれだけ名指しする。
-          # 綴りが `pnpm --dir web check` なのは、Claude 自身の cwd がリポジトリのルートだから。
+          # コマンド文字列が `pnpm --dir web check` なのは、Claude 自身の cwd がリポジトリのルートだから。
           # claude-code-action は composite action なので、上の defaults.run.working-directory は
           # このアクション内部の run: へ継承されない（GitHub Actions の仕様）。cwd を渡す input も無く、
           # CLI は $GITHUB_WORKSPACE で起動する。素の `pnpm check` はそこで ERR_PNPM_NO_IMPORTER_MANIFEST_FOUND になる。
@@ -105,4 +105,4 @@ jobs:
           # 言語・文体の指定は prompt でなく system prompt へ置く（claude-code-review.yml と同じ理由）。
           # 自動レビュー側にだけ入れると、@claude で手動に呼んだときの応答だけ英語で返る非対称が生まれる。二本に同じ指定を置く。
           # 綴りは --allowedTools に揃える（--allowed-tools も通るが、二本で別の綴りを配らない）。
-          claude_args: '--allowedTools "Bash(pnpm --dir web check)" --append-system-prompt "応答はすべて日本語で書く。文体は だ・である調。識別子・ルール名・パス・引用したコードは原文のまま残す。判定の口を打つときは web/ の外から `pnpm --dir web check` と綴る——アプリは web/ の中にあり、作業ディレクトリはリポジトリのルートである。"'
+          claude_args: '--allowedTools "Bash(pnpm --dir web check)" --append-system-prompt "応答はすべて日本語で書く。文体は だ・である調。識別子・ルール名・パス・引用したコードは原文のまま残す。判定の口を打つときは web/ の外から `pnpm --dir web check` と書く——アプリは web/ の中にあり、作業ディレクトリはリポジトリのルートである。"'
