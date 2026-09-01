@@ -11,7 +11,7 @@
  *
  * `testMatch` を `*.spec.ts` に絞るのは、既定が `*.test.ts` も拾うから。
  * 絞らないと Vitest の担当分まで Playwright が走らせる。
- * 綴りの分担は `.spec.ts` が Playwright、`.test.ts` が Vitest。
+ * ファイル名の分担は `.spec.ts` が Playwright、`.test.ts` が Vitest。
  *
  * `webServer` は使わない。
  * 配信は `scripts/smoke.ts` が spec の中で立てる（BASE_PATH の下へ出す必要があり、ポートも OS に選ばせるため）。
