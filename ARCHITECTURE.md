@@ -187,6 +187,40 @@ data/
 - **現在窓の幅は未決定**（S4 の決定）。
   幅が決まらないと重なり率が決まらず、opacity も決まらない
 
+### 配り方
+
+シリーズはビルド時に取り込み、エピソードは `public/` へ複製して実行時に取ってくる。
+初期表示に要るのは地図へ置く点だけで、エピソード一覧は詳細カードを開くまで要らないので、初期ロードへ載せる範囲をシリーズに限る。
+
+| ファイル | 件数 | バイト数 | 数字の出所 |
+|---|---|---|---|
+| `series.geojson` | 10（シード） | 5,436 | 現物の実測 |
+| `series.geojson` | 90（完了時） | 約 47 KB | 1 件 538 B からの外挿 |
+| `episodes.json` | 754（2026-08-23 のフィード） | 約 327 KB（gzip 約 34 KB） | スキーマと件数からの見積り |
+| `episodes.json` | 1000 | 約 434 KB（gzip 約 45 KB） | 上を伸ばした値 |
+
+`episodes.json` の現物はまだ無いので、その 2 行は `episodeSchema` の欄から組んだ見積りである。
+シードの 1 件は 415 B（Point）から 1,046 B（MultiPolygon）まで散るので、538 B は図形の内訳込みの平均である。
+`summary` を 1 件 80 字ずつ埋めると `series.geojson` は 90 件で約 68 KB へ増える。
+
+- **シリーズは Server Component が `node:fs` で読む**。
+  `data/` はルート側にあって `web/tsconfig.json` の `include` の外で、`resolveJsonModule` が効くのは `.json` だけなので、`.geojson` を素の `import` では読めない。
+  `fs` なら解決の設定が要らず、`web/tests/data.test.ts` と同じ読み口になる。
+  static export では `next build` の中でしか走らないので、公開後にファイルを触る口は残らない
+- **エピソードは `public/data/episodes.json` を fetch する**。
+  `data/` は `web/` の外にあって `public/` へ入らないので、ビルドの前に複製する手順が要る。
+  worker の複製（`web/package.json` の `sync-map-worker`）と同じ形で `predev` / `prebuild` へ繋ぐ
+- **fetch の URL には `BASE_PATH` を付ける**。
+  GitHub Pages はリポジトリ名を挟んだ場所へ配信するので、`/data/episodes.json` は公開後に 404 になる
+- **どちらの読み込み口も `parseSeries` / `parseEpisodes` を通す**。
+  `fs` で読んだ値も fetch した値も型を持たないので、検査を外すと `as` で型を名乗ることになる。
+  ビルド時の検査（`web/tests/data.test.ts`）が見るのは `data/` の現物だけなので、複製し損ねた・404 の HTML を掴んだ、は実行時にしか映らない
+- `vitest.config.ts` に手当ては要らない。
+  どちらの口も `fs` と `fetch` で読み、`.geojson` を import しない
+- §7 の「実行時 fetch を持たない」が指すのは RSS の取得で、自分で配った静的 JSON を引くことではない（#92 が文言を絞る）
+- 読み込み口の現物はまだ無い。
+  シリーズ側は #5（S3: kind ごとのレイヤでシリーズを描画する）、エピソード側は複製の手順ごと #6（S3: シリーズクリックで詳細カードを開く）が書く
+
 ## 4. UI 構成
 
 - 全画面マップ + 下部に era スライダー（ラベルは era 名、位置は補間年を薄く表示）
