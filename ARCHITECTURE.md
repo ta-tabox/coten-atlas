@@ -351,3 +351,6 @@ RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを impo
   `seriesId` は単数 nullable で、割当キーが season なので、season を持つ回は必ず一つのシリーズへ入る（ADR-0018）。
   跨る回をどちらのシリーズの下に見せるかは S6 の精緻化のときに突き合わせる
 - モバイルでの振る舞い（全画面マップ + 下部スライダー + 左パネル）の範囲は S8 の精緻化で決める
+- `series.timeRange` が era 空間からはみ出しても、いまは赤くならない。
+  検査は入っている（`web/src/lib/schema/references.ts` の `seriesOutsideEraSpace`）が、見るのは**重なるかどうかだけ**で、収まっているかは見ていない。
+  era 空間の外へ伸びる `timeRange` を書けてしまうので、S4 を割るときに現在窓の幅と一緒に拾う

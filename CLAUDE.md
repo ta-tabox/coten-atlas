@@ -53,3 +53,17 @@
 
 **コードを書く前に** @CODING.md と skill `coding-standards` / `karpathy-guidelines` を開く
 （レビューやリファクタに限らない。言語固有の作法は skill の `languages/` のみ）。
+
+**申し送りの層は持たない**（[ADR-0025](docs/adr/0025-retire-next-md.md)）。
+続きは開いている issue の一覧から拾い、構造に関わる未決は `ARCHITECTURE.md` §8 が引き取る。
+
+## 配布物の追随
+
+`.claude/` と `.github/workflows/` の一部、`web/scripts/lint-comments.ts` と `web/tests/`、`CODING.md` は共有の雛形からの写しである。
+
+- **追随は、この器の開発を再開するときにまとめてやる**。
+  都度の追随は打ち切ってあるので、放っておけば雛形との差は開き続ける。
+  実装へ触れる最初のセッションが配布手順を通し直す
+- **検査器は雛形のコピーでバイト一致を保つ**。
+  直すときは雛形の側を先に直して配り直す。
+  器の側で直すと、次の追随で黙って踏み潰される
