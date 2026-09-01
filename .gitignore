@@ -10,6 +10,6 @@ web/public/maplibre-gl-*.mjs
 # dev と build で参照先（`.next/dev/types` と `.next/types`）が書き分けられるので、追跡するとどちらかを回すたびに差分が出る。
 web/next-env.d.ts
 .DS_Store
-# 手元の環境だけで意味を持つ指示と申し送り。公開するファイルから接続を外した残り（docs/adr/0017-local-only-instructions.md）。
+# 手元の環境だけで意味を持つ指示。公開するファイルから接続を外した残り（docs/adr/0017-local-only-instructions.md）。
+# 申し送りの NEXT.md はここに在ったが、層ごと畳んだ（docs/adr/0025-retire-next-md.md）。
 CLAUDE.local.md
-NEXT.md
