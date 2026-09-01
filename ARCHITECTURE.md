@@ -190,7 +190,8 @@ data/
 | `episodes.json` | 1000 | 約 434 KB（gzip 約 45 KB） | 上を伸ばした値 |
 
 `episodes.json` の現物はまだ無いので、その 2 行は `episodeSchema` の欄から組んだ見積りである。
-`summary` を 1 件 80 字ずつ埋めると `series.geojson` は 90 件で約 71 KB へ増え、20 頂点の Polygon を持つ件は 1 件あたり約 1 KB 増える。
+シードの 1 件は 415 B（Point）から 1,046 B（MultiPolygon）まで散るので、546 B は図形の内訳込みの平均である。
+`summary` を 1 件 80 字ずつ埋めると `series.geojson` は 90 件で約 71 KB へ増える。
 
 - **シリーズは Server Component が `node:fs` で読む**。
   `data/` はルート側にあって `web/tsconfig.json` の `include` の外で、`resolveJsonModule` が効くのは `.json` だけなので、`.geojson` を素の `import` では読めない。
