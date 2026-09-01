@@ -26,7 +26,7 @@ import {
 /**
  * シードの現物。
  * `data/` はリポジトリのルート直下で `web/` の外にあり、`tsconfig.json` の別名は `web/` の中しか解決しないので、辿る手は相対パスしか無い。
- * 段数を数え間違えても型では赤くならないため、隣の `data.test.ts` と同じ深さに置いて同じ綴りにしてある。
+ * 段数を数え間違えても型では赤くならないため、隣の `data.test.ts` と同じ深さに置いて同じパスの形にしてある。
  */
 const SERIES_FILE = fileURLToPath(
   new URL("../../data/series.geojson", import.meta.url),

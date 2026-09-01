@@ -20,7 +20,7 @@ import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
 /**
  * まだ終わっていないことを表す `end` の値。
- * 消費側がこの綴りを直に書かなくて済むよう、名前で配る。
+ * 消費側がこの文字列を直に書かなくて済むよう、名前で配る。
  */
 export const ERA_END_PRESENT = "present";
 
