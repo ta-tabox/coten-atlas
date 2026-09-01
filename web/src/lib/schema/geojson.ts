@@ -94,3 +94,11 @@ export const geometrySchema = z.discriminatedUnion("type", [
   polygonSchema,
   multiPolygonSchema,
 ]);
+
+/**
+ * 上の union が受け付ける `type` の値。
+ * union から引くので、種類を足したときにこの列だけが古いまま残ることが無い。
+ */
+export const GEOMETRY_TYPES = geometrySchema.options.map(
+  (option) => option.shape.type.value,
+);

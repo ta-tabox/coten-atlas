@@ -120,6 +120,9 @@ data/
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
 - エピソードとシリーズの割当キーは `itunes:season`（[ADR-0018](docs/adr/0018-season-as-assignment-key.md)）。
   シリーズ側もエピソード側も `season` を持ち、シリーズ側は必須、エピソード側は持たない回があるので nullable
+- `id` はシリーズ名のローマ字を kebab-case にした手書きの値で、フィードから機械で決まる値ではない。
+  同じ綴りを二つのシリーズが要求したら、どちらかを変える。
+  重複は `seriesCollectionSchema` が落とし、変えた後に残る古い参照は `references.ts` が落とすので、黙って壊れることは無い
 - `links` は `{ platform, url }` の配列で、シリーズもエピソードも同じ形。
   `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む。
   エピソード側は RSS の `<link>` を入れる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）。
@@ -134,8 +137,15 @@ data/
   ファイル単体の検査に加えて、ファイルをまたぐ整合——`episodes.json` の `seriesId` が `series.geojson` の実在する id と season を指すか、`series.geojson` の `timeRange` が `eras.json` の era 空間と重なるか——も同じテストが見る（`web/src/lib/schema/references.ts`）
 - 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
 - 概念史（お金の歴史・資本主義など）は「場所が一意でない」——主要な舞台を
-  MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする。
-  S2 でシードを作りながら規約を確定し、この節に追記する
+  MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする
+
+**概念史の geometry は、舞台を地点で数えられるかで分ける。**
+数えられるなら MultiPoint を使う。
+「世界三大宗教」は開祖が三人いるので、話がブッダガヤ・エルサレム・メッカという特定の地点へ落ちる。
+数えられないなら代表 Polygon を使う。
+「お金の歴史」は同じ仕組みが各地で独立に立ち上がるので、地点を挙げると挙げた場所だけが舞台に見える。
+どちらの形でも `kind` は `concept` のままにする。
+「帝政ローマ」の版図と「お金の歴史」の代表範囲は同じ Polygon で書かれ、両者を隔てるのは `kind` だけなので、`place` を与えると控えめに描く手掛かりが消える。
 
 ### 時系列（era）モデル
 
@@ -314,7 +324,7 @@ data/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
-まだ存在しないもの: `data/series.geojson`（#4）、`data/episodes.json` と `data/inbox/`（#27）、
+まだ存在しないもの: `data/episodes.json` と `data/inbox/`（#27）、
 `web/scripts/sync-feed.ts`（S6）、`VISION.md`（#41）。
 `data/` はアプリの外なので**ルート側**に置く。
 
