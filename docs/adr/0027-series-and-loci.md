@@ -23,7 +23,7 @@
    列は `eras.json` と同じ素の配列
 2. **`data/loci.geojson` が事物（`locus`、複数形 `loci`）を持つ。**
    GeoJSON FeatureCollection で、MapLibre の source はこれをそのまま受ける。
-   Feature の `properties` は `id` と `seriesId` の 2 欄。
+   Feature の `properties` は `id`・`seriesId`・`timeRange` の 3 欄。
    第一段階の geometry は Point だけ
 3. **シリーズは `anchor` を持ち、値は代表点の事物 id か、位置なしを表す定数 `ANCHOR_UNLOCATED`（綴りは `"unlocated"`）のどちらか。**
    null を使わない。
@@ -32,7 +32,11 @@
    `anchor` が指す事物が実在し、その `seriesId` がそのシリーズを指し、geometry が Point であること。
    位置なしのシリーズが事物を 1 件も持たないこと。
    全事物の `seriesId` が実在するシリーズを指すこと
-5. 事物の年範囲や役割の欄は第二段階まで持たない。
+5. **事物は第一段階から `timeRange` を持つ。**
+   値は年の閉区間（`series.timeRange` と同じ形）か、シリーズの `timeRange` に一致することを表す定数 `TIME_RANGE_OF_SERIES`（綴りは `"series"`）のどちらか。
+   代表点の `timeRange` はこの定数でなければならない。
+   年を書いた事物の `timeRange` は、そのシリーズの `timeRange` に収まっていなければならない（`references.ts`）
+6. 役割の欄は持たない。
    代表点は `series.anchor` の参照で見分ける
 
 ## 理由
@@ -45,6 +49,11 @@
 欄の欠落や null はどちらとも読める。
 0019 と同じ理由で、読んだ人が意味を推測せずに済む綴りを置く。
 
+事物に `timeRange` を第一段階から持たせるのは、描画の濃淡が読む欄を段階で変えないためである。
+第二段階で欄が増えると、地図へ渡す形も era スライダーの入力も組み直すことになる。
+代表点は常にシリーズ全体を代表するので、年を写すと同じ値を二箇所に持つ。
+一致を定数で表せば、シリーズの `timeRange` を直したときに代表点が追随し忘れることが無い。
+
 採らなかった案:
 
 - **代表点の座標を `series.json` へ直に持ち、`loci.geojson` は第二段階で足す** — 第一段階は 1 ファイルで済む。
@@ -55,6 +64,10 @@
 - **事物に `role: "anchor"` の欄を持たせる** — シリーズ側の参照と二重になり、片方だけ書き換えたデータが作れる
 - **シリーズ側に事物 id の配列を持たせる** — 事物が増えると `series.json` が再び重くなる。
   参照は多の側から一の側へ向ける
+- **代表点に年を写す** — 欄が一つの形で済む。
+  ただしシリーズと同じ値を二箇所に持ち、片方だけ直したデータが作れる
+- **`timeRange` を第二段階で足す** — 第一段階のスキーマが小さい。
+  ただし欄が増えた時点で描画の入力が変わり、第一段階の表示を書き直すことになる
 - **DB へ移す** — 0028
 
 ## 帰結
@@ -63,13 +76,16 @@
   どちらも string で、鍵の運搬に限る意図は変わらないので supersede しない
 - 描画の濃淡に要る `kind` は事物の properties に無い。
   地図へ渡す形をビルド時に組むときに `seriesId` から引いて写す。
+  `timeRange` の定数も同じ場所でシリーズの `timeRange` に解決する。
+  era スライダー（S4）が読むのは事物の `timeRange` で、段階で変わらない。
   `data/` の形は動かさない（0024 の「地図へ渡す形だけを平らにする」と同じ扱い）
 - `web/scripts/sync-feed.ts` の `readSeries` と `web/src/lib/feed/assign.ts` は `series.json` を読む。
   season → seriesId の索引の組み方は変わらない
 - `web/src/lib/schema/data-files.ts` の対応表は 4 ファイルになる
 - `series.geojson` は消え、`data/LICENSE` と `README.md` のファイル名が変わる
 - 移行は #109。
-  第二段階の欄（年範囲・図形）は #111 が足す
+  定数と `references.ts` の検査もここで入る。
+  第二段階の図形と、位置なしのシリーズに事物を持たせるかは #111 が決める
 - `ROADMAP.md` の閾値 1 は `series.json` の件数を数える
 
 ## 覆る条件

@@ -22,7 +22,7 @@
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-0003](docs/adr/0003-maplibre.md) |
 | ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-0004](docs/adr/0004-openfreemap-positron.md) |
 | データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-0005](docs/adr/0005-two-layer-data.md) |
-| 位置情報 | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で年範囲つきの精緻な図形を足す | [ADR-0026](docs/adr/0026-two-phase-location.md) |
+| 位置情報 | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で精緻な図形を足す。代表点は第二段階でも独立に持ち、どちらを描くかは利用者が切り替える | [ADR-0026](docs/adr/0026-two-phase-location.md) |
 | シリーズと事物 | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ | [ADR-0027](docs/adr/0027-series-and-loci.md) |
 | 管理画面 | 手元でだけ動き、`data/` のファイルへ書く。公開サイトの成果物に含まれない | [ADR-0028](docs/adr/0028-local-only-admin.md) |
 | 配信リンク | RSS の `<link>`（Spotify のエピソードページ） | [ADR-0006](docs/adr/0006-rss-link-as-episode-url.md) |
@@ -140,7 +140,11 @@ data/
     {
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [22.43, 37.07] },  // 第一段階は Point だけ
-      "properties": { "id": "sparta-city", "seriesId": "sparta" }   // 鍵だけ。属性は series.json から引く（ADR-0024）
+      "properties": {
+        "id": "sparta-city",       // 鍵。属性は series.json から引く（ADR-0024）
+        "seriesId": "sparta",
+        "timeRange": "series"      // シリーズの timeRange に一致する印（定数 TIME_RANGE_OF_SERIES）。代表点は必ずこれ。第二段階の事物は年の閉区間を書く
+      }
     }
     // 位置なしのシリーズはここに現れない
   ]
@@ -161,8 +165,12 @@ data/
   null は「まだ置いていない」と「置かないと決めた」を語らない（[ADR-0027](docs/adr/0027-series-and-loci.md)）。
   `anchor` が指す事物は実在し、その `seriesId` がそのシリーズを指し、geometry が Point でなければならない。
   位置なしのシリーズは事物を 1 件も持たない。
-  どちらも `references.ts` が見る
+  どちらも `references.ts` が見る。
+  位置なしは段階を問わず代表点を持たない（[ADR-0026](docs/adr/0026-two-phase-location.md)）
 - 事物の `id` は事物間で一意で、`ANCHOR_UNLOCATED` と同じ綴りを名乗れない
+- 事物の `timeRange` は年の閉区間か、シリーズの `timeRange` に一致することを表す定数 `TIME_RANGE_OF_SERIES` のどちらか。
+  代表点は定数でなければならず、年を書いた事物はそのシリーズの `timeRange` に収まっていなければならない（`references.ts`）。
+  era スライダーが読むのは事物の `timeRange` で、定数は地図へ渡す形を組むときにシリーズの値へ解決する
 - 代表点に正確さを求めない。
   活動の中心地か舞台の代表地点を 1 点置く。
   代表点を 1 つ置くと嘘になるシリーズ（お金の歴史のように、同じ仕組みが各地で独立に立ち上がるもの）は位置なしにする（[ADR-0026](docs/adr/0026-two-phase-location.md)）
@@ -262,6 +270,10 @@ data/
 - 位置なしのシリーズ（`anchor` が `ANCHOR_UNLOCATED`）は地図に出ない。
   同じパネルの別区画に、地図と区別して並べる（[ADR-0026](docs/adr/0026-two-phase-location.md)）。
   現在窓で絞るかどうかは S5 で決める（§8）
+- 第二段階のデータが入った後は、代表点と精緻な事物のどちらを描くかを利用者が画面で切り替える（[ADR-0026](docs/adr/0026-two-phase-location.md)）。
+  切り替えを出すかどうかは環境変数が決め、精緻な事物を持たないシリーズは代表点へフォールバックする。
+  代表点は `series.anchor` の参照で見分けるので、二つの集合は同じ `loci.geojson` から割れる。
+  実装は #111
 - オブジェクトクリック → 詳細カード（summary・年代・エピソード一覧・Spotify リンク）
 - 状態管理は React の範囲で足りる想定（selection / era window / panel 開閉のみ）。
   外部ライブラリを足す前に本当に要るか問う
@@ -401,9 +413,9 @@ RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを impo
 - 位置なしのシリーズを一覧パネルの別区画に出すとき、現在窓で絞るか全件を常に出すか。
   絞れば地図と同じ時代の話だけが並び、絞らなければ地図に出ないものの一覧として安定する。
   S5 を割るときに決める
-- 第二段階で精緻な事物が入ったシリーズの代表点をどうするか。
-  独立に持ち続けるか、事物から導くか。
-  #111 に着手するときに決める（ADR-0026 の覆る条件）
+- 位置なしのシリーズに第二段階の事物を持たせるか。
+  第一段階の規則は「事物を持たない」で、代表点を持たないことは段階を問わず決まっている。
+  #111 に着手するときに決める
 - `series.timeRange` が era 空間からはみ出しても、いまは赤くならない。
   検査は入っている（`web/src/lib/schema/references.ts` の `seriesOutsideEraSpace`）が、見るのは**重なるかどうかだけ**で、収まっているかは見ていない。
   era 空間の外へ伸びる `timeRange` を書けてしまうので、S4 を割るときに現在窓の幅と一緒に拾う
