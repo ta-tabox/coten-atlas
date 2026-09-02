@@ -22,8 +22,8 @@
 
 **地図の 1 エントリの呼び名を `series`（日本語では「シリーズ」）にする。**
 
-1. スキーマの綴りを揃える。
-   `web/src/lib/schema/theme.ts` は `series.ts` になり、4 つのスキーマ・入口の関数・3 つの型が `series` / `Series` を綴る
+1. スキーマの名前を揃える。
+   `web/src/lib/schema/theme.ts` は `series.ts` になり、4 つのスキーマ・入口の関数・3 つの型が `series` / `Series` を名乗る
 2. エピソードが指す先の欄を `themeId` から `seriesId` へ
 3. データファイルの名は `series.geojson`。
    現物はまだ無いので、直すのは検査の対応表と `data/LICENSE` の対象一覧
