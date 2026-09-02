@@ -1,40 +1,33 @@
 /**
- * 公式 RSS の XML を、エピソード 1 件ずつの素の値へ直す。
+ * 公式 RSS の XML から、エピソード 1 件ずつの値を取り出す。
  *
  * ネットワークへは出ない。
  * 取得とパースを混ぜるとパースの検査に実フィードが要るようになるので、fetch は呼ぶ側（scripts/sync-feed.ts）が持つ。
  *
- * 返すのはフィードに書いてある値だけで、episodes.json の形ではない。
- * seriesId の割当は assign.ts、スキーマの検査は schema/episode.ts が持つ。
- *
- * 正規化はこの層が引き受ける。
- * `guid` は先頭に空白を持つ回が 5 件あるので trim して返す（trim しないと同じ回が毎回「新規」に見える）。
- * `pubDate` は RFC 822 の GMT で来るので ISO 8601 へ直す。
+ * ここが引き受けるのは XML の癖を均すところまでである。
+ * `#text` と素の文字列の差、属性の在り処、要素の欠落を落とし込んで、全欄が文字列（か欠落）の記録へ均す。
+ * 何が必須で何をどう変換するかは `item.ts` のスキーマが持つ。
  *
  * 入口は parseFeed。
  */
 
 import { XMLParser } from "fast-xml-parser";
+import * as z from "zod";
+import { type FeedItem, feedItemSchema } from "@/lib/feed/item";
 
 /**
- * フィードのエピソード 1 件。
- *
- * `season` は `itunes:season` で、752 件中 176 件（番外編・特別編・告知）が持たない。
- * `episodeNumber` と `durationSec` は episodes.json へ保存しない（docs/adr/0018-season-as-assignment-key.md）。
+ * XML から取り出したままの 1 件。
+ * スキーマへ渡す前の、全欄が文字列か欠落の記録である。
  */
-export type FeedItem = {
-  guid: string;
-  title: string;
-  link: string;
-  /**
-   * ISO 8601。
-   * フィードの RFC 822 から直したもの。
-   */
-  pubDate: string;
-  audioUrl: string;
-  season: number | null;
-  episodeNumber: number | null;
-  durationSec: number | null;
+type RawFeedItem = {
+  guid?: string;
+  title?: string;
+  link?: string;
+  pubDate?: string;
+  audioUrl?: string;
+  season?: string;
+  episodeNumber?: string;
+  durationSec?: string;
 };
 
 /**
@@ -42,7 +35,7 @@ export type FeedItem = {
  *
  * `parseTagValue` を切ってあるので、数字だけの `guid` やタイトルが数値へ化けない。
  * `trimValues` も切ってある。
- * パーサ任せで空白が落ちると、`guid` を trim しているのがこのモジュールなのかパーサなのかが検査で見分けられなくなる。
+ * パーサ任せで空白が落ちると、`guid` を trim しているのがこちらのスキーマなのかパーサなのかが検査で見分けられなくなる。
  */
 const parser = new XMLParser({
   ignoreAttributes: false,
@@ -89,33 +82,36 @@ function itemsOf(document: unknown): Record<string, unknown>[] {
 }
 
 /**
- * `item` 1 件を FeedItem へ直す。
- * 欠けていては困る欄が無ければ、何件目のどの回かを添えて投げる。
+ * `item` 1 件をスキーマに掛けて FeedItem にする。
+ * 合わなければ、何件目のどの回かと、合わない欄を全部添えて投げる。
  */
 function toFeedItem(item: Record<string, unknown>, index: number): FeedItem {
-  const label = labelOf(item, index);
+  const raw = toRawFeedItem(item);
+  const parsed = feedItemSchema.safeParse(raw);
 
+  if (!parsed.success) {
+    throw new Error(
+      `${labelOf(raw, index)} がフィードの形に合わない\n${z.prettifyError(parsed.error)}`,
+    );
+  }
+
+  return parsed.data;
+}
+
+/**
+ * `item` の要素と属性を、全欄が文字列か欠落の記録へ均す。
+ * 値の可否はここでは見ない。
+ */
+function toRawFeedItem(item: Record<string, unknown>): RawFeedItem {
   return {
-    guid: required(textOf(item.guid), "guid", label),
-    title: required(textOf(item.title), "title", label),
-    link: required(textOf(item.link), "link", label),
-    pubDate: toIsoDate(required(textOf(item.pubDate), "pubDate", label), label),
-    audioUrl: required(
-      textOf(attributeOf(item.enclosure, "@_url")),
-      "enclosure/@url",
-      label,
-    ),
-    season: toPositiveInt(
-      textOf(item["itunes:season"]),
-      "itunes:season",
-      label,
-    ),
-    episodeNumber: toPositiveInt(
-      textOf(item["itunes:episode"]),
-      "itunes:episode",
-      label,
-    ),
-    durationSec: toDurationSec(textOf(item["itunes:duration"])),
+    guid: textOf(item.guid),
+    title: textOf(item.title),
+    link: textOf(item.link),
+    pubDate: textOf(item.pubDate),
+    audioUrl: textOf(attributeOf(item.enclosure, "@_url")),
+    season: textOf(item["itunes:season"]),
+    episodeNumber: textOf(item["itunes:episode"]),
+    durationSec: textOf(item["itunes:duration"]),
   };
 }
 
@@ -123,112 +119,36 @@ function toFeedItem(item: Record<string, unknown>, index: number): FeedItem {
  * 投げるときに何件目のどの回かを示す文字列。
  * `guid` より題名の方が人が見て分かるので、題名が読めればそちらを添える。
  */
-function labelOf(item: Record<string, unknown>, index: number): string {
-  const title = textOf(item.title) ?? textOf(item.guid);
+function labelOf(raw: RawFeedItem, index: number): string {
+  const title = raw.title ?? raw.guid;
   const position = `${index + 1} 件目`;
 
-  return title === null ? position : `${position}（${title}）`;
+  return title === undefined ? position : `${position}（${title}）`;
 }
 
 /**
- * 欠けていては困る欄を取り出す。
- * 無ければ投げる。
- */
-function required(value: string | null, field: string, label: string): string {
-  if (value === null) {
-    throw new Error(`${label} に ${field} が無い`);
-  }
-
-  return value;
-}
-
-/**
- * 要素の中身を、前後の空白を落とした文字列で返す。
- * 空欄と、空白しか無い欄は null。
+ * 要素の中身を文字列で返す。
+ * 空欄と、空白しか無い欄は欠落として扱う。
  *
  * 属性を持つ要素の中身はパーサが `#text` へ入れるので、素の文字列と両方を受ける。
  * `<guid isPermaLink="false">` が属性を持つ側で、`<link>` が持たない側である。
+ *
+ * 前後の空白はここでは落とさない。
+ * 落とすのはスキーマの仕事で、ここが均すのは XML の形だけである。
  */
-function textOf(node: unknown): string | null {
+function textOf(node: unknown): string | undefined {
   const raw = typeof node === "string" ? node : recordOf(node)?.["#text"];
 
-  if (typeof raw !== "string") {
-    return null;
+  if (typeof raw !== "string" || raw.trim() === "") {
+    return undefined;
   }
 
-  const trimmed = raw.trim();
-
-  return trimmed === "" ? null : trimmed;
+  return raw;
 }
 
 /** 要素の属性を取り出す。 */
 function attributeOf(node: unknown, name: string): unknown {
   return recordOf(node)?.[name];
-}
-
-/**
- * RFC 822 の日時を ISO 8601 へ直す。
- *
- * 全 752 件が `Wed, 19 Aug 2026 21:00:00 GMT` の形で、時間帯を明示して持つ。
- * 時間帯を持たない文字列を渡すと `Date` は実行環境の地方時として読むので、その形はフィードに現れないことを前提にしている。
- *
- * RFC 822 の解釈自体は ECMAScript の規定の外にあり、実装に委ねられている。
- * 走らせる先が Node（V8）だけなのでこれで足りる。
- */
-function toIsoDate(pubDate: string, label: string): string {
-  const parsed = new Date(pubDate);
-
-  if (Number.isNaN(parsed.getTime())) {
-    throw new Error(`${label} の pubDate を日時として読めない: ${pubDate}`);
-  }
-
-  return parsed.toISOString();
-}
-
-/**
- * `itunes:season` や `itunes:episode` の値を正の整数へ直す。
- * 欄が無ければ null を返し、欄はあるのに正の整数でなければ投げる。
- */
-function toPositiveInt(
-  text: string | null,
-  field: string,
-  label: string,
-): number | null {
-  if (text === null) {
-    return null;
-  }
-
-  const value = Number(text);
-
-  if (!Number.isInteger(value) || value <= 0) {
-    throw new Error(`${label} の ${field} が正の整数でない: ${text}`);
-  }
-
-  return value;
-}
-
-/**
- * `itunes:duration` を秒へ直す。
- * `00:52:48`（時:分:秒）と `18:20`（分:秒）と秒だけの表記を受ける。
- *
- * 読めない表記は投げずに null にする。
- * この値を読む先がまだ無いので（episodes.json へも保存しない）、表記の揺れで同期全体を止める理由が無い。
- */
-function toDurationSec(text: string | null): number | null {
-  if (text === null) {
-    return null;
-  }
-
-  const parts = text.split(":").map(Number);
-
-  if (
-    parts.length > 3 ||
-    parts.some((part) => !Number.isInteger(part) || part < 0)
-  ) {
-    return null;
-  }
-
-  return parts.reduce((total, part) => total * 60 + part, 0);
 }
 
 /**

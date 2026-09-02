@@ -11,7 +11,7 @@
  * 入口は assignSeriesId。
  */
 
-import type { FeedItem } from "@/lib/feed/parse";
+import type { FeedItem } from "@/lib/feed/item";
 import type { SeriesCollection } from "@/lib/schema/series";
 
 /**

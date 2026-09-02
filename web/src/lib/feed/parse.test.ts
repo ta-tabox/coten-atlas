@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { EMPTY_FEED_XML, FEED_XML } from "@/lib/feed/__fixtures__/feed";
-import { type FeedItem, parseFeed } from "@/lib/feed/parse";
+import type { FeedItem } from "@/lib/feed/item";
+import { parseFeed } from "@/lib/feed/parse";
 
 /** フィクスチャの中から題名の書き出しで 1 件を選ぶ。 */
 function itemStartingWith(items: FeedItem[], prefix: string): FeedItem {
@@ -88,7 +89,30 @@ describe("parseFeed", () => {
       "",
     );
 
-    expect(() => parseFeed(withoutPubDate)).toThrow("pubDate が無い");
+    expect(() => parseFeed(withoutPubDate)).toThrow(/pubDate/);
+  });
+
+  it("欠けた欄を一度に全部報せる", () => {
+    const withoutBoth = FEED_XML.replace(
+      "<pubDate>Wed, 19 Aug 2026 21:00:00 GMT</pubDate>",
+      "",
+    ).replace(
+      "<link>https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q</link>",
+      "",
+    );
+
+    // 最初に見つけた欄で投げると、直して走らせ直すまで次の欠けが見えない。
+    expect(() => parseFeed(withoutBoth)).toThrow(/link/);
+    expect(() => parseFeed(withoutBoth)).toThrow(/pubDate/);
+  });
+
+  it("正の整数でない itunes:season で投げる", () => {
+    const brokenSeason = FEED_XML.replace(
+      "<itunes:season>66</itunes:season>",
+      "<itunes:season>いち</itunes:season>",
+    );
+
+    expect(() => parseFeed(brokenSeason)).toThrow("正の整数でない");
   });
 
   it("日時として読めない pubDate で投げる", () => {
