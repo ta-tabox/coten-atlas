@@ -237,7 +237,7 @@ data/
 | ファイル | 件数 | バイト数 | 数字の出所 |
 |---|---|---|---|
 | `series.json` | 90（完了時） | 約 27 KB | 現行 `series.geojson` の properties 部分（1 件約 300 B）からの外挿 |
-| `loci.geojson` | 90（完了時） | 約 12 KB | Point の Feature 1 件約 130 B からの外挿 |
+| `loci.geojson` | 約 77（完了時。位置なしの 13 件を除く） | 約 10 KB | Point の Feature 1 件約 130 B からの外挿。位置なしの件数は #95 が挙げた 13 件 |
 | `episodes.json` | 754（2026-08-23 のフィード） | 約 327 KB（gzip 約 34 KB） | スキーマと件数からの見積り |
 | `episodes.json` | 1000 | 約 434 KB（gzip 約 45 KB） | 上を伸ばした値 |
 
