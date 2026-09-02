@@ -18,8 +18,12 @@ import { DATA_VALIDATORS, unvalidatedNames } from "@/lib/schema/data-files";
 import { parseEpisodes } from "@/lib/schema/episode";
 import { parseEras } from "@/lib/schema/era";
 import { parseInbox } from "@/lib/schema/inbox";
+import { parseLoci } from "@/lib/schema/locus";
 import {
+  brokenAnchors,
+  brokenLocusSeriesReferences,
   brokenSeriesReferences,
+  lociOutsideSeriesTimeRange,
   seriesOutsideEraSpace,
 } from "@/lib/schema/references";
 import { parseSeries } from "@/lib/schema/series";
@@ -29,6 +33,11 @@ import { parseSeries } from "@/lib/schema/series";
  * リポジトリのルート直下で、`web/` の外にある。
  */
 const DATA_DIR = fileURLToPath(new URL("../../data", import.meta.url));
+
+/** `data/` 直下の 1 本を読んで JSON へ直す。 */
+function readData(fileName: string): unknown {
+  return JSON.parse(fs.readFileSync(path.join(DATA_DIR, fileName), "utf8"));
+}
 
 /**
  * `data/` 直下のファイル名。
@@ -68,9 +77,7 @@ describe("data/", () => {
     // まだ生成されていないファイルは飛ばす。
     // 実在しないものを赤にしても、報せる中身が無い。
     it.skipIf(!fs.existsSync(file))(`${fileName} がスキーマに合う`, () => {
-      expect(() =>
-        parse(JSON.parse(fs.readFileSync(file, "utf8"))),
-      ).not.toThrow();
+      expect(() => parse(readData(fileName))).not.toThrow();
     });
   }
 
@@ -92,20 +99,51 @@ describe("data/", () => {
 
   const episodesFile = path.join(DATA_DIR, "episodes.json");
   const seriesFile = path.join(DATA_DIR, "series.json");
+  const lociFile = path.join(DATA_DIR, "loci.geojson");
   const erasFile = path.join(DATA_DIR, "eras.json");
 
   // 片方でも無いうちは、ファイルをまたぐ参照がまだ生まれていない。
   it.skipIf(!fs.existsSync(episodesFile) || !fs.existsSync(seriesFile))(
     "episodes.json の seriesId が series.json の実在する id と season を指す",
     () => {
-      const episodes = parseEpisodes(
-        JSON.parse(fs.readFileSync(episodesFile, "utf8")),
-      );
-      const series = parseSeries(
-        JSON.parse(fs.readFileSync(seriesFile, "utf8")),
-      );
+      const episodes = parseEpisodes(readData("episodes.json"));
+      const series = parseSeries(readData("series.json"));
 
       expect(brokenSeriesReferences(episodes, series)).toEqual([]);
+    },
+  );
+
+  // 片方でも無いうちは、シリーズと事物の対応がまだ生まれていない。
+  const withoutSeriesAndLoci =
+    !fs.existsSync(seriesFile) || !fs.existsSync(lociFile);
+
+  it.skipIf(withoutSeriesAndLoci)(
+    "series.json の anchor が loci.geojson の実在する代表点を指す",
+    () => {
+      const series = parseSeries(readData("series.json"));
+      const loci = parseLoci(readData("loci.geojson"));
+
+      expect(brokenAnchors(series, loci)).toEqual([]);
+    },
+  );
+
+  it.skipIf(withoutSeriesAndLoci)(
+    "loci.geojson の seriesId が series.json の実在するシリーズを指す",
+    () => {
+      const series = parseSeries(readData("series.json"));
+      const loci = parseLoci(readData("loci.geojson"));
+
+      expect(brokenLocusSeriesReferences(loci, series)).toEqual([]);
+    },
+  );
+
+  it.skipIf(withoutSeriesAndLoci)(
+    "loci.geojson の timeRange が series.json の timeRange に収まる",
+    () => {
+      const series = parseSeries(readData("series.json"));
+      const loci = parseLoci(readData("loci.geojson"));
+
+      expect(lociOutsideSeriesTimeRange(loci, series)).toEqual([]);
     },
   );
 
@@ -113,10 +151,8 @@ describe("data/", () => {
   it.skipIf(!fs.existsSync(seriesFile) || !fs.existsSync(erasFile))(
     "series.json の timeRange が eras.json の era 空間と重なる",
     () => {
-      const series = parseSeries(
-        JSON.parse(fs.readFileSync(seriesFile, "utf8")),
-      );
-      const eras = parseEras(JSON.parse(fs.readFileSync(erasFile, "utf8")));
+      const series = parseSeries(readData("series.json"));
+      const eras = parseEras(readData("eras.json"));
 
       expect(seriesOutsideEraSpace(series, eras)).toEqual([]);
     },

@@ -2,24 +2,33 @@ import { describe, expect, it } from "vitest";
 import type { EpisodeCollection } from "@/lib/schema/episode";
 import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
 import {
+  type LocusCollection,
+  type LocusTimeRange,
+  TIME_RANGE_OF_SERIES,
+} from "@/lib/schema/locus";
+import {
+  brokenAnchors,
+  brokenLocusSeriesReferences,
   brokenSeriesReferences,
+  lociOutsideSeriesTimeRange,
   seriesOutsideEraSpace,
 } from "@/lib/schema/references";
-import type { SeriesList } from "@/lib/schema/series";
+import { ANCHOR_UNLOCATED, type SeriesList } from "@/lib/schema/series";
 
-/** 検査に要る欄（id・season・timeRange）だけを差し替えたシリーズ一覧を作る。 */
+/** 検査に要る欄（id・season・anchor・timeRange）だけを差し替えたシリーズ一覧を作る。 */
 function seriesListOf(
   ...entries: {
     id: string;
     season: number;
+    anchor?: string;
     timeRange?: { start: number; end: number };
   }[]
 ): SeriesList {
-  return entries.map(({ id, season, timeRange }) => ({
+  return entries.map(({ id, season, anchor, timeRange }) => ({
     id,
     title: id,
     kind: "place",
-    anchor: `${id}-anchor`,
+    anchor: anchor ?? `${id}-anchor`,
     timeRange: timeRange ?? { start: -900, end: -200 },
     summary: "",
     region: "ギリシア",
@@ -27,6 +36,24 @@ function seriesListOf(
     links: [],
     tags: [],
   }));
+}
+
+/** 検査に要る欄（id・seriesId・timeRange）だけを差し替えた事物の全件を作る。 */
+function lociOf(
+  ...entries: { id: string; seriesId: string; timeRange?: LocusTimeRange }[]
+): LocusCollection {
+  return {
+    type: "FeatureCollection",
+    features: entries.map(({ id, seriesId, timeRange }) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [22.43, 37.07] },
+      properties: {
+        id,
+        seriesId,
+        timeRange: timeRange ?? TIME_RANGE_OF_SERIES,
+      },
+    })),
+  };
 }
 
 /** 検査に要る欄（start と end）だけを差し替えた era の列を作る。 */
@@ -168,5 +195,151 @@ describe("seriesOutsideEraSpace", () => {
     );
 
     expect(problems).toEqual([expect.stringContaining("late")]);
+  });
+});
+
+describe("brokenAnchors", () => {
+  it("anchor が自分の事物を指していれば空", () => {
+    const problems = brokenAnchors(
+      seriesListOf({ id: "sparta", season: 2, anchor: "sparta-city" }),
+      lociOf({ id: "sparta-city", seriesId: "sparta" }),
+    );
+
+    expect(problems).toEqual([]);
+  });
+
+  it("anchor が指す事物がどこにも無ければ名指す", () => {
+    const problems = brokenAnchors(
+      seriesListOf({ id: "sparta", season: 2, anchor: "sparta-city" }),
+      lociOf(),
+    );
+
+    expect(problems).toEqual([expect.stringContaining("sparta-city")]);
+  });
+
+  it("anchor が別のシリーズの事物を指していれば名指す", () => {
+    const problems = brokenAnchors(
+      seriesListOf({ id: "sparta", season: 2, anchor: "athens-city" }),
+      lociOf({ id: "athens-city", seriesId: "athens" }),
+    );
+
+    expect(problems).toEqual([expect.stringContaining("athens")]);
+  });
+
+  it("代表点の timeRange に年が書かれていれば名指す", () => {
+    const problems = brokenAnchors(
+      seriesListOf({ id: "sparta", season: 2, anchor: "sparta-city" }),
+      lociOf({
+        id: "sparta-city",
+        seriesId: "sparta",
+        timeRange: { start: -404, end: -371 },
+      }),
+    );
+
+    expect(problems).toEqual([expect.stringContaining(TIME_RANGE_OF_SERIES)]);
+  });
+
+  it("位置なしのシリーズが事物を持たなければ空", () => {
+    const problems = brokenAnchors(
+      seriesListOf({ id: "okane", season: 12, anchor: ANCHOR_UNLOCATED }),
+      lociOf({ id: "sparta-city", seriesId: "sparta" }),
+    );
+
+    expect(problems).toEqual([]);
+  });
+
+  it("位置なしのシリーズが事物を持てば名指す", () => {
+    const problems = brokenAnchors(
+      seriesListOf({ id: "okane", season: 12, anchor: ANCHOR_UNLOCATED }),
+      lociOf({ id: "athens-agora", seriesId: "okane" }),
+    );
+
+    expect(problems).toEqual([expect.stringContaining("okane")]);
+  });
+});
+
+describe("brokenLocusSeriesReferences", () => {
+  it("seriesId が実在するシリーズを指していれば空", () => {
+    const problems = brokenLocusSeriesReferences(
+      lociOf({ id: "sparta-city", seriesId: "sparta" }),
+      seriesListOf({ id: "sparta", season: 2 }),
+    );
+
+    expect(problems).toEqual([]);
+  });
+
+  it("どのシリーズにも無い seriesId を名指す", () => {
+    const problems = brokenLocusSeriesReferences(
+      lociOf({ id: "athens-city", seriesId: "athens" }),
+      seriesListOf({ id: "sparta", season: 2 }),
+    );
+
+    expect(problems).toEqual([expect.stringContaining("athens")]);
+  });
+});
+
+describe("lociOutsideSeriesTimeRange", () => {
+  /** -900 から -200 までのシリーズ 1 件。 */
+  const sparta = seriesListOf({ id: "sparta", season: 2 });
+
+  it("シリーズの timeRange に収まる年なら空", () => {
+    const problems = lociOutsideSeriesTimeRange(
+      lociOf({
+        id: "sparta-city",
+        seriesId: "sparta",
+        timeRange: { start: -404, end: -371 },
+      }),
+      sparta,
+    );
+
+    expect(problems).toEqual([]);
+  });
+
+  it("両端が一致していても収まっていると見る（timeRange は閉区間）", () => {
+    const problems = lociOutsideSeriesTimeRange(
+      lociOf({
+        id: "sparta-city",
+        seriesId: "sparta",
+        timeRange: { start: -900, end: -200 },
+      }),
+      sparta,
+    );
+
+    expect(problems).toEqual([]);
+  });
+
+  it("シリーズより後ろへはみ出す年を名指す", () => {
+    const problems = lociOutsideSeriesTimeRange(
+      lociOf({
+        id: "sparta-city",
+        seriesId: "sparta",
+        timeRange: { start: -404, end: 146 },
+      }),
+      sparta,
+    );
+
+    expect(problems).toEqual([expect.stringContaining("sparta-city")]);
+  });
+
+  it("シリーズと一致する印を置いた事物は見ない", () => {
+    const problems = lociOutsideSeriesTimeRange(
+      lociOf({ id: "sparta-city", seriesId: "sparta" }),
+      sparta,
+    );
+
+    expect(problems).toEqual([]);
+  });
+
+  it("seriesId の指す先が無い事物は見ない", () => {
+    const problems = lociOutsideSeriesTimeRange(
+      lociOf({
+        id: "athens-city",
+        seriesId: "athens",
+        timeRange: { start: -3000, end: -2000 },
+      }),
+      sparta,
+    );
+
+    expect(problems).toEqual([]);
   });
 });
