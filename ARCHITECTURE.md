@@ -75,9 +75,6 @@ data/
 第一段階では、シリーズが代表点 1 つか位置なしのどちらかを持ち、事物の geometry は Point だけである。
 第二段階（S9、完了条件の外）で事物に年範囲と精緻な図形を足す。
 
-`series.json` と `loci.geojson` の現物はまだ無く、#109 が `series.geojson` から割る。
-それまでは `series.geojson` が 1 シリーズ = 1 Feature の形で残っている。
-
 **episodes.json**（RSS 由来、guid キー）:
 
 ```jsonc
@@ -238,15 +235,8 @@ data/
 シリーズと事物はビルド時に取り込み、エピソードは `public/` へ複製して実行時に取ってくる。
 初期表示に要るのは地図へ置く点とシリーズの属性だけで、エピソード一覧は詳細カードを開くまで要らないので、初期ロードへ載せる範囲をその二つに限る。
 
-| ファイル | 件数 | バイト数 | 数字の出所 |
-|---|---|---|---|
-| `series.json` | 90（完了時） | 約 27 KB | 現行 `series.geojson` の properties 部分（1 件約 300 B）からの外挿 |
-| `loci.geojson` | 約 77（完了時。位置なしの 13 件を除く） | 約 10 KB | Point の Feature 1 件約 130 B からの外挿。位置なしの件数は #95 が挙げた 13 件 |
-| `episodes.json` | 754（2026-08-23 のフィード） | 約 327 KB（gzip 約 34 KB） | スキーマと件数からの見積り |
-| `episodes.json` | 1000 | 約 434 KB（gzip 約 45 KB） | 上を伸ばした値 |
-
-`series.json` と `loci.geojson` の現物はまだ無く（#109）、`episodes.json` の 2 行も `episodeSchema` の欄から組んだ見積りである。
-`summary` を 1 件 80 字ずつ埋めると `series.json` は 90 件で約 48 KB へ増える。
+エピソードの件数はシリーズの十倍を超え、増え続ける。
+シリーズと事物は初期ロードへ載せても軽く、エピソードは載せると地図が出るまでの待ちがそのぶん伸びる。
 
 - **シリーズと事物は Server Component が `node:fs` で読む**。
   `data/` はルート側にあって `web/tsconfig.json` の `include` の外で、`resolveJsonModule` が効くのは `.json` だけなので、`.geojson` を素の `import` では読めない。
@@ -263,8 +253,6 @@ data/
 - `vitest.config.ts` に手当ては要らない。
   どちらの口も `fs` と `fetch` で読み、`.geojson` を import しない
 - §7 の「実行時 fetch を持たない」が指すのは RSS の取得で、自分で配った静的 JSON を引くことではない（#92 が文言を絞る）
-- 読み込み口の現物はまだ無い。
-  シリーズと事物の側は #5（S3: シリーズを描画する）、エピソード側は複製の手順ごと #6（S3: シリーズクリックで詳細カードを開く）が書く
 
 ## 4. UI 構成
 
