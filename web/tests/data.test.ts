@@ -2,7 +2,7 @@
  * `data/` の現物が `src/lib/schema/` のスキーマに合っているかを見る。
  *
  * 型検査は `data/` を見ない（`tsconfig.json` の `include` が `web/` 配下しか見ない）ので、JSON がスキーマから外れても型では赤くならない。
- * 人手で書く層（`series.geojson`・`eras.json`）を持つ以上、書き間違いを機械で拾う場所がどこかに要る。
+ * 人手で書く層（`series.json`・`eras.json`）を持つ以上、書き間違いを機械で拾う場所がどこかに要る。
  *
  * ここが読むのは現物だけで、対応表と漏れの判定は `@/lib/schema/data-files` が、ファイルをまたぐ参照の判定は `@/lib/schema/references` が持つ。
  * jsdom では `import.meta.url` が file URL にならないので、環境を node に指定してある。
@@ -91,12 +91,12 @@ describe("data/", () => {
   }
 
   const episodesFile = path.join(DATA_DIR, "episodes.json");
-  const seriesFile = path.join(DATA_DIR, "series.geojson");
+  const seriesFile = path.join(DATA_DIR, "series.json");
   const erasFile = path.join(DATA_DIR, "eras.json");
 
   // 片方でも無いうちは、ファイルをまたぐ参照がまだ生まれていない。
   it.skipIf(!fs.existsSync(episodesFile) || !fs.existsSync(seriesFile))(
-    "episodes.json の seriesId が series.geojson の実在する id と season を指す",
+    "episodes.json の seriesId が series.json の実在する id と season を指す",
     () => {
       const episodes = parseEpisodes(
         JSON.parse(fs.readFileSync(episodesFile, "utf8")),
@@ -109,9 +109,9 @@ describe("data/", () => {
     },
   );
 
-  // series.geojson が無いうちは、era 空間と突き合わせる相手が居ない。
+  // series.json が無いうちは、era 空間と突き合わせる相手が居ない。
   it.skipIf(!fs.existsSync(seriesFile) || !fs.existsSync(erasFile))(
-    "series.geojson の timeRange が eras.json の era 空間と重なる",
+    "series.json の timeRange が eras.json の era 空間と重なる",
     () => {
       const series = parseSeries(
         JSON.parse(fs.readFileSync(seriesFile, "utf8")),

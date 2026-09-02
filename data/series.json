@@ -1,0 +1,122 @@
+[
+  {
+    "id": "yoshida-shoin",
+    "title": "吉田松陰",
+    "kind": "place",
+    "anchor": "hagi",
+    "timeRange": { "start": 1830, "end": 1859 },
+    "summary": "",
+    "region": "日本",
+    "season": 1,
+    "links": [],
+    "tags": ["人物", "幕末", "日本"]
+  },
+  {
+    "id": "sparta",
+    "title": "スパルタ",
+    "kind": "place",
+    "anchor": "sparta-city",
+    "timeRange": { "start": -900, "end": -200 },
+    "summary": "",
+    "region": "ギリシア",
+    "season": 2,
+    "links": [],
+    "tags": ["古代", "ギリシア"]
+  },
+  {
+    "id": "shokatsu-komei",
+    "title": "諸葛孔明",
+    "kind": "place",
+    "anchor": "chengdu",
+    "timeRange": { "start": 181, "end": 234 },
+    "summary": "",
+    "region": "中国",
+    "season": 6,
+    "links": [],
+    "tags": ["人物", "三国志", "中国"]
+  },
+  {
+    "id": "sekai-sandai-shukyo",
+    "title": "世界三大宗教",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": -560, "end": 632 },
+    "summary": "",
+    "region": "ユーラシア",
+    "season": 7,
+    "links": [],
+    "tags": ["宗教", "概念史"]
+  },
+  {
+    "id": "hitler",
+    "title": "ヒトラー",
+    "kind": "place",
+    "anchor": "berlin",
+    "timeRange": { "start": 1889, "end": 1945 },
+    "summary": "",
+    "region": "ドイツ",
+    "season": 8,
+    "links": [],
+    "tags": ["人物", "20世紀", "ドイツ"]
+  },
+  {
+    "id": "alexandros",
+    "title": "アレクサンドロス",
+    "kind": "place",
+    "anchor": "pella",
+    "timeRange": { "start": -356, "end": -323 },
+    "summary": "",
+    "region": "地中海〜西アジア",
+    "season": 11,
+    "links": [],
+    "tags": ["人物", "遠征", "古代"]
+  },
+  {
+    "id": "okane-no-rekishi",
+    "title": "お金の歴史",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": -600, "end": 2020 },
+    "summary": "",
+    "region": "ユーラシア",
+    "season": 12,
+    "links": [],
+    "tags": ["経済", "概念史"]
+  },
+  {
+    "id": "america-kaitakushi",
+    "title": "アメリカ開拓史",
+    "kind": "place",
+    "anchor": "st-louis",
+    "timeRange": { "start": 1607, "end": 1890 },
+    "summary": "",
+    "region": "北アメリカ",
+    "season": 15,
+    "links": [],
+    "tags": ["開拓", "近代", "アメリカ"]
+  },
+  {
+    "id": "cleopatra",
+    "title": "クレオパトラ",
+    "kind": "place",
+    "anchor": "alexandria",
+    "timeRange": { "start": -69, "end": -30 },
+    "summary": "",
+    "region": "エジプト",
+    "season": 33,
+    "links": [],
+    "tags": ["人物", "古代", "エジプト"]
+  },
+  {
+    "id": "teisei-roma",
+    "title": "帝政ローマ",
+    "kind": "place",
+    "anchor": "rome",
+    "timeRange": { "start": -27, "end": 476 },
+    "summary": "",
+    "region": "地中海",
+    "season": 66,
+    "links": [],
+    "tags": ["帝国", "古代", "ローマ"]
+  }
+]

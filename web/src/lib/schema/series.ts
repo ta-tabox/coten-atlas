@@ -1,9 +1,10 @@
 /**
  * コテンラジオの 1 シリーズのスキーマ。
- * 地図が読む GeoJSON FeatureCollection の形を、実行時に検査できるかたちで持つ。
+ * `data/series.json` の形を、実行時に検査できるかたちで持つ。
  *
  * 年は西暦の整数で、負値が紀元前を表す（0 年は暦に存在しないが、区別しても得るものが無いので許す）。
- * geometry の形そのものは `geojson.ts` が持つ。
+ * 地図へ置く図形は持たない。
+ * 図形は事物の側にあり、`locus.ts` が持つ（docs/adr/0027-series-and-loci.md）。
  * zod の既定は未知のキーを黙って捨て、手書きの書き間違いや規約外の欄の混入がどこにも映らないので、スキーマに無いキーは落とす。
  *
  * 描画も RSS 同期もこの形だけを前提にしてよい。
@@ -13,13 +14,18 @@
 
 import * as z from "zod";
 import { duplicatesOf } from "@/lib/duplicates";
-import { geometrySchema } from "@/lib/schema/geojson";
 import { linksSchema } from "@/lib/schema/link";
 import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
 /**
+ * 位置なしを表す `anchor` の値。
+ * 消費側がこの文字列を直に書かなくて済むよう、名前で配る。
+ */
+export const ANCHOR_UNLOCATED = "unlocated";
+
+/**
  * 描画スタイルの分岐キー。
- * 図形の違いは `geometry.type` が表すので、ここは場所が一意に決まるかどうかだけを分ける（docs/adr/0023-kind-place-or-concept.md）。
+ * 場所が一意に決まるかどうかだけを分ける（docs/adr/0023-kind-place-or-concept.md）。
  */
 export const seriesKindSchema = z.enum(["place", "concept"]);
 
@@ -44,11 +50,11 @@ export const seriesTimeRangeSchema = z
   });
 
 /**
- * シリーズ 1 件が持つ属性。
+ * シリーズ 1 件。
  * 地図の描画・一覧パネル・詳細カード・RSS 同期の全部がここを読む。
  */
-export const seriesPropertiesSchema = z.strictObject({
-  /** エピソードの `seriesId` が指す先。 */
+export const seriesSchema = z.strictObject({
+  /** エピソードの `seriesId` と事物の `seriesId` が指す先。 */
   id: trimmedNonEmptyStringSchema,
 
   /**
@@ -62,6 +68,14 @@ export const seriesPropertiesSchema = z.strictObject({
    * `concept` は場所が一意に決まらないもので、控えめに描く（docs/adr/0023-kind-place-or-concept.md）。
    */
   kind: seriesKindSchema,
+
+  /**
+   * 代表点の事物 id か、位置なしを表す `ANCHOR_UNLOCATED`。
+   * そのシリーズの事物のうちどれが代表点かを示す印であって、シリーズと事物の紐づけではない（docs/adr/0027-series-and-loci.md）。
+   * 紐づけは事物側の `seriesId` が担う。
+   * 指す先が実在するかは 2 つのファイルを並べないと見えないので、`references.ts` が見る。
+   */
+  anchor: trimmedNonEmptyStringSchema,
 
   /**
    * シリーズが扱う年代の範囲。
@@ -100,42 +114,21 @@ export const seriesPropertiesSchema = z.strictObject({
   tags: z.array(trimmedNonEmptyStringSchema),
 });
 
-/** シリーズ 1 件。 */
-export const seriesFeatureSchema = z.strictObject({
-  /** GeoJSON が geometry と properties の対に要求する固定値。 */
-  type: z.literal("Feature"),
-
-  /**
-   * 地図のどこに、どんな図形で置くか。
-   * 使い分けは `ARCHITECTURE.md` §3 が持つ。
-   */
-  geometry: geometrySchema,
-
-  properties: seriesPropertiesSchema,
-});
-
 /**
  * シリーズ全件。
- * MapLibre へそのまま渡せる GeoJSON FeatureCollection である。
+ * `eras.json` と同じ素の配列で、GeoJSON ではない。
  *
  * `id` と `season` の重複をここで落とす。
- * `id` はエピソードが指す先の鍵で、`season` は同期が組む season → seriesId の索引の鍵なので、どちらも重複すると引いた先が一つに定まらない。
+ * `id` はエピソードと事物が指す先の鍵で、`season` は同期が組む season → seriesId の索引の鍵なので、どちらも重複すると引いた先が一つに定まらない。
  */
-export const seriesCollectionSchema = z
-  .strictObject({
-    type: z.literal("FeatureCollection"),
-    features: z.array(seriesFeatureSchema),
-  })
-  .superRefine((collection, ctx) => {
-    const properties = collection.features.map((feature) => feature.properties);
-
-    for (const id of duplicatesOf(properties.map((property) => property.id))) {
+export const seriesListSchema = z
+  .array(seriesSchema)
+  .superRefine((list, ctx) => {
+    for (const id of duplicatesOf(list.map((series) => series.id))) {
       ctx.addIssue({ code: "custom", message: `id が重複している: ${id}` });
     }
 
-    const seasons = properties.map((property) => property.season);
-
-    for (const season of duplicatesOf(seasons)) {
+    for (const season of duplicatesOf(list.map((series) => series.season))) {
       ctx.addIssue({
         code: "custom",
         message: `season が複数のシリーズに割り当てられている: ${season}`,
@@ -143,16 +136,16 @@ export const seriesCollectionSchema = z
     }
   });
 
-export type Series = z.infer<typeof seriesFeatureSchema>;
-export type SeriesCollection = z.infer<typeof seriesCollectionSchema>;
+export type Series = z.infer<typeof seriesSchema>;
+export type SeriesList = z.infer<typeof seriesListSchema>;
 export type SeriesTimeRange = z.infer<typeof seriesTimeRangeSchema>;
 
 /**
  * シリーズ全件を検査して返す。
  * 合わなければ、どの要素のどこが合わないかを添えて投げる。
  */
-export function parseSeries(input: unknown): SeriesCollection {
-  const parsed = seriesCollectionSchema.safeParse(input);
+export function parseSeries(input: unknown): SeriesList {
+  const parsed = seriesListSchema.safeParse(input);
 
   if (!parsed.success) {
     throw new Error(

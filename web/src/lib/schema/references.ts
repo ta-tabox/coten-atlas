@@ -17,7 +17,7 @@
 
 import type { EpisodeCollection } from "@/lib/schema/episode";
 import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
-import type { SeriesCollection } from "@/lib/schema/series";
+import type { SeriesList } from "@/lib/schema/series";
 
 /**
  * `seriesId` の参照が壊れているエピソードを、理由の文で返す。
@@ -25,14 +25,9 @@ import type { SeriesCollection } from "@/lib/schema/series";
  */
 export function brokenSeriesReferences(
   episodes: EpisodeCollection,
-  series: SeriesCollection,
+  series: SeriesList,
 ): string[] {
-  const seasonsById = new Map(
-    series.features.map((feature) => [
-      feature.properties.id,
-      feature.properties.season,
-    ]),
-  );
+  const seasonsById = new Map(series.map(({ id, season }) => [id, season]));
 
   const problems: string[] = [];
 
@@ -70,7 +65,7 @@ export function brokenSeriesReferences(
  * 右端をどの年へ解決して描くか（S4、docs/adr/0019-era-open-end.md の帰結）とは独立で、ここは era の列そのものだけを見る。
  */
 export function seriesOutsideEraSpace(
-  series: SeriesCollection,
+  series: SeriesList,
   eras: EraList,
 ): string[] {
   const spaceStart = eras[0].start;
@@ -78,9 +73,7 @@ export function seriesOutsideEraSpace(
 
   const problems: string[] = [];
 
-  for (const feature of series.features) {
-    const { id, timeRange } = feature.properties;
-
+  for (const { id, timeRange } of series) {
     if (timeRange.end < spaceStart) {
       problems.push(
         `series ${id}: timeRange の end（${timeRange.end}）が最初の era の start（${spaceStart}）より前で、スライダーのどの位置にも現れない`,
