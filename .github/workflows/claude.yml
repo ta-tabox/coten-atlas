@@ -104,5 +104,5 @@ jobs:
           # cd を挟まず一語で済ませるのは、allowedTools が複合コマンドだと `cd` 側にも許可が要るため。
           # 言語・文体の指定は prompt でなく system prompt へ置く（claude-code-review.yml と同じ理由）。
           # 自動レビュー側にだけ入れると、@claude で手動に呼んだときの応答だけ英語で返る非対称が生まれる。二本に同じ指定を置く。
-          # 綴りは --allowedTools に揃える（--allowed-tools も通るが、二本で別の綴りを配らない）。
+          # 書き方は --allowedTools に揃える（--allowed-tools も通るが、二本で別の書き方を配らない）。
           claude_args: '--allowedTools "Bash(pnpm --dir web check)" --append-system-prompt "応答はすべて日本語で書く。文体は だ・である調。識別子・ルール名・パス・引用したコードは原文のまま残す。判定の口を打つときは web/ の外から `pnpm --dir web check` と書く——アプリは web/ の中にあり、作業ディレクトリはリポジトリのルートである。"'
