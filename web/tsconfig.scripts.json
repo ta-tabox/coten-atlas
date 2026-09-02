@@ -1,0 +1,26 @@
+{
+  // scripts/ を JS へ落とすための設定。
+  // 型検査だけの tsconfig.json とは目的が違うので分けてある。
+  //
+  // 入口は scripts/sync-feed.ts の 1 本だけを挙げる。
+  // そこから辿れる src/ は tsc が自分で引き込むので、テストなど実行に要らないものが dist へ出ない。
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./dist",
+    "incremental": false,
+    // next の言語プラグインは型検査用で、出力には関係しない。
+    "plugins": [],
+    // 素の tsc は `.ts` 付きの import をそのまま出力へ残し、Node が解決できない。
+    // allowImportingTsExtensions は noEmit か、このどちらかとしか併用できない。
+    "rewriteRelativeImportExtensions": true,
+    // include を 1 本へ絞ると @types の自動取り込みが効かないので、要るものを名指しする。
+    "types": ["node"]
+  },
+  // tsc は `@/` を書き換えないので、出力へ残った別名を tsc-alias が相対パスへ直す。
+  // resolveFullPaths が無いと拡張子の付かない綴りが残り、Node の ESM が解決に失敗する。
+  "tsc-alias": {
+    "resolveFullPaths": true
+  },
+  "include": ["scripts/sync-feed.ts"]
+}

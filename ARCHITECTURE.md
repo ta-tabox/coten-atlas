@@ -285,9 +285,12 @@ data/
   1. RSS を取得し、guid で episodes.json と差分
   2. series.geojson 全件の `season` から season → seriesId の索引を組み、新規エピソードの `itunes:season` で引いて seriesId 割当（ADR-0018）
   3. どのシリーズにも当たらないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
-     （タイトル・guid・推定シリーズ名。座標と年代は空欄=人間+Claude の補正対象）
+     （タイトル・guid・`itunes:season`・配信リンク。座標と年代は空欄=人間+Claude の補正対象）。
+     タイトルの表記は揺れていて当てにならないので、そこからシリーズ名を推定した欄は持たない（ADR-0018）
   4. 結果サマリ（新規 n 件 / 割当 m 件 / 要レビュー k 件）を stdout へ
-- 運用: 当面は手動で `pnpm sync` → inbox を見てキュレーション → コミット。
+- 運用: 当面は手動で `pnpm sync` → inbox に出た回を見て `series.geojson` へシリーズを足す → コミット。
+  手を入れる先は手動層の `series.geojson` だけで、`episodes.json` は毎回フィードから組み直すので編集しない（ADR-0005）。
+  inbox が持つのはキュレーション済みのデータではなく、どのシリーズにも当たらなかった回の一覧である。
   軌道に乗ったら GitHub Actions の cron で sync + PR 自動作成に昇格（S8 以降の任意課題）
 - 静的サイトなので実行時 fetch はしない。同期は常にビルド前のデータ更新として行う
 
@@ -324,8 +327,8 @@ data/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
-まだ存在しないもの: `data/episodes.json` と `data/inbox/`（#27）、
-`web/scripts/sync-feed.ts`（S6）、`VISION.md`（#41）。
+まだ存在しないもの: `data/episodes.json` と `data/inbox/`（#100 が同期を一度回して起こす）、
+`VISION.md`（#41）。
 `data/` はアプリの外なので**ルート側**に置く。
 
 `web/scripts/` はこれと別枠になる。`tsconfig.json` の `paths` も vitest の alias も `web/` の中で

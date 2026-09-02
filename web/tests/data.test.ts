@@ -17,6 +17,7 @@ import { describe, expect, it } from "vitest";
 import { DATA_VALIDATORS, unvalidatedNames } from "@/lib/schema/data-files";
 import { parseEpisodes } from "@/lib/schema/episode";
 import { parseEras } from "@/lib/schema/era";
+import { parseInbox } from "@/lib/schema/inbox";
 import {
   brokenSeriesReferences,
   seriesOutsideEraSpace,
@@ -31,13 +32,33 @@ const DATA_DIR = fileURLToPath(new URL("../../data", import.meta.url));
 
 /**
  * `data/` 直下のファイル名。
- * ディレクトリへは降りない（`inbox/` の形は #27 が決める）。
+ * ディレクトリへは降りない。
+ * `inbox/` の中は日付ごとに増えていくので、対応表でなく下の走査が受け持つ。
  */
 function dataFileNames(): string[] {
   return fs
     .readdirSync(DATA_DIR, { withFileTypes: true })
     .filter((entry) => entry.isFile())
     .map((entry) => entry.name);
+}
+
+/** 未割当スタブの置き場。 */
+const INBOX_DIR = path.join(DATA_DIR, "inbox");
+
+/**
+ * `data/inbox/` の JSON のファイル名。
+ * ディレクトリごと無い間は空なので、検査は 1 件も生えない。
+ */
+function inboxFileNames(): string[] {
+  if (!fs.existsSync(INBOX_DIR)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(INBOX_DIR, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+    .map((entry) => entry.name)
+    .sort();
 }
 
 describe("data/", () => {
@@ -56,6 +77,18 @@ describe("data/", () => {
   it("検査する口を持たないデータファイルが増えていない", () => {
     expect(unvalidatedNames(dataFileNames())).toEqual([]);
   });
+
+  // inbox は日付ごとにファイルが増えるので、名前を対応表へ書けない。
+  // 人間が開いて編集する唯一の生成物なので、編集で形が崩れたまま気付かない経路を残さない。
+  for (const fileName of inboxFileNames()) {
+    it(`inbox/${fileName} がスキーマに合う`, () => {
+      expect(() =>
+        parseInbox(
+          JSON.parse(fs.readFileSync(path.join(INBOX_DIR, fileName), "utf8")),
+        ),
+      ).not.toThrow();
+    });
+  }
 
   const episodesFile = path.join(DATA_DIR, "episodes.json");
   const seriesFile = path.join(DATA_DIR, "series.geojson");

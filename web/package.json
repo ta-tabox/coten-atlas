@@ -16,6 +16,8 @@
     "pretest:watch": "pnpm sync-map-worker",
     "test:watch": "vitest",
     "validate:data": "vitest run tests/data.test.ts",
+    "build:scripts": "rm -rf dist && tsc -p tsconfig.scripts.json && tsc-alias -p tsconfig.scripts.json",
+    "sync": "pnpm build:scripts && node dist/scripts/sync-feed.js",
     "smoke": "playwright test --project=smoke",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm smoke"
   },
@@ -39,8 +41,10 @@
     "@types/react-dom": "^19.2.5",
     "@typescript/typescript6": "^6.0.2",
     "@vitejs/plugin-react": "^6.1.0",
+    "fast-xml-parser": "^5.11.1",
     "jsdom": "^30.0.1",
     "tailwindcss": "^4.3.3",
+    "tsc-alias": "^1.9.3",
     "typescript": "^7.0.2",
     "vitest": "^4.1.11"
   }

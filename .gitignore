@@ -1,6 +1,8 @@
 web/node_modules/
 web/.next/
 web/out/
+# scripts/ を JS へ落とした出力。`pnpm sync` が毎回作り直す。
+web/dist/
 web/*.tsbuildinfo
 # Playwright の実行結果。失敗時のトレースと .last-run.json が入る。
 web/test-results/
