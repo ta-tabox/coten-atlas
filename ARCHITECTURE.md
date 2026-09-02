@@ -107,7 +107,7 @@ data/
     "id": "sparta",
     "title": "スパルタ",
     "kind": "place",                              // 描画の濃淡の分岐キー
-    "anchor": "sparta-city",                      // 代表点の事物 id。位置なしなら "unlocated"（定数 ANCHOR_UNLOCATED）
+    "anchor": "sparta-city",                      // 代表点の事物 id（loci.geojson の properties.id）
     "timeRange": { "start": -900, "end": -200 },  // 両端を含む閉区間。負値 = BC
     "summary": "",         // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
     "region": "ギリシア",
@@ -119,7 +119,7 @@ data/
     "id": "sekai-sandai-shukyo",
     "title": "世界三大宗教",
     "kind": "concept",
-    "anchor": "unlocated",  // 代表点を 1 つ置くと嘘になるので地図に出さない。一覧パネルの別区画に出る（§4）
+    "anchor": "unlocated",  // 位置なし。JSON に定数は無いので文字列をそのまま書き、コードは ANCHOR_UNLOCATED の名で読む。地図に出ず、一覧パネルの別区画に出る（§4）
     "timeRange": { "start": -560, "end": 632 },
     "summary": "",
     "region": "ユーラシア",
@@ -143,7 +143,7 @@ data/
       "properties": {
         "id": "sparta-city",       // 鍵。属性は series.json から引く（ADR-0024）
         "seriesId": "sparta",
-        "timeRange": "series"      // シリーズの timeRange に一致する印（定数 TIME_RANGE_OF_SERIES）。代表点は必ずこれ。第二段階の事物は年の閉区間を書く
+        "timeRange": "series"      // 「シリーズの timeRange と同じ」の意（コードでは TIME_RANGE_OF_SERIES）。代表点は必ずこれで、第二段階の事物は年の閉区間を書く
       }
     }
     // 位置なしのシリーズはここに現れない
@@ -161,16 +161,19 @@ data/
 - `id` はシリーズ名のローマ字を kebab-case にした手書きの値で、フィードから機械で決まる値ではない。
   同じ値を二つのシリーズが要求したら、どちらかを変える。
   重複はスキーマが落とし、変えた後に残る古い参照（エピソードの `seriesId`・事物の `seriesId`）は `references.ts` が落とすので、黙って壊れることは無い
-- `anchor` は代表点の事物 id か、位置なしを表す定数 `ANCHOR_UNLOCATED` のどちらかで、null を使わない。
+- `anchor` は代表点の事物 id か、位置なしを表す `"unlocated"` のどちらかで、null を使わない。
   null は「まだ置いていない」と「置かないと決めた」を語らない（[ADR-0027](docs/adr/0027-series-and-loci.md)）。
   `anchor` が指す事物は実在し、その `seriesId` がそのシリーズを指し、geometry が Point でなければならない。
   位置なしのシリーズは事物を 1 件も持たない。
   どちらも `references.ts` が見る。
   位置なしは段階を問わず代表点を持たない（[ADR-0026](docs/adr/0026-two-phase-location.md)）
-- 事物の `id` は事物間で一意で、`ANCHOR_UNLOCATED` と同じ綴りを名乗れない
-- 事物の `timeRange` は年の閉区間か、シリーズの `timeRange` に一致することを表す定数 `TIME_RANGE_OF_SERIES` のどちらか。
-  代表点は定数でなければならず、年を書いた事物はそのシリーズの `timeRange` に収まっていなければならない（`references.ts`）。
-  era スライダーが読むのは事物の `timeRange` で、定数は地図へ渡す形を組むときにシリーズの値へ解決する
+- 事物の `id` は事物間で一意。
+  `"unlocated"` は位置なしの印に使うので、事物の `id` には使えない
+- 事物の `timeRange` は年の閉区間か、シリーズの `timeRange` と同じことを表す `"series"` のどちらか。
+  代表点の `timeRange` は `"series"` でなければならない。
+  代表点はシリーズ全体を代表するので、年を写して二重に持たない。
+  年を書いた事物はそのシリーズの `timeRange` に収まっていなければならない（`references.ts`）。
+  era スライダーが読むのは事物の `timeRange` で、`"series"` は地図へ渡す形を組むときにシリーズの値へ置き換える
 - 代表点に正確さを求めない。
   活動の中心地か舞台の代表地点を 1 点置く。
   代表点を 1 つ置くと嘘になるシリーズ（お金の歴史のように、同じ仕組みが各地で独立に立ち上がるもの）は位置なしにする（[ADR-0026](docs/adr/0026-two-phase-location.md)）

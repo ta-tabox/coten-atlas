@@ -27,16 +27,17 @@
    geometry は触らない。
    Feature の `properties` は `id`・`seriesId`・`timeRange` の 3 欄。
    第一段階の geometry は Point だけ
-3. **シリーズは `anchor` を持ち、値は代表点の事物 id か、位置なしを表す定数 `ANCHOR_UNLOCATED`（綴りは `"unlocated"`）のどちらか。**
+3. **シリーズは `anchor` を持ち、値は代表点の事物 id か、位置なしを表す値 `"unlocated"`（コードでは `ANCHOR_UNLOCATED`）のどちらか。**
    null を使わない。
-   事物の id はこの綴りを名乗れない
+   事物の id に `"unlocated"` は使えない
 4. **ファイルをまたぐ整合を `references.ts` が見る。**
    `anchor` が指す事物が実在し、その `seriesId` がそのシリーズを指し、geometry が Point であること。
    位置なしのシリーズが事物を 1 件も持たないこと。
    全事物の `seriesId` が実在するシリーズを指すこと
 5. **事物は第一段階から `timeRange` を持つ。**
-   値は年の閉区間（`series.timeRange` と同じ形）か、シリーズの `timeRange` に一致することを表す定数 `TIME_RANGE_OF_SERIES`（綴りは `"series"`）のどちらか。
-   代表点の `timeRange` はこの定数でなければならない。
+   値は年の閉区間（`series.timeRange` と同じ形）か、シリーズの `timeRange` と同じことを表す値 `"series"`（コードでは `TIME_RANGE_OF_SERIES`）のどちらか。
+   代表点の `timeRange` は `"series"` でなければならない。
+   代表点はシリーズ全体を代表するので、年を写して二重に持たない。
    年を書いた事物の `timeRange` は、そのシリーズの `timeRange` に収まっていなければならない（`references.ts`）
 6. 役割の欄は持たない。
    代表点は `series.anchor` の参照で見分ける
@@ -50,7 +51,7 @@ geometry を組み直す合成は要らない。
 
 位置なしを印にするのは、「まだ置いていない」と「置かないと決めた」を分けるためである。
 欄の欠落や null はどちらとも読める。
-0019 と同じ理由で、読んだ人が意味を推測せずに済む綴りを置く。
+0019 と同じ理由で、読んだ人が意味を推測せずに済む語を置く。
 
 事物に `timeRange` を第一段階から持たせるのは、描画の濃淡が読む欄を段階で変えないためである。
 第二段階で欄が増えると、地図へ渡す形も era スライダーの入力も組み直すことになる。
@@ -79,7 +80,7 @@ geometry を組み直す合成は要らない。
   どちらも string で、鍵の運搬に限る意図は変わらないので supersede しない
 - 描画の濃淡に要る `kind` は事物の properties に無い。
   地図へ渡す形をビルド時に組むときに `seriesId` から引いて写す。
-  `timeRange` の定数も同じ場所でシリーズの `timeRange` に解決する。
+  `timeRange` の `"series"` も同じ場所でシリーズの値へ置き換える。
   era スライダー（S4）が読むのは事物の `timeRange` で、段階で変わらない。
   `data/` の形は動かさない（0024 の「地図へ渡す形だけを平らにする」と同じ扱い）
 - `web/scripts/sync-feed.ts` の `readSeries` と `web/src/lib/feed/assign.ts` は `series.json` を読む。
@@ -87,7 +88,7 @@ geometry を組み直す合成は要らない。
 - `web/src/lib/schema/data-files.ts` の対応表は 4 ファイルになる
 - `series.geojson` は消え、`data/LICENSE` と `README.md` のファイル名が変わる
 - 移行は #109。
-  定数と `references.ts` の検査もここで入る。
+  `ANCHOR_UNLOCATED`・`TIME_RANGE_OF_SERIES` の名と `references.ts` の検査もここで入る。
   第二段階の図形と、位置なしのシリーズに事物を持たせるかは #111 が決める
 - `ROADMAP.md` の閾値 1 は `series.json` の件数を数える
 
