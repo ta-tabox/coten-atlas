@@ -5,8 +5,8 @@
  * 人間が手を入れる先は `series.geojson` であってこのファイルではないので、解決した回をここから消すことはしない。
  * いま何が未割当かは `episodes.json` の `seriesId` が持ち、こちらは日付ごとの記録である。
  *
- * 読みはスキーマに掛ける。
- * 人間が開いて編集しうる場所なので、形が崩れたものを黙って受けると、書き戻すときに崩れたまま残る。
+ * 形の正は `src/lib/schema/inbox.ts` が持ち、ここはそれを読み書きする側である。
+ * 人間が開いて編集しうる場所なので、読みは必ずスキーマへ通す。
  *
  * 入口は readInbox と writeInbox。
  */
@@ -14,29 +14,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
-import * as z from "zod";
 import type { FeedItem } from "@/lib/feed/item";
-
-/**
- * inbox の 1 件。
- *
- * 人間がシリーズを決めるために要る欄だけを持つ。
- * 座標と年代は `series.geojson` を書くときに埋めるものなので、ここには置かない。
- */
-const inboxEntrySchema = z.strictObject({
-  guid: z.string().trim().min(1),
-  title: z.string().trim().min(1),
-  season: z.int().positive().nullable(),
-  link: z.url(),
-});
-
-/** inbox のファイル 1 本。 */
-const inboxFileSchema = z.strictObject({
-  syncedAt: z.iso.datetime(),
-  episodes: z.array(inboxEntrySchema),
-});
-
-export type InboxEntry = z.infer<typeof inboxEntrySchema>;
+import { type InboxEntry, parseInbox } from "@/lib/schema/inbox";
 
 /** フィードの 1 件を inbox の 1 件へ直す。 */
 export function toInboxEntry(item: FeedItem): InboxEntry {
@@ -60,15 +39,11 @@ export function readInbox(file: string): InboxEntry[] {
     return [];
   }
 
-  const parsed = inboxFileSchema.safeParse(readJsonFile(file));
-
-  if (!parsed.success) {
-    throw new Error(
-      `inbox の形に合わない: ${file}\n${z.prettifyError(parsed.error)}`,
-    );
+  try {
+    return parseInbox(readJsonFile(file)).episodes;
+  } catch (cause) {
+    throw new Error(`inbox の形に合わない: ${file}`, { cause });
   }
-
-  return parsed.data.episodes;
 }
 
 /**
