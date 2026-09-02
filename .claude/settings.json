@@ -1,5 +1,5 @@
 {
-  "_comment": "Bash(git push:*) は共有の雛形どおり allow。force 系と --delete / --mirror は ask にも残すが、権限パターンは前方一致なので git push origin --force のようにフラグが push の直後に来ない語順を拾えない。語順に依存しない判定は PreToolUse フック guard-force-push.sh が持ち、コマンド全文を見て ask へ回す。フックの if を git 全体で絞ってあるのは、コマンド名より細かいパターンが $( ) を含む行を素通しさせて起動する（hooks のドキュメント）ためで、git push:* と書いても絞りにならないから。ask の列挙はフックを切ったときの下限として残してある（CLAUDE.md「git」節）。判定の口は pnpm check の一本（docs/adr/0009-pnpm-check.md）。check を構成する個別スクリプトも allow に置く——切り分けのために単体で叩くので、置かないと毎回訊かれるだけの摩擦になる。mise はランタイム版管理として残っており（install / 参照系）、tasks は持たない。gh は雛形どおり全器共通の三層で配る——読み取り・起票・コメント・close までが allow、merge と release が ask、repo の削除／編集と secret と auth が deny。切り分けの理由は CLAUDE.md「git」節が持つ。gh api だけはコマンド文字列が一通りしか無く、前方一致では読み取りと書き込みを分けられない。全部を ask にするとレビューの読み取りや返信——gh issue comment が allow なのと同じ「戻せるコメント」——まで毎回訊かれるので、コマンド全文を見る PreToolUse フック guard-gh-api.sh が戻せない書き込みだけを ask へ回す。素通しするのは読み取り・コメント投稿・レビュースレッドの resolve の三つ。ask に DELETE を二パターン残してあるのはフックを切ったときの下限で、語順に依存しない判定はフックが持つ（雛形からの逸脱。CLAUDE.md「git」節に記録がある）。",
+  "_comment": "Bash(git push:*) は共有の雛形どおり allow。force 系と --delete / --mirror は ask にも残すが、権限パターンは前方一致なので git push origin --force のようにフラグが push の直後に来ない語順を拾えない。語順に依存しない判定は PreToolUse フック guard-force-push.sh が持ち、コマンド全文を見て ask へ回す。フックの if を git 全体で絞ってあるのは、コマンド名より細かいパターンが $( ) を含む行を素通しさせて起動する（hooks のドキュメント）ためで、git push:* と書いても絞りにならないから。ask の列挙はフックを切ったときの下限として残してある（CLAUDE.md「git」節）。判定の口は pnpm check の一本（docs/adr/0009-pnpm-check.md）。check を構成する個別スクリプトも allow に置く——切り分けのために単体で叩くので、置かないと毎回訊かれるだけの摩擦になる。mise はランタイム版管理として残っており（install / 参照系）、tasks は持たない。gh は雛形どおり全器共通の三層で配る——読み取り・起票・コメント・close までが allow、merge と release が ask、repo の削除／編集と secret と auth が deny。切り分けの理由は CLAUDE.md「git」節が持つ。gh api だけはコマンド文字列が一通りしか無く、前方一致では読み取りと書き込みを分けられない。全部を ask にするとレビューの読み取りや返信——gh issue comment が allow なのと同じ「戻せるコメント」——まで毎回訊かれるので、コマンド全文を見る PreToolUse フック guard-gh-api.sh が戻せない書き込みだけを ask へ回す。素通しするのは読み取り・コメント投稿・レビュースレッドの resolve の三つ。ask に DELETE を二パターン残してあるのはフックを切ったときの下限で、語順に依存しない判定はフックが持つ（雛形からの逸脱。CLAUDE.md「git」節に記録がある）。deny の先頭にある .env* のパス規則は、gh の三層とは別の配布物からの写しである。線は読みと書きで別々に引く。読んで漏れるのは秘密を持つ側だけなので、読みは秘密を持つ書き方だけを塞ぎ、追跡対象で秘密を持たない .env.example は読める側へ置く。書いて漏れうるのは逆にその .env.example なので、書きは .env* の一律にして例外を置かない。評価順が deny → ask → allow で、より狭い allow が deny を覆さないから、例外は書けず線は書き方そのもので引くしかない。パス規則を Read と Edit の二つで書くのは、Write(パス) と書いた規則が受理されるが参照されないため。このリポジトリはまだ .env* を一つも持たないので、これは予防で入れてある。",
   "attribution": {
     "commit": "Co-authored-by: Claude <noreply@anthropic.com>",
     "pr": "",
@@ -50,6 +50,13 @@
       "Bash(gh api --method DELETE:*)"
     ],
     "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.local)",
+      "Read(**/.env.*.local)",
+      "Read(**/.env.development)",
+      "Read(**/.env.production)",
+      "Read(**/.env.test)",
+      "Edit(**/.env*)",
       "Bash(gh repo delete:*)",
       "Bash(gh repo edit:*)",
       "Bash(gh secret:*)",
