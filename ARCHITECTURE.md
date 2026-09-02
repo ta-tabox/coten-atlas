@@ -65,7 +65,7 @@ data/eras.json    （時代区分）──────────────�
 data/
 ├── episodes.json        # 自動層。RSS から同期。手で編集しない
 ├── series.json          # 手動層。シリーズ=キュレーション対象の正。geometry を持たない
-├── loci.geojson         # 手動層。事物（シリーズが地図の上に持つもの）。MapLibre へ直接渡す
+├── loci.geojson         # 手動層。事物（シリーズが地図の上に持つもの）。地図の source の元
 ├── eras.json            # 時代区分（下記「時系列（era）モデル」）
 └── inbox/               # RSS 同期が排出する「未割当シリーズのスタブ」置き場
 ```
@@ -131,7 +131,7 @@ data/
 ]
 ```
 
-**loci.geojson**（事物。GeoJSON FeatureCollection で、MapLibre の source へそのまま渡す）:
+**loci.geojson**（事物。GeoJSON FeatureCollection で、地図の source の元。渡す形はビルド時に `kind` と `timeRange` を properties へ写して組む）:
 
 ```jsonc
 {

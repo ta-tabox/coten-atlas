@@ -22,7 +22,9 @@
    geometry を持たず、GeoJSON でもない。
    列は `eras.json` と同じ素の配列
 2. **`data/loci.geojson` が事物（`locus`、複数形 `loci`）を持つ。**
-   GeoJSON FeatureCollection で、MapLibre の source はこれをそのまま受ける。
+   GeoJSON FeatureCollection で、地図の source の元になる。
+   source へ渡す形はビルド時に組み、properties へ `kind` と解決した `timeRange` を写す。
+   geometry は触らない。
    Feature の `properties` は `id`・`seriesId`・`timeRange` の 3 欄。
    第一段階の geometry は Point だけ
 3. **シリーズは `anchor` を持ち、値は代表点の事物 id か、位置なしを表す定数 `ANCHOR_UNLOCATED`（綴りは `"unlocated"`）のどちらか。**
@@ -43,7 +45,8 @@
 
 シリーズと図形の多重度を 1 対多にするには、図形を別のファイルへ出すしかない。
 属性を持つファイルが geometry を持たなければ、第二段階で重い輪郭がどこに置かれても、人間が読む属性の diff は汚れない。
-`loci.geojson` を GeoJSON のまま source へ渡せるので、ビルド時の合成も要らない。
+`loci.geojson` が GeoJSON なので、地図へ渡す形は properties へ鍵から引いた値を写すだけで組める。
+geometry を組み直す合成は要らない。
 
 位置なしを印にするのは、「まだ置いていない」と「置かないと決めた」を分けるためである。
 欄の欠落や null はどちらとも読める。
