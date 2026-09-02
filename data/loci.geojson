@@ -1,0 +1,77 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [131.399, 34.408] },
+      "properties": {
+        "id": "hagi",
+        "seriesId": "yoshida-shoin",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [22.43, 37.07] },
+      "properties": {
+        "id": "sparta-city",
+        "seriesId": "sparta",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [104.07, 30.66] },
+      "properties": {
+        "id": "chengdu",
+        "seriesId": "shokatsu-komei",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [13.405, 52.52] },
+      "properties": {
+        "id": "berlin",
+        "seriesId": "hitler",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [22.525, 40.76] },
+      "properties": {
+        "id": "pella",
+        "seriesId": "alexandros",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-90.2, 38.63] },
+      "properties": {
+        "id": "st-louis",
+        "seriesId": "america-kaitakushi",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [29.92, 31.2] },
+      "properties": {
+        "id": "alexandria",
+        "seriesId": "cleopatra",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [12.496, 41.903] },
+      "properties": {
+        "id": "rome",
+        "seriesId": "teisei-roma",
+        "timeRange": "series"
+      }
+    }
+  ]
+}

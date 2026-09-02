@@ -10,6 +10,7 @@
 
 import { parseEpisodes } from "@/lib/schema/episode";
 import { parseEras } from "@/lib/schema/era";
+import { parseLoci } from "@/lib/schema/locus";
 import { parseSeries } from "@/lib/schema/series";
 
 /**
@@ -19,6 +20,7 @@ import { parseSeries } from "@/lib/schema/series";
 export const DATA_VALIDATORS = new Map<string, (input: unknown) => unknown>([
   ["eras.json", parseEras],
   ["series.json", parseSeries],
+  ["loci.geojson", parseLoci],
   ["episodes.json", parseEpisodes],
 ]);
 

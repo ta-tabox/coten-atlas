@@ -48,7 +48,7 @@ const ringSchema = z
   .refine(isClosedRing, { message: "多角形の環が閉じていない" });
 
 /** 1 地点。 */
-const pointSchema = z.strictObject({
+export const pointSchema = z.strictObject({
   type: z.literal("Point"),
   coordinates: positionSchema,
 });
