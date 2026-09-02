@@ -22,6 +22,9 @@
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-0003](docs/adr/0003-maplibre.md) |
 | ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-0004](docs/adr/0004-openfreemap-positron.md) |
 | データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-0005](docs/adr/0005-two-layer-data.md) |
+| 位置情報 | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で年範囲つきの精緻な図形を足す | [ADR-0026](docs/adr/0026-two-phase-location.md) |
+| シリーズと事物 | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ | [ADR-0027](docs/adr/0027-series-and-loci.md) |
+| 管理画面 | 手元でだけ動き、`data/` のファイルへ書く。公開サイトの成果物に含まれない | [ADR-0028](docs/adr/0028-local-only-admin.md) |
 | 配信リンク | RSS の `<link>`（Spotify のエピソードページ） | [ADR-0006](docs/adr/0006-rss-link-as-episode-url.md) |
 | デプロイ | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`） | [ADR-0007](docs/adr/0007-github-pages.md) |
 | 引用の範囲 | シリーズ名とエピソードタイトルのみ | [ADR-0008](docs/adr/0008-quote-titles-only.md) |
@@ -36,8 +39,11 @@
 公式 RSS ──(pnpm sync: ビルド前)──> data/episodes.json ─┐
                                     └─> data/inbox/     │  未割当スタブ = 人間の入口
                                                         │
-data/series.geojson （人間キュレーション）──────────────┤
-data/eras.json      （時代区分）────────────────────────┤
+手元の管理画面 ──(保存 = ファイル書き込み)──┐            │
+                                            v            │
+data/series.json  （シリーズの属性。人間キュレーション）─┤
+data/loci.geojson （事物 = 代表点。同上）────────────────┤
+data/eras.json    （時代区分）───────────────────────────┤
                                                         v
                                           Next.js static export (next build)
                                                         │
@@ -49,6 +55,7 @@ data/eras.json      （時代区分）──────────────
 ```
 
 実行時 fetch を持たない。RSS の取得は常にビルド前のデータ更新として走る。
+管理画面は手元でだけ立ち、公開サイトの成果物には含まれない（[ADR-0028](docs/adr/0028-local-only-admin.md)）。
 
 ## 3. データモデル
 
@@ -57,10 +64,19 @@ data/eras.json      （時代区分）──────────────
 ```
 data/
 ├── episodes.json        # 自動層。RSS から同期。手で編集しない
-├── series.geojson       # 手動層。シリーズ=キュレーション対象の正
+├── series.json          # 手動層。シリーズ=キュレーション対象の正。geometry を持たない
+├── loci.geojson         # 手動層。事物（シリーズが地図の上に持つもの）。MapLibre へ直接渡す
 ├── eras.json            # 時代区分（下記「時系列（era）モデル」）
 └── inbox/               # RSS 同期が排出する「未割当シリーズのスタブ」置き場
 ```
+
+シリーズと事物は 1 対多で、多の側（事物）が `seriesId` で一の側を指す（[ADR-0027](docs/adr/0027-series-and-loci.md)）。
+位置情報は二段階で持つ（[ADR-0026](docs/adr/0026-two-phase-location.md)）。
+第一段階では、シリーズが代表点 1 つか位置なしのどちらかを持ち、事物の geometry は Point だけである。
+第二段階（S9、完了条件の外）で事物に年範囲と精緻な図形を足す。
+
+`series.json` と `loci.geojson` の現物はまだ無く、#109 が `series.geojson` から割る。
+それまでは `series.geojson` が 1 シリーズ = 1 Feature の形で残っている。
 
 **episodes.json**（RSS 由来、guid キー）:
 
@@ -83,38 +99,56 @@ data/
 }
 ```
 
-**series.geojson**（GeoJSON FeatureCollection。MapLibre へ直接渡す）:
+**series.json**（シリーズの属性。`eras.json` と同じ素の配列で、GeoJSON ではない）:
 
-ファイル全体が 1 つの FeatureCollection で、シリーズ 1 件が `features` の 1 要素に当たる。
+```jsonc
+[
+  {
+    "id": "sparta",
+    "title": "スパルタ",
+    "kind": "place",                              // 描画の濃淡の分岐キー
+    "anchor": "sparta-city",                      // 代表点の事物 id。位置なしなら "unlocated"（定数 ANCHOR_UNLOCATED）
+    "timeRange": { "start": -900, "end": -200 },  // 両端を含む閉区間。負値 = BC
+    "summary": "",         // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
+    "region": "ギリシア",
+    "season": 2,           // 割当キー。itunes:season の値（ADR-0018）
+    "links": [],           // シリーズ単位の配信ページは存在しないので、何を指すかは未決定
+    "tags": ["古代", "ギリシア"]
+  },
+  {
+    "id": "sekai-sandai-shukyo",
+    "title": "世界三大宗教",
+    "kind": "concept",
+    "anchor": "unlocated",  // 代表点を 1 つ置くと嘘になるので地図に出さない。一覧パネルの別区画に出る（§4）
+    "timeRange": { "start": -560, "end": 632 },
+    "summary": "",
+    "region": "ユーラシア",
+    "season": 7,
+    "links": [],
+    "tags": ["宗教", "概念史"]
+  }
+  // 以下、1 シリーズ = 1 要素が並ぶ
+]
+```
+
+**loci.geojson**（事物。GeoJSON FeatureCollection で、MapLibre の source へそのまま渡す）:
 
 ```jsonc
 {
-  "type": "FeatureCollection",  // ファイル全体を包む器。MapLibre のソースへそのまま渡す
+  "type": "FeatureCollection",
   "features": [
     {
-      "type": "Feature",  // GeoJSON が geometry と properties の対に要求する固定値
-      "geometry": { "type": "Point", "coordinates": [22.43, 37.07] },
-      // Point / MultiPoint / Polygon / MultiPolygon / LineString をシリーズの性質で使い分ける
-      // 例: 都市国家=Point、帝国や文明圏=Polygon（飛び地があれば MultiPolygon）、遠征や航海=LineString、場所が散る概念史=MultiPoint
-      "properties": {
-        "id": "sparta",
-        "title": "スパルタ",
-        "kind": "place",                              // 描画スタイルの分岐キー
-        "timeRange": { "start": -900, "end": -200 },  // 両端を含む閉区間。負値 = BC
-        "summary": "",         // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
-        "region": "ギリシア",
-        "season": 2,           // 割当キー。itunes:season の値（ADR-0018）
-        "links": [],           // シリーズ単位の配信ページは存在しないので、何を指すかは未決定
-        "tags": ["古代", "ギリシア"]
-      }
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [22.43, 37.07] },  // 第一段階は Point だけ
+      "properties": { "id": "sparta-city", "seriesId": "sparta" }   // 鍵だけ。属性は series.json から引く（ADR-0024）
     }
-    // 以下、1 シリーズ = 1 Feature が並ぶ
+    // 位置なしのシリーズはここに現れない
   ]
 }
 ```
 
 `season` と `title` の対応は**フィードが正**で、実測の一覧は #13 のコメントが持つ（2026-08-23 時点で 1〜66 が欠番なく並ぶ）。
-上の `2` はスパルタで、この一覧から引いた値である。
+上の `2` はスパルタ、`7` は世界三大宗教で、この一覧から引いた値である。
 
 - **1 シリーズ = `itunes:season` の 1 値**。
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
@@ -122,30 +156,30 @@ data/
   シリーズ側もエピソード側も `season` を持ち、シリーズ側は必須、エピソード側は持たない回があるので nullable
 - `id` はシリーズ名のローマ字を kebab-case にした手書きの値で、フィードから機械で決まる値ではない。
   同じ値を二つのシリーズが要求したら、どちらかを変える。
-  重複は `seriesCollectionSchema` が落とし、変えた後に残る古い参照は `references.ts` が落とすので、黙って壊れることは無い
+  重複はスキーマが落とし、変えた後に残る古い参照（エピソードの `seriesId`・事物の `seriesId`）は `references.ts` が落とすので、黙って壊れることは無い
+- `anchor` は代表点の事物 id か、位置なしを表す定数 `ANCHOR_UNLOCATED` のどちらかで、null を使わない。
+  null は「まだ置いていない」と「置かないと決めた」を語らない（[ADR-0027](docs/adr/0027-series-and-loci.md)）。
+  `anchor` が指す事物は実在し、その `seriesId` がそのシリーズを指し、geometry が Point でなければならない。
+  位置なしのシリーズは事物を 1 件も持たない。
+  どちらも `references.ts` が見る
+- 事物の `id` は事物間で一意で、`ANCHOR_UNLOCATED` と同じ綴りを名乗れない
+- 代表点に正確さを求めない。
+  活動の中心地か舞台の代表地点を 1 点置く。
+  代表点を 1 つ置くと嘘になるシリーズ（お金の歴史のように、同じ仕組みが各地で独立に立ち上がるもの）は位置なしにする（[ADR-0026](docs/adr/0026-two-phase-location.md)）
 - `links` は `{ platform, url }` の配列で、シリーズもエピソードも同じ形。
   `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む。
   エピソード側は RSS の `<link>` を入れる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）。
   配信側にシリーズ単位のページが無いので、**シリーズ側が何を指すかは未決定**である（#13 の実測）
 - `kind` は `place`（場所が一意に決まる）と `concept`（決まらない）の 2 値（[ADR-0023](docs/adr/0023-kind-place-or-concept.md)）。
-  図形による分岐は持たない。
-  それは `geometry.type` が表し、MapLibre の `['geometry-type']` が直接読む
+  位置なしとは直交する。
+  `concept` でも代表点を置いて嘘にならないなら置いてよく、`place` でも `timeRange` の間に舞台が動くなら第二段階の事物で表す。
+  事物の properties には無いので、地図へ渡す形を組むときに `seriesId` から引いて写す（[ADR-0024](docs/adr/0024-map-feature-carries-key-only.md)）
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。
   この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける。
-  ファイル単体の検査に加えて、ファイルをまたぐ整合——`episodes.json` の `seriesId` が `series.geojson` の実在する id と season を指すか、`series.geojson` の `timeRange` が `eras.json` の era 空間と重なるか——も同じテストが見る（`web/src/lib/schema/references.ts`）
-- 人物伝（吉田松陰など）は活動の中心地を Point、生涯年代を timeRange とする
-- 概念史（お金の歴史・資本主義など）は「場所が一意でない」——主要な舞台を
-  MultiPoint か代表 Polygon で置き、`kind: "concept"` で控えめなスタイルにする
-
-**概念史の geometry は、舞台を地点で数えられるかで分ける。**
-数えられるなら MultiPoint を使う。
-「世界三大宗教」は開祖が三人いるので、話がブッダガヤ・エルサレム・メッカという特定の地点へ落ちる。
-数えられないなら代表 Polygon を使う。
-「お金の歴史」は同じ仕組みが各地で独立に立ち上がるので、地点を挙げると挙げた場所だけが舞台に見える。
-どちらの形でも `kind` は `concept` のままにする。
-「帝政ローマ」の版図と「お金の歴史」の代表範囲は同じ Polygon で書かれ、両者を隔てるのは `kind` だけなので、`place` を与えると控えめに描く手掛かりが消える。
+  ファイル単体の検査に加えて、ファイルをまたぐ整合——`episodes.json` の `seriesId` が実在する id と season を指すか、`series.json` の `anchor` が実在する事物を指すか、事物の `seriesId` が実在するシリーズを指すか、`timeRange` が `eras.json` の era 空間と重なるか——も同じテストが見る（`web/src/lib/schema/references.ts`）
+- 人物伝（吉田松陰など）は活動の中心地を代表点、生涯年代を `timeRange` とする
 
 ### 時系列（era）モデル
 
@@ -189,21 +223,20 @@ data/
 
 ### 配り方
 
-シリーズはビルド時に取り込み、エピソードは `public/` へ複製して実行時に取ってくる。
-初期表示に要るのは地図へ置く点だけで、エピソード一覧は詳細カードを開くまで要らないので、初期ロードへ載せる範囲をシリーズに限る。
+シリーズと事物はビルド時に取り込み、エピソードは `public/` へ複製して実行時に取ってくる。
+初期表示に要るのは地図へ置く点とシリーズの属性だけで、エピソード一覧は詳細カードを開くまで要らないので、初期ロードへ載せる範囲をその二つに限る。
 
 | ファイル | 件数 | バイト数 | 数字の出所 |
 |---|---|---|---|
-| `series.geojson` | 10（シード） | 5,436 | 現物の実測 |
-| `series.geojson` | 90（完了時） | 約 47 KB | 1 件 538 B からの外挿 |
+| `series.json` | 90（完了時） | 約 27 KB | 現行 `series.geojson` の properties 部分（1 件約 300 B）からの外挿 |
+| `loci.geojson` | 90（完了時） | 約 12 KB | Point の Feature 1 件約 130 B からの外挿 |
 | `episodes.json` | 754（2026-08-23 のフィード） | 約 327 KB（gzip 約 34 KB） | スキーマと件数からの見積り |
 | `episodes.json` | 1000 | 約 434 KB（gzip 約 45 KB） | 上を伸ばした値 |
 
-`episodes.json` の現物はまだ無いので、その 2 行は `episodeSchema` の欄から組んだ見積りである。
-シードの 1 件は 415 B（Point）から 1,046 B（MultiPolygon）まで散るので、538 B は図形の内訳込みの平均である。
-`summary` を 1 件 80 字ずつ埋めると `series.geojson` は 90 件で約 68 KB へ増える。
+`series.json` と `loci.geojson` の現物はまだ無く（#109）、`episodes.json` の 2 行も `episodeSchema` の欄から組んだ見積りである。
+`summary` を 1 件 80 字ずつ埋めると `series.json` は 90 件で約 48 KB へ増える。
 
-- **シリーズは Server Component が `node:fs` で読む**。
+- **シリーズと事物は Server Component が `node:fs` で読む**。
   `data/` はルート側にあって `web/tsconfig.json` の `include` の外で、`resolveJsonModule` が効くのは `.json` だけなので、`.geojson` を素の `import` では読めない。
   `fs` なら解決の設定が要らず、`web/tests/data.test.ts` と同じ読み口になる。
   static export では `next build` の中でしか走らないので、公開後にファイルを触る口は残らない
@@ -212,20 +245,23 @@ data/
   worker の複製（`web/package.json` の `sync-map-worker`）と同じ形で `predev` / `prebuild` へ繋ぐ
 - **fetch の URL には `BASE_PATH` を付ける**。
   GitHub Pages はリポジトリ名を挟んだ場所へ配信するので、`/data/episodes.json` は公開後に 404 になる
-- **どちらの読み込み口も `parseSeries` / `parseEpisodes` を通す**。
+- **どちらの読み込み口も `parseSeries` / `parseLoci` / `parseEpisodes` を通す**。
   `fs` で読んだ値も fetch した値も型を持たないので、検査を外すと `as` で型を名乗ることになる。
   ビルド時の検査（`web/tests/data.test.ts`）が見るのは `data/` の現物だけなので、複製し損ねた・404 の HTML を掴んだ、は実行時にしか映らない
 - `vitest.config.ts` に手当ては要らない。
   どちらの口も `fs` と `fetch` で読み、`.geojson` を import しない
 - §7 の「実行時 fetch を持たない」が指すのは RSS の取得で、自分で配った静的 JSON を引くことではない（#92 が文言を絞る）
 - 読み込み口の現物はまだ無い。
-  シリーズ側は #5（S3: kind ごとのレイヤでシリーズを描画する）、エピソード側は複製の手順ごと #6（S3: シリーズクリックで詳細カードを開く）が書く
+  シリーズと事物の側は #5（S3: シリーズを描画する）、エピソード側は複製の手順ごと #6（S3: シリーズクリックで詳細カードを開く）が書く
 
 ## 4. UI 構成
 
 - 全画面マップ + 下部に era スライダー（ラベルは era 名、位置は補間年を薄く表示）
 - 左に開閉パネル: 現在窓に表示中のシリーズ一覧。クリックで該当オブジェクトを
   選択（flyTo + ハイライト）。地図側の選択もパネルに同期（単一の selection state）
+- 位置なしのシリーズ（`anchor` が `ANCHOR_UNLOCATED`）は地図に出ない。
+  同じパネルの別区画に、地図と区別して並べる（[ADR-0026](docs/adr/0026-two-phase-location.md)）。
+  現在窓で絞るかどうかは S5 で決める（§8）
 - オブジェクトクリック → 詳細カード（summary・年代・エピソード一覧・Spotify リンク）
 - 状態管理は React の範囲で足りる想定（selection / era window / panel 開閉のみ）。
   外部ライブラリを足す前に本当に要るか問う
@@ -233,6 +269,11 @@ data/
 
 地図の画面のほかに、出典表記の置き場を二つ持つ。
 何を載せるかは ADR-0008 が持つ。
+
+公開サイトの外に、手元でだけ立つ管理画面を持つ（[ADR-0028](docs/adr/0028-local-only-admin.md)）。
+シリーズを選んで地図をクリックすると代表点が置かれ、`series.json` と `loci.geojson` へ書かれる。
+書く前にスキーマと参照の検査を通し、通らない値は書かない。
+実装の形と入口は #110 が決める。
 
 - **`/about`（このサイトについて）**: static export のページを1枚増やす。出典表記の全文はここに置く
 - **フッタ**: 番組公式への導線と出典表記へ常時到達できること。
@@ -283,13 +324,13 @@ data/
   - シリーズ内の回は `itunes:episode`。消費する画面が無いので episodes.json へは保存しない（ADR-0018）
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
-  2. series.geojson 全件の `season` から season → seriesId の索引を組み、新規エピソードの `itunes:season` で引いて seriesId 割当（ADR-0018）
+  2. series.json 全件の `season` から season → seriesId の索引を組み、新規エピソードの `itunes:season` で引いて seriesId 割当（ADR-0018）
   3. どのシリーズにも当たらないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
      （タイトル・guid・`itunes:season`・配信リンク。座標と年代は空欄=人間+Claude の補正対象）。
      タイトルの表記は揺れていて当てにならないので、そこからシリーズ名を推定した欄は持たない（ADR-0018）
   4. 結果サマリ（新規 n 件 / 割当 m 件 / 要レビュー k 件）を stdout へ
-- 運用: 当面は手動で `pnpm sync` → inbox に出た回を見て `series.geojson` へシリーズを足す → コミット。
-  手を入れる先は手動層の `series.geojson` だけで、`episodes.json` は毎回フィードから組み直すので編集しない（ADR-0005）。
+- 運用: 当面は手動で `pnpm sync` → inbox に出た回を見て `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット。
+  手を入れる先は手動層の `series.json` と `loci.geojson` だけで、`episodes.json` は毎回フィードから組み直すので編集しない（ADR-0005）。
   inbox が持つのはキュレーション済みのデータではなく、どのシリーズにも当たらなかった回の一覧である。
   軌道に乗ったら GitHub Actions の cron で sync + PR 自動作成に昇格（S8 以降の任意課題）
 - 静的サイトなので実行時 fetch はしない。同期は常にビルド前のデータ更新として行う
@@ -328,6 +369,7 @@ data/
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
 まだ存在しないもの: `data/episodes.json` と `data/inbox/`（#100 が同期を一度回して起こす）、
+`data/series.json` と `data/loci.geojson`（#109 が `series.geojson` から割る）、
 `VISION.md`（#41）。
 `data/` はアプリの外なので**ルート側**に置く。
 
@@ -342,7 +384,9 @@ RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを impo
 - **OpenHistoricalMap 連動を MVP に入れない**。S9 の任意課題として分離する（`ROADMAP.md`）
 - **番組の説明文・ロゴ・カバーアートを使わない**（ADR-0008 の帰結）。
   載せるのはシリーズ名とエピソードタイトルだけ
-- **ユーザ登録・コメント等の動的機能を持たない**。static export の前提（ADR-0001）から外れる
+- **公開サイトにユーザ登録・コメント等の動的機能を持たない**。static export の前提（ADR-0001）から外れる。
+  データの編集は手元の管理画面が担い、公開サイトの成果物に含まれない（[ADR-0028](docs/adr/0028-local-only-admin.md)）
+- **第一段階で Point 以外の図形を持たない**。版図や経路の精緻な図形は第二段階（S9）で、完了条件の外（[ADR-0026](docs/adr/0026-two-phase-location.md)）
 - **シリーズ間の明示的な関連リンク（`related` のような属性）を持たない**（§4）
 - **実行時 fetch を持たない**。同期は常にビルド前（§5）
 
@@ -354,6 +398,12 @@ RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを impo
   `seriesId` は単数 nullable で、割当キーが season なので、season を持つ回は必ず一つのシリーズへ入る（ADR-0018）。
   跨る回をどちらのシリーズの下に見せるかは S6 の精緻化のときに突き合わせる
 - モバイルでの振る舞い（全画面マップ + 下部スライダー + 左パネル）の範囲は S8 の精緻化で決める
+- 位置なしのシリーズを一覧パネルの別区画に出すとき、現在窓で絞るか全件を常に出すか。
+  絞れば地図と同じ時代の話だけが並び、絞らなければ地図に出ないものの一覧として安定する。
+  S5 を割るときに決める
+- 第二段階で精緻な事物が入ったシリーズの代表点をどうするか。
+  独立に持ち続けるか、事物から導くか。
+  #111 に着手するときに決める（ADR-0026 の覆る条件）
 - `series.timeRange` が era 空間からはみ出しても、いまは赤くならない。
   検査は入っている（`web/src/lib/schema/references.ts` の `seriesOutsideEraSpace`）が、見るのは**重なるかどうかだけ**で、収まっているかは見ていない。
   era 空間の外へ伸びる `timeRange` を書けてしまうので、S4 を割るときに現在窓の幅と一緒に拾う
