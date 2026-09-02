@@ -27,9 +27,9 @@ S3 以降でテーマ描画・スライダー・パネルの同期が入ると�
 同じ条件で回すと片方の都合がもう片方へ漏れるので、操作を伴う E2E を足すときは project をもう一つ並べる。
 端末ごとの検証（スマホ幅など）はその project の `use` が持ち、共有の設定へは置かない。
 
-**綴りで担当を分ける。**
+**ファイル名で担当を分ける。**
 `.spec.ts` が Playwright、`.test.ts` が Vitest。
-どちらの既定も相手の綴りまで拾うので、両方の設定で絞ってある。
+どちらの既定も相手のファイル名まで拾うので、両方の設定で絞ってある。
 
 **Vitest はブラウザを立てない。**
 見るのは jsdom で足りるものだけで、L4 の機構のうち純関数（`violationsOf`・`resolveWithinRoot`）はこちらに残る。
@@ -61,7 +61,7 @@ S3 以降でテーマ描画・スライダー・パネルの同期が入ると�
 ## 帰結
 
 - **runner が二つになる。** 新しいテストを書くときの分かれ目は「ブラウザが要るか」の一点で、要るなら `*.spec.ts`、要らないなら `*.test.ts` に置く
-- Vitest の `include` は `*.test.*` だけ、Playwright の `testMatch` は `*.spec.ts` だけに絞ってある。どちらの既定も相手の綴りを拾うので、絞らないと同じファイルを二つの runner が走らせる
+- Vitest の `include` は `*.test.*` だけ、Playwright の `testMatch` は `*.spec.ts` だけに絞ってある。どちらの既定も相手のファイル名を拾うので、絞らないと同じファイルを二つの runner が走らせる
 - **`pnpm smoke` が project を名指すので、E2E の project を足してもスモークの範囲は動かない。** 二重に走らせないための工夫が後から要らない
 - viewport は project の `use` が持つ。判定は `page.viewportSize()` を読むので、`scripts/smoke.ts` は自分で寸法を決めない
 - `pnpm test` は Chromium を要求しなくなった。要求するのは `pnpm smoke` だけになる
