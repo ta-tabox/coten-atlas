@@ -142,7 +142,7 @@ data/
       "geometry": { "type": "Point", "coordinates": [22.43, 37.07] },  // 第一段階は Point だけ
       "properties": {
         "id": "sparta-city",       // 鍵。属性は series.json から引く（ADR-0024）
-        "seriesId": "sparta",
+        "seriesId": "sparta",      // シリーズへの参照。1 対多はこの欄が担う
         "timeRange": "series"      // 「シリーズの timeRange と同じ」の意（コードでは TIME_RANGE_OF_SERIES）。代表点は必ずこれで、第二段階の事物は年の閉区間を書く
       }
     }
@@ -161,6 +161,8 @@ data/
 - `id` はシリーズ名のローマ字を kebab-case にした手書きの値で、フィードから機械で決まる値ではない。
   同じ値を二つのシリーズが要求したら、どちらかを変える。
   重複はスキーマが落とし、変えた後に残る古い参照（エピソードの `seriesId`・事物の `seriesId`）は `references.ts` が落とすので、黙って壊れることは無い
+- シリーズと事物の紐づけは事物側の `seriesId` が担う（多の側が一の側を指す）。
+  `anchor` は紐づけではなく、そのシリーズの事物のうちどれが代表点かを示す印である
 - `anchor` は代表点の事物 id か、位置なしを表す `"unlocated"` のどちらかで、null を使わない。
   null は「まだ置いていない」と「置かないと決めた」を語らない（[ADR-0027](docs/adr/0027-series-and-loci.md)）。
   `anchor` が指す事物は実在し、その `seriesId` がそのシリーズを指し、geometry が Point でなければならない。
@@ -182,9 +184,8 @@ data/
   エピソード側は RSS の `<link>` を入れる（[ADR-0006](docs/adr/0006-rss-link-as-episode-url.md)）。
   配信側にシリーズ単位のページが無いので、**シリーズ側が何を指すかは未決定**である（#13 の実測）
 - `kind` は `place`（場所が一意に決まる）と `concept`（決まらない）の 2 値（[ADR-0023](docs/adr/0023-kind-place-or-concept.md)）。
-  位置なしとは直交する。
-  `concept` でも代表点を置いて嘘にならないなら置いてよく、`place` でも `timeRange` の間に舞台が動くなら第二段階の事物で表す。
-  事物の properties には無いので、地図へ渡す形を組むときに `seriesId` から引いて写す（[ADR-0024](docs/adr/0024-map-feature-carries-key-only.md)）
+  `anchor` とは別の欄で、`concept` でも代表点を置いてよい。
+  シリーズの属性なので事物には持たせず、地図の濃淡に要る分は地図へ渡す形を組むときに `seriesId` で引いて写す（[ADR-0024](docs/adr/0024-map-feature-carries-key-only.md)）
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。
