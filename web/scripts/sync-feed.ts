@@ -2,7 +2,7 @@
  * 公式 RSS を引いて `data/episodes.json` を書き直し、シリーズへ割り当てられなかった新着を `data/inbox/` へ出す。
  *
  * ここが持つのは同期の段取りだけである。
- * フィードの読み方は `src/lib/feed/parse.ts`、割当の規則は同 `assign.ts`、JSON の読み書きは `json-file.ts` が持つ。
+ * フィードの読み方は `src/lib/feed/parse.ts`、割当の規則は同 `assign.ts`、inbox の読み書きは `inbox.ts`、JSON の読み書きは `json-file.ts` が持つ。
  * どのファイルをどの順で読み書きするかを決めるのがこの層の仕事で、その順序は main を上から読めば追える。
  *
  * `episodes.json` はフィードから毎回組み直す。
@@ -20,9 +20,11 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { writeInbox } from "@scripts/inbox";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
 import { assignSeriesId } from "@/lib/feed/assign";
-import { type FeedItem, parseFeed } from "@/lib/feed/parse";
+import type { FeedItem } from "@/lib/feed/item";
+import { parseFeed } from "@/lib/feed/parse";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
 import { parseSeries, type SeriesCollection } from "@/lib/schema/series";
 
@@ -51,17 +53,6 @@ const DATA_DIR = path.resolve(process.cwd(), "../data");
 const EPISODES_FILE = path.join(DATA_DIR, "episodes.json");
 const SERIES_FILE = path.join(DATA_DIR, "series.geojson");
 const INBOX_DIR = path.join(DATA_DIR, "inbox");
-
-/**
- * 人間がシリーズを決めるために要る欄だけを持つ、inbox の 1 件。
- * 座標と年代は `series.geojson` を書くときに人間が埋めるので、ここには持たせない。
- */
-type InboxEntry = {
-  guid: string;
-  title: string;
-  season: number | null;
-  link: string;
-};
 
 /** フィードの 1 件と、それに決まったシリーズ。 */
 type Assignment = {
@@ -144,16 +135,6 @@ function toEpisode(item: FeedItem, seriesId: string | null): Episode {
   };
 }
 
-/** フィードの 1 件を inbox の 1 件へ直す。 */
-function toInboxEntry(item: FeedItem): InboxEntry {
-  return {
-    guid: item.guid,
-    title: item.title,
-    season: item.season,
-    link: item.link,
-  };
-}
-
 /**
  * フィードから消えた回を報せる。
  *
@@ -199,52 +180,6 @@ function warnLostAssignments(
 }
 
 /**
- * 同じ日に既に出してある inbox のエントリを読む。
- * ファイルが無ければ空。
- *
- * 期待した形でなければ例外を投げて同期ごと止める。
- * 人間がまだ判定していないエントリの置き場なので、読めないからと空で上書きすると、そこに並んでいたエントリが消える。
- */
-function readInbox(file: string): InboxEntry[] {
-  if (!fs.existsSync(file)) {
-    return [];
-  }
-
-  const existing = readJsonFile(file) as { episodes?: unknown };
-
-  if (!Array.isArray(existing.episodes)) {
-    throw new Error(`inbox の中身を読めない: ${file}`);
-  }
-
-  return existing.episodes as InboxEntry[];
-}
-
-/**
- * その日の inbox へ未割当の回を足す。
- *
- * 既にある同じ日の一覧へ継ぎ足す。
- * 1 日に 2 度走らせたとき、丸ごと書き換えると 1 度目に出した未判定の回が消える。
- *
- * 人間が解決した回をここから消すことはしない。
- * これは日付ごとの記録であって未割当の現在値ではないので、いま何が未割当かは episodes.json の seriesId が持つ。
- */
-function writeInbox(
-  directory: string,
-  syncedAt: string,
-  unassigned: Assignment[],
-): void {
-  const file = path.join(directory, `${syncedAt.slice(0, 10)}.json`);
-  const existing = readInbox(file);
-  const known = new Set(existing.map((entry) => entry.guid));
-  const added = unassigned
-    .map(({ item }) => toInboxEntry(item))
-    .filter((entry) => !known.has(entry.guid));
-
-  writeJsonFile(file, { syncedAt, episodes: [...existing, ...added] });
-  console.log(`inbox: ${path.relative(process.cwd(), file)}`);
-}
-
-/**
  * `data/` を指せていることを確かめる。
  *
  * 作業ディレクトリが違うと、書き出しは黙って別の場所へ `data/` を作り、755 件をそこへ置く。
@@ -287,7 +222,13 @@ async function main(): Promise<void> {
   // inbox を先に書く。
   // episodes.json を先に書くと、その後で落ちたときに guid だけが既知になり、未判定のまま二度と出てこない回ができる。
   if (unassigned.length > 0) {
-    writeInbox(INBOX_DIR, syncedAt, unassigned);
+    const file = writeInbox(
+      INBOX_DIR,
+      syncedAt,
+      unassigned.map(({ item }) => item),
+    );
+
+    console.log(`inbox: ${path.relative(process.cwd(), file)}`);
   }
 
   writeJsonFile(
