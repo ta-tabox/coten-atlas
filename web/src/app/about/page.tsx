@@ -89,7 +89,8 @@ export default function AboutPage() {
         <p className="mt-3.5">
           <code className="font-mono text-[0.85em]">data/</code>{" "}
           のキュレーション層（
-          <code className="font-mono text-[0.85em]">series.geojson</code>・
+          <code className="font-mono text-[0.85em]">series.json</code>・
+          <code className="font-mono text-[0.85em]">loci.geojson</code>・
           <code className="font-mono text-[0.85em]">eras.json</code>）は CC BY
           4.0 で、再利用には帰属表示が要る。
         </p>

@@ -51,7 +51,7 @@ describe("ライセンス", () => {
 
   it("キュレーション層は CC BY 4.0 と書く", () => {
     expect(renderedText()).toContain(
-      "キュレーション層（series.geojson・eras.json）は CC BY 4.0",
+      "キュレーション層（series.json・loci.geojson・eras.json）は CC BY 4.0",
     );
   });
 

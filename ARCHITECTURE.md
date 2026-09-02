@@ -162,9 +162,10 @@ data/
   `anchor` は紐づけではなく、そのシリーズの事物のうちどれが代表点かを示す印である
 - `anchor` は代表点の事物 id か、位置なしを表す `"unlocated"` のどちらかで、null を使わない。
   null は「まだ置いていない」と「置かないと決めた」を語らない（[ADR-0027](docs/adr/0027-series-and-loci.md)）。
-  `anchor` が指す事物は実在し、その `seriesId` がそのシリーズを指し、geometry が Point でなければならない。
+  `anchor` が指す事物は実在し、その `seriesId` がそのシリーズを指さなければならない。
   位置なしのシリーズは事物を 1 件も持たない。
   どちらも `references.ts` が見る。
+  代表点の geometry が Point であることは、第一段階では `loci.geojson` のスキーマが Point しか通さないので `references.ts` の側では見ない。
   位置なしは段階を問わず代表点を持たない（[ADR-0026](docs/adr/0026-two-phase-location.md)）
 - 事物の `id` は事物間で一意。
   `"unlocated"` は位置なしの印に使うので、事物の `id` には使えない
@@ -373,7 +374,6 @@ data/
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
 まだ存在しないもの: `data/episodes.json` と `data/inbox/`（#100 が同期を一度回して起こす）、
-`data/series.json` と `data/loci.geojson`（#109 が `series.geojson` から割る）、
 `VISION.md`（#41）。
 `data/` はアプリの外なので**ルート側**に置く。
 
