@@ -23,8 +23,8 @@ import path from "node:path";
 import { writeInbox } from "@scripts/inbox";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
 import { assignSeriesId } from "@/lib/feed/assign";
-import type { FeedItem } from "@/lib/feed/item";
 import { parseFeed } from "@/lib/feed/parse";
+import type { FeedItem } from "@/lib/feed/schema";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
 import { parseSeries, type SeriesCollection } from "@/lib/schema/series";
 

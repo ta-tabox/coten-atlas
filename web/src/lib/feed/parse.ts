@@ -6,14 +6,14 @@
  *
  * ここが引き受けるのは XML の癖を均すところまでである。
  * `#text` と素の文字列の差、属性の在り処、要素の欠落を落とし込んで、全欄が文字列（か欠落）の記録へ均す。
- * 何が必須で何をどう変換するかは `item.ts` のスキーマが持つ。
+ * 値を信用してよいかの判定は持たないので、このファイルは zod を引かない。
+ * 何が必須で何をどう変換するかは `schema.ts` が持つ。
  *
  * 入口は parseFeed。
  */
 
 import { XMLParser } from "fast-xml-parser";
-import * as z from "zod";
-import { type FeedItem, feedItemSchema } from "@/lib/feed/item";
+import { type FeedItem, parseFeedItem } from "@/lib/feed/schema";
 
 /**
  * XML から取り出したままの 1 件。
@@ -82,20 +82,13 @@ function itemsOf(document: unknown): Record<string, unknown>[] {
 }
 
 /**
- * `item` 1 件をスキーマに掛けて FeedItem にする。
- * 合わなければ、何件目のどの回かと、合わない欄を全部添えて投げる。
+ * `item` 1 件を均して、スキーマへ渡す。
+ * 均すところまでがこの層の仕事で、可否の判定は `schema.ts` が持つ。
  */
 function toFeedItem(item: Record<string, unknown>, index: number): FeedItem {
   const raw = toRawFeedItem(item);
-  const parsed = feedItemSchema.safeParse(raw);
 
-  if (!parsed.success) {
-    throw new Error(
-      `${labelOf(raw, index)} がフィードの形に合わない\n${z.prettifyError(parsed.error)}`,
-    );
-  }
-
-  return parsed.data;
+  return parseFeedItem(raw, labelOf(raw, index));
 }
 
 /**

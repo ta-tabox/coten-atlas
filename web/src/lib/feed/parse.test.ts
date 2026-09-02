@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { EMPTY_FEED_XML, FEED_XML } from "@/lib/feed/__fixtures__/feed";
-import type { FeedItem } from "@/lib/feed/item";
 import { parseFeed } from "@/lib/feed/parse";
+import type { FeedItem } from "@/lib/feed/schema";
 
 /** フィクスチャの中から題名の書き出しで 1 件を選ぶ。 */
 function itemStartingWith(items: FeedItem[], prefix: string): FeedItem {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { assignSeriesId } from "@/lib/feed/assign";
-import type { FeedItem } from "@/lib/feed/item";
+import type { FeedItem } from "@/lib/feed/schema";
 import type { Series, SeriesCollection } from "@/lib/schema/series";
 
 /** 渡したシリーズだけを持つ series.geojson 相当。 */

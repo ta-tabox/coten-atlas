@@ -14,7 +14,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
-import type { FeedItem } from "@/lib/feed/item";
+import type { FeedItem } from "@/lib/feed/schema";
 import { type InboxEntry, parseInbox } from "@/lib/schema/inbox";
 
 /** フィードの 1 件を inbox の 1 件へ直す。 */
