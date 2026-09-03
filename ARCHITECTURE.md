@@ -373,8 +373,7 @@ data/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
-まだ存在しないもの: `data/episodes.json` と `data/inbox/`（#100 が同期を一度回して起こす）、
-`VISION.md`（#41）。
+まだ存在しないもの: `VISION.md`（#41）。
 `data/` はアプリの外なので**ルート側**に置く。
 
 `web/scripts/` はこれと別枠になる。`tsconfig.json` の `paths` も vitest の alias も `web/` の中で
