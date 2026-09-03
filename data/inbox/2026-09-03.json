@@ -1,0 +1,4091 @@
+{
+  "syncedAt": "2026-09-03T12:40:26.326Z",
+  "episodes": [
+    {
+      "guid": "5d85b4e4-ec6a-4502-b075-36b7408d673b",
+      "title": "【番外編＃144】まっすぐ！バングラデシュの教育現場より②（学校建設への道）　ゲスト：エクマットラ代表・渡辺大樹氏",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/144-e3l45dq"
+    },
+    {
+      "guid": "6e3e3692-c762-46c2-8049-def8577e2548",
+      "title": "【番外編＃143】まっすぐ！バングラデシュの教育現場より①（ダッカ路上の現実）　ゲスト：エクマットラ代表・渡辺大樹氏",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/143-e3l451o"
+    },
+    {
+      "guid": "2e112db4-0ffa-46a0-a4ae-8f248a09791a",
+      "title": "【65-11】女子医学生にこそスパルタ教育！海を越えて続く女医の系譜【COTEN RADIOショート エリザベス・ブラックウェル編11】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-11COTEN-RADIO-11-e3j1ag2"
+    },
+    {
+      "guid": "57497203-7e76-468c-91da-731fef59ecf8",
+      "title": "【65-10】なければ作ろう！私たちで！女性による女性のための病院誕生【COTEN RADIOショート エリザベス・ブラックウェル編10】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-10COTEN-RADIO-10-e3j1af7"
+    },
+    {
+      "guid": "381bb810-cf66-4b97-be0e-e8c73bf2233d",
+      "title": "【65-9】過酷すぎた医者修行 〜隻眼の新米女医が掴むプロフェッショナリズム〜【COTEN RADIOショート エリザベス・ブラックウェル編9】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-9-COTEN-RADIO-9-e3j1aea"
+    },
+    {
+      "guid": "bda33067-cb8b-4da2-ad20-24d7fc37922d",
+      "title": "【65-8】私は学生！だから学ばせて！孤高に立つエリザベスの主張【COTEN RADIOショート エリザベス・ブラックウェル編8】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-8COTEN-RADIO-8-e3j1adh"
+    },
+    {
+      "guid": "a2d6a79e-d870-4a2c-9cd6-590ff2f9643c",
+      "title": "【65-7】本気か茶番か？半信半疑な入学許可 〜招かれざる女子医学生の登校〜【COTEN RADIOショート エリザベス・ブラックウェル編7】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-7-COTEN-RADIO-7-e3j1acm"
+    },
+    {
+      "guid": "f35c8de5-df67-4027-8b92-38705192ac8c",
+      "title": "【65-6】男は敵か？それとも仲間か？ジェンダーを揺さぶるマーガレット・フラー思想【COTEN RADIOショート エリザベス・ブラックウェル編6】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-6COTEN-RADIO-6-e3j1abs"
+    },
+    {
+      "guid": "ce55f281-1bbe-4b8f-90e3-cc2831123151",
+      "title": "【特別編】いま未来と向き合おう！COTEN Co-Lab ／ コンソーシアム へのご案内　聴き手：篠田真貴子さん",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/COTEN-Co-Lab-e3ij23i"
+    },
+    {
+      "guid": "395d2d9b-ba04-46c6-8284-57f312f89cf4",
+      "title": "【65-5】医者なんてムリ！それでも捨てきれぬ禁忌の進路【COTEN RADIOショート エリザベス・ブラックウェル編5】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-5COTEN-RADIO-5-e3j1abb"
+    },
+    {
+      "guid": "1cedd2e2-f1fd-472d-a280-1ef8ebd0e35e",
+      "title": "【65-4】認められたい！まだ何者でもなかったエリザベスの渇望【COTEN RADIOショート エリザベス・ブラックウェル編4】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-4COTEN-RADIO-4-e3j1aaa"
+    },
+    {
+      "guid": "527fb8e8-04b7-4347-b491-b83caac2dc77",
+      "title": "【65-3】価値規範が武器になる？真の女性らしさが拓く医業への活路【COTEN RADIOショート エリザベス・ブラックウェル編3】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-3COTEN-RADIO-3-e3j1a7k"
+    },
+    {
+      "guid": "3b13cb0e-e585-41a2-a4c6-b9c08843756a",
+      "title": "【65-2】Why? 女性が医者になれなかったわけ 〜近代医学の成立と捏造〜【COTEN RADIOショート エリザベス・ブラックウェル編2】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-2Why---COTEN-RADIO-2-e3j19sm"
+    },
+    {
+      "guid": "b8ee336a-deac-4fd2-bc0e-b134eaccdb0e",
+      "title": "【65-1】Dr.エリザベス・ブラックウェル 〜医学が阻んだ逆転ヒロイン〜【COTEN RADIOショート エリザベス・ブラックウェル編1】",
+      "season": 65,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65-1Dr--COTEN-RADIO-1-e3j1983"
+    },
+    {
+      "guid": "ce672623-395b-4e42-be9d-94e20fad34f6",
+      "title": "【番外編＃142】昭和OSの終焉とAI時代の志③（憤りから志へ）　ゲスト：尾原和啓｜IT評論家",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/142OSAI-IT-e3gui8q"
+    },
+    {
+      "guid": "7a667724-7cc9-4738-9977-8db3a34fee74",
+      "title": "【特別編】歴史の会社が本気でゲームを作ったら？ Libre／人文的アプローチカード のご案内",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/Libre-e3j6lqe"
+    },
+    {
+      "guid": "cb350757-1323-4da1-8d6a-d5be32fec3f0",
+      "title": "【番外編＃141】昭和OSの終焉とAI時代の志②（DX第2回戦の本質）　ゲスト：尾原和啓｜IT評論家",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/141OSAIDX2-IT-e3guho5"
+    },
+    {
+      "guid": "dd05dd75-8f61-4587-8b71-699f73c4c3d3",
+      "title": "【番外編＃140】昭和OSの終焉とAI時代の志①（4ステップで読む社会）　ゲスト：尾原和啓｜IT評論家",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/140OSAI4-IT-e3guhdl"
+    },
+    {
+      "guid": "d5e30781-16b6-463a-91dc-0e875906d191",
+      "title": "【番外編＃139】変える！コテンラジオ再構築プロジェクト 〜配信開始から8年経ち、思うこと〜",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/139-8-e3hjkpn"
+    },
+    {
+      "guid": "24c8b759-aad1-4cda-bcf7-8c1716491e2c",
+      "title": "【64-16】「もうここらでよか」西郷隆盛の最期 〜痛みが導く新たなはじまり〜【COTEN RADIO 西郷隆盛編16】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-16-COTEN-RADIO-16-e3enbvr"
+    },
+    {
+      "guid": "4fc60ba8-bae1-4e69-b0bd-2b30e20bd097",
+      "title": "【64-15】もう戻れぬ！帰る場所なき者たちの西南戦争 〜散りゆく志の終着点【COTEN RADIO 西郷隆盛編15】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-15-COTEN-RADIO-15-e3enan9"
+    },
+    {
+      "guid": "4ecb2eed-d721-4ca3-8036-46c941ece970",
+      "title": "【64-14】もうやっせん！止まらぬ薩摩士族の空回り 〜混乱の渦が飲み込む理性〜【COTEN RADIO 西郷隆盛編14】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-14-COTEN-RADIO-14-e3enadq"
+    },
+    {
+      "guid": "613417fe-1869-4497-bebc-8d8ef86e37b5",
+      "title": "【64-13】反乱だらけ！征韓論が暴く明治政府の弱点 〜試される統治の力〜【COTEN RADIO 西郷隆盛編13】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-13-COTEN-RADIO-13-e3elrse"
+    },
+    {
+      "guid": "8aaaf27e-31ee-4a32-a3c4-e474a76c8b71",
+      "title": "【64-12】辞表？西郷が？バグだらけの明治政府β版 〜征韓論をめぐる亀裂〜【COTEN RADIO 西郷隆盛編12】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-12-COTEN-RADIO-12-e3elrh9"
+    },
+    {
+      "guid": "b6cdb842-26c9-4af6-a580-39264f80c738",
+      "title": "【特別編】いま読んでほしい！山口周さんと深井龍之介の対談本『人文知は武器になる』発売中",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/ep-e3ibb3q"
+    },
+    {
+      "guid": "e776261b-6ca4-4f33-a652-45eafd87808f",
+      "title": "【64-11】平和？まだ早ぇよ！できたて明治政府の火消し仕事 〜続く戦後処理の重圧〜【COTEN RADIO 西郷隆盛編11】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-11-COTEN-RADIO-11-e3elr8r"
+    },
+    {
+      "guid": "5dd64b63-9c82-401d-a9c9-46ba04462838",
+      "title": "【64-10】政権リセット！幕府なき国の夜明け 〜揺れる京都の権力闘争〜【COTEN RADIO 西郷隆盛編10】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-10-COTEN-RADIO-10-e3elqhq"
+    },
+    {
+      "guid": "d228aead-c319-4110-b9d9-23b7d5891922",
+      "title": "【64-9】斬らずして斬る！侍たちの江戸無血開城 〜命をかけた一言ひとこと〜【COTEN RADIO 西郷隆盛編9】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-9-COTEN-RADIO-9-e3elobk"
+    },
+    {
+      "guid": "24fd55fa-db24-42e5-88c8-c70b9fbaff87",
+      "title": "【64-8】将軍こそが朝敵だ！戊辰戦争勃発 〜覚悟の差が焦がす京の街〜【COTEN RADIO 西郷隆盛編8】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-8-COTEN-RADIO-8-e3ek7e2"
+    },
+    {
+      "guid": "00dd6be4-d083-41cc-84d0-2ab357b293ef",
+      "title": "【64-7】俺は裏を読む！じゃあ俺は裏の裏！大政奉還の裏側 〜将軍との頭脳戦〜【COTEN RADIO 西郷隆盛編7】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-7-COTEN-RADIO-7-e3e8cpg"
+    },
+    {
+      "guid": "996f4d33-8186-4bd7-88cb-97c65acb4566",
+      "title": "【64-6】“戦い”から“対話”へ！幕臣 勝海舟との対峙 〜命懸けの和平交渉〜【COTEN RADIO 西郷隆盛編6】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-6--COTEN-RADIO-6-e3e8cgb"
+    },
+    {
+      "guid": "945d8f27-2a8d-4a5e-b012-4fb062651beb",
+      "title": "【64-5】おめえの出番だぞ 西郷！呼び戻された司令官 〜薩摩リカバリー作戦〜【COTEN RADIO 西郷隆盛編5】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-5--COTEN-RADIO-5-e3e8cci"
+    },
+    {
+      "guid": "c35ba201-8c32-45b1-8ea2-f95ddbe92587",
+      "title": "【64-4】生意気な！島流しだ！やりすぎ志士の転落 〜絶望をかき消す美ら海〜【COTEN RADIO 西郷隆盛編4】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-4-COTEN-RADIO-4-e3e8bbo"
+    },
+    {
+      "guid": "c34cd49d-171a-4029-9b9e-d94e469878b7",
+      "title": "【64-3】この殿がヤバい！島津斉彬が描く未来絵図 〜磨かれる薩摩の石ころ達〜【COTEN RADIO 西郷隆盛編3】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-3-COTEN-RADIO-3-e3e8b78"
+    },
+    {
+      "guid": "62c7bcca-b543-4188-a089-cdffb3b1c393",
+      "title": "【64-2】引くなよ！絶対引くなよ！傷だらけの西郷少年 〜薩摩独自の郷中教育〜【COTEN RADIO 西郷隆盛編2】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-2-COTEN-RADIO-2-e3e8b0f"
+    },
+    {
+      "guid": "64fcfe4a-a710-46b5-b060-64c9baf47a55",
+      "title": "【64-1】あんたが大将！西郷隆盛ものがたり 〜腐りに腐った世にチェスト〜【COTEN RADIO 西郷隆盛編1】",
+      "season": 64,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64-1-COTEN-RADIO-1-e3e8aqn"
+    },
+    {
+      "guid": "36c39de9-da8e-48b0-af7a-607df09c45f8",
+      "title": "【番外編＃138】首長経験者が見る政治の世界③（無所属という選択） ゲスト：前 四條畷市長・東修平氏",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/138-e3fhbhb"
+    },
+    {
+      "guid": "16452302-3322-4b0d-8627-20d06359b296",
+      "title": "【番外編＃137】首長経験者が見る政治の世界②（制度と構造の問題） ゲスト：前 四條畷市長・東修平氏",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/137-e3fhbem"
+    },
+    {
+      "guid": "68d397e6-dcc1-4785-99e6-cf3b3fe43a5c",
+      "title": "【番外編＃136】首長経験者が見る政治の世界①（政治停滞の理由） ゲスト：前 四條畷市長・東修平氏",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/136-e3fhbb8"
+    },
+    {
+      "guid": "603eeb27-62f1-40e3-b9b9-ade90518e7e9",
+      "title": "急がば回れ！会社の危機に生きた対話と文学　ゲスト：丸井グループ 代表取締役社長 代表執行役員 CEO 青井浩 氏",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/CEO-e3fhaqu"
+    },
+    {
+      "guid": "17223f9b-657a-48dd-beb0-b4933eac8b7a",
+      "title": "【63-9】君たちはどう生きるか？叙事詩が投げかける現代への宿題【COTEN RADIOショート ギルガメシュ編9】",
+      "season": 63,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/63-9COTEN-RADIO-9-e3dkmhq"
+    },
+    {
+      "guid": "c8d4386d-04e5-4de1-9e24-ddf3f996d100",
+      "title": "【特別編】“好き”が経済を動かす？コテンカードとみんなの愛　ゲスト：丸井グループ 代表取締役社長 代表執行役員　CEO　青井浩 氏",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/CEO-e3fa2e1"
+    },
+    {
+      "guid": "c3903380-71f3-415f-ad4a-bc2934708808",
+      "title": "【63-8】不死は目の前！神々が課した攻略不可ステージ 〜蛇が呑み込む大きな夢〜【COTEN RADIOショート ギルガメシュ編8】",
+      "season": 63,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/63-8-COTEN-RADIO-8-e3dkmdp"
+    },
+    {
+      "guid": "8b25e627-6e68-46cf-a23a-ee6396502714",
+      "title": "【63-7】夜の孤独を打ち払え！ギルガメシュのぼっち旅 〜永遠の不死を求めて〜【COTEN RADIOショート ギルガメシュ編7】",
+      "season": 63,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/63-7-COTEN-RADIO-7-e3dkm85"
+    },
+    {
+      "guid": "79c169f2-dc4e-44be-868e-d5b13226a61f",
+      "title": "【告知】アニュアルレポート2025の販売を開始します",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/2025-e3evvrd"
+    },
+    {
+      "guid": "01c70a5a-1489-42b5-b2d1-c97050a4f6ec",
+      "title": "【63-6】「忘れないでね僕のことを」ふたりを分かつ神々の宣告 〜君がくれたもの【COTEN RADIOショート ギルガメシュ編6】",
+      "season": 63,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/63-6-COTEN-RADIO-6-e3dklv0"
+    },
+    {
+      "guid": "291a2791-8144-406d-b72e-b57509971d32",
+      "title": "【63-5】だが断る！逆プロポーズぶった斬り事件 〜怒れる女神イシュタルの報復〜【COTEN RADIOショート ギルガメシュ編5】",
+      "season": 63,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/63-5-COTEN-RADIO-5-e3dkgf1"
+    },
+    {
+      "guid": "00d6f8ba-4962-4e90-9dfb-d0263925a4be",
+      "title": "【63-4】森に潜む恐怖！怪物フンババ討伐クエスト 〜エンキドゥとの二人三脚〜【COTEN RADIOショート ギルガメシュ編4】",
+      "season": 63,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/63-4-COTEN-RADIO-4-e3dkg93"
+    },
+    {
+      "guid": "65713e0f-1456-4162-93db-d7f83400f703",
+      "title": "【63-3】やれんのか！暴君ギルガメシュ vs 野人エンキドゥ 〜世紀のガチンコ決戦〜【COTEN RADIOショート ギルガメシュ編3】",
+      "season": 63,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/63-3-vs--COTEN-RADIO-3-e3dkfvf"
+    },
+    {
+      "guid": "1f9a70da-ec5d-4b7d-9799-bb0e782c96ef",
+      "title": "【63-2】世界最古の神話！メソポタミアと神々の誕生 〜混沌からの天地創造〜【COTEN RADIOショート ギルガメシュ編2】",
+      "season": 63,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/63-2-COTEN-RADIO-2-e3dkfo9"
+    },
+    {
+      "guid": "568110f4-1612-4813-be2b-3bef29602a63",
+      "title": "【63-1】その名は不滅！ギルガメシュ王物語 〜永遠を求めた人間の魂〜【COTEN RADIOショート ギルガメシュ編1】",
+      "season": 63,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/63-1-COTEN-RADIO-1-e3dkfdh"
+    },
+    {
+      "guid": "3af1e01f-a97f-4125-9376-1fcba3d3c9ee",
+      "title": "【番外編＃135】仏教のこと、龍源さんに聞こう⑤｜行いが道をひらく（六波羅蜜）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/135-e3cnktb"
+    },
+    {
+      "guid": "e22dc690-cb4c-491e-9020-f7ede55169b3",
+      "title": "【番外編＃134】仏教のこと、龍源さんに聞こう④｜豊かさがひらく実践の道（余剰・三句）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/134-e3cnkau"
+    },
+    {
+      "guid": "50d63679-a678-4f87-a15e-5df5d8c69c16",
+      "title": "【番外編＃133】仏教のこと、龍源さんに聞こう③｜世界は心に映っている（唯識）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/133-e3cnjgf"
+    },
+    {
+      "guid": "f6081b23-0b12-4a58-b168-1538ed9373c8",
+      "title": "【番外編＃132】仏教のこと、龍源さんに聞こう②｜私は流れでできている（無我）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/132-e3cnir7"
+    },
+    {
+      "guid": "05942559-6a05-456b-be0b-8c3cf5cae542",
+      "title": "【番外編＃131】仏教のこと、龍源さんに聞こう①｜仏教の輪郭をつかむ（全体像）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/131-e3cnikr"
+    },
+    {
+      "guid": "e641fe11-e782-45a0-a034-fe345b6bdf9a",
+      "title": "【番外編＃130】推し活の世界 ― 変化と熱狂が紡ぐハロプロ界隈　ゲスト：LINEヤフー会長 川邊健太郎氏",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/130---LINE-e3c8fhl"
+    },
+    {
+      "guid": "2654c653-c5a0-41f1-8c61-acbec387a5b4",
+      "title": "【62-15】何が変わった？リンカン亡き後のアメリカ 〜終わりなき差別との闘い〜【COTEN RADIO リンカン編15】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-15-COTEN-RADIO-15-e3a8jm6"
+    },
+    {
+      "guid": "ce3d9f23-ef34-4e4e-be10-d89acfe12ed9",
+      "title": "【62-14】リンカンが撃たれた！ 自由を貫く大統領の最期 〜南北戦争の終わりに〜【COTEN RADIO リンカン編14】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-14--COTEN-RADIO-14-e3a8j36"
+    },
+    {
+      "guid": "b66954e6-ffbb-4d5c-afdb-29fadf9e78fa",
+      "title": "【62-13】自由よ！平等よ！奴隷解放宣言とゲティスバーグ演説 〜犠牲者に捧ぐ愛国心〜【COTEN RADIO リンカン編13】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-13-COTEN-RADIO-13-e3a8iui"
+    },
+    {
+      "guid": "348d56c7-d344-4205-a512-03e24f39bf26",
+      "title": "【62-12】やったれ新大統領！嵐を呼ぶ苛烈な南北戦争 〜奴隷制を凌ぐ連邦維持の誓い〜【COTEN RADIO リンカン編12】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-12-COTEN-RADIO-12-e3a8iha"
+    },
+    {
+      "guid": "86b6e6bf-f7fa-4c29-9b95-e4867d631761",
+      "title": "【62-11】黙れダグラス！無名弁護士リンカンの挑戦状 〜全米を分つ奴隷制拡大論争〜【COTEN RADIO リンカン編11】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-11-COTEN-RADIO-11-e3a8hu4"
+    },
+    {
+      "guid": "20f7dadc-61ef-4fc5-b084-43ec966f24b6",
+      "title": "【62-10】ダメなもんはダメ！奴隷制をめぐる路線対立の激化 〜共和党誕生に潜む抗争劇〜【COTEN RADIO リンカン編10】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-10-COTEN-RADIO-10-e3a8hpf"
+    },
+    {
+      "guid": "b7a3fb76-6d84-412f-8ae2-8720f82cf449",
+      "title": "【62-9】労働の誇りを胸に！駆け出し政治家リンカンがゆく 〜きらきら汗が叶える自由〜【COTEN RADIO リンカン編9】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-9-COTEN-RADIO-9-e3a8hkg"
+    },
+    {
+      "guid": "1ec7c33e-3e6b-4e5f-ad0f-8c8330046db4",
+      "title": "【62-8】すくすく成長！若きリンカンが見た奴隷の世界 〜プチ政治家としての芽生え〜【COTEN RADIO リンカン編8】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-8-COTEN-RADIO-8-e3a8he1"
+    },
+    {
+      "guid": "c317d187-a576-478e-ad3d-d09a02a269a6",
+      "title": "【62-7】やられっぱなしじゃねぇ！奴隷たちの意地と抵抗 〜秘密のアングラ組織爆誕〜【COTEN RADIO リンカン編7】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-7-COTEN-RADIO-7-e3a6vn4"
+    },
+    {
+      "guid": "3287e5b5-6273-4a0f-bdd5-4c12f9b371a0",
+      "title": "【62-6】奴隷増員！アメリカ南部をのみこむ綿花需要 〜豊かさとかなしき代償〜【COTEN RADIO リンカン編6】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-6-COTEN-RADIO-6-e3a6vdk"
+    },
+    {
+      "guid": "e37a1ba2-eac0-40b3-a554-c655bab54687",
+      "title": "【特別編】株式会社COTENの新たな挑戦。ジェンダーギャップ解消のための音源プラットフォーム公開について",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/COTEN-e3at940"
+    },
+    {
+      "guid": "f9d8ddd1-e6e6-4222-ba8f-1e37388b96c2",
+      "title": "【62-5】まるでオープンワールド！広がる領土と奴隷制の不安 〜議員による問題先送り〜【COTEN RADIO リンカン編5】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-5-COTEN-RADIO-5-e3a6v5e"
+    },
+    {
+      "guid": "b9496584-d13e-437f-abe9-599a766f5830",
+      "title": "【62-4】誰が始めた？誰が止める？奴隷制という時限爆弾 〜南北にヒビがビビビッ〜【COTEN RADIO リンカン編4】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-4-COTEN-RADIO-4-e3a6ui2"
+    },
+    {
+      "guid": "1686218f-6399-4b9d-91b5-4674cd169923",
+      "title": "【62-3】チャーチ型？セクト型？宗教しみしみアメリカ事情 〜妥協と妥協と時々ダキョウ〜【COTEN RADIO リンカン編3】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-3-COTEN-RADIO-3-e3a6u8g"
+    },
+    {
+      "guid": "5cf8dce5-c57e-4806-b570-eb187e37e979",
+      "title": "【62-2】信仰は我らが命！アメリカをかたどる宗教の枠組み 〜皆を束ねる未来への約束〜【COTEN RADIO リンカン編2】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-2-COTEN-RADIO-2-e3a6to8"
+    },
+    {
+      "guid": "a1fb8d1a-82c5-4ac5-8590-e8556120c09e",
+      "title": "【62-1】THIS IS AMERICA｜自由を夢見たリンカンの旅路【COTEN RADIO リンカン編1】",
+      "season": 62,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-1THIS-IS-AMERICACOTEN-RADIO-1-e3a6t18"
+    },
+    {
+      "guid": "8388825e-1297-4680-8bba-1758449f6f69",
+      "title": "【番外編＃129】怒る？スルー？あきらめる？40歳・深井龍之介のイライラ白書",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/12940-e39gpqh"
+    },
+    {
+      "guid": "c6acbc7c-e899-4f26-85db-454287121521",
+      "title": "【番外編＃128】樋口が吠える！議題① エスカレーター問題 ／ 議題② ご祝儀キャッシュレス化",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/128-e396p1o"
+    },
+    {
+      "guid": "978fe517-e1d7-45ee-a7c7-826511eceac2",
+      "title": "【番外編＃127】我々ガチ勢です！貴重な時間が何かに変わるゲームの魔力",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/127-e39bfg1"
+    },
+    {
+      "guid": "ba39b39b-09f5-4cae-b44b-6517f0db91c1",
+      "title": "【番外編＃126】技術たのしい！凸凹ふたりのショート雑談 〜3Dプリンターと自己肯定感〜",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/126-3D-e37fh5k"
+    },
+    {
+      "guid": "d4bb638e-2758-4b07-8ae8-465ab03f7d47",
+      "title": "【61-8】Endless Light｜消灯時刻を迎えた電気の魔術師 〜それでも消えぬ街の灯〜【COTEN RADIOショート ニコラ・テスラ編8】",
+      "season": 61,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/61-8Endless-Light-COTEN-RADIO-8-e3836ec"
+    },
+    {
+      "guid": "682a9a8e-c47b-4fb2-a05c-9581aef43e15",
+      "title": "【61-7】100まんボルトだ！命を賭した電流頂上決戦 〜規格ひとつで変わるセカイ〜【COTEN RADIOショート ニコラ・テスラ編7】",
+      "season": 61,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/61-7100-COTEN-RADIO-7-e381esd"
+    },
+    {
+      "guid": "1858d622-7121-4e1e-8f28-722b3b85031a",
+      "title": "【61-6】かしこいだけじゃだめですか？電流戦争開幕 〜エジソンの逆鱗にTOUCH〜【COTEN RADIOショート ニコラ・テスラ編6】",
+      "season": 61,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/61-6-TOUCHCOTEN-RADIO-6-e381eo5"
+    },
+    {
+      "guid": "ac00dfed-8ad9-4adc-ba87-effc4606c951",
+      "title": "【61-5】電！磁！力！交流で世界を回したい男 〜じわじわキテる次のジョーシキ〜【COTEN RADIOショート ニコラ・テスラ編5】",
+      "season": 61,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/61-5-COTEN-RADIO-5-e381el0"
+    },
+    {
+      "guid": "88aacebb-a817-4825-b0ba-b3867e639298",
+      "title": "【61-4】直流と何が違うの？知る人ぞ知る交流の能力 〜立ちはだかる大御所の壁〜【COTEN RADIOショート ニコラ・テスラ編4】",
+      "season": 61,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/61-4-COTEN-RADIO-4-e381e6g"
+    },
+    {
+      "guid": "97261ae3-1adb-4a07-b946-0b5ea97d7925",
+      "title": "【61-3】まわるまわるよ モーターは回る ♪ 極限精神に舞い降りた世紀の天啓【COTEN RADIOショート ニコラ・テスラ編3】",
+      "season": 61,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/61-3---COTEN-RADIO-3-e381dus"
+    },
+    {
+      "guid": "67db0aa7-9301-421e-a186-96fba0609c08",
+      "title": "【61-2】ニャンと驚き！黒猫がくれた電気への目醒め 〜沼ってゆく少年の才覚〜【COTEN RADIOショート ニコラ・テスラ編2】",
+      "season": 61,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/61-2-COTEN-RADIO-2-e381dmb"
+    },
+    {
+      "guid": "51e7343d-f814-42b5-84f5-1a0c13752a35",
+      "title": "【61-1】電撃人生！ニコラ・テスラ 〜世界に轟くビリビリ浪漫〜【COTEN RADIOショート ニコラ・テスラ編1】",
+      "season": 61,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/61-1-COTEN-RADIO-1-e381df5"
+    },
+    {
+      "guid": "fb54b6c9-3c5c-4aa4-ad9f-0e1f1d3c59a8",
+      "title": "【番外編＃125】余白があれば画を描ける！二つの価値からひもとく新時代の経営理論",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/125-e37s3h3"
+    },
+    {
+      "guid": "0cec64d3-ab86-459e-9e90-0cb7f190cf67",
+      "title": "【番外編＃124】ヘラルボニーとの共創録！プロダクトマネージャー草野陽夏が挑んだ初講演の裏側",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/124-e37m9jj"
+    },
+    {
+      "guid": "eec05b35-5e32-4f69-851e-cf70d3c61adf",
+      "title": "【番外編＃123】常に真剣！常に楽しく！『項羽と劉邦』編に込めた台本制作チームの熱狂",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/123-e36491v"
+    },
+    {
+      "guid": "98e99552-23b9-4f11-a010-d2505423dca1",
+      "title": "【60-14】あゝ無情！構造に飲まれた人々の結末 〜新たな乱世のはじまり〜【COTEN RADIO 項羽と劉邦編14】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-14-COTEN-RADIO-14-e353ihm"
+    },
+    {
+      "guid": "1e94e437-9eeb-41b7-b6b8-2b9d6b3f37bb",
+      "title": "【60-13】粛清！粛清！仲間も粛清！中華統一の代償 〜劉邦が歩んだ修羅の道〜【COTEN RADIO 項羽と劉邦編13】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-13-COTEN-RADIO-13-e353dll"
+    },
+    {
+      "guid": "0e04e719-7395-4190-9dee-d294d9ce3fc6",
+      "title": "【60-12】ついに王手！しくじり項羽の悲しき最期 〜自分の国歌がレクイエム？〜【COTEN RADIO 項羽と劉邦編12】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-12-COTEN-RADIO-12-e3526hm"
+    },
+    {
+      "guid": "a1d4a1b9-35d7-4f8c-ae06-27a3b0209541",
+      "title": "【60-11】戦わずに勝つ！ブラフだらけのスパイ大作戦 〜韓信が信じた勝利の構図〜【COTEN RADIO 項羽と劉邦編11】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-11-COTEN-RADIO-11-e3525k9"
+    },
+    {
+      "guid": "a08eb692-b8b4-4d5c-9b10-b6cc3df88a6f",
+      "title": "【60-10】その名は韓信！国士無双のスタートダッシュ 〜キラリと光る軍師の目利き〜【COTEN RADIO 項羽と劉邦編10】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-10-COTEN-RADIO-10-e351u9h"
+    },
+    {
+      "guid": "3351ba2f-394d-4d53-8d69-0b21131b8ff7",
+      "title": "【60-9】分封？分裂？牙をむく18人の王たち 〜割り切れない各々の野心〜【COTEN RADIO 項羽と劉邦編9】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-918-COTEN-RADIO-9-e351tqa"
+    },
+    {
+      "guid": "3423d426-de75-4dd8-8e8b-ebb611801761",
+      "title": "【60-8】一触即発！咸陽をめぐるせめぎあい 〜味方のフリして敵をダマせ〜【COTEN RADIO 項羽と劉邦編8】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-8-COTEN-RADIO-8-e351tlc"
+    },
+    {
+      "guid": "f21a0e31-2309-4647-ab6d-70e4ed05ad30",
+      "title": "【60-7】無血か？流血か？咸陽を目指す二つの巨星 〜まだお宝はおあずけよ〜【COTEN RADIO 項羽と劉邦編7】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-7-COTEN-RADIO-7-e351t3v"
+    },
+    {
+      "guid": "bad51160-cccf-419c-82e5-bb93be09217a",
+      "title": "【60-6】どこでも兄貴といっしょ！劉邦スタートアップ伝 〜気付けば不良が県知事に〜【COTEN RADIO 項羽と劉邦編6】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-6-COTEN-RADIO-6-e350moa"
+    },
+    {
+      "guid": "7fb407d0-1876-434a-b6ff-3fbe3ec1b735",
+      "title": "【60-5】なんか人がついてくるの！愛され系クズ 劉邦の出自 〜乱世に咲く極道署長〜【COTEN RADIO 項羽と劉邦編5】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-5--COTEN-RADIO-5-e350mjn"
+    },
+    {
+      "guid": "117a8e08-7b1d-4b9d-a923-1863774cca4b",
+      "title": "【60-4】メッタメタのギッタギタ！あらぶる項羽の咆哮 〜祖父の涙を拳に込めて〜【COTEN RADIO 項羽と劉邦編4】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-4-COTEN-RADIO-4-e350m2p"
+    },
+    {
+      "guid": "8a69cf04-e07f-49fc-838f-b7590070d657",
+      "title": "【60-3】どうせ死ぬし！陳渉と呉広の乱 〜開き直りから生まれたフェイク国家〜【COTEN RADIO 項羽と劉邦編3】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-3-COTEN-RADIO-3-e350foh"
+    },
+    {
+      "guid": "a1d24671-21b3-406a-89ba-ac391cd2639c",
+      "title": "【60-2】遺言捏造！陰謀まみれのいびつな継承 〜ねじ曲げられた始皇帝の死〜【COTEN RADIO 項羽と劉邦編2】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-2-COTEN-RADIO-2-e350fdg"
+    },
+    {
+      "guid": "019e3084-e19c-44b9-8371-2627bfd66716",
+      "title": "【番外編＃122】すぐ消えるよ！ポッドキャスト「深井・けんすうのまぼろし会議」OPEN",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/122OPEN-e358cv8"
+    },
+    {
+      "guid": "1bebbb58-8709-4f80-ab56-da8d43c3b103",
+      "title": "【60-1】覇王列伝 項羽と劉邦 〜新たな時代を夢見た者たち〜【COTEN RADIO 項羽と劉邦編1】",
+      "season": 60,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60-1--COTEN-RADIO-1-e351sq3"
+    },
+    {
+      "guid": "631f011a-a01e-424e-8bca-e0cf1fd45d1f",
+      "title": "【番外編＃121】アタマが良けりゃ田舎へ行け！ローカルとアトツギに託されしミライ",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/121-e34f61d"
+    },
+    {
+      "guid": "a468d0d5-674d-4f3d-a6b5-0ff7a4547f44",
+      "title": "【番外編＃120】ポッドキャストで生きていく！音声コンテンツに全振りした男の話　ゲスト：西山直也（株式会社FUBI）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/120-FUBI-e34f5ra"
+    },
+    {
+      "guid": "ab72451a-46d9-4464-b575-819dfa003079",
+      "title": "【59-8】GOOD BYE 軍隊！ペリーに残された任務 〜記録が語るニッポンの夜明け〜【COTEN RADIOショート ペリー来航編8】",
+      "season": 59,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/59-8GOOD-BYE--COTEN-RADIO-8-e31l11a"
+    },
+    {
+      "guid": "eed8272d-814b-4baa-939c-65fe8f982ca0",
+      "title": "【59-7】ペリー最後の大博打！日米和親条約 〜文化と文化のマウント合戦〜【COTEN RADIOショート ペリー来航編7】",
+      "season": 59,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/59-7-COTEN-RADIO-7-e31l0rr"
+    },
+    {
+      "guid": "b8e134e8-9b8f-4884-af1b-776b54152d83",
+      "title": "【59-6】台場を作れ！意見を募れ！みんなの幕府防衛計画 〜還暦目前ペリーの奮闘〜【COTEN RADIOショート ペリー来航編6】",
+      "season": 59,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/59-6-COTEN-RADIO-6-e32k9lk"
+    },
+    {
+      "guid": "640b5707-dd93-46b2-af0d-6fc225468d26",
+      "title": "【59-5】「ん？潰すよ？」幕府もビビるペリーのカマシ 〜未来を変える各々の嘘〜【COTEN RADIOショート ペリー来航編5】",
+      "season": 59,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/59-5-COTEN-RADIO-5-e31l0l3"
+    },
+    {
+      "guid": "3946b2c3-3504-48a5-9031-cc6cc80ba5f3",
+      "title": "【59-4】冷蔵庫が無くたって！知恵と威圧のアジア外交 〜琉球からの開国序章〜【COTEN RADIOショート ペリー来航編4】",
+      "season": 59,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/59-4-COTEN-RADIO-4-e31jnm1"
+    },
+    {
+      "guid": "b8297bdc-90b9-471f-bbc6-b2772da80aa4",
+      "title": "【59-3】どうする幕府？どうなるニッポン？漂う異国船に戸惑うサムライたち【COTEN RADIOショート ペリー来航編3】",
+      "season": 59,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/59-3COTEN-RADIO-3-e31jn4m"
+    },
+    {
+      "guid": "8b793aef-51c3-4216-9616-e88d7fdb331f",
+      "title": "【59-2】なぜアメリカは日本に目を付けたのか？ 〜列強だらけのシーパワー争奪戦〜【COTEN RADIOショート ペリー来航編2】",
+      "season": 59,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/59-2-COTEN-RADIO-2-e31jn18"
+    },
+    {
+      "guid": "df58777b-c2ba-4779-a575-b69a4f7a8c1b",
+      "title": "【59-1】世界の壁をぶち壊せ！ペリー来航物語 〜荒波に挑んだ船乗りの一生〜【COTEN RADIOショート ペリー来航編1】",
+      "season": 59,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/59-1-COTEN-RADIO-1-e31jk76"
+    },
+    {
+      "guid": "4baf6730-964b-4ac0-b60d-67862c69a5fc",
+      "title": "【番外編＃119】で、何が変わるの？量子コンピュータが及ぼすゲームチェンジ　ゲスト：北川拓也（QuEra Computing）②",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/119-QuEra-Computing-e32vc36"
+    },
+    {
+      "guid": "b71c33b2-d142-431b-9570-e5bfb540cff2",
+      "title": "【番外編＃118】玄人はどこを見てる？量子コンピュータ開発会社社長に聞く科学の話　ゲスト：北川拓也（QuEra Computing）①",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/118-QuEra-Computing-e32vbvu"
+    },
+    {
+      "guid": "78254216-15ff-456c-bb59-394b1e4f64dd",
+      "title": "【58-12】どーなんの？半導体とAIが切り拓く新時代 〜再定義される人間たち〜【COTEN RADIO 科学技術の歴史編12】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-12AI-COTEN-RADIO-12-e30aq18"
+    },
+    {
+      "guid": "9a2846af-7abf-4e0c-8a7b-a63780481f31",
+      "title": "【58-11】0と1でCHANGE！コンピュータの誕生と進化 〜拡張される人類の思考〜【COTEN RADIO 科学技術の歴史編11】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-1101CHANGE-COTEN-RADIO-11-e30appb"
+    },
+    {
+      "guid": "c46d6814-0dd4-43cd-9368-cebfe2c35793",
+      "title": "【58-10】希望か？悪夢か？原子力と人類の倫理 〜開かれたパンドラの箱〜【COTEN RADIO 科学技術の歴史編10】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-10-COTEN-RADIO-10-e30ap13"
+    },
+    {
+      "guid": "5f8a2756-f7c2-4fa9-aef7-ab1de1eb9a70",
+      "title": "【58-9】豆なめんなよ！人類を救う農業のチカラ 〜肥料なくして文明なし〜【COTEN RADIO 科学技術の歴史編9】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-9-COTEN-RADIO-9-e3097d2"
+    },
+    {
+      "guid": "217ce6b4-3469-4410-9d03-a58c7498632b",
+      "title": "【58-8】文明は爆発だ！火薬によるゲームチェンジ 〜火種と化す人類の夢〜【COTEN RADIO 科学技術の歴史編8】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-8-COTEN-RADIO-8-e3095ea"
+    },
+    {
+      "guid": "0bdc2237-96c7-4620-84ee-c49e54977bca",
+      "title": "【58-7】以前か？以後か？産業革命のインパクト 〜新しいことすんなって〜【COTEN RADIO 科学技術の歴史編7】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-7-COTEN-RADIO-7-e30956i"
+    },
+    {
+      "guid": "05c01b25-c8b0-496e-a78e-f4bfc46c510e",
+      "title": "【58-6】「馬ナシだってよ！すんげーっ！」金属と蒸気機関がもたらす社会変化【COTEN RADIO 科学技術の歴史編6】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-6COTEN-RADIO-6-e3093em"
+    },
+    {
+      "guid": "5ab38c7b-8c39-4791-a0d4-f97381841866",
+      "title": "【58-5】斬って伐って切り拓け！金属の発展と社会への影響 〜偶然×試行錯誤〜【COTEN RADIO 科学技術の歴史編5】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-5-COTEN-RADIO-5-e30937v"
+    },
+    {
+      "guid": "0babc967-cf54-415e-bd04-0ce28ead5acf",
+      "title": "【58-4】「科学は知り尽くした」「ファッ！？」量子の概念で吹っ飛ぶ限界【COTEN RADIO 科学技術の歴史編4】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-4COTEN-RADIO-4-e2vbduc"
+    },
+    {
+      "guid": "0755b7f6-3557-46a3-beae-d77d24b0682d",
+      "title": "【58-3】ぱっかーん！世界を変えた科学革命 〜時を加速させた数多の実験〜【COTEN RADIO 科学技術の歴史編3】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-3-COTEN-RADIO-3-e2vbd82"
+    },
+    {
+      "guid": "c4a940aa-5464-47fd-b5cc-1608bc017333",
+      "title": "【58-2】原点回帰！古代の宇宙観と科学のはじまり 〜想像から実験へ〜【COTEN RADIO 科学技術の歴史編2】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-2-COTEN-RADIO-2-e2vbb1k"
+    },
+    {
+      "guid": "fd8f4e48-cebd-4bd3-8886-6ee6d5a05eb7",
+      "title": "【58-1】シビれるぜ！科学技術の歴史 〜先人が遺した叡智のギフト〜【COTEN RADIO 科学技術の歴史編1】",
+      "season": 58,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58-1-COTEN-RADIO-1-e2vbafs"
+    },
+    {
+      "guid": "14a27f0e-b1b0-4a5f-a85c-675223807b85",
+      "title": "【番外編＃117】大切なものを大切に 中川政七商店が見据える次の一手",
+      "season": 117,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/117-e2vnnhq"
+    },
+    {
+      "guid": "827c21dc-8345-416d-bb6a-bc3057835e2a",
+      "title": "【番外編＃116】社長として 会長として 中川政七商店のリーダー論",
+      "season": 116,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/116-e2vnnah"
+    },
+    {
+      "guid": "cbf6dea8-61c6-4df9-b0c4-8997ac5cbaf5",
+      "title": "【番外編＃115】新しい朝がきた！老舗ベンチャー 中川政七商店の事業継承",
+      "season": 115,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/115-e2vkh9c"
+    },
+    {
+      "guid": "d7f0304b-12c2-4452-bd21-2aa884c87437",
+      "title": "【57-8】声尽きるまで！愛と思想の片道切符 〜自由を信じた女の最期〜【COTEN RADIOショート 伊藤野枝編8】",
+      "season": 57,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/57-8-COTEN-RADIO-8-e2uhnma"
+    },
+    {
+      "guid": "e1be47e9-d6d1-4856-a350-2ae55be3d67e",
+      "title": "【57-7】らしく？らしさ？母性愛神話との対立 〜アバズレと呼ばれた女の選択〜【COTEN RADIOショート 伊藤野枝編7】",
+      "season": 57,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/57-7-COTEN-RADIO-7-e2uhneu"
+    },
+    {
+      "guid": "7eec73df-f5b8-464f-b5f4-a9e0bd7d5277",
+      "title": "【57-6】結婚ざけんなよ！W不倫の辻家ウォー 〜見えない社会構造への反逆〜【COTEN RADIOショート 伊藤野枝編6】",
+      "season": 57,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/57-6W-COTEN-RADIO-6-e2uhn6d"
+    },
+    {
+      "guid": "912ca199-d169-4ab8-bfb9-a4f4643008cd",
+      "title": "【57-5】「社会問題は我が事」新編集長が創る女のサロン 〜ハタチの青鞜再生計画〜【COTEN RADIOショート 伊藤野枝編5】",
+      "season": 57,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/57-5-COTEN-RADIO-5-e2ulh1f"
+    },
+    {
+      "guid": "3609a17f-2d9c-4da1-bb32-5996dab9fbe5",
+      "title": "【57-4】規範を斬る論客 エマ・ゴールドマンが示す道標 〜不合理に挑む女傑伝説〜【COTEN RADIOショート 伊藤野枝編4】",
+      "season": 57,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/57-4--COTEN-RADIO-4-e2ub4e2"
+    },
+    {
+      "guid": "d6aa4d26-e5a4-432a-b802-d80a95cfbb34",
+      "title": "【57-3】ブッかませ才能↑↑平塚らいてうと青鞜 〜世論に縛られた女たちの解放〜【COTEN RADIOショート 伊藤野枝編3】",
+      "season": 57,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/57-3-COTEN-RADIO-3-e2ucqbe"
+    },
+    {
+      "guid": "f50ee43e-fe35-4e06-a53c-67538cc95264",
+      "title": "【57-2】結婚！不倫！離婚！常識を越える乙女のポリシー 〜初めての東京青春物語〜【COTEN RADIOショート 伊藤野枝編2】",
+      "season": 57,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/57-2-COTEN-RADIO-2-e2ub3vd"
+    },
+    {
+      "guid": "73273e22-bc93-422e-b7b9-2336036c8792",
+      "title": "【57-1】愛をとりもどせ！ペンと自由と伊藤野枝 〜魂で奏でる革命のファンファーレ〜【COTEN RADIOショート 伊藤野枝編1】",
+      "season": 57,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/57-1-COTEN-RADIO-1-e2u7j8p"
+    },
+    {
+      "guid": "54bb0010-19fd-419d-8170-02fa3b030dd2",
+      "title": "【番外編＃114】君に夢中！みんなだいすきYouTubeの世界 〜とかくか気になる動画たち〜",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/114YouTube-e2tfm2t"
+    },
+    {
+      "guid": "f7d7ead3-00f4-4dab-a758-c60db627e6d9",
+      "title": "【番外編＃113】ヤンヤンに大量の質問を浴びせてみた。 〜素顔と本音の人生トーク〜",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/113-e2t5r2o"
+    },
+    {
+      "guid": "df1b5ae4-83a9-4e4d-b467-cb7ab253789b",
+      "title": "【56-8】あとは頼んだ！果てしなき旅路の果てに 〜遺された戒律と日本仏教の礎〜【COTEN RADIOショート 鑑真編8】",
+      "season": 56,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/56-8-COTEN-RADIO-8-e2til05"
+    },
+    {
+      "guid": "3f93fc61-2eb8-4ecc-9589-de0cdd2c602c",
+      "title": "【56-7】鑑真さんいらっしゃい！戒律が紡ぐ仏教新時代 〜日本に灯した10年の光〜【COTEN RADIOショート 鑑真編7】",
+      "season": 56,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/56-7-10COTEN-RADIO-7-e2tiks8"
+    },
+    {
+      "guid": "446846cd-4fdb-41af-8888-9b5d0063e2a2",
+      "title": "【56-6】仏の顔は何度まで？鑑真の十二年漂流記 〜絶望の先に見えた日本〜【COTEN RADIOショート 鑑真編6】",
+      "season": 56,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/56-6-COTEN-RADIO-6-e2t5qds"
+    },
+    {
+      "guid": "7d406e36-0f25-403d-965c-1bdf31c91b15",
+      "title": "【56-5】玄奘先輩は西！ほな東！仏教と日本のエニシ 〜聖徳太子は師匠の転生？〜【COTEN RADIOショート 鑑真編5】",
+      "season": 56,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/56-5-COTEN-RADIO-5-e2t5pc6"
+    },
+    {
+      "guid": "6de11036-973d-496b-8cc9-67fbd0f5bbb9",
+      "title": "【56-4】うんこの作法が仏教の真髄？戒律と鑑真 〜天才が示す僧侶の道しるべ〜【COTEN RADIOショート 鑑真編4】",
+      "season": 56,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/56-4-COTEN-RADIO-4-e2t5nql"
+    },
+    {
+      "guid": "e4e4a288-d888-43b1-9d83-d142e5fd2d4d",
+      "title": "【56-3】四つの大罪！僧侶たちを囲う煩悩と戒律 〜サンガ公式悟りマニュアル〜【COTEN RADIOショート 鑑真編3】",
+      "season": 56,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/56-3-COTEN-RADIO-3-e2sfktj"
+    },
+    {
+      "guid": "6e895905-cef1-4aea-aa69-15049b58c46d",
+      "title": "【56-2】これぞ仏教徒マニュアル！容赦ない僧侶の戒律 〜文句も言えないモンク達〜【COTEN RADIOショート 鑑真編2】",
+      "season": 56,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/56-2-COTEN-RADIO-2-e2sfh6m"
+    },
+    {
+      "guid": "b2d162ca-ee44-4a57-8bc7-7a60ebcaf8aa",
+      "title": "【56-1】東の地へいざ征かん！唐僧 鑑真 〜命を懸けた仏教の灯火〜【COTEN RADIOショート 鑑真編1】",
+      "season": 56,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/56-1--COTEN-RADIO-1-e2sfger"
+    },
+    {
+      "guid": "53b0b7e9-e3c3-49cb-b117-9cb4c43c0418",
+      "title": "【番外編＃112】飛ぶのは記憶か？意識か？感情か？思わず言葉を失った瞬間について",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/112-e2rbgmu"
+    },
+    {
+      "guid": "6e1c6915-57aa-47fa-b4f6-a055b38eecfd",
+      "title": "【番外編＃111】そして時は動き出す！樋口聖典と出家 〜乾きと潤いを手にした男の葛藤〜",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/111-e2rbfvl"
+    },
+    {
+      "guid": "e60d5c77-f0cf-4977-a491-6e1f2c566332",
+      "title": "【55-4】どこ行く道家思想？老荘がまだ見ぬ後世への影響 〜現代人に与えられた哲学の恩恵〜【COTEN RADIOショート 老子・荘子編4】",
+      "season": 55,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/55-4-COTEN-RADIO-4-e2rben5"
+    },
+    {
+      "guid": "cdd908f4-f48b-456b-9932-2e4feb6260fb",
+      "title": "【55-3】荘子曰く！自由に生きる為の万物斉同な思想 〜夢と現にしのぶ胡蝶の予言〜【COTEN RADIOショート 老子・荘子編3】",
+      "season": 55,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/55-3-COTEN-RADIO-3-e2rbeec"
+    },
+    {
+      "guid": "32299d59-897c-469a-a617-f9b99a549a11",
+      "title": "【55-2】無為自然！老子に学ぶ原始ベイビー的生活 〜ありのままの自分になるの〜【COTEN RADIOショート 老子・荘子編2】",
+      "season": 55,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/55-2-COTEN-RADIO-2-e2rbcoi"
+    },
+    {
+      "guid": "1f481a6a-e699-4444-a20e-74dbb0f6830f",
+      "title": "【55-1】どうか聞いてくれ！老子と荘子 〜紀元前に遺された哲学者の伝言〜【COTEN RADIOショート 老子・荘子編1】",
+      "season": 55,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/55-1-COTEN-RADIO-1-e2r6fnf"
+    },
+    {
+      "guid": "f004be1c-0adb-46d1-9d9d-85049f59547d",
+      "title": "【番外編＃110】休むって大事！深井龍之介の休養計画 〜心と体のメンテナンス〜",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/110-e2r3em0"
+    },
+    {
+      "guid": "f7788e28-17a0-4c7e-bb08-6fc9620f548a",
+      "title": "【54-12】イギリスの暴政に立ち向かえ！インド大反乱 〜ムガール帝国の終焉とこれから〜【COTEN RADIO ムガール帝国編12】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-12-COTEN-RADIO-12-e2oa9dd"
+    },
+    {
+      "guid": "7b632b4a-0892-4d4f-a3bf-b066bedfddde",
+      "title": "【54-11】税金ごくごく！私腹を肥やすイギリスの台頭 〜チート級のインド弱体化作戦〜【COTEN RADIO ムガール帝国編11】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-11-COTEN-RADIO-11-e2oa91v"
+    },
+    {
+      "guid": "9bd6150b-f3d4-4f40-8cd4-2196579f0c9c",
+      "title": "【54-10】それは俺のスパイス！ヨーロッパ諸国のインド進出 〜利権をめぐる超絶マネーゲーム〜【COTEN RADIO ムガール帝国編10】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-10-COTEN-RADIO-10-e2oa8ju"
+    },
+    {
+      "guid": "bc9c952d-450b-4efc-afde-c390aa0b1214",
+      "title": "【54-9】しっちゃかめっちゃか！ムガール帝国の栄枯盛衰 〜酒とアヘンに溺れた皇帝たち〜【COTEN RADIO ムガール帝国編9】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-9-COTEN-RADIO-9-e2oa8gr"
+    },
+    {
+      "guid": "8667f8ae-0c1b-4ca2-8bc9-ebece16ba35c",
+      "title": "【54-8】奪われたら奪い返す！俺達のムガール帝国 〜親子でつなぐ栄光への架け橋〜【COTEN RADIO ムガール帝国編8】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-8-COTEN-RADIO-8-e2oa84c"
+    },
+    {
+      "guid": "1b2d4037-c4d5-4302-865a-f030fc95099d",
+      "title": "【54-7】すすめバーブル！ムガール帝国の誕生 〜サマルカンドへの尽きぬ想い〜 【COTEN RADIO ムガール帝国編7】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-7--COTEN-RADIO-7-e2oa7ne"
+    },
+    {
+      "guid": "fe6c9253-d534-47c1-b0f5-a6052f1d1cd1",
+      "title": "【54-6】生首タワーで戦意喪失！弱り目にティムールのインド侵攻 〜どん詰まり王朝を襲う悪夢〜【COTEN RADIO ムガール帝国編6】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-6-COTEN-RADIO-6-e2oa4ih"
+    },
+    {
+      "guid": "71029eb6-e034-4ec1-9ccd-01da44c1878b",
+      "title": "【54-5】自分ら結局何教なん？インドの宗教と王朝 〜仏教保護とヒンドゥー教の誕生〜【COTEN RADIO ムガール帝国編5】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-5-COTEN-RADIO-5-e2oa4fc"
+    },
+    {
+      "guid": "7ce1a6a1-9725-41c2-8cf5-6c9aa58e2f01",
+      "title": "【54-4】知っておきたい！インドのカースト制度 〜人間関係をがんじがらめにする強固な鎖〜【COTEN RADIO ムガール帝国編4】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-4-COTEN-RADIO-4-e2oa4c1"
+    },
+    {
+      "guid": "715f68d5-2afa-4359-b313-245a9d09d770",
+      "title": "【54-3】幻覚キノコでトリップ!? インド哲学の誕生と発展 〜かしこ哲学者たちのぶっ飛び理論〜【COTEN RADIO ムガール帝国編3】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-3----COTEN-RADIO-3-e2oa38a"
+    },
+    {
+      "guid": "44232fb4-284c-4100-9d47-a373eb5f2c4e",
+      "title": "【54-2】その言葉は現実となる！古代インド神秘伝説 〜インダス文明とアーリア人の足跡〜【COTEN RADIO ムガール帝国編2】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-2-COTEN-RADIO-2-e2oa323"
+    },
+    {
+      "guid": "d8760db1-fdd8-4030-b6ff-1e786539c9fd",
+      "title": "【54-1】嗚呼！栄光のムガール帝国 〜黄金の玉座を巡るハイエナたちの闘争〜【COTEN RADIO ムガール帝国編1】",
+      "season": 54,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54-1-COTEN-RADIO-1-e2oa2b7"
+    },
+    {
+      "guid": "33b6866a-bab2-4c79-9c39-b05e31abcf22",
+      "title": "【番外編＃109】会話ってマジむずい！目には見えない「語れない」と「語らない」の壁",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/109-e2oabhj"
+    },
+    {
+      "guid": "5bd1421f-140a-4738-b5e1-d8f68f1c1642",
+      "title": "【番外編＃108】街で声を掛けられた！有名人（？）になってしまった僕たちの本音",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/108-e2oabbs"
+    },
+    {
+      "guid": "b5551586-0df0-428b-893d-c2165df4a072",
+      "title": "【53-4】負けてたまるか！真っ暗な檻の向こう側にて 〜泥に撒いた愛の種〜【COTEN RADIOショート ゴッホ編4】",
+      "season": 53,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/53-4-COTEN-RADIO-4-e2noj1p"
+    },
+    {
+      "guid": "387b036b-1014-4107-a42d-acdb87209b57",
+      "title": "【53-3】友よ！僕を裏切るな！一人の画家が壊れた瞬間 〜赤く染まった黄色い家〜【COTEN RADIOショート ゴッホ編3】",
+      "season": 53,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/53-3-COTEN-RADIO-3-e2noj0r"
+    },
+    {
+      "guid": "34e29d83-42b9-4c0f-9f6d-cd81d8ead5af",
+      "title": "【53-2】浮世絵で覚醒！パリに集いしパンクなヤツラ 〜印象派との出会い〜【COTEN RADIOショート ゴッホ編2】",
+      "season": 53,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/53-2-COTEN-RADIO-2-e2noj02"
+    },
+    {
+      "guid": "2e85332c-6a39-461b-bb2e-2ae0ebb793ce",
+      "title": "【53-1】孤高の天才 ゴッホの生涯 〜後世に花咲く絵画への情熱〜【COTEN RADIOショート ゴッホ編1】",
+      "season": 53,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/53-1--COTEN-RADIO-1-e2noius"
+    },
+    {
+      "guid": "e2056fa8-63c5-4559-8cad-9d6b0d288758",
+      "title": "【52-12】天下人 家康の新ルール！幕藩体制の確立 〜265年続く徳川伝説の始まり〜【COTEN RADIO 秀吉・家康編12】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-12--265COTEN-RADIO-12-e2mfmm3"
+    },
+    {
+      "guid": "673fe178-83b6-49b4-8827-ef77d06873f6",
+      "title": "【52-11】「この鐘、やってんな」大阪の陣 開戦 〜家康のイチャモンに豊臣てんやわんや〜【COTEN RADIO 秀吉・家康編11】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-11--COTEN-RADIO-11-e2mfmed"
+    },
+    {
+      "guid": "887d7358-c892-4f29-aad2-6a95429cf9d4",
+      "title": "【特別編】激動の社会をどう生きる？株式会社COTENの新規事業「人文知研究所」が示す未来への指針",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/COTEN-e2nlk3g"
+    },
+    {
+      "guid": "2d2c1efb-0106-4bc4-9ecb-ce237b75fded",
+      "title": "【52-10】関ヶ原の覇者 家康の統治術 〜武家社会の基盤を築く大きな一手〜【COTEN RADIO 秀吉・家康編10】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-10--COTEN-RADIO-10-e2mfm2c"
+    },
+    {
+      "guid": "d4656c38-f99f-4985-b51b-5afd4baf1e88",
+      "title": "【52-9】「弁当食べてるのわかんない？」関ヶ原の戦い 〜裏切りの連鎖が紡ぐ命運〜【COTEN RADIO 秀吉・家康編9】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-9-COTEN-RADIO-9-e2mfghd"
+    },
+    {
+      "guid": "87d3ab37-2a86-4a72-8c35-69e253e874f1",
+      "title": "【52-8】三成ムカつく！豊臣家を真っ二つにする各々の正義 〜関ヶ原へのカウントダウン〜【COTEN RADIO 秀吉・家康編8】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-8-COTEN-RADIO-8-e2mfg9u"
+    },
+    {
+      "guid": "c7c6addc-debd-4ac9-9024-f5a1e2f9e3c5",
+      "title": "【52-7】明を攻める？正気？政権を揺るがす秀吉の愚行 〜朝鮮出兵に託した男の浪漫〜【COTEN RADIO 秀吉・家康編7】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-7-COTEN-RADIO-7-e2mfg4c"
+    },
+    {
+      "guid": "272167c4-763a-488a-84f9-182b7d6ea39b",
+      "title": "【52-6】《急募 ミドルマネージャー》秀吉を待ち受ける天下統一後のネクストステージ【COTEN RADIO 秀吉・家康編6】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-6-COTEN-RADIO-6-e2mec7r"
+    },
+    {
+      "guid": "150be9ab-5c34-47d8-b256-7af8bbf85789",
+      "title": "【52-5】大阪に城や！城！！秀吉が描いた天下統一の絵図 〜最強軍で北条さんフルボッコ〜【COTEN RADIO 秀吉・家康編5】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-5-COTEN-RADIO-5-e2meb9f"
+    },
+    {
+      "guid": "45ae0bcb-3b01-4d7a-b98e-bd4bd203d3f0",
+      "title": "【52-4】え？本能寺が変！織田信長殺人事件 〜明日を見失った家臣たちの逆襲〜【COTEN RADIO 秀吉・家康編4】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-4-COTEN-RADIO-4-e2meb45"
+    },
+    {
+      "guid": "c56f0256-828b-4c3d-891a-a84b2ea7fd8c",
+      "title": "【52-3】人心掌握の名手 秀吉の兵站力 〜中国地方を恐怖に陥れた城攻め三選〜【COTEN RADIO 秀吉・家康編3】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-3--COTEN-RADIO-3-e2mbjhd"
+    },
+    {
+      "guid": "328310c8-611d-4f68-b621-baa57177e0b6",
+      "title": "採用に関するお知らせ 〜エンジニアチーム「Gutenberg」について喋ってみた。〜",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/Gutenberg-e2md2ie"
+    },
+    {
+      "guid": "1083dd13-ed38-4762-857b-55258cabb61f",
+      "title": "【52-2】一難去ってまた一難！織田信長と敵！敵！敵！ 〜名もなき若武者たちの転機〜【COTEN RADIO 秀吉・家康編2】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-2-COTEN-RADIO-2-e2m77pj"
+    },
+    {
+      "guid": "f710a3e8-aee4-44d6-8159-3e200abfd1e5",
+      "title": "【52-1】豊臣秀吉と徳川家康 〜歴史を動かす信長イズムの継承〜【COTEN RADIO 秀吉・家康編1】",
+      "season": 52,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52-1-COTEN-RADIO-1-e2m72hv"
+    },
+    {
+      "guid": "97096488-ea46-4ebf-a693-71b9ae9bf59e",
+      "title": "【51-4】赤ちゃん国家の大一番！サルフの戦い 〜大陸に鳴り響く王朝交代の前奏曲〜【COTEN RADIOショート ヌルハチ編4】",
+      "season": 51,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/51-4-COTEN-RADIO-4-e2ldkq8"
+    },
+    {
+      "guid": "6b32cc15-ac24-4255-a270-bfc8a344b7d0",
+      "title": "【51-3】八つの旗で後金建国！皇帝ヌルハチの企み 〜明への怒りのサヨナラ宣言〜【COTEN RADIOショート ヌルハチ編3】",
+      "season": 51,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/51-3-COTEN-RADIO-3-e2ldkmt"
+    },
+    {
+      "guid": "b9374ff3-a8f0-4a0f-823b-48237c318e58",
+      "title": "【51-2】我が名はマンジュ国！若きヌルハチの立身出世 〜女真族統一への道〜【COTEN RADIOショート ヌルハチ編2】",
+      "season": 51,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/51-2-COTEN-RADIO-2-e2ldkic"
+    },
+    {
+      "guid": "35a9a119-acc0-469f-a5cb-077e37c5d287",
+      "title": "【51-1】戦国風雲児 ヌルハチの野望 ～アジアを変える清の下の力持ち～【COTEN RADIOショート ヌルハチ編1】",
+      "season": 51,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/51-1--COTEN-RADIO-1-e2ldke3"
+    },
+    {
+      "guid": "c95c1dfc-e937-4b7a-9475-30f2dc9e20fd",
+      "title": "【番外編＃107】大公開！コテンラジオの舞台裏 〜作り手が語る台本制作の全貌〜　ゲスト：西谷剛史（株式会社COTEN）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/107--COTEN-e2lc2hj"
+    },
+    {
+      "guid": "c3d0d985-9849-46a6-8e13-98d62f0394a1",
+      "title": "【番外編＃106】見たい！読みたい！語りたい！僕らを魅了する珠玉のコンテンツ雑談",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/106-e2ke2b7"
+    },
+    {
+      "guid": "8e0b69e1-081d-4b29-924e-59b51a3db328",
+      "title": "【番外編＃105】皆様に感謝とリスペクトを込めて！リスナーからのメッセージ紹介",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/105-e2ke2hb"
+    },
+    {
+      "guid": "568671f6-422e-462d-baf7-edca5fa8485e",
+      "title": "【50-12】偽ジャンヌも降臨!? 復権裁判の行く末 〜後世に色濃く残る聖女の影響〜【COTEN RADIO ジャンヌ・ダルク編12】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-12----COTEN-RADIO-12-e2in2ah"
+    },
+    {
+      "guid": "0f792a0e-b791-4571-b8db-f7cc205b6535",
+      "title": "【50-11】魔女を火炙りに！異端審問 〜メンツを潰されたエリートの逆襲〜【COTEN RADIO ジャンヌ・ダルク編11】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-11-COTEN-RADIO-11-e2in1sn"
+    },
+    {
+      "guid": "c012c5c5-1355-4915-89c4-6e756572bcf5",
+      "title": "【50-10】バブル崩壊！コンピエーニュ包囲戦 〜神と王と敵軍に囚われし乙女〜【COTEN RADIO ジャンヌ・ダルク編10】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-10-COTEN-RADIO-10-e2in1if"
+    },
+    {
+      "guid": "7d153bad-6b32-442b-b571-84aad9677125",
+      "title": "【50-9】「ん？まだ議論すんの？」ランスでの戴冠式を実現した乙女の貫禄【COTEN RADIO ジャンヌ・ダルク編9】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-9COTEN-RADIO-9-e2in135"
+    },
+    {
+      "guid": "b4d8a4d3-0bc1-4711-901f-b2b2ad30698b",
+      "title": "【50-8】爆進！乙女に導かれし者たちのオルレアン包囲戦 そして伝説へ…【COTEN RADIO ジャンヌ・ダルク編8】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-8-COTEN-RADIO-8-e2ijmf7"
+    },
+    {
+      "guid": "d05bf303-cdf0-4fe3-9289-e0981b1a5eb2",
+      "title": "【50-7】御旗のもとに！激戦地オルレアン入城 〜少女の一声でぶち上がる士気ゲージ〜【COTEN RADIO ジャンヌ・ダルク編7】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-7-COTEN-RADIO-7-e2ijj6h"
+    },
+    {
+      "guid": "5a5b2fb9-1473-4c62-a58f-ea98946cae28",
+      "title": "【50-6】今すぐ出かけよう！辺境地よりの使者 〜乙女を突き動かす神の声〜【COTEN RADIO ジャンヌ・ダルク編6】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-6-COTEN-RADIO-6-e2ijidc"
+    },
+    {
+      "guid": "991db195-ce15-4085-80e1-90811e1e3e8a",
+      "title": "【50-5】神さまの言うとおり！天命を背負った田舎娘 ジャンヌ・ダルクの生い立ち【COTEN RADIO ジャンヌ・ダルク編5】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-5-COTEN-RADIO-5-e2iji4m"
+    },
+    {
+      "guid": "6f5bf5e8-ab98-4e60-a32b-487b90185678",
+      "title": "【50-4】このシャルル、どのシャルル？玉座を求める男と女の百年戦争【COTEN RADIO ジャンヌ・ダルク編4】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-4COTEN-RADIO-4-e2ijhtk"
+    },
+    {
+      "guid": "1736d819-ecaa-4ffd-929b-3756062358a2",
+      "title": "【特別編】リスナーアンケート2024の結果を共有します！",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/2024-e2jsb02"
+    },
+    {
+      "guid": "754bd747-b8e4-4f04-8ece-3becd7af6303",
+      "title": "【50-3】『ウチの嫁が不倫してた件』百年戦争の経緯 〜国家存亡を懸けた継承権争い〜【COTEN RADIO ジャンヌ・ダルク編3】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-3-COTEN-RADIO-3-e2ijhlc"
+    },
+    {
+      "guid": "2f62985e-e4ed-4d52-8cde-b254c9dea61e",
+      "title": "【50-2】ランスでひと狩り行こうぜ！フランスのルーツを彩る男たちの騎士道【COTEN RADIO ジャンヌ・ダルク編2】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-2COTEN-RADIO-2-e2iimc5"
+    },
+    {
+      "guid": "f3d5d148-5537-4c2d-b7d3-c9b50a3b3cfe",
+      "title": "【50-1】翔べ！ジャンヌ・ダルク 〜戦地を舞う女性騎士の一生〜【COTEN RADIO ジャンヌ・ダルク編1】",
+      "season": 50,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50-1-COTEN-RADIO-1-e2iid1m"
+    },
+    {
+      "guid": "304b3127-d636-4120-826e-acc3d48e76a1",
+      "title": "【49-2】そこに愛はあるんか？光源氏の放蕩ライフ 〜生まれながらの敗者が抱えた葛藤〜【COTEN RADIOショート 紫式部 後編】",
+      "season": 49,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/49-2-COTEN-RADIO-e2idnhv"
+    },
+    {
+      "guid": "439ba5a3-0c83-4d05-a3db-5e73ecdee0d1",
+      "title": "【49-1】いとをかし！源氏物語 〜紫式部が紡ぐ宮廷恋模様〜【COTEN RADIOショート 紫式部 前編】",
+      "season": 49,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/49-1-COTEN-RADIO-e2idn7f"
+    },
+    {
+      "guid": "0b47c99a-95cd-43dc-b72a-0227d2cd3158",
+      "title": "【特別編】希望となれ！コミュニティナース 〜地元企業の後継者が抱える得失〜　ゲスト：矢田明子（CNC）& 岡野武治（岡野バルブ製造）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/CNC-e2igjsb"
+    },
+    {
+      "guid": "2e8d2937-57ba-4a67-a0c5-5838427c8ee1",
+      "title": "【番外編＃104】全国で再現不可？いいかねPaletteに学ぶ土地それぞれのユニークな進化　ゲスト：青柳考哉（株式会社BOOK）③",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/104Palette-BOOK-e2i8jju"
+    },
+    {
+      "guid": "64507925-cbeb-4d75-94d7-0b19264078ea",
+      "title": "【番外編＃103】みんながみんな主人公！いいかねPaletteを引き継ぎし男の野望　ゲスト：青柳考哉（株式会社BOOK）②",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/103Palette-BOOK-e2i5pjq"
+    },
+    {
+      "guid": "64730787-ec6e-4ebc-a46a-cf36faea7c3a",
+      "title": "【下品注意　番外編＃102】ブルース足りてる？田川が育む「トガリ」という名のヤンキー進化学　ゲスト：青柳考哉（株式会社BOOK）①",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/102-BOOK-e2i20pc"
+    },
+    {
+      "guid": "fe372242-24e2-4404-9c72-1979bccd5444",
+      "title": "【48-6】「なんのために生まれて なにをして生きるのか」94年間の軌跡から向き合う問い【COTEN RADIOショート やなせたかし編6】",
+      "season": 48,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/48-6-94COTEN-RADIO-6-e2g177f"
+    },
+    {
+      "guid": "26ea1395-5ea5-4dff-adbb-645888a0a1fd",
+      "title": "【48-5】愛と勇気だけが友達？ダサかっこいいヒーローが僕たちに教えてくれた正義【COTEN RADIOショート やなせたかし編5】",
+      "season": 48,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/48-5COTEN-RADIO-5-e2g175g"
+    },
+    {
+      "guid": "0bfbd92b-2aec-4960-820d-80fa6f2ffd9f",
+      "title": "【48-4】電話のベルがりんりんりん！アンパンマン誕生前夜 〜神様 手塚治虫からの一報〜【COTEN RADIOショート やなせたかし編4】",
+      "season": 48,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/48-4--COTEN-RADIO-4-e2g173p"
+    },
+    {
+      "guid": "eecbd47c-d45c-4570-af49-b640475f67a8",
+      "title": "【48-3】生きているから悲しいんだ！器用貧乏な下積み生活がくれた名刺代わりの代表作【COTEN RADIOショート やなせたかし編3】",
+      "season": 48,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/48-3COTEN-RADIO-3-e2g1717"
+    },
+    {
+      "guid": "91cf0ef3-b173-4d7f-9a08-0935fde6c3ae",
+      "title": "【48-2】ひとりの兵士が見た戦争と飢餓 〜あやふやな正義に潰されたいくつもの夢〜【COTEN RADIOショート やなせたかし編2】",
+      "season": 48,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/48-2-COTEN-RADIO-2-e2g16uc"
+    },
+    {
+      "guid": "fad116e5-cfa8-4d51-ba66-a5ba14ef57a3",
+      "title": "【48-1】それいけ！やなせたかしとアンパンマン 〜心優しきヒーローに託された愛と勇気〜【COTEN RADIOショート やなせたかし編1】",
+      "season": 48,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/48-1-COTEN-RADIO-1-e2g16s0"
+    },
+    {
+      "guid": "341f6e0c-656b-41c4-afbf-bc64a76e861d",
+      "title": "【番外編＃101】新大統領の手腕はいかが？ケマル没後のトルコが抱える諸問題",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/101-e2gilhi"
+    },
+    {
+      "guid": "3fe2c7b4-0fc6-4d75-ab3d-9d80e3816f68",
+      "title": "【47-14】ケマル・アタテュルクの最期 〜僕たちは史実をどこから見るか？〜【COTEN RADIO ケマル・アタテュルク編14】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-14-COTEN-RADIO-14-e2ee73n"
+    },
+    {
+      "guid": "3ee6a3b4-5294-43ba-a688-a34bfdc87d57",
+      "title": "【47-13】私がトルコだ！偉大なる父の大演説 〜戻せない世俗国家へのスイッチ〜【COTEN RADIO ケマル・アタテュルク編13】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-13-COTEN-RADIO-13-e2ee6ih"
+    },
+    {
+      "guid": "7e84a5b3-c69a-4dc7-b0d6-82bf48d7e3a4",
+      "title": "【47-12】ついに設立！トルコ共和国 〜民族主義と世俗主義のイイトコドリ〜【COTEN RADIO ケマル・アタテュルク編12】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-12-COTEN-RADIO-12-e2e9vco"
+    },
+    {
+      "guid": "09c70c3d-aec3-4d42-a78e-7b0ea885c2e5",
+      "title": "【47-11】肋骨折れても何のその！対ギリシャ戦争 〜トルコ独立への最後のピース〜【COTEN RADIO ケマル・アタテュルク編11】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-11-COTEN-RADIO-11-e2e9v12"
+    },
+    {
+      "guid": "948a842b-2edf-47a1-8b6b-0918c0b29a21",
+      "title": "【47-10】俺の話を聞け！交渉人ケマルの外交戦術 〜目の前に立ちはだかる旧政府の壁〜【COTEN RADIO ケマル・アタテュルク編10】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-10-COTEN-RADIO-10-e2e8bev"
+    },
+    {
+      "guid": "0ce80f3d-02a0-450a-a8a1-d81e6852b23e",
+      "title": "【47-9】新時代はこの未来だ！第一次世界大戦終結 〜不敗将軍ケマルの大出世〜【COTEN RADIO ケマル・アタテュルク編9】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-9-COTEN-RADIO-9-e2e8b76"
+    },
+    {
+      "guid": "b0598b75-6272-41c4-94e4-864325cffda0",
+      "title": "【47-8】全指揮権をオレに回せ！軍人ケマルの開眼 〜第一次世界大戦での大暴れ〜【COTEN RADIO ケマル・アタテュルク編8】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-8-COTEN-RADIO-8-e2e8anf"
+    },
+    {
+      "guid": "ae0d05d0-150c-42af-843c-ef26077ec34b",
+      "title": "【47-7】かがくのちからってすげー！青年トルコ人革命 〜軍人たちの出世競争〜【COTEN RADIO ケマル・アタテュルク編7】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-7-COTEN-RADIO-7-e2e6q3g"
+    },
+    {
+      "guid": "17a1bed2-f266-44df-acff-59a8037372ee",
+      "title": "【47-6】ケマル、うまれる。 〜天に選ばれしエリート少年を育む多くの文化〜【COTEN RADIO ケマル・アタテュルク編6】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-6-COTEN-RADIO-6-e2e6paa"
+    },
+    {
+      "guid": "403be9bb-8c50-4f39-b206-b0380716e1ad",
+      "title": "【47-5】ここがすごいよ！アブドゥルハミト2世 〜現代への礎を築く近代化政策〜【COTEN RADIO ケマル・アタテュルク編5】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-52-COTEN-RADIO-5-e2e6oa7"
+    },
+    {
+      "guid": "95ce81e2-2830-4379-a1e7-13ced9aaec3b",
+      "title": "【47-4】ゆらゆらオスマン帝国 〜グラつくアブドゥルハミト2世の専制政治体制〜【COTEN RADIO ケマル・アタテュルク編4】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-4-2COTEN-RADIO-4-e2e6o1c"
+    },
+    {
+      "guid": "6973e7ca-ccdc-4131-a832-5a234c4fd702",
+      "title": "【47-3】さらばターバン！マフムト2世によって入れ替わるオスマン帝国の社会OS【COTEN RADIO ケマル・アタテュルク編3】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-32OSCOTEN-RADIO-3-e2e6nhq"
+    },
+    {
+      "guid": "782514f8-3264-45dd-ad4a-c274ebe556cb",
+      "title": "【47-2】こんなはずじゃ･･･！ヨーロッパを揺るがすオスマン帝国の脅威と過ち【COTEN RADIO ケマル・アタテュルク編2】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-2COTEN-RADIO-2-e2e6mqe"
+    },
+    {
+      "guid": "05c4db8e-aa20-4940-ace6-630705d80b1c",
+      "title": "【47-1】ケマル・アタテュルク 〜ひとりの男がもたらす近代トルコの夜明け〜【COTEN RADIO ケマル・アタテュルク編1】",
+      "season": 47,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-1-COTEN-RADIO-1-e2e6m7r"
+    },
+    {
+      "guid": "a165781d-7b1a-4582-9434-3c92fafcfe2e",
+      "title": "【番外編＃100】千年の継承 〜変わる時代と変わらぬ信仰〜 ゲスト：太宰府天満宮 第40代宮司 西高辻󠄀信宏さん（後編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/100---40-e2dbkvl"
+    },
+    {
+      "guid": "7d00e8ca-4f9b-4ce2-b8a8-addd9bf2c677",
+      "title": "【番外編＃99】千年の継承 〜変わる時代と変わらぬ信仰〜 ゲスト：太宰府天満宮 第40代宮司 西高辻󠄀信宏さん（中編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/99---40-e2dbkq6"
+    },
+    {
+      "guid": "98cea78d-db45-4f32-8903-70de619bb05f",
+      "title": "【番外編＃98】千年の継承 〜変わる時代と変わらぬ信仰〜 ゲスト：太宰府天満宮 第40代宮司 西高辻󠄀信宏さん（前編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/98---40-e2d9tjt"
+    },
+    {
+      "guid": "bd0903e1-587a-4c0c-b35b-3c28eb99583b",
+      "title": "【番外編＃97】えっ、アレも今年だっけ？2023年のコテンラジオを振り返ろう！",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/972023-e2dh434"
+    },
+    {
+      "guid": "b1caca36-6746-4981-9b45-c5d980c68c26",
+      "title": "【46-12】ぐらつく世界をどう生きる？民主主義が持つ脆弱性との向き合い方【COTEN RADIO 民主主義の歴史編12】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-12COTEN-RADIO-12-e2c8r4f"
+    },
+    {
+      "guid": "13442d96-b42c-45f3-8270-54ef38ea1734",
+      "title": "【46-11】サムライの国が超イメチェン！日本における民主主義クロニクル【COTEN RADIO 民主主義の歴史編11】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-11COTEN-RADIO-11-e2c8qsl"
+    },
+    {
+      "guid": "9a5cf83b-17c6-4e71-9349-891c54d54bc2",
+      "title": "【46-10】アメリカ合衆国の挑戦 〜星条旗の下に集いし民衆の夢〜【COTEN RADIO 民主主義の歴史編10】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-10-COTEN-RADIO-10-e2c791g"
+    },
+    {
+      "guid": "74963c0c-5cc4-490e-bee9-fca7243db32f",
+      "title": "【46-9】どうした？ワイマール共和国 〜厄災を呼ぶ民主主義のスキマ〜【COTEN RADIO 民主主義の歴史編9】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-9-COTEN-RADIO-9-e2c78j8"
+    },
+    {
+      "guid": "74967cc5-2f56-457f-914f-cbf0020a60c6",
+      "title": "【46-8】むっちゃくちゃ！フランス革命が招いた混乱くぁwせdrftgyふじこlp【COTEN RADIO 民主主義の歴史編8】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-8wdrftgylpCOTEN-RADIO-8-e2c7fe9"
+    },
+    {
+      "guid": "712e86a5-3dc2-4e28-9c6f-e8abf3673d64",
+      "title": "【46-7】社会契約説：ジャック・ルソー 〜みんなの意思とボクの意思の終着点〜【COTEN RADIO 民主主義の歴史編7】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-7-COTEN-RADIO-7-e2c784j"
+    },
+    {
+      "guid": "98a9b99a-b6b2-464b-983f-f5d6c2610cad",
+      "title": "【46-6】社会契約説：ジョン・ロック 〜ダメな政府はアンインストール！〜【COTEN RADIO 民主主義の歴史編6】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-6-COTEN-RADIO-6-e2bo8u5"
+    },
+    {
+      "guid": "266bb234-4cd5-4ddf-a093-20192a58a5cf",
+      "title": "【46-5】社会契約説：トマス・ホッブズ 〜乱世を生き抜くゼロベース思考のすゝめ〜【COTEN RADIO 民主主義の歴史編5】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-5-COTEN-RADIO-5-e2bo8lo"
+    },
+    {
+      "guid": "f13a8c95-d856-4f70-ae3e-394096a78f61",
+      "title": "【46-4】辺境の地・イギリスの議会制度 〜No pain, no gain.〜【COTEN RADIO 民主主義の歴史編4】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-4-No-pain--no-gain-COTEN-RADIO-4-e2bo8a9"
+    },
+    {
+      "guid": "370a7f2b-8e21-4d80-9050-abb9d025c680",
+      "title": "【46-3】俺たちアンチ民主主義！ローマ＆イタリアが掲げる共和制の変遷【COTEN RADIO 民主主義の歴史編3】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-3COTEN-RADIO-3-e2bo7ti"
+    },
+    {
+      "guid": "462b84cc-3c4e-49ad-be01-2d188fa2604d",
+      "title": "【46-2】カリスマなんていらねえよ！出る杭は打たれる古代ギリシャの民主主義【COTEN RADIO 民主主義の歴史編2】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-2COTEN-RADIO-2-e2bmm7n"
+    },
+    {
+      "guid": "a83e0608-f7eb-49eb-8d3e-f3da56d8d8e0",
+      "title": "【46-1】奇想天外！民主主義 〜人類が求めた自由と平等〜【COTEN RADIO 民主主義の歴史編1】",
+      "season": 46,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-1-COTEN-RADIO-1-e2bmi0j"
+    },
+    {
+      "guid": "f0ae8e01-bf32-4243-83f9-cdda4e271200",
+      "title": "【45-4】右大臣 菅原道真の左遷 〜ルーキー世代との軋轢の果てに〜【COTEN RADIOショート 菅原道真編4】",
+      "season": 45,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/45-4--COTEN-RADIO-4-e2b01uu"
+    },
+    {
+      "guid": "e894fd69-a2eb-4ccc-92a3-cef542d365ff",
+      "title": "【45-3】「譲位？今でしょ！」天皇のご意見番がひた走るハイパー出世街道【COTEN RADIOショート 菅原道真編3】",
+      "season": 45,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/45-3COTEN-RADIO-3-e2b01q8"
+    },
+    {
+      "guid": "377d6bab-dc8b-45ea-8e1b-d0612c308696",
+      "title": "【45-2】やっかみには要注意！ひいじいちゃんから続く菅原一族の英才教育【COTEN RADIOショート 菅原道真編2】",
+      "season": 45,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/45-2COTEN-RADIO-2-e2b01cl"
+    },
+    {
+      "guid": "05444d36-3377-496c-82b4-0652ec1c2c23",
+      "title": "【45-1】学問の神様 菅原道真 〜千年愛される平安貴族の足跡〜【COTEN RADIOショート 菅原道真編1】",
+      "season": 45,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/45-1--COTEN-RADIO-1-e2b00mu"
+    },
+    {
+      "guid": "08257b7a-287c-41fe-bb56-fc1122763e1b",
+      "title": "【番外編＃96】出雲発！コミュニティナースって何？　ゲスト：矢田明子（Community Nurse Company）（後編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/96-Community-Nurse-Company-e2abiu0"
+    },
+    {
+      "guid": "0a784346-0fef-49c9-87dd-ff4cd13c0f51",
+      "title": "【番外編＃95】出雲発！コミュニティナースって何？　ゲスト：矢田明子（Community Nurse Company）（中編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/95-Community-Nurse-Company-e2abisl"
+    },
+    {
+      "guid": "0017421e-81b6-4918-964b-4d58317f2088",
+      "title": "【番外編＃94】出雲発！コミュニティナースって何？　ゲスト：矢田明子（Community Nurse Company）（前編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/94-Community-Nurse-Company-e2abipv"
+    },
+    {
+      "guid": "21519ffa-8aee-4d76-b9db-e9fe0a003b3b",
+      "title": "【44-12】善性の発動条件 〜シンドラーを学んでわかったこと&わからなかったこと〜【COTEN RADIO シンドラー編12】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-12-COTEN-RADIO-12-e286vb1"
+    },
+    {
+      "guid": "23f75b41-5538-428d-aec8-5bc72e65dd7e",
+      "title": "【番外編#93】株式会社COTENの資金調達 〜ベンチャーキャピタリストと語る現代の呪術〜",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/93COTEN-e2a7f91"
+    },
+    {
+      "guid": "3d443aff-72f8-4642-8012-f96a8db82487",
+      "title": "【44-11】ユダヤ人を救った不屈の良心 〜人は誰もが勇者になれる〜【COTEN RADIO シンドラー編11】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-11-COTEN-RADIO-11-e286us3"
+    },
+    {
+      "guid": "bf378e83-0c7e-4592-b96e-2fae66bab911",
+      "title": "【44-10】外交官・杉原千畝 〜無数のユダヤ難民を救った命のビザ〜【COTEN RADIO シンドラー編10】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-10-COTEN-RADIO-10-e2864n0"
+    },
+    {
+      "guid": "56a3af1a-1f24-40d6-b9aa-3a7ff3838e60",
+      "title": "【番外編＃92】金のヤンヤンを手に入れろ！！COTEN RADIO短歌コンテスト大賞決定審査会",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/92COTEN-RADIO-e29slg2"
+    },
+    {
+      "guid": "0ca7e47d-8b79-4236-b434-1d7c2e5fbce3",
+      "title": "【44-9】若き研究者ミルグラムの実験 〜アイヒマンが巻き起こした多くのモヤモヤ〜【COTEN RADIO シンドラー編9】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-9-COTEN-RADIO-9-e2864es"
+    },
+    {
+      "guid": "7e7ab8d7-5555-4cee-baed-4f694a432ecc",
+      "title": "【44-8】アドルフ・アイヒマン 〜ホロコーストを引き起こした男の知られざる素顔〜【COTEN RADIO シンドラー編8】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-8-COTEN-RADIO-8-e285s75"
+    },
+    {
+      "guid": "a9d63bf7-b5da-47b2-b86a-d514e4ac9d2e",
+      "title": "【告知】COTEN RADIOシルバーウィークお休みのお知らせ",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/COTEN-RADIO-e29eefg"
+    },
+    {
+      "guid": "c3d3e987-5f16-41ec-b7b7-3da3b3ba6400",
+      "title": "【44-7】落日の救世主 オスカー・シンドラー 〜救った命に救われた晩年〜【COTEN RADIO シンドラー編7】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-7--COTEN-RADIO-7-e285s3f"
+    },
+    {
+      "guid": "f3cb2a03-13cd-494d-9f7d-44555fbf4779",
+      "title": "【44-6】アーモン・ゲートとシンドラー 〜権力が生み出した命の分かれ道〜【COTEN RADIO シンドラー編6】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-6-COTEN-RADIO-6-e28b863"
+    },
+    {
+      "guid": "a4a2dc9b-50e9-4669-9165-168a0aa65a10",
+      "title": "【44-5】コネと賄賂で事業拡大！商才あふれるシンドラーを変えたポーランドでの惨劇【COTEN RADIO シンドラー編5】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-5COTEN-RADIO-5-e285rmn"
+    },
+    {
+      "guid": "0fdcf5ec-aafe-4d16-b087-e0e4f0715980",
+      "title": "【44-4】学生時代のアダ名は詐欺師!? オスカー・シンドラーの生い立ち【COTEN RADIO シンドラー編4】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-4---COTEN-RADIO-4-e285rd5"
+    },
+    {
+      "guid": "eb200c68-9077-49bd-9da8-ca49750cab8d",
+      "title": "【44-3】壊れゆくポーランド 〜過酷な迫害を生き延びたレオン少年の記憶〜【COTEN RADIO シンドラー編3】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-3-COTEN-RADIO-3-e285r8j"
+    },
+    {
+      "guid": "078f1572-71df-4da9-9899-4d00a9c41afd",
+      "title": "【44-2】クリスタル・ナハト 〜月明かりに照らされたユダヤ人の涙〜【COTEN RADIO シンドラー編2】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-2-COTEN-RADIO-2-e285qpj"
+    },
+    {
+      "guid": "12d9964f-bbf8-41fc-8f10-0231a2b6bb3d",
+      "title": "【告知】COTEN採用情報（エンジニア&データマネージャー）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/COTEN-e28gih1"
+    },
+    {
+      "guid": "6c2d7691-b716-49ac-a4db-efedcf6b1460",
+      "title": "【44-1】オスカー・シンドラー 〜1,200人の命を救った善意と勇気〜【COTEN RADIO シンドラー編1】",
+      "season": 44,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-1-1-200COTEN-RADIO-1-e28b7ap"
+    },
+    {
+      "guid": "c5fac131-e53a-4cb1-a0a7-f4d579590a1b",
+      "title": "【43-4】なぜ人間は空想の動物を創り出すのか？龍とは認知習性の結晶体【COTEN RADIOショート 龍の歴史編4】",
+      "season": 43,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/43-4COTEN-RADIO-4-e275g9m"
+    },
+    {
+      "guid": "7ac6bd0b-3733-4448-b4c9-fe3f6ed175a8",
+      "title": "【43-3】龍と人の三角関係 ～嫌われ龍と愛され龍を分かつもの～【COTEN RADIOショート 龍の歴史編3】",
+      "season": 43,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/43-3-COTEN-RADIO-3-e275fjq"
+    },
+    {
+      "guid": "fd805512-ede7-40d9-a9e8-ebda858e397c",
+      "title": "【43-2】君はどこからやってきた？骨の化石からたどる龍の残り香【COTEN RADIOショート 龍の歴史編2】",
+      "season": 43,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/43-2COTEN-RADIO-2-e26t06s"
+    },
+    {
+      "guid": "55d77f0b-ad22-4742-95ee-1b2a341b7d55",
+      "title": "【43-1】燃えよ！龍の歴史 〜人類を魅了し続ける神獣の起源〜【COTEN RADIOショート 龍の歴史編1】",
+      "season": 43,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/43-1-COTEN-RADIO-1-e26sutt"
+    },
+    {
+      "guid": "1394de24-c99f-4e6d-b010-0e71becaeaff",
+      "title": "【番外編＃91】一緒に学ぼう！キリスト教　ゲスト：千葉遊大〈プリンストン神学校 博士課程在籍〉（後編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/91-e26lnlm"
+    },
+    {
+      "guid": "3a1cef9e-aa38-4704-a346-b3ca518960b8",
+      "title": "【番外編＃90】一緒に学ぼう！キリスト教　ゲスト：千葉遊大〈プリンストン神学校 博士課程在籍〉（中編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/90-e26lm4m"
+    },
+    {
+      "guid": "e2214524-0d4b-4963-a933-57e97cb69f3c",
+      "title": "【番外編＃89】一緒に学ぼう！キリスト教　ゲスト：千葉遊大〈プリンストン神学校 博士課程在籍〉（前編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/89-e26ll8d"
+    },
+    {
+      "guid": "a0f56049-f9b7-4c60-bc63-694727a1d1c7",
+      "title": "【42-12】その後のカルタゴと地中海世界 〜ハンニバルの生き様に学ぶリーダーの条件〜【COTEN RADIO ハンニバル 編12】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-12-COTEN-RADIO--12-e25aeh3"
+    },
+    {
+      "guid": "d1f2efae-2d64-4e40-940e-bba1485d2e8a",
+      "title": "【42-11】第三次ポエニ戦争 〜カルタゴ絶対滅ぼすマンのダンコたる決意〜【COTEN RADIO ハンニバル 編11】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-11-COTEN-RADIO--11-e25ae7d"
+    },
+    {
+      "guid": "c7694ada-11c4-4103-b474-5e0a77771b85",
+      "title": "【42-10】さらばハンニバル！敗戦国の呪縛から逃れられぬ男の晩年【COTEN RADIO ハンニバル 編10】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-10COTEN-RADIO--10-e25adoe"
+    },
+    {
+      "guid": "9e22e8dd-695c-462b-a068-825189ca9052",
+      "title": "【42-9】最終局面！ザマの戦い 〜不屈のローマが繰り出す最後のフォール技〜【COTEN RADIO ハンニバル 編9】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-9-COTEN-RADIO--9-e25ad9o"
+    },
+    {
+      "guid": "3331eb00-b1ad-4974-9779-679f5cd7aafe",
+      "title": "【42-8】凸撃！カンネーの戦い 〜がけっぷちで輝く天才軍師の才能〜【COTEN RADIO ハンニバル 編8】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-8-COTEN-RADIO--8-e25abg4"
+    },
+    {
+      "guid": "7e0e7af1-659f-408f-9185-4dacbd39cce0",
+      "title": "【42-7】片目失明もまったなし！背水の陣で無双するトレビア川&トラシメヌス湖畔の戦い【COTEN RADIO ハンニバル 編7】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-7COTEN-RADIO--7-e25a9up"
+    },
+    {
+      "guid": "b0b9f19b-5ee3-4c28-bf10-e64d60076931",
+      "title": "【42-6】第二次ポエニ戦争勃発 〜ぞうさんぞうさんおやまをのぼるのね〜【COTEN RADIO ハンニバル 編6】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-6-COTEN-RADIO--6-e25a9gm"
+    },
+    {
+      "guid": "49a15655-485e-4d0b-908a-47cb44e749c7",
+      "title": "【42-5】「おめえの出番だぞ ハンニバル!!」カルタゴの若大将に託されたローマへの復讐心【COTEN RADIO ハンニバル 編5】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-5---COTEN-RADIO--5-e25a86c"
+    },
+    {
+      "guid": "7e689865-4727-42c0-8750-55c7ccf57722",
+      "title": "【42-4】「シラクサマジ草ｗｗｗ」第一次ポエニ戦争の明暗を分ける同志の裏切り【COTEN RADIO ハンニバル 編4】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-4COTEN-RADIO--4-e258e3k"
+    },
+    {
+      "guid": "7dcc15d2-dacf-4f5f-9137-8a1bc4c90373",
+      "title": "【42-3】「日和ってる奴いる？いねえよなぁ！」第一次ポエニ戦争に挑むローマ軍の超絶メンタル【COTEN RADIO ハンニバル 編3】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-3COTEN-RADIO--3-e258cgi"
+    },
+    {
+      "guid": "a8e1c08d-1bb0-493d-ae70-a28c247dbe49",
+      "title": "【42-2】カルタゴ建国伝説 〜地中海を席巻する海洋帝国の成り立ち〜【COTEN RADIO ハンニバル 編2】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-2-COTEN-RADIO--2-e258bl0"
+    },
+    {
+      "guid": "aa96d690-9ff5-40c3-b382-c97e46991229",
+      "title": "【42-1】カルタゴの英雄 ハンニバル 〜ローマ最大の悪夢と呼ばれた男の一生〜【COTEN RADIO ハンニバル 編1】",
+      "season": 42,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42-1--COTEN-RADIO--1-e258aft"
+    },
+    {
+      "guid": "d283518c-4b24-4590-86fe-9a42a840c6cd",
+      "title": "【番外編＃88】当事者としてのウクライナ戦争　ゲスト：牧野寛＆ボリス・アファナセフ（SAMI Japan）（後編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/88-SAMI-Japan-e24thvk"
+    },
+    {
+      "guid": "55a2f4ba-335c-4cc0-b4b4-02a60f993945",
+      "title": "【告知】Crewサイトリニューアルについて",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/Crew-e25a9v1"
+    },
+    {
+      "guid": "2bb64789-2b2d-425c-a489-3543ab62f443",
+      "title": "【番外編＃87】当事者としてのウクライナ戦争　ゲスト：牧野寛＆ボリス・アファナセフ（SAMI Japan）（中編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/87-SAMI-Japan-e24th7p"
+    },
+    {
+      "guid": "1af3a782-ab27-4b60-8eba-2fb7a12f91d6",
+      "title": "【番外編＃86】当事者としてのウクライナ戦争　ゲスト：牧野寛＆ボリス・アファナセフ（SAMI Japan）（前編）",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/86-SAMI-Japan-e24tg77"
+    },
+    {
+      "guid": "d82c351c-4c08-404f-b78c-366f49ab5935",
+      "title": "【41-4】「パクってみな、飛ぶぞ！」空飛ぶ技術の仁義なき戦い【COTEN RADIOショート ライト兄弟編4】",
+      "season": 41,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/41-4COTEN-RADIO-4-e22l25n"
+    },
+    {
+      "guid": "a305b5ea-a994-412e-8c00-acb796682ba0",
+      "title": "【41-3】世界がライト兄弟を知った日 ～華麗なるフライト、束の間の栄光～【COTEN RADIOショート ライト兄弟編3】",
+      "season": 41,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/41-3-COTEN-RADIO-3-e22l1vv"
+    },
+    {
+      "guid": "99483dcb-b24c-4c49-966e-6ff3df58a2c3",
+      "title": "【41-2】大奮闘チャリンコブラザーズ 〜ねじれた翼にロマンをのせて〜【COTEN RADIOショート ライト兄弟編2】",
+      "season": 41,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/41-2-COTEN-RADIO-2-e22l1sj"
+    },
+    {
+      "guid": "6eed361c-7590-4db0-b0a6-12f6171681d0",
+      "title": "【41-1】飛べ！ライト兄弟 〜空を変えてしまった翼の職人たち〜【COTEN RADIOショート ライト兄弟編1】",
+      "season": 41,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/41-1-COTEN-RADIO-1-e22l1k9"
+    },
+    {
+      "guid": "8d677364-9d8a-4f38-9443-067e6d541641",
+      "title": "【番外編＃85】これからのCOTEN RADIO",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/85COTEN-RADIO-e23u6tc"
+    },
+    {
+      "guid": "4249e559-7dd7-4a9a-bad5-1b7fc9555589",
+      "title": "【40-12】十字軍運動の終焉 〜豊饒な文化の礎となった戦士たちの生き様〜【COTEN RADIO サラディンと十字軍 編12】",
+      "season": 40,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-12-COTEN-RADIO--12-e20ethh"
+    },
+    {
+      "guid": "364814d9-b3a8-4175-8045-96d1c8093179",
+      "title": "【40-11】サラディン亡き後の十字軍 〜最強モンゴル軍も一目置く新たな英雄の台頭〜【COTEN RADIO サラディンと十字軍 編11】",
+      "season": 40,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-11-COTEN-RADIO--11-e20er8t"
+    },
+    {
+      "guid": "01380357-2e63-44a5-9ec0-cf4bff99c417",
+      "title": "【40-10】第3回十字軍とサラディン軍 〜白旗振るまで帰れません！チキチキ耐久サバイバル〜【COTEN RADIO サラディンと十字軍編10】",
+      "season": 37,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-103-COTEN-RADIO-10-e20d5jf"
+    },
+    {
+      "guid": "587d2297-2e8a-47c1-9abe-ecffa2a4680d",
+      "title": "【40-9】妹泣かすヤツは全員ボコす！第3回十字軍で一国を率いるカリスマ王の武勇伝【COTEN RADIO サラディンと十字軍編9】",
+      "season": 40,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-93COTEN-RADIO-9-e20d4gs"
+    },
+    {
+      "guid": "d96251c7-7201-4ce8-a2ec-6d1fe2f904aa",
+      "title": "【40-8】水路を絶って、煙でドン！聖地エルサレム奪還を誓うサラディン軍の圧倒的戦闘力【COTEN RADIO サラディンと十字軍 編8】",
+      "season": 40,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-8COTEN-RADIO--8-e20d424"
+    },
+    {
+      "guid": "1d049b88-ea2c-4499-b565-7850857bcf15",
+      "title": "【40-7】ぬるっとシリアの覇権を奪取！裏切り宰相サラディンが描く立身出世プラン【COTEN RADIO サラディンと十字軍編7】",
+      "season": 40,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-7COTEN-RADIO-7-e20d3o8"
+    },
+    {
+      "guid": "de11d2d5-62dc-4c83-923b-419b71c94193",
+      "title": "【40-6】生まれてすぐに一族追放！紆余曲折ありすぎ英雄 サラディンの生い立ち【COTEN RADIO サラディンと十字軍編6】",
+      "season": 37,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-6-COTEN-RADIO-6-e20d2dv"
+    },
+    {
+      "guid": "def317bc-0b41-4ddd-aa6a-9929de78e1b3",
+      "title": "【40-5】第2回十字軍とイスラーム諸国 〜実力社会に躍り出るザンギー親子の快進撃〜【COTEN RADIO サラディンと十字軍編5】",
+      "season": 40,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-52-COTEN-RADIO-5-e20d1nr"
+    },
+    {
+      "guid": "eaa6b187-77bc-48a1-8775-54b6f46f3902",
+      "title": "【40-4】民衆チームはまさかの丸腰!? 第1回十字軍によるイスラーム侵攻の顛末【COTEN RADIO サラディンと十字軍編4】",
+      "season": 40,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-4---1COTEN-RADIO-4-e20at66"
+    },
+    {
+      "guid": "c685cdc8-169d-42f1-98bc-4873ab15b297",
+      "title": "【40-3】人にはそれぞれ事情がある！十字軍兵士たちが抱く色んな動機やモチベーション【COTEN RADIO サラディンと十字軍編3】",
+      "season": 40,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-3COTEN-RADIO-3-e20aq86"
+    },
+    {
+      "guid": "3af33277-a9a0-427e-9a72-8aad3382fdab",
+      "title": "【40-2】『はい破門』『そマ？』聖職者の叙任権闘争で揺れる中世ヨーロッパ【COTEN RADIO サラディンと十字軍編2】",
+      "season": 40,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-2COTEN-RADIO-2-e20amjg"
+    },
+    {
+      "guid": "ed922d2a-6be3-4357-b89c-5c1b5821deca",
+      "title": "【40-1】イスラームの英雄 サラディン 〜十字軍が最も恐れた男の生涯～【COTEN RADIO サラディンと十字軍編1】",
+      "season": 40,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-1--COTEN-RADIO-1-e20ajt9"
+    },
+    {
+      "guid": "e8846337-275b-4860-bc25-5f795e469525",
+      "title": "【39-4】悪魔の最期 〜熾烈なプロパガンダ合戦の果てに訪れたナチスの破滅〜【COTEN RADIOショート ゲッベルス編4】",
+      "season": 39,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/39-4-COTEN-RADIO-4-e1vke7d"
+    },
+    {
+      "guid": "06798a65-33a1-4c45-9992-b2159fbab0ac",
+      "title": "【39-3】天才宣伝マンの熱狂 〜ゲッベルスの圧倒的宣伝力が導くナチスの勃興〜【COTEN RADIOショート ゲッベルス編3】",
+      "season": 39,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/39-3-COTEN-RADIO-3-e1vke21"
+    },
+    {
+      "guid": "66d90905-457d-4ac9-abda-8c1bf025d587",
+      "title": "【39-2】消して、書いて、世界を騙せ！権力によるメディア利用とプロパガンダの歴史【COTEN RADIOショート ゲッベルス編2】",
+      "season": 39,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/39-2COTEN-RADIO-2-e1vj1ok"
+    },
+    {
+      "guid": "739c635e-737e-4860-bd2b-a54ad74ad378",
+      "title": "【39-1】宣伝大臣 ゲッベルス 〜ヒトラーに熱狂したプロパガンダの悪魔〜【COTEN RADIOショート ゲッベルス編1】",
+      "season": 39,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/39-1--COTEN-RADIO-1-e1vivfk"
+    },
+    {
+      "guid": "be1d6902-d128-45b1-a515-47b178dac87f",
+      "title": "【38-6】各国の現状と日本の立ち位置 〜僕たちに求められるリアリティと覚悟〜【COTEN RADIO 社会福祉の歴史編6】",
+      "season": 38,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/38-6-COTEN-RADIO-6-e1uoe7j"
+    },
+    {
+      "guid": "37323995-d502-43ae-b96e-b1b9223d6855",
+      "title": "【38-5】ニッポンソーシャルヒストリー 〜GHQでガラリと変わる社会福祉の転換期〜【COTEN RADIO 社会福祉の歴史編5】",
+      "season": 38,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/38-5-GHQCOTEN-RADIO-5-e1uods2"
+    },
+    {
+      "guid": "71a1e3e3-1b01-4113-8ffe-6e79059c9552",
+      "title": "【38-4】幸福な国ランキング常連！消費税20％超でも安心して暮らせる北欧諸国の社会モデル【COTEN RADIO 社会福祉の歴史編4】",
+      "season": 38,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/38-420COTEN-RADIO-4-e1uod7d"
+    },
+    {
+      "guid": "9d81a3e0-59ba-4075-a220-71797ed28f51",
+      "title": "【38-3】行き詰まる福祉国家 〜どんなに不景気だってコインはインフレーション〜【COTEN RADIO 社会福祉の歴史編3】",
+      "season": 38,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/38-3-COTEN-RADIO-3-e1uobhb"
+    },
+    {
+      "guid": "a6bc8340-319c-4883-a16c-e6266a4534e6",
+      "title": "【38-2】ガンバる国家！ガンバる民間！福祉国家の成立に至るイギリスとアメリカのお国事情【COTEN RADIO 社会福祉の歴史編2】",
+      "season": 38,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/38-2COTEN-RADIO-2-e1uoaa2"
+    },
+    {
+      "guid": "88da1019-e1e8-46c4-ac81-75b4e44562ec",
+      "title": "【38-1】社会福祉の歴史 〜僕たち、独りじゃ生きられないから。〜【COTEN RADIO 社会福祉の歴史編1】",
+      "season": 38,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/38-1-COTEN-RADIO-1-e1uo85t"
+    },
+    {
+      "guid": "7e4e9890-5da0-4f2d-9d9f-68afb31eb152",
+      "title": "【番外編 #84】株式会社ヘラルボニーの挑戦 〜障害×アートによるビジネスが描く社会の新たな目線〜(後編)",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/84-e1ubkkk"
+    },
+    {
+      "guid": "7b6b1af3-fe93-4cf2-a412-458d45fbec05",
+      "title": "【番外編 #83】株式会社ヘラルボニーの挑戦 〜障害×アートによるビジネスが描く社会の新たな目線〜(前編)",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/83-e1ubk9c"
+    },
+    {
+      "guid": "ffea91e4-5c66-47da-8790-ee0acac1b269",
+      "title": "【37-8】知らざるを知らずと為せ！前人未到のチャレンジがもたらす新たな視点の重要性【COTEN RADIO 障害の歴史編8】",
+      "season": 37,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/37-8COTEN-RADIO-8-e1t5804"
+    },
+    {
+      "guid": "95c2d938-dba5-4342-92b3-99984384f6b7",
+      "title": "【37-7】ノーマライゼーションとインクルージョン 〜障害者があたりまえの権利を享受できる社会モデルへ〜【COTEN RADIO 障害の歴史編7】",
+      "season": 37,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/37-7-COTEN-RADIO-7-e1t57l7"
+    },
+    {
+      "guid": "4be00246-abb1-4187-8c94-4ea11c282adf",
+      "title": "【37-6】『その主張、異議あり！』優生学を批判する遺伝学者たちに引き継がれしダーウィンの情熱【COTEN RADIO 障害の歴史編6】",
+      "season": 37,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/37-6COTEN-RADIO-6-e1t56ok"
+    },
+    {
+      "guid": "426ad46a-9e28-4883-8500-8cdeb06d8579",
+      "title": "【37-5】人間を優劣で格付け!? よりよい社会の為の優生学に排除される社会的弱者たちの苦悩【COTEN RADIO 障害の歴史編5】",
+      "season": 37,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/37-5---COTEN-RADIO-5-e1t561r"
+    },
+    {
+      "guid": "b2065453-9c09-4038-ab89-18121531322e",
+      "title": "【37-4】進化論と社会ダーウィズム 〜レジェンド研究者が遺した生物多様性を理解する為の系譜〜【COTEN RADIO 障害の歴史編4】",
+      "season": 37,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/37-4-COTEN-RADIO-4-e1t54r8"
+    },
+    {
+      "guid": "3ad8004b-4400-4220-981e-76dcc39085ce",
+      "title": "【37-3】『悪魔のせい？』『病気のせい！』啓蒙主義によって再定義される障害との向き合い方【COTEN RADIO 障害の歴史編3】",
+      "season": 37,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/37-3COTEN-RADIO-3-e1t54fo"
+    },
+    {
+      "guid": "f21f80bd-8757-4f1c-9392-afb4dbf1c8aa",
+      "title": "【37-2】みんなちがってみんないい！ 宗教ロジックが障害者にもたらす多種多様な専門職【COTEN RADIO 障害の歴史編2】",
+      "season": 37,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/37-2-COTEN-RADIO-2-e1t547c"
+    },
+    {
+      "guid": "e883b2a8-20b5-4f9c-ba26-a1d7f2ea4e74",
+      "title": "【37-1】障害の歴史 〜声なき声に耳をすませば〜【COTEN RADIO 障害の歴史編1】",
+      "season": 37,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/37-1-COTEN-RADIO-1-e1t53ij"
+    },
+    {
+      "guid": "b12502b6-5c13-439e-a2de-882674121e28",
+      "title": "【番外編 #82】若新雄純リターンズ！迫り来る老いと死、ボクたちはどう向き合う？(後編)",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/82-e1sbbd3"
+    },
+    {
+      "guid": "7d7440ee-3d47-4187-9d5c-234f09b9883b",
+      "title": "【番外編 #81】若新雄純リターンズ！迫り来る老いと死、ボクたちはどう向き合う？(前編)",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/81-e1sbarp"
+    },
+    {
+      "guid": "91ddd2b3-f1ed-49ba-82b6-e2c9985691ef",
+      "title": "【36-8】「わからない」をどう受け入れるか？未来を生きる僕たちの新たな死へのアプローチ【COTEN RADIO 老いと死の歴史編8】",
+      "season": 36,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/36-8COTEN-RADIO-8-e1rdnqt"
+    },
+    {
+      "guid": "2ed74b0d-9c10-49ac-a3a3-1454914ef71e",
+      "title": "【36-7】伊達にあの世は見てねぇぜ！日本の死生観を揺さぶり続ける亡者たちの霊魂【COTEN RADIO 老いと死の歴史編7】",
+      "season": 36,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/36-7COTEN-RADIO-7-e1rdnm3"
+    },
+    {
+      "guid": "90d48fa1-222f-4c8b-84e9-c79d1442f07f",
+      "title": "【36-6】世界の宗教が捉える死 〜死後の世界をめぐる考察と宗教間の美しき不調和〜【COTEN RADIO 老いと死の歴史編6】",
+      "season": 36,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/36-6-COTEN-RADIO-6-e1rdn8v"
+    },
+    {
+      "guid": "6c15c335-5d95-4311-8944-e48be5bfcd1c",
+      "title": "【36-5】あなたの知らない死後の世界 〜死を経験できない人間による死との向き合い方〜【COTEN RADIO 老いと死の歴史編5】",
+      "season": 36,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/36-5-COTEN-RADIO-5-e1rdkh1"
+    },
+    {
+      "guid": "43d9bb43-9c70-456d-9522-c54a1a708e05",
+      "title": "【36-4】「寿命なんて誰が決めた!?」大切な存在の死に触れた動物の意識と挙動【COTEN RADIO 老いと死の歴史編4】",
+      "season": 36,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/36-4--COTEN-RADIO-4-e1rc20k"
+    },
+    {
+      "guid": "4e4a1e46-d917-4253-9c8a-84a71803e633",
+      "title": "【36-3】人間と死のフシギな関係 〜医学の領域を超える生と死のヤバいメカニズム〜【COTEN RADIO 老いと死の歴史編3】",
+      "season": 36,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/36-3-COTEN-RADIO-3-e1rc1qh"
+    },
+    {
+      "guid": "c4d0195c-412e-4153-b146-247588c0ab6d",
+      "title": "【36-2】老人が老人になる日 〜TPOによって形を変える「老人」という名のざっくりカテゴライズ〜【COTEN RADIO 老いと死の歴史編2】",
+      "season": 36,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/36-2-TPOCOTEN-RADIO-2-e1rc1ik"
+    },
+    {
+      "guid": "17bbeea0-4c93-4f2b-9b46-2d6a4fb2353e",
+      "title": "【36-1】老いと死の歴史 〜地球に生きる人類の逃れられぬ宿命〜【COTEN RADIO 老いと死の歴史編1】",
+      "season": 36,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/36-1-COTEN-RADIO-1-e1rc0v8"
+    },
+    {
+      "guid": "2d31de91-cf46-455b-b2b6-6703170a7b73",
+      "title": "【番外編 #80】ウクライナ戦争の現状と今後 〜テレビ東京報道局 豊島晋作キャスターの視点〜(後編)",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/80-e1r5529"
+    },
+    {
+      "guid": "4d5d0d78-d9b8-4703-b3fd-f3e1047454df",
+      "title": "【番外編 #79】ウクライナ戦争の現状と今後 〜テレビ東京報道局 豊島晋作キャスターの視点〜(前編)",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/79-e1r53q1"
+    },
+    {
+      "guid": "65367590-10de-4cf2-9ccd-bb82961c3a0d",
+      "title": "【35-4】構造主義とは何なのか？ 〜西洋哲学の腹を食い破るエイリアンの正体〜【COTEN RADIO ジンブンガク レヴィ＝ストロース編4】",
+      "season": 35,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/35-4-COTEN-RADIO--4-e1qe01j"
+    },
+    {
+      "guid": "e04ce501-0390-476d-894c-3ed81a364871",
+      "title": "【番外編 #78】≪祝ACCグランプリ受賞！≫ 燃える広告音楽プロデューサー 樋口太陽に聞くコテンラジオと広告アワード",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/78ACC-e1qq167"
+    },
+    {
+      "guid": "117cfa54-87a7-4ce0-b696-78c8ce5bce10",
+      "title": "【35-3】構造なんなん？インセスト・タブーが明らかにした数学と婚姻の数奇な関係【COTEN RADIO ジンブンガク レヴィ＝ストロース編3】",
+      "season": 35,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/35-3COTEN-RADIO--3-e1qdvrj"
+    },
+    {
+      "guid": "57e4d847-1631-4804-a318-41aa678f4193",
+      "title": "【35-2】構造主義への目覚め 〜チョキをチョキと認識する為に知らなきゃならない言語の本質〜【COTEN RADIO ジンブンガク レヴィ＝ストロース編2】",
+      "season": 35,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/35-2-COTEN-RADIO--2-e1qdvll"
+    },
+    {
+      "guid": "fb6758f0-ab1f-4c02-9079-e112369d40af",
+      "title": "【35-1】知の巨人 レヴィ＝ストロース 〜世界を席巻した文化人類学者の足跡〜【COTEN RADIO ジンブンガク レヴィ＝ストロース編1】",
+      "season": 35,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/35-1--COTEN-RADIO--1-e1qdsj7"
+    },
+    {
+      "guid": "a537ca51-8edb-46e5-ab55-e9d59ae6f2cf",
+      "title": "【番外編 #77】樋口＆ヤンヤン不在！キニマンス塚本ニキ参戦！どうする？どうなる？コテンラジオ【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/77COTEN-RADIO-e1q83ul"
+    },
+    {
+      "guid": "092b299d-543e-4a8b-9d92-022bf6de16f2",
+      "title": "【34-12】武家社会を定着させた男 北条義時の最期と武士たちが信じ抜いた源頼朝の権威【COTEN RADIO 鎌倉武士編12】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-12-COTEN-RADIO-12-e1nn9mr"
+    },
+    {
+      "guid": "93cc4d3c-6e3b-4454-bef4-c556bdb45054",
+      "title": "【34-11】鎌倉幕府の挑戦！ラスボス 後鳥羽上皇との仁義なきドッカンバトル「承久の乱」【COTEN RADIO 鎌倉武士編11】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-11-COTEN-RADIO-11-e1nn77i"
+    },
+    {
+      "guid": "0bd0b410-4271-4240-bae4-99a8996dd30b",
+      "title": "【34-10】食うか食われるか。ライバルを蹴落とした権力亡者・北条時政の止まらない暴走と転落【COTEN RADIO 鎌倉武士編10】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-10COTEN-RADIO-10-e1njda1"
+    },
+    {
+      "guid": "3c3b2a33-c244-4dc7-bd92-82866c2b3d9f",
+      "title": "【34-9】激震！鎌倉殿、逝く。残された若き二代目・源頼家を支える13人の重臣たち【COTEN RADIO 鎌倉武士編9】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-913COTEN-RADIO-9-e1njbhk"
+    },
+    {
+      "guid": "bf5ecd1d-8ccc-47ca-8e93-4c5535588d88",
+      "title": "【34-8】親しき仲こそ礼儀あり!? 鎌倉幕府をまとめる源頼朝の卓越した組織マネジメント能力【COTEN RADIO 鎌倉武士編8】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-8---COTEN-RADIO-8-e1njbcj"
+    },
+    {
+      "guid": "84de73de-1789-4093-a79d-e95ccb6e82cb",
+      "title": "【34-7】嗚呼、諸行無常。壇ノ浦の戦い 〜栄華を誇った平家の滅亡と幼き安徳天皇の壮絶な今際〜【COTEN RADIO 鎌倉武士編7】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-7-COTEN-RADIO-7-e1njb3g"
+    },
+    {
+      "guid": "c5bea829-8714-4cbd-bae0-73e718507394",
+      "title": "【34-6】源頼朝、挙兵。〜勇猛な坂東武者を束ねる棟梁に引き継がれしカリスマの血筋〜【COTEN RADIO 鎌倉武士編6】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-6COTEN-RADIO-6-e1nhsuq"
+    },
+    {
+      "guid": "558dc0a6-fb78-49ad-a924-846c2661e618",
+      "title": "【34-5】立ち上がれ！源頼朝 〜伊豆国での流人生活で踏み出した平家打倒への第一歩〜【COTEN RADIO 鎌倉武士編5】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-5-COTEN-RADIO-5-e1nhsj0"
+    },
+    {
+      "guid": "b92d216c-faa9-4332-82fc-f552daec7d0a",
+      "title": "【34-4】平家にあらずんば人にあらず！皇位継承権をめぐる平氏と天皇家の綱渡りなカンケイ【COTEN RADIO 鎌倉武士編4】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-4COTEN-RADIO-4-e1nhsds"
+    },
+    {
+      "guid": "e216525f-07e3-4f54-8fe9-323b7ff564fa",
+      "title": "【34-3】力こそが正義！荘園の発達で爆発的に増える武士だけが持つ手段としての武力【COTEN RADIO 鎌倉武士編3】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-3COTEN-RADIO-3-e1nhs7k"
+    },
+    {
+      "guid": "0c39ae80-02c9-4c7d-a0b5-3568bbfc525a",
+      "title": "【34-2】王権は誰の手に!? 中世の摂関政治が生み出したモンスター貴族 藤原道長の栄華【COTEN RADIO 鎌倉武士編2】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-2----COTEN-RADIO-2-e1nhrvh"
+    },
+    {
+      "guid": "ee865a33-536e-41eb-b3bf-06755a126651",
+      "title": "【34-1】俺たちの鎌倉殿！武士の世を創りし鎌倉武士の栄枯盛衰【COTEN RADIO 鎌倉武士編1】",
+      "season": 34,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34-1COTEN-RADIO-1-e1nhrb7"
+    },
+    {
+      "guid": "01e42093-282e-4501-9d6d-45fe2308d636",
+      "title": "【32-16】『戦争に勝つ』とは何か？日露戦争が後世に残したいくつもの物語【COTEN RADIO 日露戦争編16】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-16COTEN-RADIO-16-e1l1g6h"
+    },
+    {
+      "guid": "bdc7e1c8-7a43-4724-abe1-da82789d3d21",
+      "title": "【32-15】「皇国の興廃、この一戦にあり。」日本海海戦で勝利を決定付けた東郷平八郎たちの英断【COTEN RADIO 日露戦争編15】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-15COTEN-RADIO-15-e1l1g44"
+    },
+    {
+      "guid": "3cf797d9-d86f-428f-ac79-ec280deb5ae3",
+      "title": "【32-14】傷だらけの奉天決戦 〜凍てつく大地でのアウェイ戦で活躍する秋山支隊の功績〜【COTEN RADIO 日露戦争編14】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-14-COTEN-RADIO-14-e1l1g0k"
+    },
+    {
+      "guid": "3b21afff-2ec1-4471-9073-fca624b69280",
+      "title": "【32-13】二〇三高地ヲ陥落セヨ！作戦変更に戸惑う戦線部隊と危機的状況に見る日本人のメンタリティー【COTEN RADIO 日露戦争編13】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-13COTEN-RADIO-13-e1l1fo3"
+    },
+    {
+      "guid": "71bb9804-a27d-427d-b0c2-432233278f5b",
+      "title": "【32-12】要塞をぶっ潰せ！旅順総攻撃 〜名将 乃木希典を苦しめた悪条件のオンパレード〜【COTEN RADIO 日露戦争編12】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-12--COTEN-RADIO-12-e1l1fhr"
+    },
+    {
+      "guid": "13653da4-e9c1-4341-8c58-ba3db3cdc040",
+      "title": "【32-11】資金調達と広報 〜生き馬の目を抜く苛烈な国際交渉に身を投じた日本人の半生〜【COTEN RADIO 日露戦争編11】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-11-COTEN-RADIO-11-e1l1ffb"
+    },
+    {
+      "guid": "bfae810a-492a-49c7-a8dd-c3d8a7e7ccc8",
+      "title": "【32-10】制海権を奪い取れ！日露戦争のキーポイント・旅順に鳴り響く開戦のファンファーレ【COTEN RADIO 日露戦争編10】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-10COTEN-RADIO-10-e1l1fa3"
+    },
+    {
+      "guid": "9ad82151-e782-4a9a-8855-b8dc17660391",
+      "title": "【32-9】うるしを塗れ！電柱を建てろ！がけっぷち日本軍のロシア対策徹底マニュアル【COTEN RADIO 日露戦争編9】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-9COTEN-RADIO-9-e1l1f6o"
+    },
+    {
+      "guid": "78c66f57-e01a-4f51-aeff-7b17d69933a3",
+      "title": "【32-8】義和団事件 〜フルボッコにされる清国を占領し続けるロシアが引いた開戦の引き金〜【COTEN RADIO 日露戦争編8】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-8-COTEN-RADIO-8-e1l0joj"
+    },
+    {
+      "guid": "8054cd4a-4542-48f7-97c0-22e86a2bd3b7",
+      "title": "【32-7】ロシア帝国と明治政府 〜アジア各地に蒔かれた世界を揺るがす大戦の火種〜【COTEN RADIO 日露戦争編7】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-7-COTEN-RADIO-7-e1l0jk0"
+    },
+    {
+      "guid": "27d4d180-fbfb-4749-a18c-00964f161111",
+      "title": "【32-6】「もうやめて！とっくに清国のライフはゼロよ！」日清戦争で飛躍する日本に響く不協和音【COTEN RADIO 日露戦争編6】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-6COTEN-RADIO-6-e1l1etb"
+    },
+    {
+      "guid": "c4b73c9c-3cda-469b-819d-9d1995881c28",
+      "title": "【32-5】眠れる獅子を叩き起こせ！大陸進出を目論む日本軍のマッチポンプ大作戦 in 朝鮮半島【COTEN RADIO 日露戦争編5】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-5-in-COTEN-RADIO-5-e1l0i83"
+    },
+    {
+      "guid": "6c325883-43f6-4827-9f85-55a5e926a58d",
+      "title": "【32-4】血で血を洗う抗争勃発！李氏朝鮮、近代化をめぐる派閥対立と周辺国の謀略【COTEN RADIO 日露戦争編4】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-4COTEN-RADIO-4-e1l0i4d"
+    },
+    {
+      "guid": "c637fadf-f8dd-4811-8345-35de6d8912c0",
+      "title": "【32-3】新しいルールを作るのは誰だ!? 日本の近代国家化で広がる極東の亀裂【COTEN RADIO 日露戦争編3】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-3---COTEN-RADIO-3-e1l0hmb"
+    },
+    {
+      "guid": "5618d167-91b3-4ff2-86de-bdd4ea14768e",
+      "title": "【32-2】戦慄のアヘン戦争 〜ドラッグに揺れるアジア情勢とある幕末志士の開眼〜【COTEN RADIO 日露戦争編2】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-2-COTEN-RADIO-2-e1l0hek"
+    },
+    {
+      "guid": "fb54f75d-712b-422d-9e58-727d902d96b9",
+      "title": "【32-1】日露戦争 〜弱小国ニッポンが見出した勝利への布石〜【COTEN RADIO 日露戦争編1】",
+      "season": 32,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32-1-COTEN-RADIO-1-e1l0h1s"
+    },
+    {
+      "guid": "23b61850-912b-4ace-873e-1a24cecac6d4",
+      "title": "【番外編 #76】「過ちは、繰り返すな…！」画一的思考からの脱却を図る僕たちの採用活動【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/76COTEN-RADIO-e1knpl1"
+    },
+    {
+      "guid": "32701dc3-e48e-47d7-924e-eff44e10f0ff",
+      "title": "【番外編 #75】「なんか皇帝化してない？」リスナーからのご指摘にコテン深井がズバリお答えします！【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/75COTEN-RADIO-e1knpbb"
+    },
+    {
+      "guid": "b93084df-98d3-41c1-895d-1eff4b146c0c",
+      "title": "【番外編#74】人間の知性について 〜ひとくくりにできない才能と広がる未来への可能性〜【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/74-COTEN-RADIO-e1kf047"
+    },
+    {
+      "guid": "466039ca-6d2b-4d0e-886b-734711e5190c",
+      "title": "【番外編#73】信仰と確信 〜人類と世界を理解する為に必要な宗教のアレコレ〜【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/73-COTEN-RADIO-e1kevs5"
+    },
+    {
+      "guid": "fdeb48b3-d932-46dd-9e5b-e0782df7bd63",
+      "title": "【31-4】切腹の美学　〜武士が武士であるために〜【COTEN RADIOショート 切腹編4】",
+      "season": 31,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/31-4-COTEN-RADIO-4-e1k56dh"
+    },
+    {
+      "guid": "84064e15-8852-468a-a4c6-71ddbbfd3cc7",
+      "title": "【31-3】切腹の理由ランキング第1位は○○！？　～誇り高き武士社会における切腹の役割～【COTEN RADIOショート 切腹編3】",
+      "season": 31,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/31-31-COTEN-RADIO-3-e1k567b"
+    },
+    {
+      "guid": "d2695ec5-ec10-45b6-993b-426307d0665e",
+      "title": "【31-2】腹を割って話そう！切腹メソッド　〜なぜ武士は腹を切るのか？〜【COTEN RADIOショート 切腹編2】",
+      "season": 31,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/31-2-COTEN-RADIO-2-e1jvi8q"
+    },
+    {
+      "guid": "89e550dd-9dce-49fa-b3e3-8fa631a050bf",
+      "title": "【31-1】切腹の歴史　～現代人が知らない武士の死の作法～【COTEN RADIOショート 切腹編1】",
+      "season": 31,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/31-1-COTEN-RADIO-1-e1jra4i"
+    },
+    {
+      "guid": "b52f35ab-18a1-44f7-adaa-f8ad2985d9fc",
+      "title": "【番外編#72】「コテンラジオ、変わります。」チーム新体制で目指す新たな価値提供と未来への挑戦【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/72COTEN-RADIO-e1jlv14"
+    },
+    {
+      "guid": "2ad8fdd6-00a3-4b66-9f58-0cea3de9d147",
+      "title": "【特別編】揺らぐ北欧秩序 〜中立2カ国、NATO加盟の歴史的経緯〜【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/2NATOCOTEN-RADIO-e1jj38d"
+    },
+    {
+      "guid": "b877e046-e1d4-425c-9536-6340d52ee103",
+      "title": "【番外編 #71】世界史データベースのキーパーソン！プロダクトマネージャー草野陽夏の仕事から見る株式会社COTEN（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/71COTENCOTEN-RADIO-e1jf4ss"
+    },
+    {
+      "guid": "86a69f81-6ae2-4ec9-b07b-c2c17370e58e",
+      "title": "【番外編 #70】世界史データベースのキーパーソン！プロダクトマネージャー草野陽夏の仕事から見る株式会社COTEN（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/70COTENCOTEN-RADIO-e1j9uak"
+    },
+    {
+      "guid": "9d14ec8c-2526-4910-a7f1-46b8ccab6322",
+      "title": "【30-12】結局、フリードリヒ大王とは何だったのか？一人の男の覚悟に僕達が感じたこと【COTEN RADIO フリードリヒ大王編12】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-12COTEN-RADIO-12-e1gq006"
+    },
+    {
+      "guid": "361e161e-4ec4-40f8-bd26-524849ba8030",
+      "title": "【30-11】(おでん肉じゃが粉吹き芋) 孤独な哲人王の晩年 (カレーポテトチップスポタージュスープ)【COTEN RADIO フリードリヒ大王編11】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-11--COTEN-RADIO-11-e1gpvgv"
+    },
+    {
+      "guid": "00e952de-1e1a-4d0f-bfca-5607a5d56126",
+      "title": "【30-10】まだ可能性はゼロじゃない！七年戦争で壊滅的状態のプロイセンに差し込んだ一筋の光【COTEN RADIO フリードリヒ大王編10】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-10COTEN-RADIO-10-e1go47l"
+    },
+    {
+      "guid": "e5f5af84-92f8-42c6-973a-6ed0ecaf92a3",
+      "title": "【特別編】祝・オリジナルグッズ完成！制作の裏側トーク　ゲスト：Steve*inc.代表 太田伸志さん&AD黒田志保利さん（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/Steveinc--ADCOTEN-RADIO-e1gahta"
+    },
+    {
+      "guid": "a96111f9-207f-4c11-bbec-80dee81d9c9d",
+      "title": "【特別編】祝・オリジナルグッズ完成！制作の裏側トーク　ゲスト：Steve*inc.代表 太田伸志さん&AD黒田志保利さん（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/Steveinc--ADCOTEN-RADIO-e1gahre"
+    },
+    {
+      "guid": "7ddcf650-3be3-445e-b1d6-5aee9babe5db",
+      "title": "【30-9】うらみはらさでおくべきか!! 七年戦争勃発 〜フリードリヒを憎む女たちの逆襲〜【COTEN RADIO フリードリヒ大王編9】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-9----COTEN-RADIO-9-e1go3vl"
+    },
+    {
+      "guid": "38773471-1e21-416e-adca-78124b327cdb",
+      "title": "【30-8】シュレージエン戦争　〜不屈のプロイセン VS 女帝マリア・テレジアの執念〜【COTEN RADIO フリードリヒ大王編8】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-8--VS-COTEN-RADIO-8-e1gijie"
+    },
+    {
+      "guid": "67f7681a-51bd-4f4c-a786-62082fa04ae1",
+      "title": "【30-7】隣国同士で大激突！ハプスブルク王女 マリア・テレジアのお家事情【COTEN RADIO フリードリヒ大王編7】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-7-COTEN-RADIO-7-e1gijbq"
+    },
+    {
+      "guid": "0d119235-d59d-4a83-a6a4-b5fd06464f39",
+      "title": "【30-6】青年フリードリヒ、覚醒。父との和解と死別で芽生えた国王としての決意と覚悟【COTEN RADIO フリードリヒ大王編6】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-6COTEN-RADIO-6-e1ghfd7"
+    },
+    {
+      "guid": "20411e45-85d0-4842-9d2c-f2908abdac7c",
+      "title": "【30-5】フリードリヒ少年の決死行 〜親友カッテの無惨な最期〜【COTEN RADIO フリードリヒ大王編5】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-5-COTEN-RADIO-5-e1ghf0p"
+    },
+    {
+      "guid": "628d8829-4b9e-459f-a407-749f949193ca",
+      "title": "【30-4】『芸術？そんなんいらんねん！』軍人王からの壮絶過ぎる帝王教育に爆発寸前！【COTEN RADIO フリードリヒ大王編4】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-4COTEN-RADIO-4-e1g7og0"
+    },
+    {
+      "guid": "d8ff427d-6c39-44d8-bd5d-a75f4f691f8d",
+      "title": "【30-3】世にも奇妙なフリードリヒ大王の先祖達。 〜猫背と軍人王とボクと。〜【COTEN RADIO フリードリヒ大王編3】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-3-COTEN-RADIO-3-e1g7n9g"
+    },
+    {
+      "guid": "4de0ddef-63d5-4c42-84ce-11f88134c148",
+      "title": "【30-2】こうして生まれたプロイセン！ヨーロッパ北東部を揺るがした東方植民の悲劇【COTEN RADIO フリードリヒ大王編2】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-2COTEN-RADIO-2-e1g7m29"
+    },
+    {
+      "guid": "f8500ce5-273c-468a-8378-06146774c80b",
+      "title": "【30-1】名君 フリードリヒ大王 〜プロイセンをブチ上げた剣とペン〜【COTEN RADIO フリードリヒ大王編1】",
+      "season": 30,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30-1--COTEN-RADIO-1-e1g7lom"
+    },
+    {
+      "guid": "b376b69b-5e9a-4b66-a14a-97266c137857",
+      "title": "【番外編 #69】『宇宙兄弟』『ドラゴン桜』編集者が語る 世界を理解する為の観察力の鍛え方　ゲスト：株式会社コルク 佐渡島庸平（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/69---COTEN-RADIO-e1dtklj"
+    },
+    {
+      "guid": "9672d654-5dff-41e3-ab2f-493a3722289e",
+      "title": "【番外編 #68】『宇宙兄弟』『ドラゴン桜』編集者が語る 世界を理解する為の観察力の鍛え方　ゲスト：株式会社コルク 佐渡島庸平（中編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/68---COTEN-RADIO-e1dtkgq"
+    },
+    {
+      "guid": "74b84716-8835-4a8a-8dff-df345f5a199f",
+      "title": "【番外編 #67】『宇宙兄弟』『ドラゴン桜』編集者が語る 世界を理解する為の観察力の鍛え方　ゲスト：株式会社コルク 佐渡島庸平（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/67---COTEN-RADIO-e1dtk7o"
+    },
+    {
+      "guid": "a9d23c7e-884d-4e35-8d03-513044aa6eb2",
+      "title": "【番外編 #66】戦国の貴公子　宇喜多秀家　～夢託されし秀吉チルドレンの生き様～（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/66--COTEN-RADIO-e1g9f3s"
+    },
+    {
+      "guid": "3e1c18ba-3e69-4257-ad58-3b0eb2b9df04",
+      "title": "【番外編 #65】戦国の貴公子　宇喜多秀家　～夢託されし秀吉チルドレンの生き様～（中編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/65--COTEN-RADIO-e1g2jlg"
+    },
+    {
+      "guid": "276dd068-955a-4adb-8327-71f7b364aa20",
+      "title": "【告知】『歴史思考』2022年3月30日発売！深井龍之介初書籍！",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/2022330-e1fs2tv"
+    },
+    {
+      "guid": "77115a4f-edaf-4cc5-9cb2-872873d87bbb",
+      "title": "【番外編 #64】戦国の貴公子　宇喜多秀家　～夢託されし秀吉チルドレンの生き様～（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/64--COTEN-RADIO-e1fmf6u"
+    },
+    {
+      "guid": "87b16782-abf7-4051-88a9-5ced473b8db3",
+      "title": "【29-12】残されたエンゲルスの奮闘　〜現代まで影響を与え続けるマルクスの問い〜【COTEN RADIO マルクス・エンゲルス編12】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-12-COTEN-RADIO-12-e1ds1m2"
+    },
+    {
+      "guid": "0274a07e-b694-4c95-aa4f-17d534755382",
+      "title": "【29-11】『資本論』vol.2　〜みんなが欲しがる貨幣のチカラ〜【COTEN RADIO マルクス・エンゲルス編11】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-11vol-2-COTEN-RADIO-11-e1ds1e5"
+    },
+    {
+      "guid": "991de219-34fe-4875-8d11-1b3ea928ea4c",
+      "title": "【特別編　緊急収録】ウクライナとロシア 6/6　～地政学から読み解く現在～【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/66-COTEN-RADIO-e1fkqd8"
+    },
+    {
+      "guid": "ec4f85c4-3deb-4436-b1e8-63efe464d83e",
+      "title": "【特別編　緊急収録】ウクライナとロシア 5/6　～地政学から読み解く現在～【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/56-COTEN-RADIO-e1fjtg4"
+    },
+    {
+      "guid": "57db8b0a-f766-4201-ab7e-5495ed58f166",
+      "title": "【特別編　緊急収録】ウクライナとロシア 4/6　～プーチン大統領のこれまで～【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-COTEN-RADIO-e1fjslo"
+    },
+    {
+      "guid": "5c9a41cd-56d7-44a6-a610-3784c6e5238d",
+      "title": "【特別編　緊急収録】ウクライナとロシア 3/6　～プーチン大統領のこれまで～【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/36-COTEN-RADIO-e1fjsir"
+    },
+    {
+      "guid": "f62c5e57-2bba-403f-95ac-66c315c9e4c9",
+      "title": "【特別編　緊急収録】ウクライナとロシア 2/6　～ウクライナとロシアの歴史～【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-COTEN-RADIO-e1fjli2"
+    },
+    {
+      "guid": "eeded264-869d-4789-b418-67c6eee6c473",
+      "title": "【特別編　緊急収録】ウクライナとロシア 1/6　～ウクライナとロシアの歴史～【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/16-COTEN-RADIO-e1fjl4p"
+    },
+    {
+      "guid": "9694556c-70e6-492d-bb17-61f16b8240f6",
+      "title": "【29-10】『資本論』vol.1　〜価値ってなんだ？〜【COTEN RADIO マルクス・エンゲルス編10】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-10vol-1-COTEN-RADIO-10-e1ds16t"
+    },
+    {
+      "guid": "27565e5e-143e-4f69-ad17-90039f359268",
+      "title": "【29-9】老年マルクスの飽くなき情熱　〜資本論の完成と第一インターナショナル設立に向けての奔走〜【COTEN RADIO マルクス・エンゲルス編9】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-9-COTEN-RADIO-9-e1ds10o"
+    },
+    {
+      "guid": "ab98b84d-4a9b-4d66-a730-79122f59b383",
+      "title": "【29-8】「マルクス、アウト〜！」図ってはいけない革命で逮捕＆苦難の亡命生活。【COTEN RADIO マルクス・エンゲルス編8】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-8COTEN-RADIO-8-e1ds0jr"
+    },
+    {
+      "guid": "1a957424-7f6e-49c2-b0f2-425bc81a1470",
+      "title": "【29-7】「万国の労働者よ、団結せよ！」マルクス＆エンゲルス、共産党宣言を共同執筆【COTEN RADIO マルクス・エンゲルス編7】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-7COTEN-RADIO-7-e1dqfjl"
+    },
+    {
+      "guid": "17eeb9a1-f4c6-4dde-9617-da5f6b6f3427",
+      "title": "【29-6】心の友よ！マルクスとエンゲルス 世界を革命に導く二人の出会い【COTEN RADIO マルクス・エンゲルス編6】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-6-COTEN-RADIO-6-e1dqeqg"
+    },
+    {
+      "guid": "84d1ab71-31c5-4ac5-bec5-cab1e13ca99e",
+      "title": "【29-5】敷かれたレールなんてクソくらえ！資本家に生まれし若きエンゲルスの苦悩と父への抵抗【COTEN RADIO マルクス・エンゲルス編5】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-5COTEN-RADIO-5-e1dqem8"
+    },
+    {
+      "guid": "8d3cb26f-57a5-4690-b9ee-1186f086135f",
+      "title": "【29-4】「ヘーゲルすげー！んっ？でも何か違くね？」ライン新聞発行でマルクスが垣間見たジャーナリズムの限界【COTEN RADIO マルクス・エンゲルス編4】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-4COTEN-RADIO-4-e1dqegt"
+    },
+    {
+      "guid": "6e330ee4-3636-4a4f-b30a-bd01e6907115",
+      "title": "【29-3】マルクスの誕生と青年期　〜アイデンティティの喪失とインターナショナルな視座〜【COTEN RADIO マルクス・エンゲルス編3】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-3-COTEN-RADIO-3-e1dqea4"
+    },
+    {
+      "guid": "e4bd271e-21e5-4198-b59f-575d71cbaae6",
+      "title": "【29-2】亡きナポレオンの呪縛を解き放て！ウィーン会議で作る新たなヨーロッパ秩序と激動のプロイセン【COTEN RADIO マルクス・エンゲルス編2】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-2COTEN-RADIO-2-e1dqe0d"
+    },
+    {
+      "guid": "0b67061d-e718-4b51-b7f2-30d1493c2e1f",
+      "title": "【29-1】振り返ればヤツがいる！マルクス・エンゲルス　〜世界を変えたふたりの友情〜【COTEN RADIO マルクス・エンゲルス編1】",
+      "season": 29,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29-1-COTEN-RADIO-1-e1dqcmc"
+    },
+    {
+      "guid": "8797d289-58e4-480d-aa0a-edf4a5f39515",
+      "title": "【番外編 #63】徒然なるまま聞いてみよう！東京大学史料編纂所 本郷和人教授への歴史Q&A（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/63-QACOTEN-RADIO-e1d54ih"
+    },
+    {
+      "guid": "0cd1a355-e6ae-400e-b4b7-e711ad6c334c",
+      "title": "【番外編 #62】徒然なるまま聞いてみよう！東京大学史料編纂所 本郷和人教授への歴史Q&A（中編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/62-QACOTEN-RADIO-e1d5437"
+    },
+    {
+      "guid": "b42981d3-fbc2-4ffe-83ff-484ac396fd12",
+      "title": "【番外編 #61】徒然なるまま聞いてみよう！東京大学史料編纂所 本郷和人教授への歴史Q&A（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/61-QACOTEN-RADIO-e1d54pb"
+    },
+    {
+      "guid": "317416cb-cbc8-49f5-abc8-f9b361687463",
+      "title": "【28-4】株式会社COTENの大実験　〜ポスト資本主義と皆でつくる新たな世界〜【COTEN RADIO 資本主義編4】",
+      "season": 28,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/28-4COTEN-COTEN-RADIO-4-e1cg2ge"
+    },
+    {
+      "guid": "cc68e566-be3e-49e6-af84-972ac98a64d0",
+      "title": "【28-3】ポスト資本主義　ー現代人が彩る新たな社会のグラデーションー【COTEN RADIO 資本主義編3】",
+      "season": 28,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/28-3-COTEN-RADIO-3-e1cg28b"
+    },
+    {
+      "guid": "fd5a83ea-b754-4150-9ef4-9b3dc4e5ad62",
+      "title": "【28-2】資本主義の経済学史　〜現代人が知っておくべきレジェンド学者たちの持論！〜【COTEN RADIO 資本主義編2】",
+      "season": 28,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/28-2-COTEN-RADIO-2-e1cg1ql"
+    },
+    {
+      "guid": "d6a56b4c-05d1-488e-bd7c-91146a2892b7",
+      "title": "【28-1】カネを持ってりゃ偉いのか!? 人類史を変えた「資本主義」の正体【COTEN RADIO 資本主義編1】",
+      "season": 28,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/28-1---COTEN-RADIO-1-e1cg1j5"
+    },
+    {
+      "guid": "be7534ae-332c-4769-99e0-54e680aa5b2c",
+      "title": "【27-10】「あの時、彼女はどう思ったか？」孤独に生きた武則天に学ぶ人生観【COTEN RADIO 武則天編10】",
+      "season": 27,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27-10COTEN-RADIO-10-e1bgs7r"
+    },
+    {
+      "guid": "c0c46e96-e7d9-4b24-ba33-c0ed7d60325f",
+      "title": "【27-9】武周朝の成立　〜武則天、あの手この手で皇帝の座をゲット！〜【COTEN RADIO 武則天編9】",
+      "season": 27,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27-9-COTEN-RADIO-9-e1bgs0t"
+    },
+    {
+      "guid": "8f9bec3d-8ec7-4221-8af7-6c0c9b134cdf",
+      "title": "【27-8】優秀な人材を登用！デキないヤツはクビ！皇后 武則天による垂簾政治【COTEN RADIO 武則天編8】",
+      "season": 27,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27-8-COTEN-RADIO-8-e1bgrmm"
+    },
+    {
+      "guid": "3246c23d-86dc-4663-9231-f6cf1ea6ec42",
+      "title": "【27-7】皇后廃位政争　〜武則天 VS 先代から仕える最強高官軍団〜【COTEN RADIO 武則天編7】",
+      "season": 27,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27-7--VS-COTEN-RADIO-7-e1bgpfd"
+    },
+    {
+      "guid": "64db71e8-b578-45e1-a089-d58790bb7eca",
+      "title": "【27-6】武則天 Episode.0　〜皇帝に愛されし女たちの権力闘争〜【COTEN RADIO 武則天編6】",
+      "season": 27,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27-6-Episode-0-COTEN-RADIO-6-e1bgp3f"
+    },
+    {
+      "guid": "5b18ea3b-2eb5-4216-a94b-825de4c31d33",
+      "title": "【27-5】太宗 李世民　〜唐王朝の天下統一を成し遂げた名君〜【COTEN RADIO 武則天編5】",
+      "season": 27,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27-5--COTEN-RADIO-5-e1bf2a7"
+    },
+    {
+      "guid": "130b40a4-03a0-4647-a2d1-b4de8004b4b7",
+      "title": "【27-4】なぜ「隋」は2代で滅びたのか？　〜アジアに咲き誇る世界帝国の興亡〜【COTEN RADIO 武則天編4】",
+      "season": 27,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27-42-COTEN-RADIO-4-e1bf1pp"
+    },
+    {
+      "guid": "f43b88bb-2226-44a7-943b-a78de5126468",
+      "title": "【27-3】五胡十六国時代の始まりと終焉　〜諸民族の崩壊と再構築が生んだ異民族帝国の多元性〜【COTEN RADIO 武則天編3】",
+      "season": 27,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27-3-COTEN-RADIO-3-e1bf14u"
+    },
+    {
+      "guid": "d35bd483-561f-44d9-ba69-98487b693746",
+      "title": "【27-2】華やかな暗黒時代･･･？魏晋南北朝時代を襲った政治的混乱と現代まで鮮やかに咲き誇る中国文化【COTEN RADIO 武則天編2】",
+      "season": 27,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27-2COTEN-RADIO-2-e1bf0ft"
+    },
+    {
+      "guid": "df5abcf2-a499-4178-b9a3-bed6d57eac50",
+      "title": "【27-1】女帝 武則天　〜中国史を動かした美貌と策謀〜【COTEN RADIO 武則天編1】",
+      "season": 27,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27-1--COTEN-RADIO-1-e1b9c4j"
+    },
+    {
+      "guid": "47b514e1-9b35-49f0-821b-8015326d192a",
+      "title": "【特別編】財閥の歴史　〜日本の近代化を担った老舗たちの系譜〜(後編)【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/COTEN-RADIO-e1aq5dq"
+    },
+    {
+      "guid": "a809ba32-9592-4dcb-9e34-1e6897be632a",
+      "title": "【特別編】財閥の歴史　〜日本の近代化を担った老舗たちの系譜〜(前編)【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/COTEN-RADIO-e1apv8u"
+    },
+    {
+      "guid": "4c4886b0-10bb-4449-a179-b46d0317ea25",
+      "title": "【番外編 #60】[PG-18]「社会には愛しかない」AV監督・二村ヒトシさんに聞く人類を幸せにする為のセックス（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/60PG-18AVCOTEN-RADIO-e1aoaf0"
+    },
+    {
+      "guid": "703e9df4-17f2-4da2-85ce-511c84a76eef",
+      "title": "【番外編 #59】[PG-18]「社会には愛しかない」AV監督・二村ヒトシさんに聞く人類を幸せにする為のセックス（中編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/59PG-18AVCOTEN-RADIO-e1abjbf"
+    },
+    {
+      "guid": "c09767f2-a35b-4936-b5d6-d899d63db27f",
+      "title": "【番外編 #58】[PG-18]「社会には愛しかない」AV監督・二村ヒトシさんに聞く人類を幸せにする為のセックス（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/58PG-18AVCOTEN-RADIO-e1abil3"
+    },
+    {
+      "guid": "0227f3bb-362b-4309-bf17-bfc16bdbb0ba",
+      "title": "【26-13】[PG-18] 20世紀以降の性　時代の過渡期を生きる我々に求められる人間としての在り方【COTEN RADIO 性の歴史編13】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-13PG-18-20-COTEN-RADIO-13-e181r3a"
+    },
+    {
+      "guid": "77a92b24-a184-47fa-9cb6-41563846c0de",
+      "title": "【26-12】[PG-18] 武士と文明開化とセックスと。　〜日本人の価値観をガラリと変えた西洋文化〜【COTEN RADIO 性の歴史編12】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-12PG-18--COTEN-RADIO-12-e181n2k"
+    },
+    {
+      "guid": "647fe16f-8443-41fc-87a6-433543481b54",
+      "title": "【26-11】[PG-18] 古代から中世における日本の性　〜目が合った瞬間にSEX〜【COTEN RADIO 性の歴史編11】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-11PG-18--SEXCOTEN-RADIO-11-e181lmf"
+    },
+    {
+      "guid": "e2a5aa9e-2df0-487e-a2b0-7d4c4f5da67f",
+      "title": "【26-10】[PG-18] セックスで心身ともに健康に！激変する中国大陸の性事情とフェチズムの多様性【COTEN RADIO 性の歴史編10】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-10PG-18-COTEN-RADIO-10-e180rdn"
+    },
+    {
+      "guid": "b750df7b-3f2c-4d64-83e1-9139666d560f",
+      "title": "【26-9】[PG-18] 性に翻弄される女たち　規制と開放の狭間で揺れ動く19世紀ヨーロッパの性【COTEN RADIO 性の歴史編9】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-9PG-18--19COTEN-RADIO-9-e17ukgp"
+    },
+    {
+      "guid": "14f9061b-1765-425a-a63c-8c966c0d4735",
+      "title": "【26-8】[PG-18] 18世紀ヨーロッパの性　〜タブー破りこそが人類最大のエクスタシー!?〜【COTEN RADIO 性の歴史編8】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-8PG-18-18---COTEN-RADIO-8-e17ukam"
+    },
+    {
+      "guid": "229d7f36-904b-4fbc-8a32-1f49d4e62751",
+      "title": "【26-7】[PG-18] 死刑！死刑！お前も死刑！宗教改革で突き進む性規制と虐げられる女性たち【COTEN RADIO 性の歴史編7】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-7PG-18-COTEN-RADIO-7-e17uj4c"
+    },
+    {
+      "guid": "74cced6d-c170-4cb8-8aa9-868ed67459c2",
+      "title": "【26-6】[PG-18] 「射精に秩序を!!」キリスト教が定めた中世ヨーロッパのSEXマニュアルと重すぎる罰【COTEN RADIO 性の歴史編6】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-6PG-18---SEXCOTEN-RADIO-6-e17uij7"
+    },
+    {
+      "guid": "6b9186d4-5ae8-4333-a912-3250411434ad",
+      "title": "【26-5】[PG-18] 人のセックスを笑うな！キリスト教が塗り替えた古代ローマの性の概念【COTEN RADIO 性の歴史編5】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-5PG-18-COTEN-RADIO-5-e17qu35"
+    },
+    {
+      "guid": "16e77b35-9885-4550-90bc-4f5454ce2fa6",
+      "title": "【26-4】[PG-18] 人生は官能と享楽だ！セックス大国・古代ギリシアの奥深き性事情【COTEN RADIO 性の歴史編4】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-4PG-18-COTEN-RADIO-4-e17qtoi"
+    },
+    {
+      "guid": "753161d1-c620-4150-92a5-509198a27637",
+      "title": "【26-3】[PG-18] 先史社会の性（後編）　〜タブーがタブーとされたワケ〜【COTEN RADIO 性の歴史編3】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-3PG-18--COTEN-RADIO-3-e17qtik"
+    },
+    {
+      "guid": "652d2b76-b1e6-4b9f-af58-59c7a8132c07",
+      "title": "【26-2】[PG-18] 先史社会の性（前編）　〜神話とセックスの密接な関わり〜【COTEN RADIO 性の歴史編2】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-2PG-18--COTEN-RADIO-2-e17qt9p"
+    },
+    {
+      "guid": "a79692c6-c8e6-429d-ac19-2ed6d3a3aa5e",
+      "title": "【26-1】[PG-18] 性の歴史　ー人類が紡いだ愛とセックスの物語ー【COTEN RADIO 性の歴史編1】",
+      "season": 26,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26-1PG-18--COTEN-RADIO-1-e17qqm9"
+    },
+    {
+      "guid": "052b44e0-f7f5-4580-acae-ef45ef875f38",
+      "title": "【番外編 #57】プロセスエコノミー　〜デジタル社会を生き続けるボクらの物語〜　ゲスト：尾原和啓（IT評論家）（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/57--ITCOTEN-RADIO-e180qa5"
+    },
+    {
+      "guid": "a75b1d5f-37fc-42b6-93d0-a383423b58a6",
+      "title": "【番外編 #56】プロセスエコノミー　〜デジタル社会を生き続けるボクらの物語〜　ゲスト：尾原和啓（IT評論家）（中編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/56--ITCOTEN-RADIO-e17qosh"
+    },
+    {
+      "guid": "a3ec14eb-93e9-4b50-8d4f-c84f49360cc4",
+      "title": "【番外編 #55】プロセスエコノミー　〜デジタル社会を生き続けるボクらの物語〜　ゲスト：尾原和啓（IT評論家）（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/55--ITCOTEN-RADIO-e17qo50"
+    },
+    {
+      "guid": "5a8af188-2fb6-4504-b8d7-542e0e1fbeee",
+      "title": "【番外編 #54】実験と挑戦　プロデューサー・研究者 若新雄純さんが企むこれまで&これから（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/54--COTEN-RADIO-e17b68e"
+    },
+    {
+      "guid": "99c972b2-ee55-4532-a6d7-600196dac30d",
+      "title": "【番外編 #53】実験と挑戦　プロデューサー・研究者 若新雄純さんが企むこれまで&これから（中編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/53--COTEN-RADIO-e177b47"
+    },
+    {
+      "guid": "91950747-9af7-4663-b292-8413e333e53c",
+      "title": "【番外編 #52】実験と挑戦　プロデューサー・研究者 若新雄純さんが企むこれまで&これから（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/52--COTEN-RADIO-e171guf"
+    },
+    {
+      "guid": "85c85095-d828-40eb-88a2-a96274d460df",
+      "title": "【25-13】近代公教育制度の確立　ー結局、僕たちは何のために学ぶんだろう？ー【COTEN RADIO 教育の歴史編13】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-13-COTEN-RADIO-13-e157ih6"
+    },
+    {
+      "guid": "5d876697-6c43-4bb8-87b3-fca964a80826",
+      "title": "【25-12】ある教師のエモいい話　〜貧しい子供達を救ったペスタロッチの愛情〜【COTEN RADIO 教育の歴史編12】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-12-COTEN-RADIO-12-e157eng"
+    },
+    {
+      "guid": "fba847c0-951e-4041-9115-5683f4158ba1",
+      "title": "【25-11】変態紳士・ルソー、再び。社会に衝撃を与えた啓蒙主義と教育【COTEN RADIO 教育の歴史編11】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-11COTEN-RADIO-11-e157ckv"
+    },
+    {
+      "guid": "be0d3979-4070-44cd-b3ac-9a11b7989ddc",
+      "title": "【25-10】宗教改革で社会OSがアプデ!?そもそも論から社会を覆す思想家たちの構想と教育の変化【COTEN RADIO 教育の歴史編10】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-10OS--COTEN-RADIO-10-e15635d"
+    },
+    {
+      "guid": "6fc79d41-55da-4411-bd9e-80965c479e96",
+      "title": "【25-9】イスラームの教育　〜生活と宗教が密接する社会が目指した理想郷〜【COTEN RADIO 教育の歴史編9】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-9-COTEN-RADIO-9-e154ars"
+    },
+    {
+      "guid": "0558c998-5915-4727-b180-ae82aa72c84b",
+      "title": "【25-8】どうしてこうなったん？島国ニッポンの歴史と教育の変遷【COTEN RADIO 教育の歴史編8】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-8COTEN-RADIO-8-e1547q8"
+    },
+    {
+      "guid": "68f3230b-f40f-48e5-bfbc-23254e99383e",
+      "title": "【25-7】中国の教育　〜なぜ彼らは儒教OSを選んだのか？〜（後編）【COTEN RADIO 教育の歴史編7】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-7-OSCOTEN-RADIO-7-e152liq"
+    },
+    {
+      "guid": "30c3a8bf-8faa-45a4-b979-154c14403c37",
+      "title": "【25-6】中国の教育　〜なぜ彼らは儒教OSを選んだのか？〜（前編）【COTEN RADIO 教育の歴史編6】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-6-OSCOTEN-RADIO-6-e152ke7"
+    },
+    {
+      "guid": "5e9e1b52-2728-4ef8-9335-391f7e956dc7",
+      "title": "【25-5】愛が生まれた日　〜中世ヨーロッパの教育によって「発見」された子どもたち〜【COTEN RADIO 教育の歴史編5】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-5-COTEN-RADIO-5-e150sli"
+    },
+    {
+      "guid": "84424e0d-2a72-407a-8a7d-e14734517e8b",
+      "title": "【25-4】ユニバーシティ？カレッジ？世の中に知識人を輩出する「大学」のルーツ【COTEN RADIO 教育の歴史編4】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-4COTEN-RADIO-4-e150qc3"
+    },
+    {
+      "guid": "d4561e31-487f-48eb-8113-582eedf0363d",
+      "title": "【25-3】「よそはよそ！うちはうち！」中世ヨーロッパの日常が生んだ教育の多様性【COTEN RADIO 教育の歴史編3】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-3COTEN-RADIO-3-e150nm2"
+    },
+    {
+      "guid": "21966459-88ec-4f0d-b598-a674454aeff4",
+      "title": "【25-2】論破おじさん・ソクラテスの遺志を引き継ぎし古代アテネの教育スタイル【COTEN RADIO 教育の歴史編2】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-2COTEN-RADIO-2-e14uc5b"
+    },
+    {
+      "guid": "9942dd4a-68b0-4ac9-8192-b051d825559c",
+      "title": "【25-1】教育の歴史　ー人間は何のために学ぶのか？ー【COTEN RADIO 教育の歴史編1】",
+      "season": 25,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25-1-COTEN-RADIO-1-e14ubma"
+    },
+    {
+      "guid": "7cdea946-f5a7-4568-924d-8cbd0682d641",
+      "title": "【番外編 #51】 「しくみ」で世界中を笑顔に！しくみデザイン 中村俊介さんが描く未来の社会と教育のカタチ（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/51--COTEN-RADIO-e14q0rj"
+    },
+    {
+      "guid": "964cece8-95f2-4d05-9ef4-3378af0e28a3",
+      "title": "【番外編 #50】 「しくみ」で世界中を笑顔に！しくみデザイン 中村俊介さんが描く未来の社会と教育のカタチ（中編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/50--COTEN-RADIO-e14kknv"
+    },
+    {
+      "guid": "026edb2e-2fbf-4d29-9a20-73c27180e5e9",
+      "title": "【番外編 #49】 「しくみ」で世界中を笑顔に！しくみデザイン 中村俊介さんが描く未来の社会と教育のカタチ（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/49--COTEN-RADIO-e14dqgt"
+    },
+    {
+      "guid": "dbc9b1ac-7cb9-423b-b5ea-fc5915c5d305",
+      "title": "【24-12】夢幻の如くなり　〜戦国時代に学ぶ現代人としての生き方〜【COTEN RADIO 織田信長編12】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-12-COTEN-RADIO-12-e11vsed"
+    },
+    {
+      "guid": "149f5df2-b318-498a-857f-1892c2ab713a",
+      "title": "【24-11】明智光秀！羽柴秀吉！超優秀な武将を方面軍に抱える信長のマネジメント力【COTEN RADIO 織田信長編11】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-11COTEN-RADIO-11-e11v950"
+    },
+    {
+      "guid": "55ca1fa0-bfbf-48a0-84f4-55f383b1145d",
+      "title": "【24-10】天下人 織田信長の政治力　〜実はオリジナル政策じゃなかったアレやコレ〜【COTEN RADIO 織田信長編10】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-10--COTEN-RADIO-10-e11v8qr"
+    },
+    {
+      "guid": "b14eedbb-0b10-4441-b310-5124e22f55a0",
+      "title": "【24-9】「義弟が裏切った？ハッハッハ、またまたご冗談を。・・・。マジ？」信長包囲網で大ピンチ！【COTEN RADIO 織田信長編9】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-9COTEN-RADIO-9-e11vguu"
+    },
+    {
+      "guid": "2b19c84a-50f9-45de-9f7d-ea6ecc2bf446",
+      "title": "【24-8】将軍の権力基盤が凋落！信長、足利義昭とのタッグで畿内平定へ【COTEN RADIO 織田信長編8】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-8COTEN-RADIO-8-e11utj2"
+    },
+    {
+      "guid": "87179d6c-8f06-4b8c-a327-7dd7436ab22a",
+      "title": "【24-7】奇跡のジャイアントキリング！桶狭間の戦いで東海一の弓取り・今川義元を撃破！【COTEN RADIO 織田信長編7】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-7COTEN-RADIO-7-e11t1hv"
+    },
+    {
+      "guid": "bec98a19-316d-44f0-879b-b0180f8acad0",
+      "title": "【24-6】戦国三英傑・織田信長の型破りな出自　〜織田パパ秀の栄枯盛衰〜【COTEN RADIO 織田信長編6】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-6-COTEN-RADIO-6-e11svi0"
+    },
+    {
+      "guid": "549c4a09-c533-4f1b-afa1-4b5bdac6b77a",
+      "title": "【24-5】下剋上で室町幕府が大混乱！歴史を彩るスタープレイヤーたちが表舞台に参戦！【COTEN RADIO 織田信長編5】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-5COTEN-RADIO-5-e11onjt"
+    },
+    {
+      "guid": "a574e9fb-4f41-4f1c-8a2a-4969220f1690",
+      "title": "【24-4】「悪党だけが笑っている！」鎌倉幕府、政治的混乱により滅亡【COTEN RADIO 織田信長編4】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-4COTEN-RADIO-4-e11olt5"
+    },
+    {
+      "guid": "5ba40927-61ba-4c6a-9de7-b0ab19aa48dd",
+      "title": "【24-3】「武士の武士による武士の為の政治を！」日本初の武家政権 鎌倉幕府【COTEN RADIO 織田信長編3】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-3-COTEN-RADIO-3-e11oldf"
+    },
+    {
+      "guid": "32bc806a-366e-4825-b952-d65343384cf7",
+      "title": "【24-2】武士の興り　〜もののふ第0世代、爆誕！〜【COTEN RADIO 織田信長編2】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-2-0COTEN-RADIO-2-e11oken"
+    },
+    {
+      "guid": "86b511a3-4788-454e-abe8-2a380aab5af7",
+      "title": "【24-1】キング・オブ・日本史　織田信長　〜本当のとこ、どうやったん？〜【COTEN RADIO 織田信長編1】",
+      "season": 24,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24-1--COTEN-RADIO-1-e11obed"
+    },
+    {
+      "guid": "903ef349-0682-40cb-ad6d-b1058fc73d32",
+      "title": "【番外編 #48】 株式会社コテンの文化　〜ひとりひとりがパフォーマンスを自然に発揮できる人材配置〜【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/48--COTEN-RADIO-e11r82e"
+    },
+    {
+      "guid": "246467a3-42cb-4e2d-903d-a57e234695fa",
+      "title": "【番外編 #47】 音声コンテンツで草莽崛起だ！Podcast制作コミュニティ「樋口塾」が作る未来への架け橋【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/47-PodcastCOTEN-RADIO-e11kb8n"
+    },
+    {
+      "guid": "7252cd5d-3462-4ea9-bdd2-835cabc1fcc6",
+      "title": "【番外編 #46】「聞け！これが田川だ！」現代に生きる田川ヤンキーの恐るべき実態　ゲスト：青柳考哉（株式会社BOOK）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/46-BOOKCOTEN-RADIO-e11dcc0"
+    },
+    {
+      "guid": "1e99557d-50bb-4614-be53-ddf86083eab4",
+      "title": "【23-11】幸せってなんだっけ？エリザベス1世の晩年【COTEN RADIO エリザベス1世編11】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-111COTEN-RADIO-111-evjdvr"
+    },
+    {
+      "guid": "924f54bd-5f66-46a8-873a-97bed2af2672",
+      "title": "【23-10】闘う処女王　大国スペインが誇る無敵艦隊を撃破！【COTEN RADIO エリザベス1世編10】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-10-COTEN-RADIO-110-evjdvf"
+    },
+    {
+      "guid": "87a979eb-3faa-4005-8c6d-87cd16b5d2b7",
+      "title": "【23-9】強盗！横領！イングランドの身勝手な行動にスペイン大激怒【COTEN RADIO エリザベス1世編9】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-9COTEN-RADIO-19-evjdua"
+    },
+    {
+      "guid": "51d0e709-7ffc-4fec-81d6-12c6035e8690",
+      "title": "【23-8】「俺たちエリザベス親衛隊！」優秀な部下を束ねるエリザベス1世の人間力【COTEN RADIO エリザベス1世編8】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-81COTEN-RADIO-18-evjdtq"
+    },
+    {
+      "guid": "cd31557e-68b8-4009-a3c2-14db53b51f51",
+      "title": "【23-7】女性蔑視の社会をどう統治する？エリザベス1世の戦略【COTEN RADIO エリザベス1世編7】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-71COTEN-RADIO-17-evjdt5"
+    },
+    {
+      "guid": "66ef0e38-fcd3-46dd-8ec8-6135b6293db3",
+      "title": "【23-6】 “血染めの女王“メアリー1世の栄光と凋落。そして、バトンは渡された。【COTEN RADIO エリザベス1世編6】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-6-1COTEN-RADIO-16-evjdsn"
+    },
+    {
+      "guid": "732ab6e3-78cd-408a-afa8-5dd6c48cf9ed",
+      "title": "【23-5】魑魅魍魎が跋扈する政治の世界！エリザベスを巻き込むイングランド王位継承事情【COTEN RADIO エリザベス1世編5】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-5COTEN-RADIO-15-evjdri"
+    },
+    {
+      "guid": "fa3af74f-a2db-4bd3-a59f-5e993b1c815a",
+      "title": "【23-4】「おめーの席ねぇから！」王女エリザベス、母親の処刑で庶子転落【COTEN RADIO エリザベス1世編4】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-4COTEN-RADIO-14-eunlps"
+    },
+    {
+      "guid": "985e292c-2a99-48c0-8874-a9af073138b6",
+      "title": "【23-3】「あなたのアヒルにキスしたい！」離婚王 ヘンリー8世のクズ過ぎる恋愛テクニック【COTEN RADIO エリザベス1世編3】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-3-8COTEN-RADIO-13-eunlni"
+    },
+    {
+      "guid": "22f8ed7a-cfdf-47f9-814e-7375c3106ac8",
+      "title": "【23-2】君は薔薇より美しい！結婚で広がるテューダー朝の外交戦略【COTEN RADIO エリザベス1世編2】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-2COTEN-RADIO-12-eunlfj"
+    },
+    {
+      "guid": "17e6763f-528e-4ca8-a5c5-a34736f3df1b",
+      "title": "【23-1】エリザベス1世　波乱に満ちた女帝の一生【COTEN RADIO エリザベス1世編1】",
+      "season": 23,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23-11-COTEN-RADIO-11-eukif2"
+    },
+    {
+      "guid": "266ae184-19dc-46d1-aa22-d38c4b321ef5",
+      "title": "【番外編 #45】エール株式会社 篠田真貴子さんと語る「聴く力」（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/45-COTEN-RADIO-eud672"
+    },
+    {
+      "guid": "124724ab-7cb1-419f-b708-41f46e46d165",
+      "title": "【番外編 #44】エール株式会社 篠田真貴子さんと語る「聴く力」（中編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/44-COTEN-RADIO-eu634s"
+    },
+    {
+      "guid": "6119d0f8-fb5c-4d88-8a6d-1fa26eb359c2",
+      "title": "【番外編 #43】エール株式会社 篠田真貴子さんと語る「聴く力」（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/43-COTEN-RADIO-etum6e"
+    },
+    {
+      "guid": "9c52de5d-a159-4904-9920-6581a94b3eed",
+      "title": "【22-14】（後編）各国における戦後の動乱　〜過ちを繰り返さない為に私達ができること〜【COTEN RADIO 第一次世界大戦編14】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-14-COTEN-RADIO-14-erc3pk"
+    },
+    {
+      "guid": "4d13e0f2-ade7-40e6-8607-8667816e4a86",
+      "title": "【22-13】（前編）各国における戦後の動乱　〜過ちを繰り返さない為に私達ができること〜【COTEN RADIO 第一次世界大戦編13】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-13-COTEN-RADIO-13-erc3p4"
+    },
+    {
+      "guid": "3960812c-ff92-4528-a4bc-60d578086de7",
+      "title": "【22-12】ドイツ帝国の末路　〜休戦後も続く各国からの報復〜【COTEN RADIO 第一次世界大戦編12】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-12-COTEN-RADIO-12-erc3od"
+    },
+    {
+      "guid": "8f85ad8d-7018-4a22-8c3c-4ef5971d8c0e",
+      "title": "【22-11】ついに決着!?戦局を変えたアメリカ参戦とロシア革命【COTEN RADIO 第一次世界大戦編11】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-11--COTEN-RADIO-11-erc3g0"
+    },
+    {
+      "guid": "8c8acc00-9a54-46d0-a468-42d003ee3ade",
+      "title": "【22-10】膠着する東部戦線　〜追い詰められたドイツとヴィルヘルム2世の絶望〜【COTEN RADIO 第一次世界大戦編10】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-10-2COTEN-RADIO-10-erc3f6"
+    },
+    {
+      "guid": "5f5983f8-f3d4-4848-8dde-a9cc2a174d08",
+      "title": "【22-9】機関銃、有刺鉄線、毒ガス・・・。世界を揺るがす地獄の塹壕戦【COTEN RADIO 第一次世界大戦編9】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-9COTEN-RADIO-9-erc3es"
+    },
+    {
+      "guid": "89b7f8d3-68bc-4889-80bf-544fa657d17e",
+      "title": "【22-8】「ヨーロッパの火薬庫」が爆発！サライェボ事件で鳴り響く開戦の鼓笛【COTEN RADIO 第一次世界大戦編8】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-8COTEN-RADIO-8-erc3eg"
+    },
+    {
+      "guid": "27488a60-7535-4a08-ade6-bd2a83719860",
+      "title": "【22-7】世界大戦の火蓋は切られた！タンジール事件とボスニア危機【COTEN RADIO 第一次世界大戦編7】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-7COTEN-RADIO-7-erc2m4"
+    },
+    {
+      "guid": "d18e160e-193a-4b4a-9c37-d29255d13852",
+      "title": "【22-6】コミュニケーション不足で世界崩壊!?　三国同盟vs三国協商【COTEN RADIO 第一次世界大戦編6】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-6---vsCOTEN-RADIO-6-eqn6dc"
+    },
+    {
+      "guid": "79a23af9-e065-4eba-b106-f58ee4a93799",
+      "title": "【22-5】ヨーロッパの諸葛亮!?ビスマルクの恐るべき外交センスと拮抗する世界【COTEN RADIO 第一次世界大戦編5】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-5--COTEN-RADIO-5-eqn6b9"
+    },
+    {
+      "guid": "02edf25b-dabd-4ebb-ba44-d1c0604cebbb",
+      "title": "【22-4】「国民」は作られたもの？国民国家モデル導入が生んだ世界の格差【COTEN RADIO 第一次世界大戦編4】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-4COTEN-RADIO-4-eqn66e"
+    },
+    {
+      "guid": "dc14d6ac-2173-4cc0-8bf4-1ac426bde95c",
+      "title": "【22-3】（後編）テクノロジーの進化が戦争を変えた！？第一次世界大戦・前日譚【COTEN RADIO 第一次世界大戦編3】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-3COTEN-RADIO-3-eqh308"
+    },
+    {
+      "guid": "10c0002f-d3cb-450c-8720-e06c8680ff96",
+      "title": "【22-2】（前編）テクノロジーの進化が戦争を変えた！？第一次世界大戦・前日譚【COTEN RADIO 第一次世界大戦編2】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-2COTEN-RADIO-2-eqcfa7"
+    },
+    {
+      "guid": "0c17eea7-5ccc-44ff-b505-3739074df1e1",
+      "title": "【22-1】第一次世界大戦　〜なぜ世界は戦争を選んだのか〜【COTEN RADIO 第一次世界大戦編1】",
+      "season": 22,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-1-COTEN-RADIO-1-eq719f"
+    },
+    {
+      "guid": "74acae6f-9b3c-4f91-aa1c-3c0154c7c13b",
+      "title": "【番外編 #42】衰退？成熟？老いるって何だろう？【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/42COTEN-RADIO-eps47v"
+    },
+    {
+      "guid": "451793f0-183a-4ea7-b34b-f98c56c4188e",
+      "title": "【告知】Spotifyオリジナル配信開始！！",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/Spotify-eptfal"
+    },
+    {
+      "guid": "8766ed70-aba6-45bb-bdaa-86fa4a4a523b",
+      "title": "【番外編 #41】古今東西ゲーム談義　〜なぜ僕達はゲームを愛するのか〜【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/41-COTEN-RADIO-eps2fh"
+    },
+    {
+      "guid": "ecc7f7cd-a7f5-4634-8b54-817ca4e62bd7",
+      "title": "【21-8】その後の宗教改革　〜世界史ダイナミズムの原点に触れて思うこと〜【COTEN RADIO 宗教改革編8】",
+      "season": 21,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/21-8-COTEN-RADIO-8-epo06i"
+    },
+    {
+      "guid": "7b04d916-9afe-4632-9381-c860f910105f",
+      "title": "【21-7】仕事に励め！富を蓄えよ！神学者ジャン・カルヴァンが伝える神の教え【COTEN RADIO 宗教改革編7】",
+      "season": 21,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/21-7COTEN-RADIO-7-eph74b"
+    },
+    {
+      "guid": "1555d237-65fd-4c13-9c71-7a32f60fe838",
+      "title": "【21-6】内乱！外敵！カトリック教会を取り巻く脅威とカールおじさんの苦悩【COTEN RADIO 宗教改革編6】",
+      "season": 21,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/21-6COTEN-RADIO-6-epbf7v"
+    },
+    {
+      "guid": "24343589-6a49-49eb-86c9-539334fcff3e",
+      "title": "【21-5】ルター、インフルエンサー化！？発言を拡散されて大炎上。農民反乱勃発！【COTEN RADIO 宗教改革編5】",
+      "season": 21,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/21-5COTEN-RADIO-5-ep59b4"
+    },
+    {
+      "guid": "56b8dc65-cb6d-4dd3-870f-7623d96cfdb1",
+      "title": "【21-4】マルティン・ルター登場　〜神聖ローマ帝国に鳴り響く異端児の産声〜【COTEN RADIO 宗教改革編4】",
+      "season": 21,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/21-4-COTEN-RADIO-4-ep216n"
+    },
+    {
+      "guid": "58877c50-46b3-4aa9-852e-132ba55256b8",
+      "title": "【21-3】世俗の権力？魂の救済？どっちの論理ショー　〜カトリック教会のジレンマ〜【COTEN RADIO 宗教改革編3】",
+      "season": 21,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/21-3-COTEN-RADIO-3-eou1q8"
+    },
+    {
+      "guid": "f709946c-0599-43a9-bb74-0b8fdff6d659",
+      "title": "【21-2】ローマ教皇至上権　〜俺か、俺以外か。〜COTEN RADIO 宗教改革編2】",
+      "season": 21,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/21-2-COTEN-RADIO-2-eopc7m"
+    },
+    {
+      "guid": "633bf8b5-853c-43e3-89eb-7abac16aa98e",
+      "title": "【21-1】宗教改革　〜巨人に挑む男達の進撃〜【COTEN RADIO 宗教改革編1】",
+      "season": 21,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/21-1-COTEN-RADIO-1-eokksd"
+    },
+    {
+      "guid": "5d5a6f9b-72de-4cbc-9334-d5c48f8d1d9a",
+      "title": "【番外編 #40】世界を動かす日本人！ソーシャルベンチャーの旗手 ボーダレス・ジャパン田口代表が掲げる夢と志（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/40-COTEN-RADIO-eo1k48"
+    },
+    {
+      "guid": "b1b60988-6bc2-4d30-9ae0-6a735f587ceb",
+      "title": "【番外編 #39】世界を動かす日本人！ソーシャルベンチャーの旗手 ボーダレス・ジャパン田口代表が掲げる夢と志（中編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/39-COTEN-RADIO-ensm9g"
+    },
+    {
+      "guid": "535de1e5-4794-4c89-8cc8-a669af32bfef",
+      "title": "【緊急告知】コテンラジオ忘年会2020LIVE配信決定！【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/2020LIVECOTEN-RADIO-ensgc2"
+    },
+    {
+      "guid": "2378cc3c-8cdb-438f-bd1d-e38d66771e55",
+      "title": "【番外編 #38】世界を動かす日本人！ソーシャルベンチャーの旗手 ボーダレス・ジャパン田口代表が掲げる夢と志（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/38-COTEN-RADIO-enobcm"
+    },
+    {
+      "guid": "0604c4c3-1719-4fa4-a768-7038c4fba9da",
+      "title": "【20-10】「ブルートゥス、お前もか。」栄華を極めた男の最期【COTEN RADIO ユリウス・カエサル編10】",
+      "season": 20,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20-10COTEN-RADIO-10-enigff"
+    },
+    {
+      "guid": "1fa08301-ea05-422c-b3aa-fb1e33f9c42d",
+      "title": "【20-9】渡れば反逆、止まれば破滅。カエサル軍、ルビコン川での決断【COTEN RADIO ユリウス・カエサル編9】",
+      "season": 20,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20-9COTEN-RADIO-9-ene5ab"
+    },
+    {
+      "guid": "6ed8057d-b875-42fe-a3ee-c1a3002b1705",
+      "title": "【20-8】ガリア戦争、ローマ内紛、共和政崩壊・・・カエサル、絶体絶命の危機！【COTEN RADIO ユリウス・カエサル編8】",
+      "season": 20,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20-8COTEN-RADIO-8-en8chh"
+    },
+    {
+      "guid": "7771db69-9ddd-490a-ad8b-9635565a3f50",
+      "title": "【20-7】自分の才能にBET！借金王カエサルの破天荒な出世街道【COTEN RADIO ユリウス・カエサル編7】",
+      "season": 20,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20-7BETCOTEN-RADIO-7-en3ubk"
+    },
+    {
+      "guid": "3122140e-1ccf-4d9d-bd33-02de9f74f6ab",
+      "title": "【20-6】経済力のクラッスス！軍事力のポンペイウス！カエサルの前にそびえ立つライバル達【COTEN RADIO ユリウス・カエサル編6】",
+      "season": 20,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20-6COTEN-RADIO-6-emvk14"
+    },
+    {
+      "guid": "ba166897-bae2-41d6-8359-6612310298e5",
+      "title": "【20-5】出世の裏に色恋あり？カエサルのスキャンダラスな人生【COTEN RADIO ユリウス・カエサル編5】",
+      "season": 20,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20-5COTEN-RADIO-5-emr180"
+    },
+    {
+      "guid": "08d203cb-07fe-4837-8ed0-ec122cce7566",
+      "title": "【20-4】元老院派独裁官スッラの大粛清　〜民衆派カエサルの危機〜【COTEN RADIO ユリウス・カエサル編4】",
+      "season": 20,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20-4-COTEN-RADIO-4-eml49j"
+    },
+    {
+      "guid": "102e4bca-ee10-44b5-a9ef-6194652b8295",
+      "title": "【20-3】時代は揺り戻す？グラックス兄弟／マリウス／スッラによるローマ改革【COTEN RADIO ユリウス・カエサル編3】",
+      "season": 20,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20-3COTEN-RADIO-3-emga4g"
+    },
+    {
+      "guid": "13b7ae0a-5d82-47fa-bd3c-769c1cbb4495",
+      "title": "【20-2】何故ローマ帝国は強いのか？ 〜問題抽出力と優先度付けの重要性〜【COTEN RADIO ユリウス・カエサル編2】",
+      "season": 20,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20-2-COTEN-RADIO-2-embckn"
+    },
+    {
+      "guid": "d3de6c20-5a16-457a-91b4-532f85ec4e9b",
+      "title": "【20-1】ユリウス・カエサル ― 帝政ローマ、レガシーからの脱却！【COTEN RADIO ユリウス・カエサル編1】",
+      "season": 20,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20-1--COTEN-RADIO-1-em62ja"
+    },
+    {
+      "guid": "1ea51939-665b-4804-a506-958413608af5",
+      "title": "【番外編 #37】メンタルケア、どうしてる？（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/37COTEN-RADIO-elshv5"
+    },
+    {
+      "guid": "fa6ab1d2-45a0-4c00-9c4a-5eb3fa8c974c",
+      "title": "【番外編 #36】メンタルケア、どうしてる？（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/36COTEN-RADIO-elshf4"
+    },
+    {
+      "guid": "1ce558d1-a16c-41d6-98b1-baecb507c474",
+      "title": "【番外編 #35】握手しただけで才能と性癖がわかる男・たかちん（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/35COTEN-RADIO-ell4a2"
+    },
+    {
+      "guid": "7e25ba2a-1704-4266-968c-011355eb3e05",
+      "title": "【番外編 #34】握手しただけで才能と性癖がわかる男・たかちん（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/34COTEN-RADIO-elhttu"
+    },
+    {
+      "guid": "8f0a9310-cb11-4b62-a667-d43edb6d09d9",
+      "title": "【19-10】最澄と空海の晩年 ― 天才が人生を捧げた仏教の正体【COTEN RADIO 最澄と空海編10】",
+      "season": 19,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19-10--COTEN-RADIO-10-elbrkp"
+    },
+    {
+      "guid": "2132e5b9-ce2d-48da-b20e-6e14539ed6db",
+      "title": "【19-9】最澄、雨ニモマケズ。一隅を照らす人材育成事業【COTEN RADIO 最澄と空海編9】",
+      "season": 19,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19-9COTEN-RADIO-9-el02n0"
+    },
+    {
+      "guid": "d5007920-3e31-491f-b659-c65b603c04de",
+      "title": "【19-8】日本からヤバい奴がやってきた！― 天才・空海、唐で大出世！【COTEN RADIO 最澄と空海編8】",
+      "season": 19,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19-8-COTEN-RADIO-8-el028j"
+    },
+    {
+      "guid": "ba810c8a-1b21-41d4-a90b-392832bc017b",
+      "title": "【19-7】最澄、天皇の勅命で遣唐使に！入唐で交わる二つの糸【COTEN RADIO 最澄と空海編7】",
+      "season": 19,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19-7COTEN-RADIO-7-ekovuc"
+    },
+    {
+      "guid": "6d0b37da-d3fe-48d7-bb99-f8e78ab406df",
+      "title": "【19-6】不動明王はウイルスバスター！パソコン環境で例える密教の世界【COTEN RADIO 最澄と空海編6】",
+      "season": 19,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19-6COTEN-RADIO-6-eklpvr"
+    },
+    {
+      "guid": "30cf7c98-cb44-4be1-aec6-84da9c633cc8",
+      "title": "【19-5】言語センス抜群！真言宗の祖・空海の神童時代【COTEN RADIO 最澄と空海編5】",
+      "season": 19,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19-5COTEN-RADIO-5-ekfnee"
+    },
+    {
+      "guid": "16c27d6a-6634-4877-b3df-af29eea497c0",
+      "title": "【19-4】大乗仏教が神道国家・日本に上陸！その時歴史が動いた【COTEN RADIO 最澄と空海編4】",
+      "season": 19,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19-4COTEN-RADIO-4-ek9dhc"
+    },
+    {
+      "guid": "c5a0a277-4348-4872-8713-0cb58d803923",
+      "title": "【19-3】俺の教えは釈迦の教え！多様性が広がる大乗仏教【COTEN RADIO 最澄と空海編3】",
+      "season": 19,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19-3COTEN-RADIO-3-ek6kk3"
+    },
+    {
+      "guid": "e6402f66-4d10-43ba-ba3f-0a4b8b3d517a",
+      "title": "【19-2】仏教2.0 ！ アップデートを繰り返す釈迦の思想【COTEN RADIO 最澄と空海編2】",
+      "season": 19,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19-22-0--COTEN-RADIO-2-ejs4nm"
+    },
+    {
+      "guid": "d021eedc-a5c0-4ccf-bc2f-7abac49c56d5",
+      "title": "【19-1】最澄と空海 ― 悟りを開いた男達の生涯【COTEN RADIO 最澄と空海編1】",
+      "season": 19,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19-1--COTEN-RADIO-1-ejs4hc"
+    },
+    {
+      "guid": "1e1d66a4-9324-444a-bbc9-251eb2d9cdd8",
+      "title": "【番外編 #33】中東で一番有名な日本人！鷹鳥屋明さんに話を聞いてみた（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/33COTEN-RADIO-ejhsb3"
+    },
+    {
+      "guid": "27c0dd64-1eba-464a-8d10-f684b818b0c4",
+      "title": "【番外編 #32】中東で一番有名な日本人！鷹鳥屋明さんに話を聞いてみた（中編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/32COTEN-RADIO-ejhs8a"
+    },
+    {
+      "guid": "a83dcf6a-c8b9-423c-86f2-ba3628e5b06d",
+      "title": "【番外編 #31】中東で一番有名な日本人！鷹鳥屋明さんに話を聞いてみた（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/31COTEN-RADIO-ejc3vn"
+    },
+    {
+      "guid": "08680b20-5512-4dda-9262-b7465b318079",
+      "title": "【18-9】オスマン帝国の都市再生事業 ―ムスリムが住みやすい街づくり【COTEN RADIO オスマン帝国編9】",
+      "season": 18,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/18-9-COTEN-RADIO-9-ej6ead"
+    },
+    {
+      "guid": "d3435ab3-6d8e-4771-be36-a1951e25cb99",
+      "title": "【告知】特典コンテンツ付きサポートプラン、開始！【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/COTEN-RADIO-ej2sll"
+    },
+    {
+      "guid": "5b19631c-8ab9-4f54-968e-e7cec5997170",
+      "title": "【18-8】「コンスタンティノープルを封鎖せよ！」メフメト2世の完璧なる包囲戦【COTEN RADIO オスマン帝国編8】",
+      "season": 18,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/18-82COTEN-RADIO-8-ej0p3j"
+    },
+    {
+      "guid": "838111eb-029b-42fa-bdfe-c9d6272f6963",
+      "title": "【18-7】オスマン帝国とキリスト教の板挟み！栄華を極めたビザンツ帝国の衰退【COTEN RADIO オスマン帝国編7】",
+      "season": 18,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/18-7COTEN-RADIO-7-eis8dj"
+    },
+    {
+      "guid": "207dec24-e6f8-428b-bc46-394120ec0e47",
+      "title": "【18-6】LOVE アレクサンドロス先輩♥ 征服者メフメト2世ってどんな人？【COTEN RADIO オスマン帝国編6】",
+      "season": 18,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/18-6LOVE--2COTEN-RADIO-6-eilv1s"
+    },
+    {
+      "guid": "db7107bc-ffc5-49b2-9f5b-e2801f09af25",
+      "title": "【18-5】奴隷なのにエリート！？日本人が知らないオスマン帝国の仕組み【COTEN RADIO オスマン帝国編5】",
+      "season": 18,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/18-5COTEN-RADIO-5-eihj3m"
+    },
+    {
+      "guid": "1362b0b3-67ab-4a99-97f2-89e18198d1c7",
+      "title": "【18-4】長年のユーラシア大抗争！無敵のオスマン帝国VS無敵のモンゴル帝国【COTEN RADIO オスマン帝国編4】",
+      "season": 18,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/18-4VSCOTEN-RADIO-4-eic1v8"
+    },
+    {
+      "guid": "6f30de04-6ade-4d0c-9c9f-b4e5807f273e",
+      "title": "【18-3】国作りのテンプレを制す！オスマン帝国が急成長した秘訣【COTEN RADIO オスマン帝国編3】",
+      "season": 18,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/18-3COTEN-RADIO-3-ei7bpv"
+    },
+    {
+      "guid": "df6a63db-b6a9-4a6e-9e46-b28d6c4bf925",
+      "title": "【18-2】群雄割拠のイスラーム戦国時代 ―繰り返される統一と分裂【COTEN RADIO オスマン帝国編2】",
+      "season": 18,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/18-2-COTEN-RADIO-2-ei01fa"
+    },
+    {
+      "guid": "5e0d2350-e3a8-4894-8e79-696337234b4e",
+      "title": "【18-1】進撃のオスマン帝国 ― 600年の栄枯盛衰【COTEN RADIO オスマン帝国編1】",
+      "season": 18,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/18-1--600COTEN-RADIO-1-ehsu79"
+    },
+    {
+      "guid": "013d5600-07cc-4fb5-8945-e904002955a9",
+      "title": "【番外編 #30】「一隅を照らす」中村哲という生き方（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/30COTEN-RADIO-ehn2hr"
+    },
+    {
+      "guid": "9d6b8191-13af-432b-8d26-de07cc88bff5",
+      "title": "【番外編 #29】「一隅を照らす」中村哲という生き方（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/29COTEN-RADIO-ehiqu9"
+    },
+    {
+      "guid": "4fd61ad0-9777-4e6a-b030-f34f249c03af",
+      "title": "【17-8】巨星墜つ ― チンギス・カンが現代に残したもの【COTEN RADIO チンギス・カン編8】",
+      "season": 17,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/17-8--COTEN-RADIO-8-eh8tss"
+    },
+    {
+      "guid": "21646b9f-9619-413a-94a1-f5b022fc9395",
+      "title": "【17-7】もはやアウトレイジ！反逆者へのヤバ過ぎる処刑 ― チンギス・カン【COTEN RADIO チンギス・カン編7】",
+      "season": 17,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/17-7--COTEN-RADIO-7-eh8t6h"
+    },
+    {
+      "guid": "8f2244b6-ff04-41b3-864a-cec119ed07f8",
+      "title": "【17-6】お前は既に死んでいる ～モンゴル軍の強さの秘密～【COTEN RADIO チンギス・カン編6】",
+      "season": 17,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/17-6-COTEN-RADIO-6-eh2hqn"
+    },
+    {
+      "guid": "078965c2-bed1-45e8-88ca-4cbe7d242b3f",
+      "title": "【告知】note始動！コテン深井龍之介の レキシアルゴリズム【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/note-COTEN-RADIO-egvkqe"
+    },
+    {
+      "guid": "a9068fb0-e98b-4736-8311-56d1b38760ca",
+      "title": "【17-5】モンゴル帝国の飴と鞭 ― チンギス・カン流組織の作り方【COTEN RADIO チンギス・カン編5】",
+      "season": 17,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/17-5--COTEN-RADIO-5-egu98c"
+    },
+    {
+      "guid": "261828bc-285f-4840-995a-6762efa150c8",
+      "title": "【17-4】鉄を求めてウン千里！チンギス、覇王への道【COTEN RADIO チンギス・カン編4】",
+      "season": 17,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/17-4COTEN-RADIO-4-egkbol"
+    },
+    {
+      "guid": "c81efdc2-7394-4931-9c19-d59cd7bf1301",
+      "title": "【17-3】生まれた時から敵だらけ！蒼き狼チンギス・カンの不遇な少年時代【COTEN RADIO チンギス・カン編3】",
+      "season": 17,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/17-3COTEN-RADIO-3-egkblu"
+    },
+    {
+      "guid": "9567a4c4-9267-4e7c-81f2-34933d6bd647",
+      "title": "【17-2】驚異のサバイバル力！過酷な草原を生き抜く遊牧民の正体【COTEN RADIO チンギス・カン編2】",
+      "season": 17,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/17-2COTEN-RADIO-2-egf5lg"
+    },
+    {
+      "guid": "8e2cc109-628d-41e4-a670-3136637eef02",
+      "title": "【17-1】モンゴル最強伝説はここから始まった！チンギス・カン一族の仁義なき戦い【COTEN RADIO チンギス・カン編1】",
+      "season": 17,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/17-1COTEN-RADIO-1-eg9r4k"
+    },
+    {
+      "guid": "3dc47a03-6ef8-4dfe-b531-fd2f7ccd1770",
+      "title": "【番外編 #28】人類学って何？異文化に飛び込んだ同級生に聞いてみた（後編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/28COTEN-RADIO-eg1dhl"
+    },
+    {
+      "guid": "44d96939-323a-4c11-b3d6-8934130d5ffa",
+      "title": "【番外編 #27】人類学って何？異文化に飛び込んだ同級生に聞いてみた（前編）【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/27COTEN-RADIO-eg1cv2"
+    },
+    {
+      "guid": "5842fb0b-d140-46ac-911f-55e93852252e",
+      "title": "【16-8】現代人に贈る！ヘレン・ケラーが残した言葉たち【COTEN RADIO ヘレン・ケラーとアン・サリヴァン編8】",
+      "season": 16,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/16-8COTEN-RADIO-8-efrv11"
+    },
+    {
+      "guid": "ea8dee8f-225f-42c8-93a5-d0fb55dcdb8f",
+      "title": "【16-7】ヘレンがまさかの劇場デビュー！お金を求めてドサ回り！？【COTEN RADIO ヘレン・ケラーとアン・サリヴァン編7】",
+      "season": 16,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/16-7COTEN-RADIO-7-efnhf3"
+    },
+    {
+      "guid": "b038da75-e949-485f-a867-8f816e35a705",
+      "title": "【16-6】盲人よ、自尊心を抱け！ヘレン・ケラーの社会福祉活動【COTEN RADIO ヘレン・ケラーとアン・サリヴァン編6】",
+      "season": 16,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/16-6COTEN-RADIO-6-efi3bi"
+    },
+    {
+      "guid": "4fad4763-811c-479c-a860-c8c17b910692",
+      "title": "【16-5】コミュ力MAX！最高の教育で急成長するヘレン・ケラー【COTEN RADIO ヘレン・ケラーとアン・サリヴァン編5】",
+      "season": 16,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/16-5MAXCOTEN-RADIO-5-efd67u"
+    },
+    {
+      "guid": "1d6c5ee8-cdcd-4d89-9f61-d668cc8b39d2",
+      "title": "【16-4】絶対服従！？サリヴァン先生の過酷なスパルタ合宿【COTEN RADIO ヘレン・ケラーとアン・サリヴァン編4】",
+      "season": 16,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/16-4COTEN-RADIO-4-ef6utc"
+    },
+    {
+      "guid": "68ec6ffc-36ab-4d0c-8385-5e5d73fc7d2a",
+      "title": "【16-3】サリヴァン、家庭教師デビュー。わがまま娘ヘレンとの出会い【COTEN RADIO ヘレン・ケラーとアン・サリヴァン編3】",
+      "season": 16,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/16-3COTEN-RADIO-3-ef1rtm"
+    },
+    {
+      "guid": "c981469e-4a87-4394-b35d-9cb9d4742ebe",
+      "title": "【16-2】見えない！聞こえない！話せない！少女ヘレン・ケラーの苦悩【COTEN RADIO ヘレン・ケラーとアン・サリヴァン編2】",
+      "season": 16,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/16-2COTEN-RADIO-2-eeu85j"
+    },
+    {
+      "guid": "bbe589ec-3ac0-49b2-91de-0723a77fb040",
+      "title": "【16-1】ヘレン・ケラーとアン・サリヴァン ― 愛とキセキの物語【COTEN RADIO ヘレン・ケラーとアン・サリヴァン編1】",
+      "season": 16,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/16-1--COTEN-RADIO-1-eequhv"
+    },
+    {
+      "guid": "b1ffd4d9-edbd-4e34-a3dc-5a4c5f5eb7ea",
+      "title": "【番外編 #26】深井によるNetflixおすすめ作品紹介！【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/26NetflixCOTEN-RADIO-eel63b"
+    },
+    {
+      "guid": "c8071b91-01b3-46bf-bca2-ff13f6b6f2f4",
+      "title": "【番外編 #25】新時代の働き方 ― 急激に進むリモートワークに思うこと【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/25--COTEN-RADIO-eefovt"
+    },
+    {
+      "guid": "99e7622f-73ae-4690-ba43-2ec23cfe9b4d",
+      "title": "【15-8】アメリカ西部開拓時代 ― 許されざる者達の狂宴【COTEN RADIO アメリカ開拓史編8】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/15-8--COTEN-RADIO-8-ee56sr"
+    },
+    {
+      "guid": "ee8004e6-b4c7-418d-acd3-08c469278870",
+      "title": "【番外編 #24】コロナ禍のいま！コテンラジオが語る、疫病の世界史【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/24COTEN-RADIO-edn0el"
+    },
+    {
+      "guid": "241401b9-2406-4084-ba37-0cbe9e65fe0d",
+      "title": "【緊急告知！！】4/16 20:00 ～ コテンラジオ生配信！【祝・W受賞！】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/416-2000--W-ecp2qd"
+    },
+    {
+      "guid": "ccfadd50-9ac9-41a4-b3cb-b0cde8e90eab",
+      "title": "【番外編 #23】介護福祉ベンチャー社長の誰にも言えないヤバ過ぎる相談とは？【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/23COTEN-RADIO-ecmilq"
+    },
+    {
+      "guid": "45fb8237-253d-4892-9a41-c0f0436759d2",
+      "title": "【番外編 #22】我不是間諜！我愛日本！― ヤンヤンと学ぶローカル四川語【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/22-COTEN-RADIO-echhb8"
+    },
+    {
+      "guid": "4fd96f65-498d-4eba-b941-44e116eb3df1",
+      "title": "【14-10】おもしろきこともなき世をおもしろく ー 高杉晋作の最期【COTEN RADIO 高杉晋作編10】",
+      "season": 14,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14-10--COTEN-RADIO-10-ecdho8"
+    },
+    {
+      "guid": "c76e748b-b635-4f9c-9b4c-5fad5914a177",
+      "title": "【14-9】長州オワタ＼(^o^)／そして、その時歴史が動いた【COTEN RADIO 高杉晋作編9】",
+      "season": 14,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14-9oCOTEN-RADIO-9-ec82f1"
+    },
+    {
+      "guid": "7eb7b8d9-f2b8-4563-8626-469a5ad64d30",
+      "title": "【14-8】一夜にして長州転落！そして奇兵隊爆誕【COTEN RADIO 高杉晋作編8】",
+      "season": 14,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14-8COTEN-RADIO-8-ec3mt9"
+    },
+    {
+      "guid": "https://anchor.fm/coten/episodes/94COTEN-RADIO-ebu6ld",
+      "title": "【14-7】「諸君、狂いたまえ」高杉晋作の過激過ぎる尊王攘夷運動【COTEN RADIO 高杉晋作編7】",
+      "season": 14,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14-7COTEN-RADIO-7-ebu6ld"
+    },
+    {
+      "guid": "https://anchor.fm/coten/episodes/93-COTEN-RADIO-ebo7bi",
+      "title": "【14-6】留学費用で夜遊び三昧！？高杉晋作が上海で見た衝撃的な光景とは？【COTEN RADIO 高杉晋作編6】",
+      "season": 14,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14-6COTEN-RADIO-6-ebo7bi"
+    },
+    {
+      "guid": "https://anchor.fm/coten/episodes/92---COTEN-RADIO-ebk2ll",
+      "title": "【14-5】獄中からの贈る言葉 ― 吉田松陰との涙の決別【COTEN RADIO 高杉晋作編5】",
+      "season": 14,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14-5--COTEN-RADIO-5-ebk2ll"
+    },
+    {
+      "guid": "https://anchor.fm/coten/episodes/91---COTEN-RADIO-ebh8i6",
+      "title": "【14-4】高杉晋作 ― 人生で大切なことは実践で学べ！陽明学に翻弄された男達【COTEN RADIO 高杉晋作編4】",
+      "season": 14,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14-4--COTEN-RADIO-4-ebh8i6"
+    },
+    {
+      "guid": "https://anchor.fm/coten/episodes/90---COTEN-RADIO-ebe5s1",
+      "title": "【14-3】リベンジ・オブ・関ヶ原の戦い ― 誇り高き超エリート長州人の誕生【COTEN RADIO 高杉晋作編3】",
+      "season": 14,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14-3--COTEN-RADIO-3-ebe5s1"
+    },
+    {
+      "guid": "7f8bdd9c-8fd9-47ad-80e9-781313297b2e",
+      "title": "【14-2】高杉晋作 ― 封建社会をぶっ壊す！明治維新序章【COTEN RADIO 高杉晋作編2】",
+      "season": 14,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14-2--COTEN-RADIO-2-ebb48k"
+    },
+    {
+      "guid": "dd99fade-38bb-46e5-88f0-9ea7e5bcc05f",
+      "title": "【14-1】高杉晋作 ― 吉田松陰のDNAを受け継ぎし幕末風雲児【COTEN RADIO 高杉晋作編1】",
+      "season": 14,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14-1--DNACOTEN-RADIO-1-eb881h"
+    },
+    {
+      "guid": "b33f2a92-170d-4258-955f-16036ae16d02",
+      "title": "【番外編 #21】人生はゲーム！？僕たちが幸せを感じる瞬間【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/21COTEN-RADIO-easprc"
+    },
+    {
+      "guid": "3dd06910-d34d-4e90-b7be-127652b97b5a",
+      "title": "【番外編 #20】経営、歴史、ときどきバンド？音楽を真剣に語ってみた。【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/20COTEN-RADIO-easpoh"
+    },
+    {
+      "guid": "c66e4877-e45a-4e6c-a6e8-b5e85025b33d",
+      "title": "【番外編 #19】深井の暗黒時代 ― サークル仲間の女子を一撃で号泣させたヤバすぎる一言【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/19--COTEN-RADIO-easpnk"
+    },
+    {
+      "guid": "fd2e31f4-5577-4644-96d4-dacd36d6b56c",
+      "title": "【13-9】人生は旅と勉強だ！三蔵法師に学ぶ人生哲学【COTEN RADIO 三蔵法師玄奘編9】",
+      "season": 13,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/13-9COTEN-RADIO-9-eamr1f"
+    },
+    {
+      "guid": "9220474a-6cd5-455f-9c3c-9dfa9e8d0691",
+      "title": "【13-8】三蔵法師・玄奘 ― 経典を乗せた船がまさかの転覆！？波乱万丈の西遊記最終章【COTEN RADIO 三蔵法師玄奘編8】",
+      "season": 13,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/13-8--COTEN-RADIO-8-eamr0q"
+    },
+    {
+      "guid": "fc9efc98-9614-4673-86ff-723c2a1332f2",
+      "title": "【13-7】玄奘ウルルン西遊記 ― 三蔵法師が遊牧民の王と出会った【COTEN RADIO 三蔵法師玄奘編7】",
+      "season": 13,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/13-7--COTEN-RADIO-7-eamr03"
+    },
+    {
+      "guid": "c748af77-ef30-49d3-b1ef-078697fccdf2",
+      "title": "【13-6】本当は一人ぼっち？三蔵法師のリアル西遊記【COTEN RADIO 三蔵法師玄奘編6】",
+      "season": 13,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/13-6COTEN-RADIO-6-eai8uh"
+    },
+    {
+      "guid": "28bbde6b-e136-4f51-ba01-f091a216ae49",
+      "title": "【13-5】井の中の玄奘、大海を知る。真理を求めてインドへGO！【COTEN RADIO 三蔵法師玄奘編5】",
+      "season": 13,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/13-5GOCOTEN-RADIO-5-eai8st"
+    },
+    {
+      "guid": "758a9e97-0433-4b1d-85ea-cf47d5165587",
+      "title": "【13-4】三蔵法師、旅立ち前夜 ― イケメン過ぎて裏口入門！？【COTEN RADIO 三蔵法師玄奘編4】",
+      "season": 13,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/13-4--COTEN-RADIO-4-eai8o0"
+    },
+    {
+      "guid": "668e942e-92a2-4dda-a16d-9e01539bf688",
+      "title": "【13-3】空の思想？え。なにそれ。 ― 三蔵法師の愛した唯識論【COTEN RADIO 三蔵法師玄奘編3】",
+      "season": 13,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/13-3--COTEN-RADIO-3-eaed0k"
+    },
+    {
+      "guid": "9b01e6d6-f64a-49e0-ae2c-09d1d225f2c6",
+      "title": "【13-2】三蔵法師・玄奘 ― 信じる者は救われる！？仏教と中国のディ－プなカンケイ♡【COTEN RADIO 三蔵法師玄奘編2】",
+      "season": 13,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/13-2--COTEN-RADIO-2-eaecuh"
+    },
+    {
+      "guid": "d537bc43-6ae9-4771-afe9-ef3379cc9d75",
+      "title": "【13-1】三蔵法師・玄奘 ― 終わりなき知的探究の旅【COTEN RADIO 三蔵法師玄奘編1】",
+      "season": 13,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/13-1--COTEN-RADIO-1-eabid2"
+    },
+    {
+      "guid": "460303ef-a488-4d0e-b5e3-0c47ac15fc39",
+      "title": "【番外編 #18】「死」について本気出して考えてみた。【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/18COTEN-RADIO-e9tboa"
+    },
+    {
+      "guid": "4de344f0-92e1-404f-965c-fb4f8cde8de1",
+      "title": "【番外編 #17】時空を自由に超えたいな♪もしもタイムマシンに乗れたなら【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/17COTEN-RADIO-e9tbnm"
+    },
+    {
+      "guid": "1583c7d0-a47e-6620-4cf7-82a89ea30d05",
+      "title": "【番外編 #16】中国四千年のハゲ！ヤンヤン、静かに語る。― 中国はなぜ統一したがるのか？ 【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/16--COTEN-RADIO-e977ai"
+    },
+    {
+      "guid": "964e7bbc-406f-2525-3b96-d9bc6ed6dcec",
+      "title": "【番外編 #15】50万再生に感謝を込めて♥お便り紹介！【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/1550COTEN-RADIO-e97793"
+    },
+    {
+      "guid": "665a5a4d-84f1-e9ee-0f29-923446da7cbc",
+      "title": "【YouTubeライブ配信】コテンラジオ忘年会2019！―こうして僕らは出会ってしまった―",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/YouTube2019-e9gfd8"
+    },
+    {
+      "guid": "125a4d82-ad3a-553c-3264-7f1a5d173126",
+      "title": "【番外編 #14 公開収録！】スタートアップから天下を獲った英雄・曹操 【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/14--COTEN-RADIO-e6uc6d"
+    },
+    {
+      "guid": "44cfb1da-9be6-ac27-d62e-bd7d87665be7",
+      "title": "【番外編 #13】19万再生達成！お便り紹介 【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/1319-COTEN-RADIO-e6dt7r"
+    },
+    {
+      "guid": "8e4062f3-ca32-2a56-c25c-442edf9c5b0e",
+      "title": "【10-7】GOOD BYE 恐怖心！ガンディーをめざせ！【COTEN RADIO ガンディー編7】",
+      "season": 10,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/10-7GOOD-BYE-COTEN-RADIO-7-e6dt6u"
+    },
+    {
+      "guid": "975026eb-0ddc-d1f1-4644-3985579379cc",
+      "title": "【10-6】ガンディー暗殺―ヒンドゥーとイスラムの埋まらない亀裂 ― 【COTEN RADIO ガンディー編6】",
+      "season": 10,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/10-6--COTEN-RADIO-6-e6dt5v"
+    },
+    {
+      "guid": "fbd1e713-d488-7964-3d30-7f9c97bfac0d",
+      "title": "【10-5】ガンディー！イギリスへの超絶「塩」対応 【COTEN RADIO ガンディー編5】",
+      "season": 10,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/10-5-COTEN-RADIO-5-e6dsvp"
+    },
+    {
+      "guid": "cf6c2a65-e558-16c6-e1c0-86ef6d5d31b7",
+      "title": "【10-4】ガンディーのサティヤーグラハ・非暴力不服従！そして伝説へ【COTEN RADIO ガンディー編4】",
+      "season": 10,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/10-4COTEN-RADIO-4-e6dsgk"
+    },
+    {
+      "guid": "d57582ea-fd58-40d0-7b3b-ed69f8b443bb",
+      "title": "【10-3】ガンディーの逆転人生！原点は南アフリカの凄惨すぎる人種差別 【COTEN RADIO ガンディー編3】",
+      "season": 10,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/10-3-COTEN-RADIO-3-e6ubel"
+    },
+    {
+      "guid": "708041b4-e62d-019e-bc4a-62716671390e",
+      "title": "【10-2】しくじり聖者・ガンディー ― ポンコツすぎる弁護士時代 【COTEN RADIO ガンディー編2】",
+      "season": 10,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/10-2---COTEN-RADIO-2-e6dptv"
+    },
+    {
+      "guid": "c14c7c65-a6b2-5e64-a5e9-cc0020608e3e",
+      "title": "【10-1】インド独立の父・ガンディー ― 偉大なる聖者の行進 ― 【COTEN RADIO ガンディー編1】",
+      "season": 10,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/10-1----COTEN-RADIO-1-e6dpri"
+    },
+    {
+      "guid": "53466c22-5a95-c6d6-50fb-d376baafaa60",
+      "title": "【番外編 #12】当たり前レボリューション！それ、ホントに当たり前ですか？ 【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/12-COTEN-RADIO-e5a7km"
+    },
+    {
+      "guid": "a9825253-2376-aa41-9003-e7115d885bb7",
+      "title": "【番外編 #11】ヤンヤン、人生初めての合コン！その時、革命が起きた。【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/11COTEN-RADIO-e5a7jh"
+    },
+    {
+      "guid": "c2819485-4b27-b415-6728-33a8bbdf0a5f",
+      "title": "【9-9】戦争天才・ナポレオン！敵は、全欧州。【COTEN RADIO フランス革命編9】",
+      "season": 9,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/9-9COTEN-RADIO-9-e5a7io"
+    },
+    {
+      "guid": "618e951b-cd77-c67a-cfbf-4f8f2dfe349a",
+      "title": "【9-8】正義の化身・ロベスピエールによる恐怖政治・テルミドール9日のクーデタ―【COTEN RADIO フランス革命編8】",
+      "season": 9,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/9-89COTEN-RADIO-8-e5a7hf"
+    },
+    {
+      "guid": "f0077b24-87be-e5d3-d9fb-d4eb8227c2fc",
+      "title": "【9-7】ルイ16世とマリー・アントワネット、ギロチンに散る【COTEN RADIO フランス革命編7】",
+      "season": 9,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/9-716COTEN-RADIO-7-e5a7g8"
+    },
+    {
+      "guid": "bee92d66-08d0-ca16-5c6b-6852cf5c4338",
+      "title": "【9-6】フランス革命 ― 地に堕ちた王室への信頼 ―【COTEN RADIO フランス革命編6】",
+      "season": 9,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/9-6---COTEN-RADIO-6-e5a7fc"
+    },
+    {
+      "guid": "7152ce3e-1d0a-692a-cda7-eb824dd91d7b",
+      "title": "【9-5】フランス革命 ― ついにキレた民衆の大暴動・バスティーユ牢獄陥落！ ―【COTEN RADIO フランス革命編5】",
+      "season": 9,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/9-5---COTEN-RADIO-5-e5a7dk"
+    },
+    {
+      "guid": "fa7f5223-0ccc-6bbd-78d0-63b5af51c0bb",
+      "title": "【9-4】フランス革命 ― 民衆、最初の反抗！球戯場の誓い ― 【COTEN RADIO フランス革命編4】",
+      "season": 9,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/9-4----COTEN-RADIO-4-e5a7bm"
+    },
+    {
+      "guid": "ab836b46-a3e8-8d60-be9a-39aa4d5e5d48",
+      "title": "【9-3】天才思想家にして変態紳士・ルソー 【COTEN RADIO フランス革命編3】",
+      "season": 9,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/9-3-COTEN-RADIO-3-e5a791"
+    },
+    {
+      "guid": "b7715f9c-1f71-d8c5-fd73-43cd4c30c84f",
+      "title": "【9-2】フランス革命が勃発した3つの理由 【COTEN RADIO フランス革命編2】",
+      "season": 9,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/9-23-COTEN-RADIO-2-e58vik"
+    },
+    {
+      "guid": "0cd4163c-6eb6-64a5-867b-2d10b39cfc22",
+      "title": "【9-1】フランス革命 ― Want you！ 市民のハートに、レボ☆リューション ！ 【COTEN RADIO フランス革命編1】",
+      "season": 9,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/9-1--Want-you---COTEN-RADIO-1-e57k0m"
+    },
+    {
+      "guid": "3f010cc0-ea2b-b7bf-a219-feec5deeb932",
+      "title": "【10万再生記念！幻のデモ版】 韓非子 ― 部下が上司に本音を相談できないときどうすればいい？【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/10---COTEN-RADIO-e52882"
+    },
+    {
+      "guid": "f81cefac-3060-e295-594f-c9ab0ac1de3a",
+      "title": "【番外編 #10】COTENって何してる会社？ 【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/10COTEN-COTEN-RADIO-e4p656"
+    },
+    {
+      "guid": "3cd0231c-0f91-1386-df4a-9f3835eac1aa",
+      "title": "【番外編 #9】ヤンヤンって普段は何してるの？ 【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/9-COTEN-RADIO-e4p68r"
+    },
+    {
+      "guid": "2955edcc-2752-8f23-d6d6-bae942fd69d3",
+      "title": "【番外編 #8】ハゲのリベラルアーツ ― 遺伝子が与えてくれた出家 ― 【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/8----COTEN-RADIO-e4d5im"
+    },
+    {
+      "guid": "13eb52fd-fe48-d01f-d37b-b41ac88ac6c0",
+      "title": "【番外編 #7】初ベトナムで感じた刺激と衝撃 【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/7-COTEN-RADIO-e42ssa"
+    },
+    {
+      "guid": "dc01f702-e84a-6ac4-f957-fd63fd900ace",
+      "title": "【5-5】キングダムSP 秦の始皇帝 ―暴君？名君？始皇帝ってどんな人―【COTEN RADIO 秦の始皇帝編5】",
+      "season": 5,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/5-5SP--COTEN-RADIO-5-e3vq95"
+    },
+    {
+      "guid": "1742658b-3faf-19de-1ef3-77f60e3ee33c",
+      "title": "【5-4】キングダムSP 秦の始皇帝 ―暴君？名君？始皇帝ってどんな人―【COTEN RADIO 秦の始皇帝編4】",
+      "season": 5,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/5-4SP--COTEN-RADIO-4-e3rd9p"
+    },
+    {
+      "guid": "e5b92c9e-ce91-2cdc-24d2-d0b0a2ffd2bd",
+      "title": "【5-3】キングダムSP 秦の始皇帝 ―秦を盛り上げた漢たち―【COTEN RADIO 秦の始皇帝編3】",
+      "season": 5,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/5-3SP--COTEN-RADIO-3-e3p0gt"
+    },
+    {
+      "guid": "c0224abe-b5e1-ea74-7b9b-dec3c0572f2a",
+      "title": "【5-2】キングダムSP 秦の始皇帝 ―秦はどのように成長していったのか？―【COTEN RADIO 秦の始皇帝編2】",
+      "season": 5,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/5-2SP--COTEN-RADIO-2-e3n813"
+    },
+    {
+      "guid": "02f77cf8-9b93-cd98-b8fd-546dec84d2ae",
+      "title": "【番外編 #6】 社会に最も影響を与えるのは「行為」以上に「存在」である 【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/6--COTEN-RADIO-e3ls20"
+    },
+    {
+      "guid": "c611e485-822e-ee7c-8939-4fb54d746a2a",
+      "title": "【番外編 #5】 やりたい仕事と得意な仕事、どっちが大事？【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/5-COTEN-RADIO-e3ls1g"
+    },
+    {
+      "guid": "f0421bc0-cb41-2dab-fa2c-eecd7d890705",
+      "title": "【5-1】キングダムSP 秦の始皇帝 ―「キングダム」を10倍楽しむ為の予備知識 ―【COTEN RADIO 秦の始皇帝編1】",
+      "season": 5,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/5-1SP--10-COTEN-RADIO-1-e3l2jl"
+    },
+    {
+      "guid": "3c898a58-2d68-d3de-766b-b90b44687fe1",
+      "title": "【4-4】現代の天皇 ―象徴って何？―【COTEN RADIO 天皇編4】",
+      "season": 4,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/4-4-COTEN-RADIO-4-e3csoo"
+    },
+    {
+      "guid": "e93e68f6-a816-faef-d9f8-80ae2f11d393",
+      "title": "【番外編 #4】 リベラルアーツって役立つの？【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/4-COTEN-RADIO-e3iceh"
+    },
+    {
+      "guid": "f3118b25-a40f-715c-fe1f-5c08a23066cd",
+      "title": "【4-3】天皇と日本史 ― 天皇と将軍、どっちが偉いの？【COTEN RADIO 天皇編3】",
+      "season": 4,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/4-3--COTEN-RADIO-3-e3csj7"
+    },
+    {
+      "guid": "76974dd1-f810-1645-1c2a-d10b8ed0afe5",
+      "title": "【4-2】天皇っていつ生まれたの？神さまの子孫ってどういうこと？【COTEN RADIO 天皇編2】",
+      "season": 4,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/4-2COTEN-RADIO-2-e3cset"
+    },
+    {
+      "guid": "93fc1ab3-62d6-8647-1567-c38dcae42733",
+      "title": "【番外編 #3】 老いても最前線で戦う秦国の宰相・百里奚から学ぶ 【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/3--COTEN-RADIO-e3eeqg"
+    },
+    {
+      "guid": "1d3fecb7-50d9-82be-3b4d-93516e7e34c2",
+      "title": "【番外編 #2】 今の時代になぜリベラルアーツが大切なのか？【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/2-COTEN-RADIO-e3eepa"
+    },
+    {
+      "guid": "f2189254-78d5-6465-077a-9d65f03442ff",
+      "title": "【番外編 #1】 古代のソーシャルベンチャー起業家「墨子」【COTEN RADIO】",
+      "season": null,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/1-COTEN-RADIO-e3eenk"
+    },
+    {
+      "guid": "14ade7e5-5a84-50f4-aa18-86671a035a11",
+      "title": "【4-1】結局、天皇ってなんだっけ？【COTEN RADIO 天皇編1】",
+      "season": 4,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/4-1COTEN-RADIO-1-e3cs9h"
+    },
+    {
+      "guid": "96c9f59b-ed55-29bb-8199-ea039a8a0105",
+      "title": "【3-4】マスメディアの誕生と電気通信【COTEN RADIO 人類のコミュニケーション史4】",
+      "season": 3,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/3-4COTEN-RADIO-4-e3bbj7"
+    },
+    {
+      "guid": "78eb4ff3-5b22-a576-1758-6880d9fd7316",
+      "title": "【3-3】炎上の元祖！活版印刷【COTEN RADIO 人類のコミュニケーション史3】",
+      "season": 3,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/3-3COTEN-RADIO-3-e392cs"
+    },
+    {
+      "guid": "f6006cef-b742-075b-a625-e632419ed0f3",
+      "title": "【3-2】文字、爆誕。【COTEN RADIO 人類のコミュニケーション史2】",
+      "season": 3,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/3-2COTEN-RADIO-2-e373hb"
+    },
+    {
+      "guid": "b7f9b709-0a01-87b2-3417-1258677dbda9",
+      "title": "【3-1】インターネットの本当の凄さ【COTEN RADIO 人類のコミュニケーション史1】",
+      "season": 3,
+      "link": "https://podcasters.spotify.com/pod/show/coten/episodes/3-1COTEN-RADIO-1-e355gg"
+    }
+  ]
+}
