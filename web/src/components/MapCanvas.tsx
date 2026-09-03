@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ベースマップを画面いっぱいに描く。
+ * ベースマップを画面いっぱいに描き、その上へシリーズのレイヤを載せる。
  *
  * react-map-gl は maplibre 本体を実行時に動的 import するので、プリレンダでは空のコンテナだけが出る。
  * この層を `next/dynamic` の `ssr: false` で包む必要は無い。
@@ -17,19 +17,28 @@
  */
 
 import MapLibreMap from "react-map-gl/maplibre";
+import SeriesLayers from "@/components/SeriesLayers";
 import {
   BASEMAP_STYLE_URL,
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
 } from "@/lib/map-config";
+import type { MapLocusCollection } from "@/lib/map-loci";
 
-export default function MapCanvas() {
+type MapCanvasProps = {
+  /** 地図へ渡す形に組んだ事物の全件。 */
+  loci: MapLocusCollection;
+};
+
+export default function MapCanvas({ loci }: MapCanvasProps) {
   return (
     <MapLibreMap
       mapStyle={BASEMAP_STYLE_URL}
       initialViewState={INITIAL_VIEW_STATE}
       workerUrl={MAP_WORKER_URL}
       style={{ width: "100%", height: "100dvh" }}
-    />
+    >
+      <SeriesLayers loci={loci} />
+    </MapLibreMap>
   );
 }
