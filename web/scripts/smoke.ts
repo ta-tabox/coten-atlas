@@ -22,7 +22,7 @@ import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Page } from "@playwright/test";
-import { BASE_PATH } from "../src/lib/base-path.ts";
+import { BASE_PATH } from "@/lib/base-path";
 
 /**
  * `next build` が吐いた静的成果物の置き場。
