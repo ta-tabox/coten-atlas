@@ -6,7 +6,7 @@
  * どのファイルをどの順で読み書きするかを決めるのがこの層の仕事で、その順序は main を上から読めば追える。
  *
  * `episodes.json` はフィードから毎回組み直す。
- * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.geojson` の現状から引き直す（docs/adr/0005-two-layer-data.md）。
+ * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` の現状から引き直す（docs/adr/0005-two-layer-data.md）。
  * 差分は「新着かどうか」を決めるためだけに取り、inbox へ出すのは新着のうち未割当のものに限る。
  *
  * 失敗は黙って飲まずに落とす。
@@ -26,7 +26,7 @@ import { assignSeriesId } from "@/lib/feed/assign";
 import { parseFeed } from "@/lib/feed/parse";
 import type { FeedItem } from "@/lib/feed/schema";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
-import { parseSeries, type SeriesCollection } from "@/lib/schema/series";
+import { parseSeries, type SeriesList } from "@/lib/schema/series";
 
 /**
  * 公式 RSS の在り処。
@@ -51,7 +51,7 @@ const FETCH_TIMEOUT_MS = 60_000;
 const DATA_DIR = path.resolve(process.cwd(), "../data");
 
 const EPISODES_FILE = path.join(DATA_DIR, "episodes.json");
-const SERIES_FILE = path.join(DATA_DIR, "series.geojson");
+const SERIES_FILE = path.join(DATA_DIR, "series.json");
 const INBOX_DIR = path.join(DATA_DIR, "inbox");
 
 /** フィードの 1 件と、それに決まったシリーズ。 */
@@ -85,13 +85,13 @@ async function fetchFeed(url: string): Promise<string> {
  * ファイルがまだ無い日は、失敗にせず空のシリーズ一覧として扱う。
  * シリーズを 1 件も書いていない段階でこのスクリプトが inbox を出せることが、人間がシリーズを書き始める入口になる。
  */
-function readSeries(file: string): SeriesCollection {
+function readSeries(file: string): SeriesList {
   if (!fs.existsSync(file)) {
     console.error(
       `${path.relative(process.cwd(), file)} がまだ無いので、全件を未割当として扱う`,
     );
 
-    return { type: "FeatureCollection", features: [] };
+    return [];
   }
 
   return parseSeries(readJsonFile(file));
@@ -159,7 +159,7 @@ function warnDisappeared(
  * 前回は付いていた seriesId が外れた回を報せる。
  *
  * inbox へ出すのは新着だけなので、既に見送った回の割当が外れても人間の手元には現れない。
- * `series.geojson` から season を消したり書き換えたりすると起きるので、黙って直すと地図からその回が消えたことに気付けない。
+ * `series.json` から season を消したり書き換えたりすると起きるので、黙って直すと地図からその回が消えたことに気付けない。
  */
 function warnLostAssignments(
   assignments: Assignment[],

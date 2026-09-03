@@ -10,15 +10,17 @@
 
 import { parseEpisodes } from "@/lib/schema/episode";
 import { parseEras } from "@/lib/schema/era";
+import { parseLoci } from "@/lib/schema/locus";
 import { parseSeries } from "@/lib/schema/series";
 
 /**
  * ファイル名と、それを検査する入口の対応。
- * `series.geojson` は #4、`episodes.json` は #27 が初めて書くので、それまでは実在しない。
+ * `episodes.json` は同期が初めて書くので、それまでは実在しない。
  */
 export const DATA_VALIDATORS = new Map<string, (input: unknown) => unknown>([
   ["eras.json", parseEras],
-  ["series.geojson", parseSeries],
+  ["series.json", parseSeries],
+  ["loci.geojson", parseLoci],
   ["episodes.json", parseEpisodes],
 ]);
 

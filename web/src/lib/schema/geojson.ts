@@ -1,13 +1,13 @@
 /**
  * GeoJSON の geometry の形。
- * この器が使う 5 種を、仕様（RFC 7946）から手で写したもの（ライブラリの型は引いていない）。
+ * 5 種を仕様（RFC 7946）から手で写したもの（ライブラリの型は引いていない）。
  *
  * 座標の順は GeoJSON の規定どおり `[経度, 緯度]` で、緯度が先の並びは検査で落ちる。
  * 仕様は列挙に無いメンバー（foreign members）を許すが、この器のデータでは書き間違いの検出を優先し、スキーマに無いメンバーは落とす。
  *
  * ここが持つのは外部仕様の写しだけである。
- * どのシリーズをどの図形で置くかという判断は持たない。
- * それは `series.ts` の `kind` と `geometry` の側にあり、変わる理由もそちらにしか無い。
+ * この器のデータがどの図形を通すかという判断は持たない。
+ * それは `data/` の形を決めるスキーマの側にあり、変わる理由もそちらにしか無い。
  */
 
 import * as z from "zod";
@@ -48,7 +48,7 @@ const ringSchema = z
   .refine(isClosedRing, { message: "多角形の環が閉じていない" });
 
 /** 1 地点。 */
-const pointSchema = z.strictObject({
+export const pointSchema = z.strictObject({
   type: z.literal("Point"),
   coordinates: positionSchema,
 });
@@ -94,11 +94,3 @@ export const geometrySchema = z.discriminatedUnion("type", [
   polygonSchema,
   multiPolygonSchema,
 ]);
-
-/**
- * 上の union が受け付ける `type` の値。
- * union から引くので、種類を足したときにこの列だけが古いまま残ることが無い。
- */
-export const GEOMETRY_TYPES = geometrySchema.options.map(
-  (option) => option.shape.type.value,
-);

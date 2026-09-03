@@ -1,75 +1,78 @@
 import { describe, expect, it } from "vitest";
 import {
   parseSeries,
-  seriesCollectionSchema,
+  seriesListSchema,
   seriesTimeRangeSchema,
 } from "@/lib/schema/series";
 
 /** ARCHITECTURE.md「データモデル」の例をそのまま写した 1 件。 */
 const sparta = {
-  type: "Feature",
-  geometry: { type: "Point", coordinates: [22.43, 37.07] },
-  properties: {
-    id: "sparta",
-    title: "スパルタ",
-    kind: "place",
-    timeRange: { start: -900, end: -200 },
-    summary: "",
-    region: "ギリシア",
-    season: 2,
-    links: [],
-    tags: ["古代", "ギリシア"],
-  },
+  id: "sparta",
+  title: "スパルタ",
+  kind: "place",
+  anchor: "sparta-city",
+  timeRange: { start: -900, end: -200 },
+  summary: "",
+  region: "ギリシア",
+  season: 2,
+  links: [],
+  tags: ["古代", "ギリシア"],
 };
 
-/** 渡した件数の FeatureCollection を作る。 */
-function collectionOf(...features: unknown[]): unknown {
-  return { type: "FeatureCollection", features };
+/** 正例を部分的に差し替えた 1 件を作る。 */
+function seriesWith(overrides: Record<string, unknown>): unknown {
+  return { ...sparta, ...overrides };
 }
 
-/** 正例の properties を部分的に差し替えた 1 件を作る。 */
-function seriesWith(properties: Record<string, unknown>): unknown {
-  return {
-    ...sparta,
-    properties: { ...sparta.properties, ...properties },
-  };
-}
-
-describe("seriesCollectionSchema", () => {
+describe("seriesListSchema", () => {
   it("ARCHITECTURE の例をそのまま通す", () => {
-    const parsed = parseSeries(collectionOf(sparta));
+    const parsed = parseSeries([sparta]);
 
-    expect(parsed.features[0].properties.id).toBe("sparta");
+    expect(parsed[0].id).toBe("sparta");
+  });
+
+  it("位置なしの印を anchor に受ける", () => {
+    const parsed = parseSeries([seriesWith({ anchor: "unlocated" })]);
+
+    expect(parsed[0].anchor).toBe("unlocated");
   });
 
   it("未知の kind を落とす", () => {
-    const result = seriesCollectionSchema.safeParse(
-      collectionOf(seriesWith({ kind: "raster" })),
-    );
+    const result = seriesListSchema.safeParse([seriesWith({ kind: "raster" })]);
 
     expect(result.success).toBe(false);
   });
 
-  it("スキーマに無いキーを持つ properties を落とす", () => {
-    const result = seriesCollectionSchema.safeParse(
-      collectionOf(seriesWith({ related: ["athens"] })),
-    );
+  it("geometry を持つ 1 件を落とす", () => {
+    const result = seriesListSchema.safeParse([
+      seriesWith({ geometry: { type: "Point", coordinates: [22.43, 37.07] } }),
+    ]);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("スキーマに無いキーを持つ 1 件を落とす", () => {
+    const result = seriesListSchema.safeParse([
+      seriesWith({ related: ["athens"] }),
+    ]);
 
     expect(result.success).toBe(false);
   });
 
   it("id が重複した 2 件を落とす", () => {
-    const result = seriesCollectionSchema.safeParse(
-      collectionOf(sparta, seriesWith({ season: 3 })),
-    );
+    const result = seriesListSchema.safeParse([
+      sparta,
+      seriesWith({ season: 3 }),
+    ]);
 
     expect(result.success).toBe(false);
   });
 
   it("同じ season を 2 シリーズが持つと落とす", () => {
-    const result = seriesCollectionSchema.safeParse(
-      collectionOf(sparta, seriesWith({ id: "sparta-2" })),
-    );
+    const result = seriesListSchema.safeParse([
+      sparta,
+      seriesWith({ id: "sparta-2" }),
+    ]);
 
     expect(result.success).toBe(false);
   });
@@ -87,7 +90,7 @@ describe("seriesCollectionSchema", () => {
         },
       ],
     });
-    const result = seriesCollectionSchema.safeParse(collectionOf(twoSpotify));
+    const result = seriesListSchema.safeParse([twoSpotify]);
 
     expect(result.success).toBe(false);
   });
@@ -115,8 +118,8 @@ describe("seriesTimeRangeSchema", () => {
 
 describe("parseSeries", () => {
   it("落とした理由を文脈付きで投げる", () => {
-    expect(() =>
-      parseSeries(collectionOf(seriesWith({ kind: "raster" }))),
-    ).toThrow(/series/);
+    expect(() => parseSeries([seriesWith({ kind: "raster" })])).toThrow(
+      /series/,
+    );
   });
 });

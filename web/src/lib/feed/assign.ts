@@ -12,7 +12,7 @@
  */
 
 import type { FeedItem } from "@/lib/feed/schema";
-import type { SeriesCollection } from "@/lib/schema/series";
+import type { SeriesList } from "@/lib/schema/series";
 
 /**
  * 番外編の題名の書き出し。
@@ -31,7 +31,7 @@ const BONUS_TITLE_PREFIX = "【番外編＃";
  */
 export function assignSeriesId(
   item: FeedItem,
-  series: SeriesCollection,
+  series: SeriesList,
 ): string | null {
   if (item.title.startsWith(BONUS_TITLE_PREFIX)) {
     return null;
@@ -47,15 +47,10 @@ export function assignSeriesId(
 /**
  * season からシリーズの id を引く索引。
  *
- * season がシリーズ間で一意であることは `seriesCollectionSchema` が見ているので、ここで衝突を数え直さない。
+ * season がシリーズ間で一意であることは `seriesListSchema` が見ているので、ここで衝突を数え直さない。
  * 索引は呼ばれるたびに組み直す。
  * シリーズは 66 件で、同期は 1 日に 1 度しか走らない。
  */
-function seasonIndexOf(series: SeriesCollection): Map<number, string> {
-  return new Map(
-    series.features.map((feature) => [
-      feature.properties.season,
-      feature.properties.id,
-    ]),
-  );
+function seasonIndexOf(series: SeriesList): Map<number, string> {
+  return new Map(series.map(({ season, id }) => [season, id]));
 }
