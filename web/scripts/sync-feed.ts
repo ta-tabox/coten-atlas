@@ -22,7 +22,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { writeInbox } from "@scripts/inbox";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
-import { assignSeriesId } from "@/lib/feed/assign";
+import { assignableSeasonOf, assignSeriesId } from "@/lib/feed/assign";
 import { parseFeed } from "@/lib/feed/parse";
 import type { FeedItem } from "@/lib/feed/schema";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
@@ -196,8 +196,36 @@ function assertDataDir(): void {
 }
 
 /**
- * 取得から書き出しまでを通す。
  * 数え上げたサマリを標準出力へ書く。
+ *
+ * 未割当は二つに割る。
+ * 規則で確定した分は `series.json` を埋めても減らないので、一つの数に混ぜると進捗が読めない。
+ */
+function reportSummary(assignments: Assignment[], added: Assignment[]): void {
+  const unassigned = assignments.filter(({ seriesId }) => seriesId === null);
+  const settledByRule = unassigned.filter(
+    ({ item }) => assignableSeasonOf(item) === null,
+  );
+  const awaitingSeries = unassigned.filter(
+    ({ item }) => assignableSeasonOf(item) !== null,
+  );
+  const awaitingSeasons = new Set(
+    awaitingSeries.map(({ item }) => assignableSeasonOf(item)),
+  );
+
+  console.log(
+    `フィード ${assignments.length} 件 / 新規 ${added.length} 件 / 割当 ${assignments.length - unassigned.length} 件 / 未割当 ${unassigned.length} 件`,
+  );
+  console.log(
+    `  規則で確定      ${settledByRule.length} 件（season を持たない回・番外編）`,
+  );
+  console.log(
+    `  シリーズ未作成  ${awaitingSeries.length} 件（season ${awaitingSeasons.size} 件）`,
+  );
+}
+
+/**
+ * 取得から書き出しまでを通す。
  */
 async function main(): Promise<void> {
   assertDataDir();
@@ -217,15 +245,15 @@ async function main(): Promise<void> {
   warnLostAssignments(assignments, previous);
 
   const added = assignments.filter(({ item }) => !previous.has(item.guid));
-  const unassigned = added.filter(({ seriesId }) => seriesId === null);
+  const newlyUnassigned = added.filter(({ seriesId }) => seriesId === null);
 
   // inbox を先に書く。
   // episodes.json を先に書くと、その後で落ちたときに guid だけが既知になり、未判定のまま二度と出てこない回ができる。
-  if (unassigned.length > 0) {
+  if (newlyUnassigned.length > 0) {
     const file = writeInbox(
       INBOX_DIR,
       syncedAt,
-      unassigned.map(({ item }) => item),
+      newlyUnassigned.map(({ item }) => item),
     );
 
     console.log(`inbox: ${path.relative(process.cwd(), file)}`);
@@ -241,9 +269,7 @@ async function main(): Promise<void> {
     }),
   );
 
-  console.log(
-    `フィード ${items.length} 件 / 新規 ${added.length} 件 / 割当 ${added.length - unassigned.length} 件 / 要レビュー ${unassigned.length} 件`,
-  );
+  reportSummary(assignments, added);
 }
 
 await main();

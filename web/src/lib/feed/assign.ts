@@ -26,22 +26,34 @@ import type { SeriesList } from "@/lib/schema/series";
 const BONUS_TITLE_PREFIX = "【番外編＃";
 
 /**
+ * 割当に使える season を返す。
+ *
+ * 番外編と `itunes:season` を持たない回は null で、`series.json` に何を書いてもこの回に割当は付かない。
+ * 未割当のうちシリーズを足せば減る分と減らない分を分ける述語でもあるので、呼ぶ側は同期のサマリからも引く。
+ */
+export function assignableSeasonOf(item: FeedItem): number | null {
+  if (item.title.startsWith(BONUS_TITLE_PREFIX)) {
+    return null;
+  }
+
+  return item.season;
+}
+
+/**
  * エピソード 1 件に割り当てるシリーズの id を返す。
- * どのシリーズにも当たらなければ null で、呼ぶ側が inbox へ回す。
+ * どのシリーズにも当たらなければ null で、呼ぶ側が未割当として扱う。
  */
 export function assignSeriesId(
   item: FeedItem,
   series: SeriesList,
 ): string | null {
-  if (item.title.startsWith(BONUS_TITLE_PREFIX)) {
+  const season = assignableSeasonOf(item);
+
+  if (season === null) {
     return null;
   }
 
-  if (item.season === null) {
-    return null;
-  }
-
-  return seasonIndexOf(series).get(item.season) ?? null;
+  return seasonIndexOf(series).get(season) ?? null;
 }
 
 /**

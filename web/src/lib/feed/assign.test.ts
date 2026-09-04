@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assignSeriesId } from "@/lib/feed/assign";
+import { assignableSeasonOf, assignSeriesId } from "@/lib/feed/assign";
 import type { FeedItem } from "@/lib/feed/schema";
 import type { Series } from "@/lib/schema/series";
 
@@ -72,5 +72,26 @@ describe("assignSeriesId", () => {
 
   it("シリーズが 1 件も無ければ全件を未割当にする", () => {
     expect(assignSeriesId(item({}), [])).toBeNull();
+  });
+});
+
+describe("assignableSeasonOf", () => {
+  it("season を持つ回はその値を返す", () => {
+    expect(assignableSeasonOf(item({ season: 66 }))).toBe(66);
+  });
+
+  it("番外編は season を持っていても null を返す", () => {
+    const bonus = item({
+      title: "【番外編＃115】中川政七商店とコテンラジオ",
+      season: 115,
+    });
+
+    expect(assignableSeasonOf(bonus)).toBeNull();
+  });
+
+  it("season を持たない回は null を返す", () => {
+    const special = item({ title: "【特別編】年末のごあいさつ", season: null });
+
+    expect(assignableSeasonOf(special)).toBeNull();
   });
 });
