@@ -37,7 +37,6 @@
 
 ```
 公式 RSS ──(pnpm sync: ビルド前)──> data/episodes.json ─┐
-                                    └─> data/inbox/     │  未割当スタブ = 人間の入口
                                                         │
 手元の管理画面 ──(保存 = ファイル書き込み)──┐            │
                                             v            │
@@ -66,8 +65,7 @@ data/
 ├── episodes.json        # 自動層。RSS から同期。手で編集しない
 ├── series.json          # 手動層。シリーズ=キュレーション対象の正。geometry を持たない
 ├── loci.geojson         # 手動層。事物（シリーズが地図の上に持つもの）。地図の source の元
-├── eras.json            # 時代区分（下記「時系列（era）モデル」）
-└── inbox/               # RSS 同期が排出する「未割当シリーズのスタブ」置き場
+└── eras.json            # 時代区分（下記「時系列（era）モデル」）
 ```
 
 シリーズと事物は 1 対多で、多の側（事物）が `seriesId` で一の側を指す（[ADR-0027](docs/adr/0027-series-and-loci.md)）。
@@ -330,13 +328,11 @@ data/
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
   2. series.json 全件の `season` から season → seriesId の索引を組み、新規エピソードの `itunes:season` で引いて seriesId 割当（ADR-0018）
-  3. どのシリーズにも当たらないものは `data/inbox/YYYY-MM-DD.json` にスタブ排出
-     （タイトル・guid・`itunes:season`・配信リンク。座標と年代は空欄=人間+Claude の補正対象）。
-     タイトルの表記は揺れていて当てにならないので、そこからシリーズ名を推定した欄は持たない（ADR-0018）
-  4. 結果サマリ（新規 n 件 / 割当 m 件 / 要レビュー k 件）を stdout へ
-- 運用: 当面は手動で `pnpm sync` → inbox に出た回を見て `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット。
+  3. 結果サマリを stdout へ。
+     未割当は「規則で確定」（`itunes:season` を持たない回・番外編）と「シリーズ未作成」に割って数える（[ADR-0029](docs/adr/0029-retire-inbox.md)）
+- 運用: 当面は手動で `pnpm sync` → サマリの「シリーズ未作成」を見て `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット。
   手を入れる先は手動層の `series.json` と `loci.geojson` だけで、`episodes.json` は毎回フィードから組み直すので編集しない（ADR-0005）。
-  inbox が持つのはキュレーション済みのデータではなく、どのシリーズにも当たらなかった回の一覧である。
+  未割当を溜める置き場は持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ（[ADR-0029](docs/adr/0029-retire-inbox.md)）。
   軌道に乗ったら GitHub Actions の cron で sync + PR 自動作成に昇格（S8 以降の任意課題）
 - 静的サイトなので実行時 fetch はしない。同期は常にビルド前のデータ更新として行う
 
