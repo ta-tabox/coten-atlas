@@ -21,7 +21,7 @@ vi.mock("react-map-gl/maplibre", () => ({ default: map }));
 
 /**
  * 地図へ渡す事物。
- * ここが見るのは配線なので、1 件も要らない。
+ * MapCanvas は中身を読まずに SeriesLayers へ渡すだけなので、空で足りる。
  */
 const LOCI: MapLocusCollection = { type: "FeatureCollection", features: [] };
 
