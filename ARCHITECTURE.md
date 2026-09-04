@@ -327,7 +327,7 @@ data/
   - シリーズ内の回は `itunes:episode`。消費する画面が無いので episodes.json へは保存しない（ADR-0018）
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
-  2. series.json 全件の `season` から season → seriesId の索引を組み、新規エピソードの `itunes:season` で引いて seriesId 割当（ADR-0018）
+  2. series.json 全件の `season` から season → seriesId の索引を組み、フィード全件の `itunes:season` で引いて seriesId 割当（ADR-0018）
   3. 結果サマリを stdout へ。
      未割当は「規則で確定」（`itunes:season` を持たない回・番外編）と「シリーズ未作成」に割って数える（[ADR-0029](docs/adr/0029-retire-inbox.md)）
 - 運用: 当面は手動で `pnpm sync` → サマリの「シリーズ未作成」を見て `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット。
