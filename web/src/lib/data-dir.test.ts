@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { loadLoci, loadSeries } from "@/lib/data";
+import { loadLoci, loadSeries } from "@/lib/data-dir";
 
 describe("loadSeries", () => {
   it("現物を読んで検査に通す", () => {
