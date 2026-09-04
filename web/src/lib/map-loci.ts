@@ -1,7 +1,7 @@
 /**
  * 事物とシリーズを突き合わせて、地図の source へ渡す形を組む。
  *
- * 描画の濃淡が読む `kind` は事物の properties に無く、代表点の `timeRange` は `TIME_RANGE_OF_SERIES` の印のままなので、どちらも `seriesId` からシリーズを引いて写す（docs/adr/0027-series-and-loci.md）。
+ * 描画の濃淡が読む `kind` は事物の properties に無く、代表点の `timeRange` は `TIME_RANGE_OF_SERIES` のままなので、どちらも `seriesId` からシリーズを引いて写す（docs/adr/0027-series-and-loci.md）。
  * 写すのは properties だけで、geometry は触らない。
  * `data/` の形は動かさない（docs/adr/0024-map-feature-carries-key-only.md）。
  *
