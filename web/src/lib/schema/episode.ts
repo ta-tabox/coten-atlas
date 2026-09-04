@@ -44,7 +44,7 @@ export const episodeSchema = z
 
     /**
      * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
-     * 番外編・特別編・告知は持たないので、null の回は inbox へ回る。
+     * 番外編・特別編・告知は持たないので、null の回は `seriesId` も必ず null になる。
      */
     season: z.int().positive().nullable(),
 
