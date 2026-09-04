@@ -4,7 +4,10 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { CIRCLE_OPACITY_BY_KIND, SERIES_CIRCLE_LAYER } from "@/lib/map-style";
+import {
+  CIRCLE_OPACITY_BY_KIND,
+  SERIES_CIRCLE_LAYER,
+} from "@/lib/series-layer";
 
 describe("SERIES_CIRCLE_LAYER", () => {
   it("円の濃さを kind の 2 値で分ける", () => {

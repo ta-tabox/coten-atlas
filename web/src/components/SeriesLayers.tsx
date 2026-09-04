@@ -12,7 +12,7 @@
 
 import { Layer, Source } from "react-map-gl/maplibre";
 import type { MapLocusCollection } from "@/lib/map-loci";
-import { SERIES_CIRCLE_LAYER, SERIES_SOURCE_ID } from "@/lib/map-style";
+import { SERIES_CIRCLE_LAYER, SERIES_SOURCE_ID } from "@/lib/series-layer";
 
 type SeriesLayersProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */
