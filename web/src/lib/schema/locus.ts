@@ -14,7 +14,7 @@
  */
 
 import * as z from "zod";
-import { duplicatesOf } from "@/lib/duplicates";
+import { duplicatesOf } from "@/lib/schema/duplicates";
 import { pointSchema } from "@/lib/schema/geojson";
 import { ANCHOR_UNLOCATED, seriesTimeRangeSchema } from "@/lib/schema/series";
 import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";

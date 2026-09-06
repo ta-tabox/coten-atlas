@@ -12,8 +12,8 @@ import {
   BASEMAP_STYLE_URL,
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
-} from "@/lib/map-config";
-import type { MapLocusCollection } from "@/lib/map-loci";
+} from "@/lib/map/config";
+import type { MapLocusCollection } from "@/lib/map/loci";
 
 const map = vi.hoisted(() => vi.fn<(props: MapProps) => null>(() => null));
 
