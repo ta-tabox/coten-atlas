@@ -21,7 +21,7 @@
 | 地図の DOM 境界 | overlay は React + Tailwind。MapLibre 由来の DOM は canvas コンテナと attribution だけ | [ADR-0022](docs/adr/0022-map-dom-boundary.md) |
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-0003](docs/adr/0003-maplibre.md) |
 | ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-0004](docs/adr/0004-openfreemap-positron.md) |
-| データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-0005](docs/adr/0005-two-layer-data.md) |
+| データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-0029](docs/adr/0029-two-layer-data-without-inbox.md) |
 | 位置情報 | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で精緻な図形を足す。代表点は第二段階でも独立に持ち、どちらを描くかは利用者が切り替える | [ADR-0026](docs/adr/0026-two-phase-location.md) |
 | シリーズと事物 | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ | [ADR-0027](docs/adr/0027-series-and-loci.md) |
 | 管理画面 | 手元でだけ動き、`data/` のファイルへ書く。公開サイトの成果物に含まれない | [ADR-0028](docs/adr/0028-local-only-admin.md) |
@@ -329,10 +329,10 @@ data/
   1. RSS を取得し、guid で episodes.json と差分
   2. series.json 全件の `season` から season → seriesId の索引を組み、フィード全件の `itunes:season` で引いて seriesId 割当（ADR-0018）
   3. 結果サマリを stdout へ。
-     未割当は「規則で確定」（`itunes:season` を持たない回・番外編）と「シリーズ未作成」に割って数える（[ADR-0029](docs/adr/0029-retire-inbox.md)）
+     未割当は「規則で確定」（`itunes:season` を持たない回・番外編）と「シリーズ未作成」に割って数える（[ADR-0029](docs/adr/0029-two-layer-data-without-inbox.md)）
 - 運用: 当面は手動で `pnpm sync` → サマリの「シリーズ未作成」を見て `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット。
-  手を入れる先は手動層の `series.json` と `loci.geojson` だけで、`episodes.json` は毎回フィードから組み直すので編集しない（ADR-0005）。
-  未割当を溜める置き場は持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ（[ADR-0029](docs/adr/0029-retire-inbox.md)）。
+  手を入れる先は手動層の `series.json` と `loci.geojson` だけで、`episodes.json` は毎回フィードから組み直すので編集しない。
+  未割当を溜める置き場も持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ（[ADR-0029](docs/adr/0029-two-layer-data-without-inbox.md)）。
   軌道に乗ったら GitHub Actions の cron で sync + PR 自動作成に昇格（S8 以降の任意課題）
 - 静的サイトなので実行時 fetch はしない。同期は常にビルド前のデータ更新として行う
 

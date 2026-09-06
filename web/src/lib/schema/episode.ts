@@ -1,6 +1,6 @@
 /**
  * エピソード（＝番組の 1 回）のスキーマ。
- * RSS から同期した自動層の形を持つ（docs/adr/0005-two-layer-data.md）。
+ * RSS から同期した自動層の形を持つ（docs/adr/0029-two-layer-data-without-inbox.md）。
  *
  * ここが検査するのは**正規化後**の形で、正規化そのものは同期側の仕事である。
  * フィードの `pubDate` は RFC 822 で来るので、ISO 8601 へ直してから書く。
