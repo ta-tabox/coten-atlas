@@ -184,7 +184,7 @@ function warnLostAssignments(
  * 作業ディレクトリが違うと、書き出しは黙って別の場所へ `catalog/` を作り、755 件をそこへ置く。
  * `eras.json` は追跡されていて必ず在るので、これが無い場所は `catalog/` ではない。
  */
-function assertDataDir(): void {
+function assertCatalogDir(): void {
   if (fs.existsSync(path.join(CATALOG_DIR, "eras.json"))) {
     return;
   }
@@ -227,7 +227,7 @@ function reportSummary(assignments: Assignment[], added: Assignment[]): void {
  * 取得から書き出しまでを通す。
  */
 async function main(): Promise<void> {
-  assertDataDir();
+  assertCatalogDir();
 
   const items = parseFeed(await fetchFeed(FEED_URL));
   const series = readSeries(SERIES_FILE);

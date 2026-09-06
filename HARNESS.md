@@ -30,7 +30,7 @@ ADR は追記のみで本文を書き換えないので、決定した時点の�
 型検査は `catalog/` を見ない（`tsconfig.json` の `include` が `web/` 配下しか見ない）ので、ここで拾わないとどの層にも掛からない。
 `catalog/` の検査は `web/tests/catalog.test.ts` で、ファイル名が `*.test.ts` なので `pnpm test` が拾う。
 足すと同じ検査が二度走るので、連鎖へ別の段としては足さない。
-`pnpm validate:data` はその 1 本だけを名指す切り分け用で、「これが緑なら閉じてよい」と言えるのは変わらず `pnpm check` だけである。
+`pnpm validate:catalog` はその 1 本だけを名指す切り分け用で、「これが緑なら閉じてよい」と言えるのは変わらず `pnpm check` だけである。
 
 L3 を層に持つのは static export の性質による。ビルド時にしか壊れない失敗があり、
 L0〜L2 だけでは PR が緑のまま公開が落ちる。
