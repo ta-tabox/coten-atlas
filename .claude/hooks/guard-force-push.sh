@@ -48,9 +48,28 @@ destructive+='|(^|[[:space:]]):[^[:space:]]+'
 
 # 起動条件が素通しさせた無関係なコマンドは、ここで git push でないことを見て外す。
 # 見ないと、シェルの no-op（`do :; done`）が削除 refspec に化けて、git を呼んでもいない行が ask になる。
-# 過剰に拾う分には ask が増えるだけで済むので、git が push より前に現れる行、で足りる。
+# 過剰に拾う分には ask が増えるだけで済むので、git が push より前に現れる、で足りる。
 git_push='(^|[[:space:]])git[[:space:]].*push([[:space:]]|$)'
 
-if grep -qE "$git_push" <<< "$command_line" && grep -qE "$destructive" <<< "$command_line"; then
-  ask "戻せない push の可能性がある（force / delete / mirror）。人間の諾否が要る"
-fi
+# 判定はコマンド全文でなく、`;` `|` `&` で区切ったセグメントごとに行う。
+# 全文を一息に見ると語とフラグが別々のコマンドから拾われるので、push を叩いていない行が ask になる。
+# `git status; echo "未 push の有無"; gh api graphql -f query=…` が実例で、git と push が前の二つから、`-f` が三つ目から来ていた。
+# 改行では区切らない。
+# `git push \` で次の行へ落とした `--force` を、区切ると取り逃がす。
+#
+# 区切りは `;` へ寄せて IFS で割る。
+# 衝突しない制御文字を使いたくなるが、macOS の bash 3.2 は UTF-8 ロケールで制御文字の IFS を無視するので分割が起きない。
+# 引用符の中の区切りまで割ってしまうが、`git push` とそのフラグの間へ引用符ごしの区切りが入る書き方は無いので、本物は取り逃がさない。
+# glob を止めるのは、セグメントに `*` があるとファイル名へ展開されて判定の対象が消えるためである。
+segments=${command_line//|/;}
+segments=${segments//&/;}
+
+set -f
+IFS=';'
+
+for segment in $segments; do
+  if grep -qE "$git_push" <<< "$segment" && grep -qE "$destructive" <<< "$segment"; then
+    ask "戻せない push の可能性がある（force / delete / mirror）。人間の諾否が要る"
+    exit 0
+  fi
+done
