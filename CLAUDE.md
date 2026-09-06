@@ -51,15 +51,16 @@
 決定と経緯は `docs/adr/`——1決定1レコード・**追記のみ**・覆すときは supersede
 （規約は同 `README.md`）。状態と作業単位は GitHub Issues。
 
-**コードを書く前に** @docs/CODING.md と skill `coding-standards` / `karpathy-guidelines` を開く
-（レビューやリファクタに限らない。言語固有の作法は skill の `languages/` のみ）。
+コーディング規約は `.claude/rules/`（文章は常時、コードと言語別と UI は該当ファイルの Read で読み込まれる）。
+**コードを書く前に** skill `coding-standards` / `karpathy-guidelines` を開く（レビューやリファクタに限らない）。
+隣接ファイルを読まずに新規ファイルを書くときは、先に `.claude/rules/coding.md` と該当言語の `languages/<lang>.md` を Read する。
 
 **申し送りの層は持たない**（[ADR-0025](docs/adr/0025-retire-next-md.md)）。
 続きは開いている issue の一覧から拾い、構造に関わる未決は `docs/ARCHITECTURE.md` §8 が引き取る。
 
 ## 配布物の追随
 
-`.claude/` と `.github/workflows/` の一部、`web/scripts/lint-comments.ts` と `web/tests/`、`docs/CODING.md` は共有の雛形からの写しである。
+`.claude/` と `.github/workflows/` の一部、`web/scripts/lint-comments.ts` と `web/tests/`、`.claude/rules/` は共有の雛形からの写しである。
 
 - **追随は、この器の開発を再開するときにまとめてやる**。
   都度の追随は打ち切ってあるので、放っておけば雛形との差は開き続ける。

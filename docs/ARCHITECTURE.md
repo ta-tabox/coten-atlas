@@ -351,13 +351,12 @@ catalog/
 ├── catalog/               # 人間キュレーション層と時代区分。アプリの外なのでルート側
 ├── docs/                  # 器自身の文書
 │   ├── ARCHITECTURE.md    # この文書（現況）
-│   ├── CODING.md          # コーディング規約。共有の雛形からの写し
 │   ├── ROADMAP.md         # 作る順序
 │   ├── HARNESS.md         # 検証と実行環境
 │   └── adr/               # 決定と経緯。1決定1レコード
 ├── mise.toml              # [tools] のみ。ランタイム版管理
 ├── .github/               # workflows・issue / PR テンプレ
-├── .claude/               # settings・hooks・同梱 skill
+├── .claude/               # settings・hooks・同梱 skill・rules/（規範。共有の雛形からの写し）
 └── web/                   # アプリ本体。判定の口 `pnpm check` はこの中で打つ
     ├── CLAUDE.md          # 空殻（本文はルート）
     ├── src/               # Next.js が束ねる範囲。`app/` の構造は App Router の規約
