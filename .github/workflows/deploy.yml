@@ -2,7 +2,7 @@ name: Deploy
 
 # main の内容を GitHub Pages へ配信する（docs/adr/0007-github-pages.md）。
 # 品質の判定は持たない（型・静的・テストは check.yml の pnpm check が見る）。
-# 実行環境は check.yml と同一にする（立て方が食い違うと、check が緑の commit で配信だけが落ちる）。
+# ランタイムの立て方は check.yml と揃える（食い違うと、check が緑の commit で配信だけが落ちる）。
 
 on:
   push:
@@ -44,10 +44,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # basePath と assetPrefix は next.config.ts が src/lib/base-path.ts から読む。
-      # GitHub が Pages の設定画面から勧める Next.js 用の雛形は actions/configure-pages で basePath を注入するので、入れると出所が二つになる。
-      #
-      # check.yml が Playwright を入れているのはスモークのためで、next build は使わない。
+      # 公開先のパスの接頭辞（basePath と assetPrefix）はアプリ側の next.config.ts が持つ。
+      # GitHub が Pages の設定画面から勧める Next.js 用の雛形は actions/configure-pages でこの接頭辞を注入するので、足すと出所が二つになる。
+
+      # 回すのは build の一本だけに留める。
+      # check.yml が Playwright のブラウザを入れているのは、配信物を実際にブラウザで開くスモークのためである。
+      # next build はブラウザを使わないので、ここでは入れない。
       - run: pnpm build
 
       # このステップは uses: なので defaults の working-directory が効かない。
