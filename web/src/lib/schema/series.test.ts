@@ -5,7 +5,7 @@ import {
   seriesTimeRangeSchema,
 } from "@/lib/schema/series";
 
-/** ARCHITECTURE.md「データモデル」の例をそのまま写した 1 件。 */
+/** docs/ARCHITECTURE.md「データモデル」の例をそのまま写した 1 件。 */
 const sparta = {
   id: "sparta",
   title: "スパルタ",

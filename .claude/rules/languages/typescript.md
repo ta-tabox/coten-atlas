@@ -1,6 +1,12 @@
+---
+paths:
+  - "**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}"
+---
+
 # TypeScript / JavaScript への写像
 
-核の原則（CODING.md）を TS のイディオムに落とす。
+核の原則（`coding.md`）を TS のイディオムに落とす。
+上の `paths` に当たるファイルを Read した時点で読み込まれる。
 toolchain（pnpm / Biome / mise）の設定はここでは扱わない。ここは書き方のみ。
 
 ## 不変を既定に
