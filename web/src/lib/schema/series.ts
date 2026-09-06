@@ -137,6 +137,7 @@ export const seriesListSchema = z
   });
 
 export type Series = z.infer<typeof seriesSchema>;
+export type SeriesKind = z.infer<typeof seriesKindSchema>;
 export type SeriesList = z.infer<typeof seriesListSchema>;
 export type SeriesTimeRange = z.infer<typeof seriesTimeRangeSchema>;
 
