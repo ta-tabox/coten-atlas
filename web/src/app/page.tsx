@@ -9,7 +9,7 @@
 
 import MapCanvas from "@/components/MapCanvas";
 import { loadLoci, loadSeries } from "@/lib/catalog-dir";
-import { toMapLoci } from "@/lib/map-loci";
+import { toMapLoci } from "@/lib/map/loci";
 
 export default function Page() {
   return <MapCanvas loci={toMapLoci(loadLoci(), loadSeries())} />;

@@ -22,8 +22,8 @@ import {
   BASEMAP_STYLE_URL,
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
-} from "@/lib/map-config";
-import type { MapLocusCollection } from "@/lib/map-loci";
+} from "@/lib/map/config";
+import type { MapLocusCollection } from "@/lib/map/loci";
 
 type MapCanvasProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */
