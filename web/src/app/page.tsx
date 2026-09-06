@@ -3,7 +3,7 @@
  * 全画面のベースマップと、その上に載るシリーズの代表点を置く。
  *
  * `catalog/` を読むのはここだけである。
- * Server Component が `node:fs` で読み、地図へ渡す形をビルド時に組む（ARCHITECTURE.md §3「配り方」）。
+ * Server Component が `node:fs` で読み、地図へ渡す形をビルド時に組む（docs/ARCHITECTURE.md §3「配り方」）。
  * `"use client"` を付けると `node:fs` へ届かなくなる。
  */
 

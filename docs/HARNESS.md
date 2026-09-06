@@ -22,7 +22,7 @@ L0〜L4 は `pnpm check` の一本にまとまっている（下記）。
 機械層が増えるたびに末尾がずれて、他の文書からの参照も一緒に腐る。
 issue の完了条件は機械判定（`pnpm check`）と人間の判定に分かれており、後者が待ち行列になると前者まで止まる（`ROADMAP.md`「完了条件は二本に分ける」）。
 
-[ADR-0014](docs/adr/0014-e2e-offline-smoke.md) は人間の目視を L5 と呼んでいる。
+[ADR-0014](adr/0014-e2e-offline-smoke.md) は人間の目視を L5 と呼んでいる。
 ADR は追記のみで本文を書き換えないので、決定した時点の呼び名がそのまま残る（`docs/adr/README.md` の規約 4）。
 
 `catalog/` の検査が L2 に居るのは、検査器が `web/src/lib/schema/` の zod スキーマそのもので、それを保証するのが同じ層の反例テストだから。
@@ -37,7 +37,7 @@ L0〜L2 だけでは PR が緑のまま公開が落ちる。
 
 L4 を層に持つのは、L3 までがどれも「配信物へ実際に到達できるか」を見ないため。
 ビルドが通っても worker やアセットが 404 になり、地図だけが描画されない形が実際に起きた
-（PR #60。決定は [ADR-0014](docs/adr/0014-e2e-offline-smoke.md)）。
+（PR #60。決定は [ADR-0014](adr/0014-e2e-offline-smoke.md)）。
 守らせるのは自足の一点で、外部への通信は遮断する。
 
 ## 2. 判定の口
@@ -51,7 +51,7 @@ cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next bui
 
 L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next build` の出力だから。
 その前には置けない。
-ブラウザを立てるのは L4 だけで、回すのは Playwright である（[ADR-0016](docs/adr/0016-playwright-runner.md)）。
+ブラウザを立てるのは L4 だけで、回すのは Playwright である（[ADR-0016](adr/0016-playwright-runner.md)）。
 スモークは project `smoke`（`web/tests/smoke/`）で、`pnpm smoke` がそれを名指す。
 操作を伴う E2E を足すときは project をもう一つ並べるので、スモークの範囲は動かない。
 
@@ -67,7 +67,7 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 - **赤のままコミットしない。** 回し方は「`pnpm check` → 緑ならコミット」
 - 口を増やさない。切り分けのために個別スクリプトを単体で叩くのは構わないが、
   「これが緑なら閉じてよい」と言えるのは `pnpm check` だけ
-- 決定と理由は [ADR-0009](docs/adr/0009-pnpm-check.md)（[ADR-0002](docs/adr/0002-mise-run-check.md) を supersede）
+- 決定と理由は [ADR-0009](adr/0009-pnpm-check.md)（[ADR-0002](adr/0002-mise-run-check.md) を supersede）
 - CI も同じ一本を回す（`.github/workflows/check.yml`）
 
 ランタイムの版は `mise.toml` の `[tools]` が固定する（node / pnpm）。
@@ -166,10 +166,10 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
 
 - **E2E で地図の絵を検証しない**。ヘッドレスでも描画そのものは出るが、絵を判定するには
   実タイルかそのフィクスチャが要る。L4 が守るのは配信物が自足していることまでで、
-  見た目は人間の目視に残す（[ADR-0014](docs/adr/0014-e2e-offline-smoke.md)）
+  見た目は人間の目視に残す（[ADR-0014](adr/0014-e2e-offline-smoke.md)）
 - **実 API を自動テストで叩かない**。RSS もタイルサーバも外部の可用性に依存するので、
   テストが外部の都合で赤くなる。取得層はフィクスチャで検証する。
   L4 のスモークも同じで、タイルサーバへの通信は遮断してスタイルだけを合成のもので返す
 - **`claude.yml` の `on:` を絞らない**。起動の絞りは job 側の `if:` の一本
-  （[ADR-0010](docs/adr/0010-gh-review-trigger-narrowing.md)）。run 一覧に `skipped` が
+  （[ADR-0010](adr/0010-gh-review-trigger-narrowing.md)）。run 一覧に `skipped` が
   並ぶのは正常なので、異常と読んで調べ直さない
