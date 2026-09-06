@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { toMapLoci } from "@/lib/map-loci";
+import { toMapLoci } from "@/lib/map/loci";
 import {
   type Locus,
   type LocusCollection,

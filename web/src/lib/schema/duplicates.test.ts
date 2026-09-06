@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { duplicatesOf } from "@/lib/duplicates";
+import { duplicatesOf } from "@/lib/schema/duplicates";
 
 describe("duplicatesOf", () => {
   it("重複が無ければ空を返す", () => {
