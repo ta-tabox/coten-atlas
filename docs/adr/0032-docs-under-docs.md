@@ -16,7 +16,7 @@
 `ed36ec6` の時点で、参照は次のように散っていた。
 
 - `README.md` が 5 本のリンクで 3 文書を指している
-- 移す 4 文書が `docs/adr/` へ 47 本のリンクを持っている
+- 移す 4 文書のうち 3 本が `docs/adr/` へ 47 本のリンクを持っている（`CODING.md` は 0 本）
 - ADR の本文（0001〜0031）が 56 箇所でこれらを名指ししている。すべて素の名前で、マークダウンリンクは 1 本も無い
 - `web/src/` と `web/scripts/` のコメントが 8 箇所で名指ししている
 - 道具は 1 つも依存していない。`.github/workflows/`・`.claude/settings.json`・`.claude/hooks/`・`mise.toml`・`.worktreeinclude` のどれもパスを持たない

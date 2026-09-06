@@ -373,8 +373,6 @@ catalog/
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
 ルートに残るのは、道具がその位置を要求するものだけである（[ADR-0032](adr/0032-docs-under-docs.md)）。
-`README.md` と `LICENSE` は GitHub が、`CLAUDE.md` は Claude Code がそのパスで読む。
-器自身の文書はどれもその条件を満たさないので `docs/` に居る。
 
 まだ存在しないもの: `docs/VISION.md`（#41）。
 `catalog/` はアプリの外なので**ルート側**に置く。

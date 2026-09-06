@@ -21,11 +21,13 @@ Next.js (App Router) + TypeScript を static export する。
 
 ## 文書
 
-ルートの `ls` が目次として働くので、README は索引に徹して中身を複製しない。
+ルートの `ls` が見せるのは `docs/` までなので、README がその索引を兼ねる。
+各文書の中身はここへ複製しない。
 
 - [ARCHITECTURE.md](docs/ARCHITECTURE.md) — いまどうなっているか。技術スタック・データモデル・ディレクトリ構造
 - [ROADMAP.md](docs/ROADMAP.md) — 作る順序と、その理由と、完了条件の閾値
 - [HARNESS.md](docs/HARNESS.md) — 何をもって「動いた」と言うか。開発の入口（`pnpm check` の打ち方）もここ
+- [CODING.md](docs/CODING.md) — コードと文章の書き方。判断に迷う具体例は skill `coding-standards` が持つ
 - [docs/adr/](docs/adr/) — なぜそう決めたか。1決定1レコードで追記のみ
 
 ## 出典と引用の範囲
