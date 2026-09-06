@@ -1,0 +1,81 @@
+name: Deploy
+
+# main の内容を GitHub Pages へ配信する（docs/adr/0007-github-pages.md）。
+# 品質の判定は持たない（型・静的・テストは check.yml の pnpm check が見る）。
+# ランタイムの立て方は check.yml と揃える（食い違うと、check が緑の commit で配信だけが落ちる）。
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# ここで配るのは全ジョブに渡る分なので、checkout の読み取りに要る contents: read だけに絞る。
+# Pages の書き込みと OIDC は deploy ジョブでしか要らないので、そちらの permissions が持つ。
+# upload-pages-artifact は tar して upload-artifact を呼ぶだけで GITHUB_TOKEN を使わないので、build 側に Pages の権限は要らない。
+permissions:
+  contents: read
+
+# Pages のデプロイは同時に 1 本しか走らないので、後続の push は待たせる。
+# run の目的が判定でなく配信そのものなので、check.yml と違って途中で捨てない。
+# 捨てると、その commit の内容が配信されないまま次へ進む。
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # アプリは web/ の中（#39）。run: のステップだけを web/ で回す。
+    # uses: のアクションには working-directory が効かないので、mise-action はリポジトリのルートに居たまま、ルートの mise.toml を読む。
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      # ランタイムは mise で入れる（toolchain.md）。版はルートの mise.toml が持つ。CI に書き下ろさない。
+      - uses: jdx/mise-action@v4
+
+      - run: pnpm install --frozen-lockfile
+
+      # 公開先のパスの接頭辞（basePath と assetPrefix）はアプリ側の next.config.ts が持つ。
+      # GitHub が Pages の設定画面から勧める Next.js 用の雛形は actions/configure-pages でこの接頭辞を注入するので、足すと出所が二つになる。
+
+      # 回すのは build の一本だけに留める。
+      # check.yml が Playwright のブラウザを入れているのは、配信物を実際にブラウザで開くスモークのためである。
+      # next build はブラウザを使わないので、ここでは入れない。
+      - run: pnpm build
+
+      # このステップは uses: なので defaults の working-directory が効かない。
+      # 静的出力は web/out に出るので、パスはリポジトリのルートから見た形で書く。
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: web/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # deploy-pages が要求する最小の組み合わせ（pages: write と id-token: write）。
+    # ジョブの permissions は workflow 側へ足すのでなく置き換えるので、checkout を持たないこのジョブに contents は書かない。
+    permissions:
+      pages: write
+      id-token: write
+
+    # 公開 URL は deploy-pages が出力するので、環境の側に書き下ろさない。
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
