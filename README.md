@@ -5,8 +5,7 @@
 ## 現況
 
 開発中。
-手元で `pnpm dev` すると全画面のベースマップが出るところまで。
-公開 URL はまだ無い。
+<https://ta-tabox.github.io/coten-atlas/> で公開している。
 
 どの順で何を作るかは [ROADMAP.md](ROADMAP.md)、いま何に着手しているかは GitHub Issues にある。
 
