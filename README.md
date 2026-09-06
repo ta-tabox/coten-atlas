@@ -5,8 +5,7 @@
 ## 現況
 
 開発中。
-<https://ta-tabox.github.io/coten-atlas/> で公開していて、全画面の地図にシードのシリーズが代表点の円で載るところまで進んでいる。
-代表点をクリックしても、まだ詳細は開かない。
+<https://ta-tabox.github.io/coten-atlas/> で公開している。
 
 どの順で何を作るかは [ROADMAP.md](ROADMAP.md)、いま何に着手しているかは GitHub Issues にある。
 
