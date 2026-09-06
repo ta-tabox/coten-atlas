@@ -24,6 +24,18 @@
     "tags": ["古代", "ギリシア"]
   },
   {
+    "id": "shin-no-shikotei",
+    "title": "秦の始皇帝",
+    "kind": "place",
+    "anchor": "xianyang",
+    "timeRange": { "start": -259, "end": -210 },
+    "summary": "",
+    "region": "中国",
+    "season": 5,
+    "links": [],
+    "tags": ["人物", "帝国"]
+  },
+  {
     "id": "shokatsu-komei",
     "title": "諸葛孔明",
     "kind": "place",
@@ -96,6 +108,18 @@
     "tags": ["開拓", "近代", "アメリカ"]
   },
   {
+    "id": "julius-caesar",
+    "title": "ユリウス・カエサル",
+    "kind": "place",
+    "anchor": "forum-romanum",
+    "timeRange": { "start": -100, "end": -44 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 20,
+    "links": [],
+    "tags": ["人物", "帝国", "戦争"]
+  },
+  {
     "id": "cleopatra",
     "title": "クレオパトラ",
     "kind": "place",
@@ -106,6 +130,54 @@
     "season": 33,
     "links": [],
     "tags": ["人物", "古代", "エジプト"]
+  },
+  {
+    "id": "hannibal",
+    "title": "ハンニバル",
+    "kind": "place",
+    "anchor": "carthage",
+    "timeRange": { "start": -247, "end": -183 },
+    "summary": "",
+    "region": "アフリカ",
+    "season": 42,
+    "links": [],
+    "tags": ["人物", "戦争", "遠征"]
+  },
+  {
+    "id": "roshi-soshi",
+    "title": "老子・荘子",
+    "kind": "concept",
+    "anchor": "luyi",
+    "timeRange": { "start": -571, "end": -286 },
+    "summary": "",
+    "region": "中国",
+    "season": 55,
+    "links": [],
+    "tags": ["人物", "思想"]
+  },
+  {
+    "id": "kou-to-ryuho",
+    "title": "項羽と劉邦",
+    "kind": "place",
+    "anchor": "pengcheng",
+    "timeRange": { "start": -256, "end": -195 },
+    "summary": "",
+    "region": "中国",
+    "season": 60,
+    "links": [],
+    "tags": ["人物", "戦争"]
+  },
+  {
+    "id": "gilgamesh",
+    "title": "ギルガメシュ",
+    "kind": "place",
+    "anchor": "uruk",
+    "timeRange": { "start": -2800, "end": -2600 },
+    "summary": "",
+    "region": "西アジア",
+    "season": 63,
+    "links": [],
+    "tags": ["人物", "文学"]
   },
   {
     "id": "teisei-roma",
