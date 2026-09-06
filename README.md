@@ -42,8 +42,8 @@ Next.js (App Router) + TypeScript を static export する。
 
 コードは MIT（[LICENSE](LICENSE)）。
 
-`data/` のキュレーション層（`series.json`・`loci.geojson`・`eras.json`）は CC BY 4.0 で、再利用には帰属表示が要る。
-同じ `data/` でも `episodes.json` は番組の RSS 由来なので、このリポジトリのライセンスは及ばない。
+`catalog/` のキュレーション層（`series.json`・`loci.geojson`・`eras.json`）は CC BY 4.0 で、再利用には帰属表示が要る。
+同じ `catalog/` でも `episodes.json` は番組の RSS 由来なので、このリポジトリのライセンスは及ばない。
 
 シリーズ名・エピソードタイトル・配信リンクも同じく範囲外で、権利は上の「出典と引用の範囲」のとおり制作元に帰属する。
 

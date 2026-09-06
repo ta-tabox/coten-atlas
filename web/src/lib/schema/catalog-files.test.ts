@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { DATA_VALIDATORS, unvalidatedNames } from "@/lib/schema/data-files";
+import {
+  CATALOG_VALIDATORS,
+  unvalidatedNames,
+} from "@/lib/schema/catalog-files";
 
 describe("unvalidatedNames", () => {
   it("対応表に載っているファイルは漏れとして返さない", () => {
-    expect(unvalidatedNames([...DATA_VALIDATORS.keys()])).toEqual([]);
+    expect(unvalidatedNames([...CATALOG_VALIDATORS.keys()])).toEqual([]);
   });
 
   it("検査する口を持たないデータファイルを名指しで返す", () => {
