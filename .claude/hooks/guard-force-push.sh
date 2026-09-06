@@ -51,25 +51,89 @@ destructive+='|(^|[[:space:]]):[^[:space:]]+'
 # 過剰に拾う分には ask が増えるだけで済むので、git が push より前に現れる、で足りる。
 git_push='(^|[[:space:]])git[[:space:]].*push([[:space:]]|$)'
 
-# 判定はコマンド全文でなく、`;` `|` `&` で区切ったセグメントごとに行う。
+# 判定はコマンド全文でなく、コマンドの区切りで割ったセグメントごとに行う。
 # 全文を一息に見ると語とフラグが別々のコマンドから拾われるので、push を叩いていない行が ask になる。
-# `git status; echo "未 push の有無"; gh api graphql -f query=…` が実例で、git と push が前の二つから、`-f` が三つ目から来ていた。
-# 改行では区切らない。
-# `git push \` で次の行へ落とした `--force` を、区切ると取り逃がす。
+# `git status; echo "未 push の有無"; gh api graphql -f query=…` が実例で、git と push は前の二つから、`-f` は三つ目から来ていた。
 #
-# 区切りは `;` へ寄せて IFS で割る。
-# 衝突しない制御文字を使いたくなるが、macOS の bash 3.2 は UTF-8 ロケールで制御文字の IFS を無視するので分割が起きない。
-# 引用符の中の区切りまで割ってしまうが、`git push` とそのフラグの間へ引用符ごしの区切りが入る書き方は無いので、本物は取り逃がさない。
-# glob を止めるのは、セグメントに `*` があるとファイル名へ展開されて判定の対象が消えるためである。
-segments=${command_line//|/;}
-segments=${segments//&/;}
+# 割るのはシェルと同じ規則に従うときだけである。
+# 文字単位で割ると `git push origin 2>&1 --force` が `git push origin 2>` と `1 --force` へ、
+# `git push origin 'feat&fix' --force` が `git push origin 'feat` と `fix' --force` へ割れ、
+# どちらのセグメントも片方の条件しか満たさないので素通りする。
+# 誤爆は摩擦で済むが素通りは事故なので、引用とリダイレクトを見て割る。
 
-set -f
-IFS=';'
+# `2>&1`・`>&2`・`&>file` の `&` はコマンドの区切りではない。
+is_redirection() {
+  local before=$1 after=$2
 
-for segment in $segments; do
+  case $before in
+    *'>' | *'<') return 0 ;;
+  esac
+
+  [ "$after" = '>' ]
+}
+
+# 1 文字ずつ回すので所要時間はコマンド長の 2 乗で伸びる（実測で 12000 字が 0.9 秒、48000 字が 13 秒）。
+# フックの timeout は 5 秒で、超えると判定そのものが失われる。
+# ヒアドキュメントでファイルを書く類はここに届くので、上限を置いて割るのをやめる。
+readonly split_limit=8000
+
+# 引用の外にある `;` `|` `&` と改行でコマンドを割り、1 セグメント 1 行で出す。
+# セグメントに残った改行を空白へ潰すのは、行継続で次の行へ落とした `--force` を同じセグメントに留めるためである。
+split_into_segments() {
+  local text=$1
+  local segment='' quote='' escaped='' character next
+  local index=0
+
+  # 割らなければ語とフラグが別のコマンドから拾われて誤爆するが、素通りはしない。
+  if [ "${#text}" -gt "$split_limit" ]; then
+    printf '%s\n' "${text//$'\n'/ }"
+    return
+  fi
+
+  while [ "$index" -lt "${#text}" ]; do
+    character=${text:index:1}
+    next=${text:index+1:1}
+    index=$((index + 1))
+
+    if [ -n "$escaped" ]; then
+      segment+=$character
+      escaped=''
+      continue
+    fi
+
+    case $character in
+      '\')
+        # シングルクォートの中では `\` はただの文字である。
+        if [ "$quote" = "'" ]; then segment+=$character; else escaped=1; fi
+        ;;
+      '"' | "'")
+        if [ -z "$quote" ]; then
+          quote=$character
+        elif [ "$quote" = "$character" ]; then
+          quote=''
+        fi
+        segment+=$character
+        ;;
+      ';' | '|' | '&' | $'\n')
+        if [ -n "$quote" ] || { [ "$character" = '&' ] && is_redirection "$segment" "$next"; }; then
+          segment+=$character
+        else
+          printf '%s\n' "${segment//$'\n'/ }"
+          segment=''
+        fi
+        ;;
+      *)
+        segment+=$character
+        ;;
+    esac
+  done
+
+  printf '%s\n' "${segment//$'\n'/ }"
+}
+
+while IFS= read -r segment; do
   if grep -qE "$git_push" <<< "$segment" && grep -qE "$destructive" <<< "$segment"; then
     ask "戻せない push の可能性がある（force / delete / mirror）。人間の諾否が要る"
     exit 0
   fi
-done
+done <<< "$(split_into_segments "$command_line")"
