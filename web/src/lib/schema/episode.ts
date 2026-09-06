@@ -1,6 +1,6 @@
 /**
  * エピソード（＝番組の 1 回）のスキーマ。
- * RSS から同期した自動層の形を持つ（docs/adr/0005-two-layer-data.md）。
+ * RSS から同期した自動層の形を持つ（docs/adr/0029-two-layer-data-without-inbox.md）。
  *
  * ここが検査するのは**正規化後**の形で、正規化そのものは同期側の仕事である。
  * フィードの `pubDate` は RFC 822 で来るので、ISO 8601 へ直してから書く。
@@ -44,7 +44,7 @@ export const episodeSchema = z
 
     /**
      * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
-     * 番外編・特別編・告知は持たないので、null の回は inbox へ回る。
+     * 番外編・特別編・告知は持たないので、null の回は `seriesId` も必ず null になる。
      */
     season: z.int().positive().nullable(),
 

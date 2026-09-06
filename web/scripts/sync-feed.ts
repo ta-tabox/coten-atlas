@@ -1,13 +1,14 @@
 /**
- * 公式 RSS を引いて `data/episodes.json` を書き直し、シリーズへ割り当てられなかった新着を `data/inbox/` へ出す。
+ * 公式 RSS を引いて `data/episodes.json` を書き直し、未割当の内訳を標準出力へ出す。
  *
  * ここが持つのは同期の段取りだけである。
- * フィードの読み方は `src/lib/feed/parse.ts`、割当の規則は同 `assign.ts`、inbox の読み書きは `inbox.ts`、JSON の読み書きは `json-file.ts` が持つ。
+ * フィードの読み方は `src/lib/feed/parse.ts`、割当の規則は同 `assign.ts`、JSON の読み書きは `json-file.ts` が持つ。
  * どのファイルをどの順で読み書きするかを決めるのがこの層の仕事で、その順序は main を上から読めば追える。
  *
  * `episodes.json` はフィードから毎回組み直す。
- * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` の現状から引き直す（docs/adr/0005-two-layer-data.md）。
- * 差分は「新着かどうか」を決めるためだけに取り、inbox へ出すのは新着のうち未割当のものに限る。
+ * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` の現状から引き直す。
+ * 未割当を溜める置き場も持たない（docs/adr/0029-two-layer-data-without-inbox.md）。
+ * 前回との差分を取るのは、新着を数えるためと、割当が外れた回を報せるためだけである。
  *
  * 失敗は黙って飲まずに落とす。
  * 空の結果を正常な差分として書くと、フィードが壊れた日に `episodes.json` が消える。
@@ -20,9 +21,8 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { writeInbox } from "@scripts/inbox";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
-import { assignSeriesId } from "@/lib/feed/assign";
+import { assignableSeasonOf, assignSeriesId } from "@/lib/feed/assign";
 import { parseFeed } from "@/lib/feed/parse";
 import type { FeedItem } from "@/lib/feed/schema";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
@@ -52,7 +52,6 @@ const DATA_DIR = path.resolve(process.cwd(), "../data");
 
 const EPISODES_FILE = path.join(DATA_DIR, "episodes.json");
 const SERIES_FILE = path.join(DATA_DIR, "series.json");
-const INBOX_DIR = path.join(DATA_DIR, "inbox");
 
 /** フィードの 1 件と、それに決まったシリーズ。 */
 type Assignment = {
@@ -80,10 +79,10 @@ async function fetchFeed(url: string): Promise<string> {
 
 /**
  * 人間が書いたシリーズ一覧を読む。
- * 割当はこの中身から season の索引を組んで引くので、ここに無い season のエピソードはどれも inbox へ回る。
+ * 割当はこの中身から season の索引を組んで引くので、ここに無い season のエピソードはどれも未割当になる。
  *
  * ファイルがまだ無い日は、失敗にせず空のシリーズ一覧として扱う。
- * シリーズを 1 件も書いていない段階でこのスクリプトが inbox を出せることが、人間がシリーズを書き始める入口になる。
+ * シリーズを 1 件も書いていない段階でも同期が通ることが、人間がシリーズを書き始める入口になる。
  */
 function readSeries(file: string): SeriesList {
   if (!fs.existsSync(file)) {
@@ -158,7 +157,7 @@ function warnDisappeared(
 /**
  * 前回は付いていた seriesId が外れた回を報せる。
  *
- * inbox へ出すのは新着だけなので、既に見送った回の割当が外れても人間の手元には現れない。
+ * サマリは未割当の数しか出さないので、割当が外れた回はその数に紛れる。
  * `series.json` から season を消したり書き換えたりすると起きるので、黙って直すと地図からその回が消えたことに気付けない。
  */
 function warnLostAssignments(
@@ -196,8 +195,36 @@ function assertDataDir(): void {
 }
 
 /**
- * 取得から書き出しまでを通す。
  * 数え上げたサマリを標準出力へ書く。
+ *
+ * 未割当は二つに割る。
+ * 規則で確定した分は `series.json` を埋めても減らないので、一つの数に混ぜると進捗が読めない。
+ */
+function reportSummary(assignments: Assignment[], added: Assignment[]): void {
+  const unassigned = assignments.filter(({ seriesId }) => seriesId === null);
+  const settledByRule = unassigned.filter(
+    ({ item }) => assignableSeasonOf(item) === null,
+  );
+  const awaitingSeries = unassigned.filter(
+    ({ item }) => assignableSeasonOf(item) !== null,
+  );
+  const awaitingSeasons = new Set(
+    awaitingSeries.map(({ item }) => assignableSeasonOf(item)),
+  );
+
+  console.log(
+    `フィード ${assignments.length} 件 / 新規 ${added.length} 件 / 割当 ${assignments.length - unassigned.length} 件 / 未割当 ${unassigned.length} 件`,
+  );
+  console.log(
+    `  規則で確定      ${settledByRule.length} 件（season を持たない回・番外編）`,
+  );
+  console.log(
+    `  シリーズ未作成  ${awaitingSeries.length} 件（season ${awaitingSeasons.size} 件）`,
+  );
+}
+
+/**
+ * 取得から書き出しまでを通す。
  */
 async function main(): Promise<void> {
   assertDataDir();
@@ -217,19 +244,6 @@ async function main(): Promise<void> {
   warnLostAssignments(assignments, previous);
 
   const added = assignments.filter(({ item }) => !previous.has(item.guid));
-  const unassigned = added.filter(({ seriesId }) => seriesId === null);
-
-  // inbox を先に書く。
-  // episodes.json を先に書くと、その後で落ちたときに guid だけが既知になり、未判定のまま二度と出てこない回ができる。
-  if (unassigned.length > 0) {
-    const file = writeInbox(
-      INBOX_DIR,
-      syncedAt,
-      unassigned.map(({ item }) => item),
-    );
-
-    console.log(`inbox: ${path.relative(process.cwd(), file)}`);
-  }
 
   writeJsonFile(
     EPISODES_FILE,
@@ -241,9 +255,7 @@ async function main(): Promise<void> {
     }),
   );
 
-  console.log(
-    `フィード ${items.length} 件 / 新規 ${added.length} 件 / 割当 ${added.length - unassigned.length} 件 / 要レビュー ${unassigned.length} 件`,
-  );
+  reportSummary(assignments, added);
 }
 
 await main();

@@ -5,7 +5,7 @@
  * タイトルからシリーズ名を取り出して当てにいかない。
  * `【COTEN RADIO ○○編N】` が基本形だが、`編` が無い回・前後編の回・開き `【` が欠落した回があり、正規表現は必ず取りこぼす。
  *
- * 当たらなかった回は inbox へ落ちて人間が引き受ける（docs/adr/0005-two-layer-data.md）。
+ * 当たらなかった回は未割当のまま残り、人間が `series.json` を足して引き受ける（docs/adr/0029-two-layer-data-without-inbox.md）。
  * 機械で拾えないものをここで推測しない。
  *
  * 入口は assignSeriesId。
@@ -21,27 +21,39 @@ import type { SeriesList } from "@/lib/schema/series";
  * 番号では見分けが付かないので、題名のこの書き出しで落とす。
  *
  * これは割当でなく除外にだけ使う。
- * 取りこぼしたときに起きるのは inbox へ落ちるべき回が落ちないことで、シリーズを誤って名乗ることではない。
+ * 取りこぼしたときに起きるのは未割当のまま残るべき回が残らないことで、シリーズを誤って名乗ることではない。
  */
 const BONUS_TITLE_PREFIX = "【番外編＃";
 
 /**
+ * 割当に使える season を返す。
+ *
+ * 番外編と `itunes:season` を持たない回は null で、`series.json` に何を書いてもこの回に割当は付かない。
+ * 未割当のうちシリーズを足せば減る分と減らない分を分ける述語でもあるので、呼ぶ側は同期のサマリからも引く。
+ */
+export function assignableSeasonOf(item: FeedItem): number | null {
+  if (item.title.startsWith(BONUS_TITLE_PREFIX)) {
+    return null;
+  }
+
+  return item.season;
+}
+
+/**
  * エピソード 1 件に割り当てるシリーズの id を返す。
- * どのシリーズにも当たらなければ null で、呼ぶ側が inbox へ回す。
+ * どのシリーズにも当たらなければ null で、呼ぶ側が未割当として扱う。
  */
 export function assignSeriesId(
   item: FeedItem,
   series: SeriesList,
 ): string | null {
-  if (item.title.startsWith(BONUS_TITLE_PREFIX)) {
+  const season = assignableSeasonOf(item);
+
+  if (season === null) {
     return null;
   }
 
-  if (item.season === null) {
-    return null;
-  }
-
-  return seasonIndexOf(series).get(item.season) ?? null;
+  return seasonIndexOf(series).get(season) ?? null;
 }
 
 /**
