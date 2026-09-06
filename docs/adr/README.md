@@ -63,14 +63,14 @@
 | [0029](0029-two-layer-data-without-inbox.md) | データを「エピソード = RSS 自動 / シリーズ = 人間キュレーション」の二層に分け、未割当は `episodes.json` の `seriesId` を正にする（0005 を supersede） | 2026-09-04 | 採用 |
 | [0030](0030-catalog-rename.md) | データの置き場の名前を `catalog/` にする | 2026-09-06 | 採用 |
 | [0031](0031-lib-layout-by-concern.md) | `web/src/lib/` は関心ごとのディレクトリで割り、ファイル名の接頭辞で代用しない | 2026-09-06 | 採用 |
-| [0032](0032-docs-under-docs.md) | 器自身の文書は `docs/` に置き、ルートには道具が要求するものと玄関だけを残す | 2026-09-06 | 採用 |
+| [0032](0032-docs-under-docs.md) | 器自身の文書は `docs/` に置き、ルートには道具がその位置を要求するものだけを残す | 2026-09-06 | 採用 |
 
 **0019 までのレコードは `テーマ` の語で書かれている。**
 地図の 1 エントリの呼び名を [0020](0020-series-rename.md) で `series`（シリーズ）へ揃えたので、それより前のレコードにある「テーマ」は「シリーズ」と読む。
 
-**0031 までのレコードは `ARCHITECTURE.md`・`HARNESS.md`・`ROADMAP.md` をルート直下のものとして指している。**
-この 3 本を [0032](0032-docs-under-docs.md) で `docs/` へ移したので、それより前のレコードにある名指しは `docs/` の下と読む。
-`README.md`・`CLAUDE.md`・`CODING.md` は動いていない。
+**0031 までのレコードは `ARCHITECTURE.md`・`CODING.md`・`HARNESS.md`・`ROADMAP.md` をルート直下のものとして指している。**
+この 4 本を [0032](0032-docs-under-docs.md) で `docs/` へ移したので、それより前のレコードにある名指しは `docs/` の下と読む。
+ルートに残るのは `README.md`・`LICENSE`・`CLAUDE.md` だけである。
 
 **0029 までのレコードは `data/` の名でデータの置き場を指している。**
 置き場を [0030](0030-catalog-rename.md) で `catalog/` へ改名したので、それより前のレコードにある `data/` は `catalog/` と読む。

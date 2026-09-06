@@ -346,11 +346,12 @@ catalog/
 ```
 .
 ├── README.md              # リポジトリの玄関。GitHub がここを描く
+├── LICENSE                # GitHub がライセンス欄に出す
 ├── CLAUDE.md              # セッションの入口（規約・git）
-├── CODING.md              # コーディング規約。共有の雛形からの写し
 ├── catalog/               # 人間キュレーション層と時代区分。アプリの外なのでルート側
 ├── docs/                  # 器自身の文書
 │   ├── ARCHITECTURE.md    # この文書（現況）
+│   ├── CODING.md          # コーディング規約。共有の雛形からの写し
 │   ├── ROADMAP.md         # 作る順序
 │   ├── HARNESS.md         # 検証と実行環境
 │   └── adr/               # 決定と経緯。1決定1レコード
@@ -371,10 +372,9 @@ catalog/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
-ルートに残るのは、道具がその位置を要求するものと玄関だけである（[ADR-0032](adr/0032-docs-under-docs.md)）。
-`README.md` は GitHub が、`CLAUDE.md` は Claude Code がルートを読む。
-`CODING.md` は共有の雛形からの写しなので、位置を動かすと次の追随が取りこぼす。
-器自身の文書はその条件を満たさないので `docs/` に居る。
+ルートに残るのは、道具がその位置を要求するものだけである（[ADR-0032](adr/0032-docs-under-docs.md)）。
+`README.md` と `LICENSE` は GitHub が、`CLAUDE.md` は Claude Code がそのパスで読む。
+器自身の文書はどれもその条件を満たさないので `docs/` に居る。
 
 まだ存在しないもの: `docs/VISION.md`（#41）。
 `catalog/` はアプリの外なので**ルート側**に置く。

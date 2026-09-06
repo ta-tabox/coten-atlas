@@ -51,7 +51,7 @@
 決定と経緯は `docs/adr/`——1決定1レコード・**追記のみ**・覆すときは supersede
 （規約は同 `README.md`）。状態と作業単位は GitHub Issues。
 
-**コードを書く前に** @CODING.md と skill `coding-standards` / `karpathy-guidelines` を開く
+**コードを書く前に** @docs/CODING.md と skill `coding-standards` / `karpathy-guidelines` を開く
 （レビューやリファクタに限らない。言語固有の作法は skill の `languages/` のみ）。
 
 **申し送りの層は持たない**（[ADR-0025](docs/adr/0025-retire-next-md.md)）。
@@ -59,7 +59,7 @@
 
 ## 配布物の追随
 
-`.claude/` と `.github/workflows/` の一部、`web/scripts/lint-comments.ts` と `web/tests/`、`CODING.md` は共有の雛形からの写しである。
+`.claude/` と `.github/workflows/` の一部、`web/scripts/lint-comments.ts` と `web/tests/`、`docs/CODING.md` は共有の雛形からの写しである。
 
 - **追随は、この器の開発を再開するときにまとめてやる**。
   都度の追随は打ち切ってあるので、放っておけば雛形との差は開き続ける。
