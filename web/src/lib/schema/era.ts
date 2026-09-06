@@ -15,7 +15,7 @@
  */
 
 import * as z from "zod";
-import { duplicatesOf } from "@/lib/duplicates";
+import { duplicatesOf } from "@/lib/schema/duplicates";
 import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
 /**
