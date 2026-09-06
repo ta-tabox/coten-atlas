@@ -9,12 +9,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# deploy-pages は OIDC でデプロイ先の資格を取るので id-token: write が要る。
-# contents は checkout の読み取りにしか使わないので read で足りる。
+# ここで配るのは全ジョブに渡る分なので、checkout の読み取りに要る contents: read だけに絞る。
+# Pages の書き込みと OIDC は deploy ジョブでしか要らないので、そちらの permissions が持つ。
+# upload-pages-artifact は tar して upload-artifact を呼ぶだけで GITHUB_TOKEN を使わないので、build 側に Pages の権限は要らない。
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # Pages のデプロイは同時に 1 本しか走らないので、後続の push は待たせる。
 # run の目的が判定でなく配信そのものなので、check.yml と違って途中で捨てない。
@@ -62,6 +61,12 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
+    # deploy-pages が要求する最小の組み合わせ（pages: write と id-token: write）。
+    # ジョブの permissions は workflow 側へ足すのでなく置き換えるので、checkout を持たないこのジョブに contents は書かない。
+    permissions:
+      pages: write
+      id-token: write
 
     # 公開 URL は deploy-pages が出力するので、環境の側に書き下ろさない。
     environment:
