@@ -1,0 +1,88 @@
+# 0031. `web/src/lib/` は関心ごとのディレクトリで割り、ファイル名の接頭辞で代用しない
+
+- **状態**: 採用
+- **決定日**: 2026-09-06（#123）
+- **関係する ADR**: 0013・0016・0030
+
+## 文脈
+
+`web/src/lib/` は 32 本で、役割分担は付いているが割り方が揃っていない。
+
+`feed/`（RSS の取得と割当）と `schema/`（`catalog/` の形）はディレクトリになっている。
+一方で地図の関心を持つ 3 本は直下に並び、`map-config.ts`・`map-loci.ts` はファイル名の接頭辞がディレクトリの代わりをしていた。
+`series-layer.ts` はその接頭辞すら持たないので、名前からは地図の一部だと読めない。
+
+割り方に規則が無いと、次に `lib/` へファイルを足す人がその都度決め直すことになる。
+#6（S3: シリーズクリックで詳細カードを開く）は `episodes.ts` と `format.ts` を新設するので、規則の不在がそのまま次の非対称になる。
+
+## 決定
+
+**`lib/` の中は関心ごとのディレクトリで割り、ファイル名の接頭辞をディレクトリの代わりにしない。**
+
+1. 地図の 3 本を `map/` へ束ねる。
+   移した先では接頭辞を落とし、`map/config.ts`・`map/loci.ts`・`map/series-layer.ts` にする
+2. `duplicates.ts` を `schema/` の中へ移す。
+   利用者が `schema/` の 5 本しか居ないので、直下に置くと汎用の置き場に見える
+3. ディレクトリを作っても中身が 1 本にしかならないものは直下に残す。
+   `base-path.ts`（配信の基底パス）と `catalog-dir.ts`（`catalog/` の読み口）がそれに当たる
+
+**割らないものも同時に決める。**
+
+4. `schema/` の中は割らない
+5. `web/tests/smoke.test.ts`（vitest）と `web/tests/smoke/`（Playwright）の名前は割らない
+6. `catalog-dir.ts`・`schema/catalog-files.ts`・`tests/catalog.test.ts` は動かさない
+
+動かしたのは配置だけである。
+各モジュールの責務も、中の関数の切り方も、公開している名前も動かしていない。
+
+## 理由
+
+**ディレクトリは走査の単位だが、接頭辞は文字列の一致でしかない。**
+`map/` を開けば地図の関心が全部そこに在ると分かるが、`map-` の接頭辞は「他に漏れが無い」ことを言えない。
+現に `series-layer.ts` が漏れていた。
+
+**接頭辞で揃える案は、`map/` と同じ効果を名前の長さで買うことになる。**
+`series-layer.ts` を `map-series-layer.ts` へ改名すれば漏れは塞がるが、ディレクトリで済む区別を全ファイル名が背負い続ける。
+そのうえ `feed/` と `schema/` が既にディレクトリなので、同じ器に二つの割り方が並ぶ。
+
+**`duplicatesOf` の利用者は `schema/` の外に 1 人も居ない。**
+locus・link・series・episode・era の 5 本がすべてで、どれも `catalog/` の形を検査する側にある。
+汎用ユーティリティの置き場を新設するより、使う場所の中へ入れる方が実態に合う。
+
+### 採らなかった案
+
+- **`schema/` を領域（episode・era・series・locus）と部品（geojson・link・text）に割る。**
+  層が混ざっているのは事実だが、部品の受け皿に付けられる名前が無い。
+  `shared/`・`common/`・`parts/` は `CODING.md` が思考停止の兆候として名指す汎用語で、`primitives/` は RFC 7946 の写しである `geojson.ts` に対して嘘になる。
+  名前が付かないのは、その区分がまだ実体を持っていない合図である。
+  代償として `schema/` は 18 エントリになり、`lib/` で最も混んだディレクトリのまま残る
+- **`base-path.ts` を動かす。**
+  `next.config.ts` は `@/` が解決される前に読まれるのでこの 1 本だけを相対パスで import しており（[0013](0013-maplibre-worker-self-hosted.md)）、動かすとその行も直すことになる。
+  払う先の置き場が `config/` のような 1 本のディレクトリにしかならないので、代償だけが残る
+- **`tests/smoke.test.ts` と `tests/smoke/` の名前を割る。**
+  前者は `scripts/smoke.ts` の純関数を、後者は Playwright の project `smoke` を名乗っており、どちらも指すものを正しく写している。
+  衝突は配置の事故ではなく、同じものを走者の違う二層から見ていることの反映である。
+  走者の分担は拡張子が持ち（`.test.ts` が Vitest、`.spec.ts` が Playwright。[0016](0016-playwright-runner.md)）、両方の設定ファイルが明記している。
+  どちらを改名しても、`--project=smoke` か `scripts/smoke.ts` のどちらかとの結び付きが切れる
+- **`catalog-` の 3 本を `lib/catalog/` へ束ねる。**
+  [0030](0030-catalog-rename.md) が `catalog-dir.ts` と `schema/catalog-files.ts` という名前を決めているので、束ねると `catalog` の語がファイル名からディレクトリ名へ移る。
+  語を動かさずに束ねると `catalog/catalog-dir.ts` と吃る
+
+## 帰結
+
+- `lib/` 直下は `base-path.ts`・`catalog-dir.ts`（＋そのテスト）と、`feed/`・`map/`・`schema/` の 3 ディレクトリになる。
+  直下にファイルを足すときは、まずどの関心に属するかを問うことになる
+- #6 が新設する `episodes.ts` と `format.ts` は、この規則の下で置き場が決まる。
+  規則の適用であって決定ではないので、そのとき ADR は要らない
+- `ARCHITECTURE.md` §6 のツリーは `src/` までしか降りないので、書き換えは要らない。
+  既存 ADR と `HARNESS.md` が名指す `web/src/lib/schema/` と `web/src/lib/base-path.ts` も動いていない
+- `schema/` の混み具合は残る。
+  部品の受け皿に名前が付くのは、その区分が実体を持ってからになる
+
+## 覆る条件
+
+`schema/` の部品に固有名が付いたとき。
+外部仕様の写し（GeoJSON）と、この器が決めた共有の制約（`text`・`link`）が別々の理由で増え始めれば、汎用語に頼らない名前でそれぞれを名指せる。
+
+`lib/` 直下に、どの関心にも属さないファイルが 3 本以上溜まったときも同じ。
+「ディレクトリを作っても中身が 1 本」という直下の条件が成り立たなくなる。
