@@ -77,8 +77,23 @@ is_redirection() {
 # ヒアドキュメントでファイルを書く類はここに届くので、上限を置いて割るのをやめる。
 readonly split_limit=8000
 
+# 語の境界にしかならない記号を空白へ潰して、セグメントを 1 行で出す。
+#
+# 潰すのは、上の二つの正規表現が語頭と語尾を空白か行頭行末でしか見ないためである。
+# `echo $(git push --force origin main)` の `git` は `(` の直後に来るので語頭に当たらず、
+# `$(git push -f)` の `-f` は `)` の直前に来るので語尾に当たらない。
+# どちらもコマンド置換の中で本当に走る force push なのに、素通りしていた。
+#
+# 改行を潰すのは、行継続で次の行へ落とした `--force` を同じセグメントへ留めるためである。
+emit_segment() {
+  local text=$1
+  local boundaries='[()`{}]'
+
+  text=${text//$'\n'/ }
+  printf '%s\n' "${text//$boundaries/ }"
+}
+
 # 引用の外にある `;` `|` `&` と改行でコマンドを割り、1 セグメント 1 行で出す。
-# セグメントに残った改行を空白へ潰すのは、行継続で次の行へ落とした `--force` を同じセグメントに留めるためである。
 split_into_segments() {
   local text=$1
   local segment='' quote='' escaped='' character next
@@ -86,7 +101,7 @@ split_into_segments() {
 
   # 割らなければ語とフラグが別のコマンドから拾われて誤爆するが、素通りはしない。
   if [ "${#text}" -gt "$split_limit" ]; then
-    printf '%s\n' "${text//$'\n'/ }"
+    emit_segment "$text"
     return
   fi
 
@@ -118,7 +133,7 @@ split_into_segments() {
         if [ -n "$quote" ] || { [ "$character" = '&' ] && is_redirection "$segment" "$next"; }; then
           segment+=$character
         else
-          printf '%s\n' "${segment//$'\n'/ }"
+          emit_segment "$segment"
           segment=''
         fi
         ;;
@@ -128,7 +143,7 @@ split_into_segments() {
     esac
   done
 
-  printf '%s\n' "${segment//$'\n'/ }"
+  emit_segment "$segment"
 }
 
 while IFS= read -r segment; do
