@@ -1,5 +1,5 @@
 /**
- * 公式 RSS を引いて `data/episodes.json` を書き直し、未割当の内訳を標準出力へ出す。
+ * 公式 RSS を引いて `catalog/episodes.json` を書き直し、未割当の内訳を標準出力へ出す。
  *
  * ここが持つのは同期の段取りだけである。
  * フィードの読み方は `src/lib/feed/parse.ts`、割当の規則は同 `assign.ts`、JSON の読み書きは `json-file.ts` が持つ。
@@ -48,10 +48,10 @@ const FETCH_TIMEOUT_MS = 60_000;
  * このファイルは `dist/` へ出力してから走るので、`import.meta.url` から辿ると出力先の深さの分だけずれた場所を指す。
  * 実行の入口が `pnpm sync` の一本なので、pnpm が保証する作業ディレクトリの方が動かない。
  */
-const DATA_DIR = path.resolve(process.cwd(), "../data");
+const CATALOG_DIR = path.resolve(process.cwd(), "../catalog");
 
-const EPISODES_FILE = path.join(DATA_DIR, "episodes.json");
-const SERIES_FILE = path.join(DATA_DIR, "series.json");
+const EPISODES_FILE = path.join(CATALOG_DIR, "episodes.json");
+const SERIES_FILE = path.join(CATALOG_DIR, "series.json");
 
 /** フィードの 1 件と、それに決まったシリーズ。 */
 type Assignment = {
@@ -179,18 +179,18 @@ function warnLostAssignments(
 }
 
 /**
- * `data/` を指せていることを確かめる。
+ * `catalog/` を指せていることを確かめる。
  *
- * 作業ディレクトリが違うと、書き出しは黙って別の場所へ `data/` を作り、755 件をそこへ置く。
- * `eras.json` は追跡されていて必ず在るので、これが無い場所は `data/` ではない。
+ * 作業ディレクトリが違うと、書き出しは黙って別の場所へ `catalog/` を作り、755 件をそこへ置く。
+ * `eras.json` は追跡されていて必ず在るので、これが無い場所は `catalog/` ではない。
  */
-function assertDataDir(): void {
-  if (fs.existsSync(path.join(DATA_DIR, "eras.json"))) {
+function assertCatalogDir(): void {
+  if (fs.existsSync(path.join(CATALOG_DIR, "eras.json"))) {
     return;
   }
 
   throw new Error(
-    `data/ が見つからない: ${DATA_DIR}（pnpm sync は web/ から走らせる）`,
+    `catalog/ が見つからない: ${CATALOG_DIR}（pnpm sync は web/ から走らせる）`,
   );
 }
 
@@ -227,7 +227,7 @@ function reportSummary(assignments: Assignment[], added: Assignment[]): void {
  * 取得から書き出しまでを通す。
  */
 async function main(): Promise<void> {
-  assertDataDir();
+  assertCatalogDir();
 
   const items = parseFeed(await fetchFeed(FEED_URL));
   const series = readSeries(SERIES_FILE);

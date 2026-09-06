@@ -24,7 +24,7 @@
 | データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-0029](docs/adr/0029-two-layer-data-without-inbox.md) |
 | 位置情報 | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で精緻な図形を足す。代表点は第二段階でも独立に持ち、どちらを描くかは利用者が切り替える | [ADR-0026](docs/adr/0026-two-phase-location.md) |
 | シリーズと事物 | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ | [ADR-0027](docs/adr/0027-series-and-loci.md) |
-| 管理画面 | 手元でだけ動き、`data/` のファイルへ書く。公開サイトの成果物に含まれない | [ADR-0028](docs/adr/0028-local-only-admin.md) |
+| 管理画面 | 手元でだけ動き、`catalog/` のファイルへ書く。公開サイトの成果物に含まれない | [ADR-0028](docs/adr/0028-local-only-admin.md) |
 | 配信リンク | RSS の `<link>`（Spotify のエピソードページ） | [ADR-0006](docs/adr/0006-rss-link-as-episode-url.md) |
 | デプロイ | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`） | [ADR-0007](docs/adr/0007-github-pages.md) |
 | 引用の範囲 | シリーズ名とエピソードタイトルのみ | [ADR-0008](docs/adr/0008-quote-titles-only.md) |
@@ -36,20 +36,20 @@
 ## 2. システム全体像
 
 ```
-公式 RSS ──(pnpm sync: ビルド前)──> data/episodes.json ─┐
-                                                        │
-手元の管理画面 ──(保存 = ファイル書き込み)──┐            │
-                                            v            │
-data/series.json  （シリーズの属性。人間キュレーション）─┤
-data/loci.geojson （事物 = 代表点。同上）────────────────┤
-data/eras.json    （時代区分）───────────────────────────┤
-                                                        v
+公式 RSS ──(pnpm sync: ビルド前)──> catalog/episodes.json ─┐
+                                                           │
+手元の管理画面 ──(保存 = ファイル書き込み)──┐               │
+                                            v               │
+catalog/series.json  （シリーズの属性。人間キュレーション）─┤
+catalog/loci.geojson （事物 = 代表点。同上）────────────────┤
+catalog/eras.json    （時代区分）───────────────────────────┤
+                                                           v
                                           Next.js static export (next build)
-                                                        │
-                                                        v
+                                                           │
+                                                           v
                               GitHub Pages の静的ファイル一式
-                                                        │
-                                                        v
+                                                           │
+                                                           v
                           ブラウザ: MapLibre がシリーズを描き、era スライダーが opacity を動かす
 ```
 
@@ -61,7 +61,7 @@ data/eras.json    （時代区分）──────────────�
 ### 二層構造
 
 ```
-data/
+catalog/
 ├── episodes.json        # 自動層。RSS から同期。手で編集しない
 ├── series.json          # 手動層。シリーズ=キュレーション対象の正。geometry を持たない
 ├── loci.geojson         # 手動層。事物（シリーズが地図の上に持つもの）。地図の source の元
@@ -185,7 +185,7 @@ data/
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。
-  この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/data.test.ts`）が `data/` 全体をそれに掛ける。
+  この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/catalog.test.ts`）が `catalog/` 全体をそれに掛ける。
   ファイル単体の検査に加えて、ファイルをまたぐ整合——`episodes.json` の `seriesId` が実在する id と season を指すか、`series.json` の `anchor` が実在する事物を指すか、事物の `seriesId` が実在するシリーズを指すか、`timeRange` が `eras.json` の era 空間と重なるか——も同じテストが見る（`web/src/lib/schema/references.ts`）
 - 人物伝（吉田松陰など）は活動の中心地を代表点、生涯年代を `timeRange` とする
 
@@ -195,7 +195,7 @@ data/
 `eras.json` が持つ時代区分を**一区間ずつ等幅**に並べた一次元の空間（以下 era 空間）の上を動く。
 
 ```jsonc
-// data/eras.json — この 7 区間が era 空間を 7 等分する
+// catalog/eras.json — この 7 区間が era 空間を 7 等分する
 [
   { "id": "prehistory", "label": "先史",   "start": -10000, "end": -800 },
   { "id": "ancient",    "label": "古代",   "start": -800,   "end": 550 },
@@ -238,17 +238,17 @@ data/
 シリーズと事物は初期ロードへ載せても軽く、エピソードは載せると地図が出るまでの待ちがそのぶん伸びる。
 
 - **シリーズと事物は Server Component が `node:fs` で読む**。
-  `data/` はルート側にあって `web/tsconfig.json` の `include` の外で、`resolveJsonModule` が効くのは `.json` だけなので、`.geojson` を素の `import` では読めない。
-  `fs` なら解決の設定が要らず、`web/tests/data.test.ts` と同じ読み口になる。
+  `catalog/` はルート側にあって `web/tsconfig.json` の `include` の外で、`resolveJsonModule` が効くのは `.json` だけなので、`.geojson` を素の `import` では読めない。
+  `fs` なら解決の設定が要らず、`web/tests/catalog.test.ts` と同じ読み口になる。
   static export では `next build` の中でしか走らないので、公開後にファイルを触る口は残らない
-- **エピソードは `public/data/episodes.json` を fetch する**。
-  `data/` は `web/` の外にあって `public/` へ入らないので、ビルドの前に複製する手順が要る。
+- **エピソードは `public/catalog/episodes.json` を fetch する**。
+  `catalog/` は `web/` の外にあって `public/` へ入らないので、ビルドの前に複製する手順が要る。
   worker の複製（`web/package.json` の `sync-map-worker`）と同じ形で `predev` / `prebuild` へ繋ぐ
 - **fetch の URL には `BASE_PATH` を付ける**。
-  GitHub Pages はリポジトリ名を挟んだ場所へ配信するので、`/data/episodes.json` は公開後に 404 になる
+  GitHub Pages はリポジトリ名を挟んだ場所へ配信するので、`/catalog/episodes.json` は公開後に 404 になる
 - **どちらの読み込み口も `parseSeries` / `parseLoci` / `parseEpisodes` を通す**。
   `fs` で読んだ値も fetch した値も型を持たないので、検査を外すと `as` で型を名乗ることになる。
-  ビルド時の検査（`web/tests/data.test.ts`）が見るのは `data/` の現物だけなので、複製し損ねた・404 の HTML を掴んだ、は実行時にしか映らない
+  ビルド時の検査（`web/tests/catalog.test.ts`）が見るのは `catalog/` の現物だけなので、複製し損ねた・404 の HTML を掴んだ、は実行時にしか映らない
 - `vitest.config.ts` に手当ては要らない。
   どちらの口も `fs` と `fetch` で読み、`.geojson` を import しない
 - §7 の「実行時 fetch を持たない」が指すのは RSS の取得で、自分で配った静的 JSON を引くことではない（#92 が文言を絞る）
@@ -339,8 +339,8 @@ data/
 ## 6. ディレクトリ構造
 
 ルートは**プロジェクトの文書と運用設定**だけを持ち、Next.js アプリは `web/` 配下に隔離する。
-このリポジトリは今後 `data/`（人間キュレーション層）と RSS 同期スクリプトを持つので、
-`src/` の隣に `data/` が並ぶと「これは Next.js が読むのか、ビルド前に走る何かなのか」が
+このリポジトリは今後 `catalog/`（人間キュレーション層）と RSS 同期スクリプトを持つので、
+`src/` の隣に `catalog/` が並ぶと「これは Next.js が読むのか、ビルド前に走る何かなのか」が
 構造から読めなくなる。境界をディレクトリで引けば、その問いが起きる場所そのものが無くなる。
 
 ```
@@ -350,7 +350,7 @@ data/
 ├── ARCHITECTURE.md        # この文書（現況）
 ├── ROADMAP.md             # 作る順序
 ├── HARNESS.md             # 検証と実行環境
-├── data/                  # 人間キュレーション層と時代区分。アプリの外なのでルート側
+├── catalog/               # 人間キュレーション層と時代区分。アプリの外なのでルート側
 ├── docs/adr/              # 決定と経緯。1決定1レコード
 ├── mise.toml              # [tools] のみ。ランタイム版管理
 ├── .github/               # workflows・issue / PR テンプレ
@@ -370,13 +370,13 @@ data/
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
 まだ存在しないもの: `VISION.md`（#41）。
-`data/` はアプリの外なので**ルート側**に置く。
+`catalog/` はアプリの外なので**ルート側**に置く。
 
 `web/scripts/` はこれと別枠になる。`tsconfig.json` の `paths` も vitest の alias も `web/` の中で
 解決するので、`web/` の道具立てに依るスクリプトはルートへ出さず `web/scripts/` に置く。
 RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを import し `pnpm` の scripts から走るので、
 ビルド前処理もここに入る。
-`data/` の検査はスクリプトを持たず、`web/tests/data.test.ts` が L2 で回す（`HARNESS.md`）。
+`catalog/` の検査はスクリプトを持たず、`web/tests/catalog.test.ts` が L2 で回す（`HARNESS.md`）。
 
 ## 7. 意図的にやらないこと
 

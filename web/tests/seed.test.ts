@@ -1,8 +1,8 @@
 /**
- * `data/series.json` のシードが S2 の狙いを満たしているかを見る。
+ * `catalog/series.json` のシードが S2 の狙いを満たしているかを見る。
  *
  * 見るのはスキーマが見ない観点だけである。
- * 現物が `seriesListSchema` を通ること、`id`・`season` の一意性、`timeRange` が era 空間と重なることは隣の `data.test.ts` が既に落とすので、ここでは数えない。
+ * 現物が `seriesListSchema` を通ること、`id`・`season` の一意性、`timeRange` が era 空間と重なることは隣の `catalog.test.ts` が既に落とすので、ここでは数えない。
  *
  * 描画は `kind` の 2 値で濃さを分け（docs/adr/0023-kind-place-or-concept.md）、位置なしのシリーズは地図に出さず一覧の別区画へ回す（docs/adr/0026-two-phase-location.md）。
  * 分岐の枝に対応する現物が無いと、その枝は一度も描かれないまま描画のステップへ渡り、見た目の検証からも漏れる。
@@ -24,11 +24,11 @@ import {
 
 /**
  * シードの現物。
- * `data/` はリポジトリのルート直下で `web/` の外にあり、`tsconfig.json` の別名は `web/` の中しか解決しないので、辿る手は相対パスしか無い。
- * 段数を数え間違えても型では赤くならないため、隣の `data.test.ts` と同じ深さに置いて同じパスの形にしてある。
+ * `catalog/` はリポジトリのルート直下で `web/` の外にあり、`tsconfig.json` の別名は `web/` の中しか解決しないので、辿る手は相対パスしか無い。
+ * 段数を数え間違えても型では赤くならないため、隣の `catalog.test.ts` と同じ深さに置いて同じパスの形にしてある。
  */
 const SERIES_FILE = fileURLToPath(
-  new URL("../../data/series.json", import.meta.url),
+  new URL("../../catalog/series.json", import.meta.url),
 );
 
 /**
@@ -43,7 +43,7 @@ function seedSeries(): SeriesList {
   return parseSeries(JSON.parse(fs.readFileSync(SERIES_FILE, "utf8")));
 }
 
-describe("data/series.json のシード", () => {
+describe("catalog/series.json のシード", () => {
   it("kind の 2 値がどちらも出現する", () => {
     const appeared = new Set(seedSeries().map((series) => series.kind));
 

@@ -87,7 +87,7 @@ export default function AboutPage() {
         <p className="mt-3.5">コードは MIT。</p>
 
         <p className="mt-3.5">
-          <code className="font-mono text-[0.85em]">data/</code>{" "}
+          <code className="font-mono text-[0.85em]">catalog/</code>{" "}
           のキュレーション層（
           <code className="font-mono text-[0.85em]">series.json</code>・
           <code className="font-mono text-[0.85em]">loci.geojson</code>・
@@ -96,7 +96,7 @@ export default function AboutPage() {
         </p>
 
         <p className="mt-3.5">
-          同じ <code className="font-mono text-[0.85em]">data/</code> でも{" "}
+          同じ <code className="font-mono text-[0.85em]">catalog/</code> でも{" "}
           <code className="font-mono text-[0.85em]">episodes.json</code>{" "}
           は番組の RSS 由来なので、このリポジトリのライセンスは及ばない。
         </p>

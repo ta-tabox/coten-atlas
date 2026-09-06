@@ -15,7 +15,7 @@
     "test": "vitest run",
     "pretest:watch": "pnpm sync-map-worker",
     "test:watch": "vitest",
-    "validate:data": "vitest run tests/data.test.ts",
+    "validate:catalog": "vitest run tests/catalog.test.ts",
     "build:scripts": "rm -rf dist && tsc -p tsconfig.scripts.json && tsc-alias -p tsconfig.scripts.json",
     "sync": "pnpm build:scripts && node dist/scripts/sync-feed.js",
     "smoke": "playwright test --project=smoke",

@@ -2,7 +2,7 @@
  * シリーズ側の値が事物へ正しく写るかを見る。
  *
  * 相手は現物でなく手で置いた最小の組み合わせである。
- * 見たいのは写しの規則で、`data/` の中身が規則を満たすかは `tests/data.test.ts` が持つ。
+ * 見たいのは写しの規則で、`catalog/` の中身が規則を満たすかは `tests/catalog.test.ts` が持つ。
  */
 
 import { describe, expect, it } from "vitest";
