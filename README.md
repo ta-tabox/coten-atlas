@@ -8,7 +8,7 @@
 手元で `pnpm dev` すると全画面のベースマップが出るところまで。
 公開 URL はまだ無い。
 
-どの順で何を作るかは [ROADMAP.md](ROADMAP.md)、いま何に着手しているかは GitHub Issues にある。
+どの順で何を作るかは [ROADMAP.md](docs/ROADMAP.md)、いま何に着手しているかは GitHub Issues にある。
 
 ## 技術スタック
 
@@ -17,15 +17,15 @@ Next.js (App Router) + TypeScript を static export する。
 データはエピソード（RSS から自動同期）とシリーズ（人間のキュレーション）の二層に分かれる。
 ツールチェーンは mise + pnpm + Biome、テストは Vitest。
 
-確定事項の一覧とそれぞれの根拠は [ARCHITECTURE.md](ARCHITECTURE.md) の「技術スタック（確定事項）」にある。
+確定事項の一覧とそれぞれの根拠は [ARCHITECTURE.md](docs/ARCHITECTURE.md) の「技術スタック（確定事項）」にある。
 
 ## 文書
 
 ルートの `ls` が目次として働くので、README は索引に徹して中身を複製しない。
 
-- [ARCHITECTURE.md](ARCHITECTURE.md) — いまどうなっているか。技術スタック・データモデル・ディレクトリ構造
-- [ROADMAP.md](ROADMAP.md) — 作る順序と、その理由と、完了条件の閾値
-- [HARNESS.md](HARNESS.md) — 何をもって「動いた」と言うか。開発の入口（`pnpm check` の打ち方）もここ
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) — いまどうなっているか。技術スタック・データモデル・ディレクトリ構造
+- [ROADMAP.md](docs/ROADMAP.md) — 作る順序と、その理由と、完了条件の閾値
+- [HARNESS.md](docs/HARNESS.md) — 何をもって「動いた」と言うか。開発の入口（`pnpm check` の打ち方）もここ
 - [docs/adr/](docs/adr/) — なぜそう決めたか。1決定1レコードで追記のみ
 
 ## 出典と引用の範囲

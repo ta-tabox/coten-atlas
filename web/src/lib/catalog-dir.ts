@@ -1,6 +1,6 @@
 /**
  * `catalog/` のファイルを読み、スキーマの検査に通した値だけを返す。
- * エピソードは読まない（`public/` へ複製して実行時に fetch する。ARCHITECTURE.md §3「配り方」）。
+ * エピソードは読まない（`public/` へ複製して実行時に fetch する。docs/ARCHITECTURE.md §3「配り方」）。
  *
  * 呼べるのは Server Component だけである。
  * `"use client"` を付けた層からは `node:fs` へ届かない。

@@ -1,8 +1,8 @@
 # ADR — 決定と経緯の受け皿
 
 このリポジトリの決定は、1決定1レコードでここに置く。
-`ARCHITECTURE.md` が持つのは**現況**、`ROADMAP.md` が持つのは**順序**、
-`HARNESS.md` が持つのは**検証**で、**なぜそう決めたか**を持つのはここだけ。
+`docs/ARCHITECTURE.md` が持つのは**現況**、`docs/ROADMAP.md` が持つのは**順序**、
+`docs/HARNESS.md` が持つのは**検証**で、**なぜそう決めたか**を持つのはここだけ。
 
 前身は「coten-atlas 実装プラン（地図）」§1 決定事項の表で、2026-08-25 に1決定1レコードへ割った。
 表をやめた理由は現物にある——`mise run check` → `pnpm check` の移設（`45d1991`）が
@@ -26,7 +26,7 @@
        残したままにすると、ADR を読んで書く側が同じ転用を再生産する。
        PR #112（位置情報の段階分けとシリーズ・事物の分離）で実際に起きた
 5. **「決定」と読めない事柄は ADR にしない。**
-   未決の論点は issue、順序は `ROADMAP.md`、現況は `ARCHITECTURE.md`
+   未決の論点は issue、順序は `docs/ROADMAP.md`、現況は `docs/ARCHITECTURE.md`
 
 ## 一覧
 
@@ -73,11 +73,11 @@
 
 ## ADR にしないもの
 
-次の3件は決定というより既定の踏襲なので、結論だけを `ARCHITECTURE.md`
+次の3件は決定というより既定の踏襲なので、結論だけを `docs/ARCHITECTURE.md`
 「技術スタック」の表に置く（同表がそれらの唯一の記載になる）。
 
 - ツールチェーン（mise + pnpm + Biome）——理由はこのリポジトリの外で決めており、ここでは踏襲するだけ
 - テストランナー = Vitest（単体のみ。ブラウザを立てる層を分ける判断は [0016](0016-playwright-runner.md) が持つ）
-- エピソード取得を RSS 自動同期にする——手順ごと `ARCHITECTURE.md`「RSS 同期パイプライン」が持つ
+- エピソード取得を RSS 自動同期にする——手順ごと `docs/ARCHITECTURE.md`「RSS 同期パイプライン」が持つ
 
-歴史地図（OpenHistoricalMap 連動を S9 へ後回し）は**順序の判断**なので `ROADMAP.md` 側。
+歴史地図（OpenHistoricalMap 連動を S9 へ後回し）は**順序の判断**なので `docs/ROADMAP.md` 側。

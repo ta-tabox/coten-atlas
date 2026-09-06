@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ERA_END_PRESENT, eraListSchema, parseEras } from "@/lib/schema/era";
 
-/** ARCHITECTURE.md「時系列（era）モデル」の 7 区分をそのまま写したもの。 */
+/** docs/ARCHITECTURE.md「時系列（era）モデル」の 7 区分をそのまま写したもの。 */
 const eras = [
   { id: "prehistory", label: "先史", start: -10000, end: -800 },
   { id: "ancient", label: "古代", start: -800, end: 550 },

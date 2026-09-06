@@ -6,7 +6,7 @@ import {
 } from "@/lib/schema/locus";
 import { ANCHOR_UNLOCATED } from "@/lib/schema/series";
 
-/** ARCHITECTURE.md「データモデル」の例をそのまま写した 1 件。 */
+/** docs/ARCHITECTURE.md「データモデル」の例をそのまま写した 1 件。 */
 const spartaCity = {
   type: "Feature",
   geometry: { type: "Point", coordinates: [22.43, 37.07] },

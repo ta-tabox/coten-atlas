@@ -1,6 +1,6 @@
 /**
  * レイヤ定義は宣言的なデータなので、描画でなく定義を見る。
- * jsdom に WebGL は無く、描いた結果を確かめる手立てがこの層に無い（HARNESS.md「1. 検証の層構造」）。
+ * jsdom に WebGL は無く、描いた結果を確かめる手立てがこの層に無い（docs/HARNESS.md「1. 検証の層構造」）。
  */
 
 import { describe, expect, it } from "vitest";
