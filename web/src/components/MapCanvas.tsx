@@ -41,7 +41,7 @@ import {
 } from "@/lib/map/config";
 import type { MapLocusCollection } from "@/lib/map/loci";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
-import type { SeriesList } from "@/lib/schema/series";
+import type { Series, SeriesList } from "@/lib/schema/series";
 
 type MapCanvasProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */
@@ -99,7 +99,10 @@ export default function MapCanvas({ loci, series }: MapCanvasProps) {
     };
   }, []);
 
-  const selectedSeries = series.find((one) => one.id === selectedSeriesId);
+  // 「選ばれていない」は null に揃える。
+  // find の undefined をそのまま持つと、同じ状態が null と undefined の二通りで表れる。
+  const selectedSeries: Series | null =
+    series.find((one) => one.id === selectedSeriesId) ?? null;
 
   return (
     <MapLibreMap
@@ -111,7 +114,7 @@ export default function MapCanvas({ loci, series }: MapCanvasProps) {
       onClick={(event) => setSelectedSeriesId(selectedSeriesIdOf(event))}
     >
       <SeriesLayers loci={loci} />
-      {selectedSeries !== undefined && (
+      {selectedSeries !== null && (
         <SeriesDetailCard
           series={selectedSeries}
           episodes={episodesOf(episodes, selectedSeries.id)}
