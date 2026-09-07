@@ -6,6 +6,9 @@
  * 取得も絞り込みもしない。
  * 渡された 1 件と、そのシリーズのエピソードだけを描く（絞り込みは `@/lib/episodes`、年の整形は `@/lib/format`）。
  *
+ * 縦に溢れるのはエピソードの一覧だけである。
+ * カードごとスクロールさせると、回数の多いシリーズでシリーズ名と年代が画面の外へ出る。
+ *
  * MapLibre の Popup を使わない。
  * 地図由来の DOM は canvas と attribution に閉じてあり、そこへ入った Tailwind のユーティリティは素のカスケードに負ける（docs/adr/0022-map-dom-boundary.md）。
  */
@@ -58,7 +61,7 @@ export default function SeriesDetailCard({
   return (
     <aside
       aria-labelledby={TITLE_ID}
-      className="absolute top-4 right-4 z-10 flex max-h-[calc(100dvh-2rem)] w-[22rem] max-w-[calc(100vw-2rem)] flex-col overflow-y-auto rounded-lg bg-white/95 px-5 py-4 font-sans leading-[1.7] text-zinc-900 shadow-lg"
+      className="absolute top-4 right-4 z-10 flex max-h-[calc(100dvh-2rem)] w-[22rem] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg bg-white/95 px-5 py-4 font-sans leading-[1.7] text-zinc-900 shadow-lg"
     >
       <header className="flex items-start gap-3 border-b border-zinc-200 pb-3">
         <div className="grow">
@@ -85,7 +88,7 @@ export default function SeriesDetailCard({
         <p className="mt-3.5 text-[0.95rem]">{series.summary}</p>
       )}
 
-      <section className="mt-4">
+      <section className="mt-4 flex min-h-0 flex-col">
         <h3 className="text-[0.8rem] tracking-[0.04em] text-zinc-500">
           エピソード
         </h3>
@@ -95,7 +98,7 @@ export default function SeriesDetailCard({
             配信一覧にこのシリーズの回がまだ無い。
           </p>
         ) : (
-          <ol className="mt-2 flex flex-col gap-2 text-[0.9rem]">
+          <ol className="mt-2 flex flex-col gap-2 overflow-y-auto text-[0.9rem]">
             {episodes.map((episode) => (
               <li key={episode.guid}>
                 <a
