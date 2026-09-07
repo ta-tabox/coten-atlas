@@ -105,10 +105,10 @@ catalog/
     "anchor": "sparta-city",                      // 代表点の事物 id（loci.geojson の properties.id）
     "timeRange": { "start": -900, "end": -200 },  // 両端を含む閉区間。負値 = BC
     "summary": "",         // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
-    "region": "ギリシア",
+    "region": "ヨーロッパ",
     "season": 2,           // 割当キー。itunes:season の値（ADR-0018）
     "links": [],           // シリーズ単位の配信ページは存在しないので、何を指すかは未決定
-    "tags": ["古代", "ギリシア"]
+    "tags": ["集団", "戦争"]
   },
   {
     "id": "sekai-sandai-shukyo",
@@ -117,7 +117,7 @@ catalog/
     "anchor": "unlocated",  // 位置なし。JSON に定数は無いので文字列をそのまま書き、コードは ANCHOR_UNLOCATED の名で読む。地図に出ず、一覧パネルの別区画に出る（§4）
     "timeRange": { "start": -560, "end": 632 },
     "summary": "",
-    "region": "ユーラシア",
+    "region": "地域なし",
     "season": 7,
     "links": [],
     "tags": ["宗教", "概念史"]
@@ -184,6 +184,10 @@ catalog/
   シリーズの属性なので事物には持たせず、地図の濃淡に要る分は地図へ渡す形を組むときに `seriesId` で引いて写す（[ADR-0024](adr/0024-map-feature-carries-key-only.md)）
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
+- `region` は地図を重ならないように割った 9 区画の閉じた集合で、区画を一つ選ぶと嘘になるシリーズは `地域なし` を名乗る（[ADR-0034](adr/0034-series-vocabulary.md)）。
+  `tags` は種別（`人物` / `集団` / `出来事` / `概念史` の閉じた集合から最低 1 つ）と主題だけを持ち、`timeRange` と `region` が既に持つ時代名・地域名を入れない。
+  値の一覧と `id`・`title` の綴りも同じレコードが持つ。
+  どちらの欄もスキーマは文字列としか見ないので、閉じた集合の外の値は検査で落ちない
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。
   この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/catalog.test.ts`）が `catalog/` 全体をそれに掛ける。
   ファイル単体の検査に加えて、ファイルをまたぐ整合——`episodes.json` の `seriesId` が実在する id と season を指すか、`series.json` の `anchor` が実在する事物を指すか、事物の `seriesId` が実在するシリーズを指すか、`timeRange` が `eras.json` の era 空間と重なるか——も同じテストが見る（`web/src/lib/schema/references.ts`）
