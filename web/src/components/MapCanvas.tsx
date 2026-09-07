@@ -29,7 +29,11 @@ import type { MapLayerMouseEvent } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import SeriesDetailCard from "@/components/SeriesDetailCard";
 import SeriesLayers from "@/components/SeriesLayers";
-import { episodesForSeries, fetchEpisodes } from "@/lib/episodes";
+import {
+  type EpisodesState,
+  episodesForSeries,
+  fetchEpisodes,
+} from "@/lib/episodes";
 import {
   BASEMAP_STYLE_URL,
   INITIAL_VIEW_STATE,
@@ -37,7 +41,6 @@ import {
 } from "@/lib/map/config";
 import type { MapLocusCollection } from "@/lib/map/loci";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
-import type { Episode } from "@/lib/schema/episode";
 import type { SeriesList } from "@/lib/schema/series";
 
 type MapCanvasProps = {
@@ -62,9 +65,24 @@ function selectedSeriesIdOf(event: MapLayerMouseEvent): string | null {
   return typeof seriesId === "string" ? seriesId : null;
 }
 
+/**
+ * カードへ渡す、そのシリーズの分だけの状態。
+ * 絞り込めるのは取得が返った後だけなので、取得中と失敗はそのまま通す。
+ */
+function episodesOf(state: EpisodesState, seriesId: string): EpisodesState {
+  if (state.kind !== "loaded") {
+    return state;
+  }
+
+  return {
+    kind: "loaded",
+    episodes: episodesForSeries(state.episodes, seriesId),
+  };
+}
+
 export default function MapCanvas({ loci, series }: MapCanvasProps) {
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
-  const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [episodes, setEpisodes] = useState<EpisodesState>({ kind: "loading" });
 
   useEffect(() => {
     let mounted = true;
@@ -96,7 +114,7 @@ export default function MapCanvas({ loci, series }: MapCanvasProps) {
       {selectedSeries !== undefined && (
         <SeriesDetailCard
           series={selectedSeries}
-          episodes={episodesForSeries(episodes, selectedSeries.id)}
+          episodes={episodesOf(episodes, selectedSeries.id)}
           onClose={() => setSelectedSeriesId(null)}
         />
       )}

@@ -13,6 +13,22 @@ import { BASE_PATH } from "@/lib/base-path";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
 
 /**
+ * エピソードを取ってきた結果。
+ *
+ * 取れなかったことを空の一覧で表さない。
+ * 空で返すと、カタログに回が無いシリーズと取得の失敗が同じ値になり、画面がその二つを言い分けられなくなる。
+ */
+export type EpisodesResult =
+  | { kind: "loaded"; episodes: Episode[] }
+  | { kind: "error" };
+
+/**
+ * 画面から見たエピソードの状態。
+ * 取得が返るまでが `loading` で、その後は `EpisodesResult` のどちらかになる。
+ */
+export type EpisodesState = { kind: "loading" } | EpisodesResult;
+
+/**
  * 配信された episodes.json の在り処。
  *
  * `BASE_PATH` を付けないと、リポジトリ名を挟んだ公開先で 404 になる（`@/lib/base-path`）。
@@ -22,13 +38,13 @@ const EPISODES_URL = `${BASE_PATH}/catalog/episodes.json`;
 
 /**
  * 配信されたエピソードの全件を、スキーマの検査に通して返す。
- * 取れなければ空で返す。
+ * 取れなければ `error` を返す。
  *
  * 詳細カードはエピソードが 1 件も無くても開くので、ここで投げると欠損が地図ごと巻き込む。
- * 代わりに `console.error` へ出す。
+ * 投げる代わりに `console.error` へ出す。
  * 遮断版スモーク（`scripts/smoke.ts`）が同一オリジンの 4xx と `console.error` を見るので、複製漏れも 404 の HTML を掴んだ形も `pnpm check` で赤くなる。
  */
-export async function fetchEpisodes(): Promise<Episode[]> {
+export async function fetchEpisodes(): Promise<EpisodesResult> {
   try {
     const response = await fetch(EPISODES_URL);
 
@@ -36,11 +52,14 @@ export async function fetchEpisodes(): Promise<Episode[]> {
       throw new Error(`${response.status} ${response.statusText}`);
     }
 
-    return parseEpisodes(await response.json()).episodes;
+    return {
+      kind: "loaded",
+      episodes: parseEpisodes(await response.json()).episodes,
+    };
   } catch (cause) {
     console.error(`エピソードを取れなかった: ${EPISODES_URL}`, cause);
 
-    return [];
+    return { kind: "error" };
   }
 }
 

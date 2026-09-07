@@ -81,17 +81,18 @@ describe("fetchEpisodes", () => {
   it("配信された全件を検査に通して返す", async () => {
     stubFetch({ ok: true, json: () => Promise.resolve(COLLECTION) });
 
-    expect((await fetchEpisodes()).map((episode) => episode.guid)).toEqual(
-      EPISODES.map((episode) => episode.guid),
-    );
+    expect(await fetchEpisodes()).toEqual({
+      kind: "loaded",
+      episodes: EPISODES,
+    });
   });
 
-  it("取れなければ空で返し、取れなかったことを console.error へ出す", async () => {
+  it("取れなければ error を返し、取れなかったことを console.error へ出す", async () => {
     const logged = vi.spyOn(console, "error").mockImplementation(() => {});
 
     stubFetch({ ok: false, status: 404, statusText: "Not Found" });
 
-    expect(await fetchEpisodes()).toEqual([]);
+    expect(await fetchEpisodes()).toEqual({ kind: "error" });
     expect(logged).toHaveBeenCalled();
   });
 });

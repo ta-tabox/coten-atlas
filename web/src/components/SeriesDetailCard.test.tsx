@@ -51,7 +51,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
-        episodes={EPISODES}
+        episodes={{ kind: "loaded", episodes: EPISODES }}
         onClose={vi.fn()}
       />,
     );
@@ -65,7 +65,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
-        episodes={EPISODES}
+        episodes={{ kind: "loaded", episodes: EPISODES }}
         onClose={vi.fn()}
       />,
     );
@@ -79,9 +79,12 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
-        episodes={[
-          episodeOf({ guid: "sparta-2", title: "リンク無しの回", links: [] }),
-        ]}
+        episodes={{
+          kind: "loaded",
+          episodes: [
+            episodeOf({ guid: "sparta-2", title: "リンク無しの回", links: [] }),
+          ],
+        }}
         onClose={vi.fn()}
       />,
     );
@@ -96,11 +99,41 @@ describe("SeriesDetailCard", () => {
 
   it("エピソードが 0 件でもシリーズの側は出る", () => {
     render(
-      <SeriesDetailCard series={SPARTA} episodes={[]} onClose={vi.fn()} />,
+      <SeriesDetailCard
+        series={SPARTA}
+        episodes={{ kind: "loaded", episodes: [] }}
+        onClose={vi.fn()}
+      />,
     );
 
     expect(screen.getByRole("heading", { name: "スパルタ" })).toBeVisible();
-    expect(screen.queryAllByRole("link")).toEqual([]);
+    expect(
+      screen.getByText("配信一覧にこのシリーズの回がまだ無い。"),
+    ).toBeVisible();
+  });
+
+  it("取得の途中は、回が無いのではなく読み込み中だと言う", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        episodes={{ kind: "loading" }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("エピソードを読み込んでいる。")).toBeVisible();
+  });
+
+  it("取得に失敗したら、回が無いのではなく取れなかったと言う", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        episodes={{ kind: "error" }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("エピソードの一覧を取れなかった。")).toBeVisible();
   });
 
   it("閉じるボタンを押すと onClose を呼ぶ", () => {
@@ -109,7 +142,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
-        episodes={EPISODES}
+        episodes={{ kind: "loaded", episodes: EPISODES }}
         onClose={onClose}
       />,
     );

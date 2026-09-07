@@ -6,6 +6,9 @@
  * 取得も絞り込みもしない。
  * 渡された 1 件と、そのシリーズのエピソードだけを描く（絞り込みは `@/lib/episodes`、年の整形は `@/lib/format`）。
  *
+ * エピソードの区画は取得中・取得の失敗・0 件を書き分ける。
+ * どれも一覧が出ないという同じ見た目になるので、区別しないと「取れなかった」が「まだ配信されていない」として残る。
+ *
  * 縦に溢れるのはエピソードの一覧だけである。
  * カードごとスクロールさせると、回数の多いシリーズでシリーズ名と年代が画面の外へ出る。
  *
@@ -14,6 +17,7 @@
  */
 
 import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
+import type { EpisodesState } from "@/lib/episodes";
 import { formatTimeRange } from "@/lib/format";
 import type { Episode } from "@/lib/schema/episode";
 import type { Series } from "@/lib/schema/series";
@@ -30,14 +34,17 @@ const SHOW_URL = "https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f";
  */
 const TITLE_ID = "series-detail-title";
 
+/** 一覧の代わりに出す短い断りの見た目。 */
+const NOTE_CLASS = "mt-2 text-[0.9rem] text-zinc-500";
+
 type SeriesDetailCardProps = {
   /** 開いているシリーズ。 */
   series: Series;
   /**
-   * そのシリーズに割り当たったエピソード。
+   * そのシリーズに割り当たったエピソードと、その取得の状態。
    * 0 件でも開く。
    */
-  episodes: Episode[];
+  episodes: EpisodesState;
   /** 閉じるボタンが押されたときに呼ぶ。 */
   onClose: () => void;
 };
@@ -50,6 +57,37 @@ function spotifyUrlOf(episode: Episode): string {
   const link = episode.links.find((one) => one.platform === "spotify");
 
   return link?.url ?? SHOW_URL;
+}
+
+/** エピソードの区画の中身を、取得の状態ごとに描き分ける。 */
+function EpisodeList({ state }: { state: EpisodesState }) {
+  if (state.kind === "loading") {
+    return <p className={NOTE_CLASS}>エピソードを読み込んでいる。</p>;
+  }
+
+  if (state.kind === "error") {
+    return <p className={NOTE_CLASS}>エピソードの一覧を取れなかった。</p>;
+  }
+
+  if (state.episodes.length === 0) {
+    return <p className={NOTE_CLASS}>配信一覧にこのシリーズの回がまだ無い。</p>;
+  }
+
+  return (
+    <ol className="mt-2 flex flex-col gap-2 overflow-y-auto text-[0.9rem]">
+      {state.episodes.map((episode) => (
+        <li key={episode.guid}>
+          <a
+            href={spotifyUrlOf(episode)}
+            className="inline-flex items-start gap-1.5 text-blue-700 underline underline-offset-2"
+          >
+            <ExternalLinkIcon className="mt-[0.35em] size-[1.05em] flex-none" />
+            {episode.title}
+          </a>
+        </li>
+      ))}
+    </ol>
+  );
 }
 
 /** シリーズの詳細カードを描く。 */
@@ -93,25 +131,7 @@ export default function SeriesDetailCard({
           エピソード
         </h3>
 
-        {episodes.length === 0 ? (
-          <p className="mt-2 text-[0.9rem] text-zinc-500">
-            配信一覧にこのシリーズの回がまだ無い。
-          </p>
-        ) : (
-          <ol className="mt-2 flex flex-col gap-2 overflow-y-auto text-[0.9rem]">
-            {episodes.map((episode) => (
-              <li key={episode.guid}>
-                <a
-                  href={spotifyUrlOf(episode)}
-                  className="inline-flex items-start gap-1.5 text-blue-700 underline underline-offset-2"
-                >
-                  <ExternalLinkIcon className="mt-[0.35em] size-[1.05em] flex-none" />
-                  {episode.title}
-                </a>
-              </li>
-            ))}
-          </ol>
-        )}
+        <EpisodeList state={episodes} />
       </section>
     </aside>
   );
