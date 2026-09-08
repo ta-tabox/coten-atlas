@@ -57,8 +57,8 @@
   言い換えが存在する比喩は装飾なので使わない
   / Say it literally when a literal phrase exists
 - 独自用語は、このプロジェクトの用語集にある語だけ使う。
-  用語集が無いなら独自用語を使わない。
-  どちらでも初出で一行定義する
+  使うときは初出で一行定義する。
+  用語集が無いなら独自用語を使わない
   / Use only the house terms this project lists, and define each on first use
 - 読み手はこのセッションを見ていない。
   コメント・コミット本文・PR・issue は、その文と対象の差分だけで意味が取れること
