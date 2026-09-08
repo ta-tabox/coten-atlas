@@ -1,15 +1,15 @@
 /**
- * era 空間の位置が指す年を見る。
+ * `positionToYear` が返す年を検証する。
  *
- * 実例は docs/ARCHITECTURE.md §3 が書いているものをそのまま置く。
- * 等幅に並べた区間の中を線形補間するので、位置が同じでも進む年数は era ごとに違う。
+ * 期待値は `docs/ARCHITECTURE.md` §3 が挙げている実例をそのまま使う。
+ * 区間を等幅に並べて中を線形補間するので、区間内の同じ割合を指しても進む年数は区間ごとに違う。
  */
 
 import { describe, expect, it } from "vitest";
 import { positionToYear, presentEndOf } from "@/lib/era/space";
 import { ERA_END_PRESENT, parseEras } from "@/lib/schema/era";
 
-/** docs/ARCHITECTURE.md §3 の 7 区分をそのまま写したもの。 */
+/** `docs/ARCHITECTURE.md` §3 が挙げている 7 区分。 */
 const ERAS = parseEras([
   { id: "prehistory", label: "先史", start: -10000, end: -800 },
   { id: "ancient", label: "古代", start: -800, end: 550 },
@@ -20,15 +20,15 @@ const ERAS = parseEras([
   { id: "modern20b", label: "戦後", start: 1945, end: ERA_END_PRESENT },
 ]);
 
-/** 戦後の右端に置く年。 */
+/** `modern20b`（戦後）の右端に置く年。 */
 const PRESENT_END = 2026;
 
-/** 7 区分のうち index 番目の区間の、`within` の位置。 */
+/** `ERAS` の `index` 番目の区間を `within` の割合だけ進んだ、era 空間の位置を返す。 */
 function positionIn(index: number, within: number): number {
   return (index + within) / ERAS.length;
 }
 
-/** その位置が指す年。 */
+/** `position` が指す年を、`ERAS` と `PRESENT_END` で求めて返す。 */
 function yearAt(position: number): number {
   return positionToYear(position, ERAS, PRESENT_END);
 }
@@ -47,7 +47,7 @@ describe("positionToYear", () => {
     expect(yearAt(1)).toBe(PRESENT_END);
   });
 
-  it("0..1 の外を指したら両端へ寄せる", () => {
+  it("0..1 の外を渡したら era 空間の最初の年と最後の年を返す", () => {
     expect(yearAt(-0.5)).toBe(-10000);
     expect(yearAt(1.5)).toBe(PRESENT_END);
   });
@@ -56,7 +56,7 @@ describe("positionToYear", () => {
     // 中世（550〜1450）と近世（1450〜1800）の境目。
     expect(yearAt(positionIn(3, 0))).toBe(1450);
 
-    // 手前は 900 年幅の刻みで、先は 350 年幅の刻みになる。
+    // 境目の手前は中世の 900 年幅、後ろは近世の 350 年幅で刻む。
     expect(yearAt(positionIn(2, 0.9))).toBe(1360);
     expect(yearAt(positionIn(3, 0.1))).toBe(1485);
   });
@@ -66,7 +66,7 @@ describe("positionToYear", () => {
     expect(yearAt(positionIn(6, 0.5))).toBe(1986);
   });
 
-  it("presentEnd が末尾の era の始まりより後ろに無ければ投げる", () => {
+  it("presentEnd が末尾の era の始まりより後ろに無ければ throw する", () => {
     expect(() => positionToYear(1, ERAS, 1900)).toThrow(/modern20b/);
   });
 });

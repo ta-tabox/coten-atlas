@@ -1,14 +1,13 @@
 /**
- * スライダーの位置の周りに現在窓を取り、シリーズの `timeRange` との重なりを表示 opacity へ落とす。
+ * 現在窓とシリーズの `timeRange` の重なりから、表示 opacity を求める。
+ * 現在窓は、スライダーが指す位置の周りに取る年の範囲を指す。
  *
- * 窓の幅は年でなく era 空間の側で固定する（docs/adr/0035-era-space-window.md）。
- * 年で固定すると、先史（9200 年幅）と 19 世紀（100 年幅）で見え方が桁違いになる。
+ * 窓の幅は年でなく era 空間の位置で決める。
+ * 窓も `timeRange` も両端を含む閉区間で扱い、era の半開区間は `space.ts` の中で閉じている。
+ * 幅の決め方と採らなかった案は `docs/adr/0035-era-space-window.md` にある。
  *
- * 窓は `timeRange` と同じ両端を含む閉区間で持つ。
- * era の半開区間は `space.ts` の内側で閉じているので、ここから先に端の扱いは 1 つしか無い。
- *
- * 描画は持たない。
- * paint への配線は era スライダーを置く側が持つ（docs/adr/0022-map-dom-boundary.md）。
+ * MapLibre の paint を組み立てない。
+ * `circle-opacity` へ配線するのは `web/src/lib/map/series-layer.ts` で、このモジュールは 0..1 の数値を返すまでを担当する。
  */
 
 import { positionToYear } from "@/lib/era/space";
@@ -16,8 +15,8 @@ import type { EraList } from "@/lib/schema/era";
 import type { SeriesTimeRange } from "@/lib/schema/series";
 
 /**
- * 現在窓の幅を、era 空間の 1 区間の幅に対する割合で持つ。
- * era の刻みを細かくすれば窓も一緒に細かくなる（docs/adr/0035-era-space-window.md）。
+ * 現在窓の幅。
+ * era 空間の 1 区間の幅を 1.0 とした割合で持つので、`eras` の区間を細かく割れば窓が跨る年数も細かくなる。
  */
 export const WINDOW_WIDTH_IN_ERAS = 0.5;
 
@@ -28,10 +27,10 @@ export type CurrentWindow = {
 };
 
 /**
- * 位置の周りに取る現在窓。
+ * `position` の周りに取る現在窓の、両端の年を返す。
  *
- * era 空間で幅を取ってから両端を年へ写すので、窓が跨る年数は era ごとに変わる。
- * era 空間の外に年は無いので、端では外へ出た側が落ちて窓が狭くなる。
+ * era 空間で `WINDOW_WIDTH_IN_ERAS` ぶんの幅を取り、両端を `positionToYear` で年へ変換する。
+ * `position` が 0 や 1 に近いと窓の端が era 空間の外へ出て、`positionToYear` が 0 と 1 へ丸めるぶん窓が狭くなる。
  */
 export function currentWindow(
   position: number,
@@ -47,13 +46,11 @@ export function currentWindow(
 }
 
 /**
- * 現在窓と `timeRange` の重なり率（0..1）。
+ * `window` と `timeRange` が重なる年数の割合を、0..1 で返す。
  *
- * どちらも両端を含む閉区間なので、年数は差でなく `end - start + 1` で数える。
- * 差で数えると 1 年のシリーズの幅が 0 になり、重なっていても 0 を返す。
- *
- * 分母は短い方に取る。
- * 窓を分母に固定すると 1 年のシリーズが窓の幅の逆数までしか上がらず、`timeRange` に固定すると era を丸ごと覆うシリーズが薄いまま残る。
+ * どちらも両端を含む閉区間なので、年数は `end - start + 1` で数える。
+ * 分母は `window` と `timeRange` のうち年数が短い方なので、1 年のシリーズが `window` に収まれば 1 を、`window` を覆い尽くすシリーズも 1 を返す。
+ * 重なる年が 1 年も無ければ 0 を返す。
  */
 export function overlapRatio(
   window: CurrentWindow,
@@ -76,10 +73,10 @@ export function overlapRatio(
 }
 
 /**
- * 重なり率から表示 opacity へ。
+ * 重なり率 `ratio` を smoothstep（`r² (3 - 2r)`）へ通した opacity を、0..1 で返す。
  *
- * 両端で傾きが 0 になる smoothstep を通し、窓へ入る瞬間と出る瞬間の段差を消す。
- * 重なり率をそのまま使うと、窓の縁でシリーズが現れたり消えたりする。
+ * 0 と 1 で傾きが 0 になるので、シリーズが窓へ入る瞬間と窓から出る瞬間に濃さが跳ねない。
+ * `ratio` が 0..1 の外なら 0 と 1 へ丸める。
  */
 export function fadeOpacity(ratio: number): number {
   const clamped = Math.min(Math.max(ratio, 0), 1);

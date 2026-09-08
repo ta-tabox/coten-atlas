@@ -1,8 +1,8 @@
 /**
- * 現在窓の取り方と、そこからシリーズの濃淡へ落ちるまでを見る。
+ * `currentWindow`・`overlapRatio`・`fadeOpacity` の戻り値を検証する。
  *
- * 窓も `timeRange` も両端を含む閉区間なので、境界の 1 年がそのまま見えるかどうかを分ける。
- * 重なりの本体はその 1 年の扱いにあるので、接するだけの範囲と 1 年だけ重なる範囲を並べて置く。
+ * 窓も `timeRange` も両端を含む閉区間なので、端の 1 年を数えるかどうかで結果が変わる。
+ * 窓の外側に接するだけの `timeRange` と、端の 1 年だけ重なる `timeRange` を並べて置く。
  */
 
 import { describe, expect, it } from "vitest";
@@ -14,7 +14,7 @@ import {
 } from "@/lib/era/window";
 import { ERA_END_PRESENT, parseEras } from "@/lib/schema/era";
 
-/** docs/ARCHITECTURE.md §3 の 7 区分をそのまま写したもの。 */
+/** `docs/ARCHITECTURE.md` §3 が挙げている 7 区分。 */
 const ERAS = parseEras([
   { id: "prehistory", label: "先史", start: -10000, end: -800 },
   { id: "ancient", label: "古代", start: -800, end: 550 },
@@ -25,10 +25,10 @@ const ERAS = parseEras([
   { id: "modern20b", label: "戦後", start: 1945, end: ERA_END_PRESENT },
 ]);
 
-/** 戦後の右端に置く年。 */
+/** `modern20b`（戦後）の右端に置く年。 */
 const PRESENT_END = 2026;
 
-/** 19 世紀（1800〜1900）の真ん中に取った窓。 */
+/** `modern19`（1800〜1900）の真ん中に取った窓。 */
 const WINDOW_IN_19C: CurrentWindow = { start: 1825, end: 1875 };
 
 describe("currentWindow", () => {
@@ -37,14 +37,14 @@ describe("currentWindow", () => {
   });
 
   it("同じ幅でも、era が変われば跨る年数が変わる", () => {
-    // 先史は 9200 年幅なので、19 世紀の 50 年に対して 4600 年になる。
+    // 先史は 9200 年幅なので、19 世紀の 50 年に対して 4600 年の窓になる。
     expect(currentWindow(0.5 / 7, ERAS, PRESENT_END)).toEqual({
       start: -7700,
       end: -3100,
     });
   });
 
-  it("era 空間の端では、外へ出た側が落ちて窓が狭くなる", () => {
+  it("era 空間の端では、窓の端が外へ出るぶん狭くなる", () => {
     expect(currentWindow(0, ERAS, PRESENT_END)).toEqual({
       start: -10000,
       end: -7700,
@@ -53,7 +53,7 @@ describe("currentWindow", () => {
 });
 
 describe("overlapRatio", () => {
-  it("1 年のシリーズは、その年を含む窓で 1.0 になる", () => {
+  it("start と end が同じシリーズは、その 1 年を含む窓で 1.0 になる", () => {
     expect(overlapRatio(WINDOW_IN_19C, { start: 1850, end: 1850 })).toBe(1);
   });
 
@@ -97,7 +97,7 @@ describe("fadeOpacity", () => {
     expect(fadeOpacity(0.9)).toBeGreaterThan(0.9);
   });
 
-  it("0..1 の外を渡されたら両端へ寄せる", () => {
+  it("0..1 の外を渡したら 0 と 1 を返す", () => {
     expect(fadeOpacity(-1)).toBe(0);
     expect(fadeOpacity(2)).toBe(1);
   });
