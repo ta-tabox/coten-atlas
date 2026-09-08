@@ -2,7 +2,7 @@ name: Deploy
 
 # main の内容を GitHub Pages へ配信する（docs/adr/0007-github-pages.md）。
 # 品質の判定は持たない（型・静的・テストは check.yml の pnpm check が見る）。
-# 配信の後にしか分からないので、配れたものへ到達できるかだけは deploy ジョブの後段が見る（docs/adr/0036-post-deploy-reachability.md）。
+# 配信の後にしか分からないので、配信されたページから参照へ到達できるかだけは deploy ジョブの後段が検証する（docs/adr/0036-post-deploy-reachability.md）。
 # ランタイムの立て方は check.yml と揃える（食い違うと、check が緑の commit で配信だけが落ちる）。
 
 on:
@@ -81,21 +81,20 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v5
 
-      # 配信された実物を一度開く（docs/adr/0036-post-deploy-reachability.md）。
-      # 見るのは、ページが名指している参照へその URL から到達できるかの一点だけ。
-      # canvas と実行時エラーは pnpm check の遮断版スモークが同じバイト列に対して見ているので、ここではブラウザを立てない。
+      # 配信されたページを一度取得し、そのページが名指している参照へ到達できるかだけを検証する。
+      # ブラウザを立てない理由と、canvas を検証しない理由は docs/adr/0036-post-deploy-reachability.md が持つ。
       #
-      # URL は deploy-pages の出力から取る。
+      # 対象の URL は deploy-pages の出力から取る。
       # ワークフローへ書き下ろすと、next.config.ts の basePath と出所が二つになる。
-      # 出力を run: の中で展開せず env: で受けるのは、値がそのままシェルの構文として読まれる形を避けるため。
+      # PAGE_URL を run: の中で展開せず env: で受けるのは、値がそのままシェルの構文として解釈されるのを防ぐため。
       - name: Verify the deployed site can reach what it references
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
           set -euo pipefail
 
-          # 配信の直後は CDN が古い版を返しうるので、ページの取得には再試行を掛ける。
-          # 伝播の途中では 404 が返るため --retry-all-errors を足す（既定の --retry は 5xx と接続の失敗しか拾わない）。
+          # 配信の直後は CDN が古い版を返しうるので、ページの取得は再試行する。
+          # 伝播の途中では 404 が返るため --retry-all-errors を足す（既定の --retry は 5xx と接続の失敗にしか反応しない）。
           if ! html=$(curl -fsS --retry 5 --retry-delay 5 --retry-all-errors "$PAGE_URL"); then
             echo "::error::$PAGE_URL を開けなかった"
             exit 1
@@ -103,21 +102,21 @@ jobs:
 
           origin=$(printf '%s' "$PAGE_URL" | cut -d/ -f1-3)
 
-          # 参照は HTML 自身から集める。
-          # 接頭辞をここへ書くと検査とアプリで出所が二つになり、その食い違いを見るというこの検査の目的が消える。
-          # `"/` で始まるものだけを拾うので、外部のオリジンへ出る参照は入らない。
-          # 参照が 0 件のとき grep は 1 を返し、pipefail と set -e がこの代入でスクリプトを打ち切るので、取り出しの失敗はここで吸って下の診断へ届かせる。
-          # 吸わないと、下の if へ到達しないまま赤になり、0 件だったのか取り出しが壊れたのかがログに残らない。
+          # 参照は取得した HTML から集める。
+          # 接頭辞をこのスクリプトへ書くと、検証する接頭辞と配信する接頭辞の出所が二つになり、その食い違いを検出するという目的が消える。
+          # `"/` で始まる参照だけを集めるので、外部のオリジンへの参照は入らない。
+          # 参照が 0 件のとき grep は 1 を返し、pipefail と set -e がこの代入でスクリプトを終了させるので、`|| true` で終了コードを 0 にして下の検証へ渡す。
+          # 渡さないと、下の if へ到達しないまま失敗し、0 件だったのか grep が壊れたのかがログに残らない。
           refs=$(printf '%s' "$html" | grep -oE '(src|href)="/[^"]*"' | sed 's/^[^"]*"//; s/"$//' | sort -u || true)
 
-          # 取り出しが壊れると検査が黙って無検査になり、緑と区別が付かなくなるので、1 件も取れなければ赤にする。
+          # 参照の取得が壊れると 0 件になり、何も検証しないまま成功するので、0 件は失敗させる。
           if [ -z "$refs" ]; then
-            echo "::error::$PAGE_URL から参照を 1 件も取れなかった。取り出しの側が壊れている疑い。"
+            echo "::error::$PAGE_URL から参照を 1 件も取得できなかった。参照の取得が壊れている疑い。"
             exit 1
           fi
 
-          # 4xx はこの検査が探しているものなので、参照の側には --retry-all-errors を足さない。
-          # 足すと、見つけた事故の数だけ待ってから赤になる。
+          # 4xx はこの検証が検出したいものなので、参照の取得には --retry-all-errors を足さない。
+          # 足すと、到達できない参照の数だけ再試行を待ってから失敗する。
           unreachable=""
           while IFS= read -r ref; do
             if ! curl -fsS --retry 3 -o /dev/null "${origin}${ref}"; then
