@@ -12,6 +12,10 @@
  * 縦に溢れるのはエピソードの一覧だけである。
  * カードごとスクロールさせると、回数の多いシリーズでシリーズ名と年代が画面の外へ出る。
  *
+ * 横へは送らない。
+ * 題号は最長 80 字あって折り返すと 1 件で 4 行を超えるので、2 行で切って続きを `title` 属性へ逃がす。
+ * 切らずに `overflow-y-auto` だけを置くと、CSS が横の overflow も auto へ倒すので横スクロールバーが出る。
+ *
  * MapLibre の Popup を使わない。
  * 地図由来の DOM は canvas と attribution に閉じてあり、そこへ入った Tailwind のユーティリティは素のカスケードに負ける（docs/adr/0022-map-dom-boundary.md）。
  */
@@ -74,15 +78,16 @@ function EpisodeList({ state }: { state: EpisodesState }) {
   }
 
   return (
-    <ol className="mt-2 flex flex-col gap-2 overflow-y-auto text-[0.9rem]">
+    <ol className="mt-2 flex flex-col gap-1.5 overflow-x-hidden overflow-y-auto pr-1.5 text-[0.9rem]">
       {state.episodes.map((episode) => (
         <li key={episode.guid}>
           <a
             href={spotifyUrlOf(episode)}
-            className="inline-flex items-start gap-1.5 text-blue-700 underline underline-offset-2"
+            title={episode.title}
+            className="flex items-start gap-2 rounded-md border border-zinc-200 px-3 py-2 hover:border-zinc-300 hover:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
           >
-            <ExternalLinkIcon className="mt-[0.35em] size-[1.05em] flex-none" />
-            {episode.title}
+            <span className="line-clamp-2 min-w-0 grow">{episode.title}</span>
+            <ExternalLinkIcon className="mt-[0.3em] size-[1em] flex-none text-zinc-400" />
           </a>
         </li>
       ))}
