@@ -1,8 +1,8 @@
 /**
- * MapLibre 本体は jsdom で描画できないので、地図コンポーネントはモックへ差し替える。
- * ここで見るのは配線であって地図ではない。
+ * MapLibre 本体は jsdom で描画できないので、`react-map-gl/maplibre` をモックに差し替える。
+ * 検証するのは props の受け渡しであって、地図の描画ではない。
  *
- * 子は描かれないので、置いたかどうかは MapLibreMap が受け取った children を見て判定する。
+ * モックは children を描画しないので、子コンポーネントの有無は MapLibreMap が受け取った `children` で判定する。
  */
 
 import { act, render } from "@testing-library/react";
@@ -25,16 +25,16 @@ const map = vi.hoisted(() => vi.fn<(props: MapProps) => null>(() => null));
 
 vi.mock("react-map-gl/maplibre", () => ({ default: map }));
 
-// 取得は解決させない。
-// 解決すると act の外で state が動き、配線だけを見たいこのテストが取得の完了待ちになる。
+// fetchEpisodes の Promise を解決させない。
+// 解決すると act の外で setEpisodes が走り、props の受け渡しだけを検証するテストが取得の完了待ちになる。
 vi.mock("@/lib/episodes", () => ({
   fetchEpisodes: () => new Promise(() => {}),
   episodesForSeries: () => [],
 }));
 
 /**
- * 地図へ渡す事物。
- * MapCanvas は中身を読まずに SeriesLayers へ渡すだけなので、空で足りる。
+ * 地図に渡す `Locus` の全件。
+ * MapCanvas は中身を読まずに SeriesLayers へ渡すだけなので、空配列で足りる。
  */
 const LOCI: MapLocusCollection = { type: "FeatureCollection", features: [] };
 
@@ -53,14 +53,17 @@ const SPARTA: Series = {
 
 const SERIES: SeriesList = [SPARTA];
 
-/** 直近の描画で MapLibreMap が受け取った props。 */
+/** 直近のレンダリングで MapLibreMap が受け取った props を返す。 */
 function lastProps(): MapProps {
   const [props] = map.mock.calls[map.mock.calls.length - 1];
 
   return props;
 }
 
-/** 地図の子に置かれた、その型の要素。 */
+/**
+ * 地図の children から `type` の要素を 1 つ返す。
+ * 無ければ undefined を返す。
+ */
 function childOfType(type: unknown): ReactNode | undefined {
   return Children.toArray(lastProps().children).find(
     (child) => isValidElement(child) && child.type === type,
@@ -68,8 +71,8 @@ function childOfType(type: unknown): ReactNode | undefined {
 }
 
 /**
- * 事物を 1 件返すクリック。
- * MapCanvas が読むのは最前面の feature の `seriesId` だけなので、埋めるのはそこに限る。
+ * `seriesId` を持つ `Locus` を 1 件返すクリックイベントを作る。
+ * MapCanvas が読むのは最前面の feature の `seriesId` だけなので、他の欄は埋めない。
  */
 function clickOn(seriesId: string): MapLayerMouseEvent {
   return {
@@ -77,7 +80,7 @@ function clickOn(seriesId: string): MapLayerMouseEvent {
   } as unknown as MapLayerMouseEvent;
 }
 
-/** 事物の無い所のクリック。 */
+/** `Locus` が無い地点のクリックイベントを作る。 */
 function clickOnBlank(): MapLayerMouseEvent {
   return { features: [] } as unknown as MapLayerMouseEvent;
 }

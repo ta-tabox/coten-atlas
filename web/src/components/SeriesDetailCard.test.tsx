@@ -1,6 +1,6 @@
 /**
- * 見るのは、渡された 1 件から何が出るかだけである。
- * 何を渡すかを決める配線は `MapCanvas.test.tsx` が持つ。
+ * 検証するのは、props の `Series` と `EpisodesState` から何が表示されるかである。
+ * props に何を渡すかを決める配線は `MapCanvas.test.tsx` が検証する。
  */
 
 import { fireEvent, render, screen } from "@testing-library/react";
@@ -12,7 +12,7 @@ import type { Series } from "@/lib/schema/series";
 /** エピソードのうち、カードが読む欄。 */
 type EpisodeFixture = Pick<Episode, "guid" | "title" | "links">;
 
-/** 残りの欄を埋めて、スキーマの通るエピソードにする。 */
+/** `fixture` の残りの欄を埋めて、スキーマを通る `Episode` を返す。 */
 function episodeOf(fixture: EpisodeFixture): Episode {
   return {
     pubDate: "2026-08-19T21:00:00.000Z",

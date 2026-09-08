@@ -1,23 +1,12 @@
 "use client";
 
 /**
- * 選ばれたシリーズ 1 件の詳細を、地図の上へ載せるカード。
+ * 選択された `Series` 1 件の詳細を、地図に重ねて表示するカード。
  *
  * 取得も絞り込みもしない。
- * 渡された 1 件と、そのシリーズのエピソードだけを描く（絞り込みは `@/lib/episodes`、年の整形は `@/lib/format`）。
+ * 表示するのは props で受け取った `Series` と `EpisodesState` だけで、絞り込みは `@/lib/episodes`、年の整形は `@/lib/format` が担当する。
  *
- * エピソードの区画は取得中・取得の失敗・0 件を書き分ける。
- * どれも一覧が出ないという同じ見た目になるので、区別しないと「取れなかった」が「まだ配信されていない」として残る。
- *
- * 縦に溢れるのはエピソードの一覧だけである。
- * カードごとスクロールさせると、回数の多いシリーズでシリーズ名と年代が画面の外へ出る。
- *
- * 横へは送らない。
- * 題号は最長 80 字あって折り返すと 1 件で 4 行を超えるので、2 行で切って続きを `title` 属性へ逃がす。
- * 切らずに `overflow-y-auto` だけを置くと、CSS が横の overflow も auto へ倒すので横スクロールバーが出る。
- *
- * MapLibre の Popup を使わない。
- * 地図由来の DOM は canvas と attribution に閉じてあり、そこへ入った Tailwind のユーティリティは素のカスケードに負ける（docs/adr/0022-map-dom-boundary.md）。
+ * MapLibre の Popup を使わない理由は docs/adr/0022-map-dom-boundary.md が正。
  */
 
 import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
@@ -27,35 +16,36 @@ import type { Episode } from "@/lib/schema/episode";
 import type { Series } from "@/lib/schema/series";
 
 /**
- * 回のリンクを持たないエピソードの逃げ先になる、番組そのものの Spotify ページ。
- * フィードの `<link>` は全件に在るので普段は出ないが、欠けた回で導線ごと消えないようにする（#13 の実測）。
+ * 番組全体の Spotify ページ。
+ * `links` が空のエピソードは、この URL にフォールバックする。
+ *
+ * RSS の `<link>` は全エピソードにあるので、通常この URL は表示しない（#13（配信リンクの実測値））。
  */
 const SHOW_URL = "https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f";
 
 /**
- * 見出しと領域を結ぶ id。
- * 同時に開くカードは 1 枚なので固定でよい。
+ * `aside` の `aria-labelledby` が参照する、`h2` の id。
+ * 同時に開くカードは 1 枚なので固定値でよい。
  */
 const TITLE_ID = "series-detail-title";
 
-/** 一覧の代わりに出す短い断りの見た目。 */
+/** エピソードの一覧の代わりに表示する 1 行の className。 */
 const NOTE_CLASS = "mt-2 text-[0.9rem] text-zinc-500";
 
 type SeriesDetailCardProps = {
   /** 開いているシリーズ。 */
   series: Series;
-  /**
-   * そのシリーズに割り当たったエピソードと、その取得の状態。
-   * 0 件でも開く。
-   */
+  /** `series` に割り当てられたエピソードと、その取得の状態。 */
   episodes: EpisodesState;
   /** 閉じるボタンが押されたときに呼ぶ。 */
   onClose: () => void;
 };
 
 /**
- * その回を Spotify で開く URL。
- * 同じ配信基盤のリンクは 2 本持てないので、`find` の 1 本で足りる（`@/lib/schema/link`）。
+ * `episode` を Spotify で開く URL を返す。
+ * `platform` が `"spotify"` のリンクが無ければ `SHOW_URL` を返す。
+ *
+ * `find` の 1 件で足りる理由は `@/lib/schema/link` が正。
  */
 function spotifyUrlOf(episode: Episode): string {
   const link = episode.links.find((one) => one.platform === "spotify");
@@ -63,7 +53,13 @@ function spotifyUrlOf(episode: Episode): string {
   return link?.url ?? SHOW_URL;
 }
 
-/** エピソードの区画の中身を、取得の状態ごとに描き分ける。 */
+/**
+ * エピソードの区画を、`state` ごとに別の内容で表示する。
+ * `loading` と `error` と 0 件には、それぞれ違う文言を出す。
+ *
+ * 三つとも一覧が出ない同じ見た目になるので、文言を共有すると取得の失敗が「まだ配信されていない」と読める。
+ * 題号は最長 80 字あるので `line-clamp-2` で 2 行に切り、全文は `title` 属性に残す。
+ */
 function EpisodeList({ state }: { state: EpisodesState }) {
   if (state.kind === "loading") {
     return <p className={NOTE_CLASS}>エピソードを読み込んでいる。</p>;
@@ -77,6 +73,8 @@ function EpisodeList({ state }: { state: EpisodesState }) {
     return <p className={NOTE_CLASS}>配信一覧にこのシリーズの回がまだ無い。</p>;
   }
 
+  // overflow-x-hidden を明示する。
+  // overflow-y-auto だけを指定すると、CSS が横の overflow も auto に変えて横スクロールバーが出る。
   return (
     <ol className="mt-2 flex flex-col gap-1.5 overflow-x-hidden overflow-y-auto pr-1.5 text-[0.9rem]">
       {state.episodes.map((episode) => (
@@ -95,7 +93,12 @@ function EpisodeList({ state }: { state: EpisodesState }) {
   );
 }
 
-/** シリーズの詳細カードを描く。 */
+/**
+ * シリーズの詳細カードを表示する。
+ * 縦のスクロールはエピソードの一覧だけに限る。
+ *
+ * カード全体をスクロールさせると、エピソードの多いシリーズでシリーズ名と年代が画面の外に出る。
+ */
 export default function SeriesDetailCard({
   series,
   episodes,

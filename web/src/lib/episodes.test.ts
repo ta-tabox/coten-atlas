@@ -1,6 +1,6 @@
 /**
- * 見るのは絞り込みの規則と、取れなかったときの振る舞いである。
- * 配信物へ実際に届くかは遮断版スモーク（`tests/smoke/`）が持つ。
+ * 検証するのは `episodesForSeries` の絞り込みと、`fetchEpisodes` が失敗したときの戻り値である。
+ * 配信された `episodes.json` に実際に到達できるかは `tests/smoke/` が検証する。
  */
 
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -10,7 +10,7 @@ import type { Episode } from "@/lib/schema/episode";
 /** エピソードのうち、割当と並びに関わる欄。 */
 type EpisodeFixture = Pick<Episode, "guid" | "pubDate" | "seriesId">;
 
-/** 残りの欄を埋めて、スキーマの通るエピソードにする。 */
+/** `fixture` の残りの欄を埋めて、スキーマを通る `Episode` を返す。 */
 function episodeOf(fixture: EpisodeFixture): Episode {
   return {
     title: fixture.guid,
@@ -52,7 +52,7 @@ const COLLECTION = {
   episodes: EPISODES,
 };
 
-/** fetch の応答を差し替える。 */
+/** グローバルの `fetch` を、`response` を返すモックに差し替える。 */
 function stubFetch(response: Partial<Response>): void {
   vi.stubGlobal(
     "fetch",

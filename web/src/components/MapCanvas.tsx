@@ -3,13 +3,11 @@
 /**
  * ベースマップを画面いっぱいに描き、その上へシリーズのレイヤと詳細カードを載せる。
  *
- * **選択の正はここ 1 箇所に置く**。
- * パネルとの双方向同期（S5）が同じ state を読むので、コンポーネントごとに持たせると同期が state の突き合わせになる。
- * 選択で保つのは `seriesId` だけで、シリーズの属性は渡された全件から引く。
+ * 選択されたシリーズを保持するのは、このコンポーネントの `selectedSeriesId` だけである。
+ * S5（一覧パネルとの双方向同期）が同じ state を読むので、子コンポーネントに複製すると同期が state の突き合わせになる。
  *
- * エピソードは初期表示に要らないので、地図と同時にビルドへ取り込まず実行時に取ってくる（docs/ARCHITECTURE.md §3「配り方」）。
- * 取得は載った直後に始める。
- * 詳細カードを開いてから引き始めると、クリックのたびに 750 件超の JSON を待つことになる。
+ * エピソードはマウント直後に `fetchEpisodes` で取得する（docs/ARCHITECTURE.md §3「配り方」）。
+ * `SeriesDetailCard` を開いてから取得を始めると、クリックのたびに 750 件を超える JSON の到着を待つ。
  *
  * react-map-gl は maplibre 本体を実行時に動的 import するので、プリレンダでは空のコンテナだけが出る。
  * この層を `next/dynamic` の `ssr: false` で包む必要は無い。
@@ -48,16 +46,16 @@ type MapCanvasProps = {
   loci: MapLocusCollection;
   /**
    * シリーズの全件。
-   * 地図が返すのは事物なので、選ばれた `seriesId` からカードへ渡す 1 件をここで引く。
+   * 地図のクリックが返すのは `Locus` なので、`seriesId` に一致する `Series` をこの配列から検索する。
    */
   series: SeriesList;
 };
 
 /**
- * クリックされた地点にある事物が指すシリーズ。
- * 事物の無い所を押したときは null。
+ * `event` の最前面にある `Locus` の `seriesId` を返す。
+ * `Locus` が無い地点をクリックしたときは null を返す。
  *
- * MapLibre は properties の値を `any` で返すので、文字列でなければ選択しない。
+ * MapLibre は `properties` の値を `any` で返すので、文字列でなければ null にする。
  */
 function selectedSeriesIdOf(event: MapLayerMouseEvent): string | null {
   const seriesId = event.features?.[0]?.properties.seriesId;
@@ -66,8 +64,10 @@ function selectedSeriesIdOf(event: MapLayerMouseEvent): string | null {
 }
 
 /**
- * カードへ渡す、そのシリーズの分だけの状態。
- * 絞り込めるのは取得が返った後だけなので、取得中と失敗はそのまま通す。
+ * `state` を `seriesId` に割り当てられたエピソードだけに絞り込んで返す。
+ * `loading` と `error` はそのまま返す。
+ *
+ * 絞り込めるのは `loaded` になった後だけである。
  */
 function episodesOf(state: EpisodesState, seriesId: string): EpisodesState {
   if (state.kind !== "loaded") {
@@ -93,14 +93,14 @@ export default function MapCanvas({ loci, series }: MapCanvasProps) {
       }
     });
 
-    // 取得の途中で外されたら、返ってきた値を捨てる。
+    // アンマウント後に setEpisodes を呼ばない。
     return () => {
       mounted = false;
     };
   }, []);
 
-  // 「選ばれていない」は null に揃える。
-  // find の undefined をそのまま持つと、同じ状態が null と undefined の二通りで表れる。
+  // 「選択が無い」を null に統一する。
+  // find の undefined をそのまま保持すると、同じ状態が null と undefined の 2 通りで表れる。
   const selectedSeries: Series | null =
     series.find((one) => one.id === selectedSeriesId) ?? null;
 

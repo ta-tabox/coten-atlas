@@ -1,48 +1,45 @@
 /**
- * 配ったエピソードをブラウザが取ってきて、シリーズごとに絞る。
+ * 配信された `episodes.json` をブラウザが取得し、シリーズごとに絞り込む。
  *
- * `catalog/` を `node:fs` で読む口（`@/lib/catalog-dir`）とは別の経路である。
- * あちらはビルド時に Server Component が読み、こちらは実行時に配信物を fetch する（docs/ARCHITECTURE.md §3「配り方」）。
- * 同じファイルに置くと、呼べる場所が混ざる。
+ * ビルド時に `catalog/` を `node:fs` で読む `@/lib/catalog-dir` とは別経路である。
+ * `"use client"` を付けたコンポーネントは `node:fs` に到達しないので、エピソードだけを実行時の fetch にする（docs/ARCHITECTURE.md §3「配り方」）。
  *
- * 取得（非同期）と絞り込み（純関数）は分けたまま置く。
- * 絞り込みを取得から切り離しておけば、fetch を差し替えずに並びと割当を固められる。
+ * 取得は `fetchEpisodes`、絞り込みは `episodesForSeries` が担当する。
  */
 
 import { BASE_PATH } from "@/lib/base-path";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
 
 /**
- * エピソードを取ってきた結果。
+ * `fetchEpisodes` が返す取得の結果。
  *
- * 取れなかったことを空の一覧で表さない。
- * 空で返すと、カタログに回が無いシリーズと取得の失敗が同じ値になり、画面がその二つを言い分けられなくなる。
+ * 取得の失敗を空配列で表さない。
+ * 空配列にすると、割り当てられたエピソードが 0 件のシリーズと取得の失敗が同じ値になり、`SeriesDetailCard` が二つを書き分けられない。
  */
 export type EpisodesResult =
   | { kind: "loaded"; episodes: Episode[] }
   | { kind: "error" };
 
 /**
- * 画面から見たエピソードの状態。
- * 取得が返るまでが `loading` で、その後は `EpisodesResult` のどちらかになる。
+ * `SeriesDetailCard` が受け取るエピソードの状態。
+ * `fetchEpisodes` が返るまでが `loading` で、返った後は `EpisodesResult` のどちらかになる。
  */
 export type EpisodesState = { kind: "loading" } | EpisodesResult;
 
 /**
- * 配信された episodes.json の在り処。
+ * 配信された `episodes.json` の URL。
  *
- * `BASE_PATH` を付けないと、リポジトリ名を挟んだ公開先で 404 になる（`@/lib/base-path`）。
- * 実体を `public/catalog/` へ置くのは `package.json` の `sync-catalog` で、`predev` / `prebuild` が呼ぶ。
+ * `BASE_PATH` を付ける理由は `@/lib/base-path` が正。
+ * `public/catalog/episodes.json` を作るのは `package.json` の `sync-catalog` で、`predev` と `prebuild` が実行する。
  */
 const EPISODES_URL = `${BASE_PATH}/catalog/episodes.json`;
 
 /**
- * 配信されたエピソードの全件を、スキーマの検査に通して返す。
- * 取れなければ `error` を返す。
+ * 配信されたエピソードの全件を取得し、`parseEpisodes` の検査に通して返す。
+ * 取得か検査に失敗したら throw せず `{ kind: "error" }` を返し、`console.error` に理由を出力する。
  *
- * 詳細カードはエピソードが 1 件も無くても開くので、ここで投げると欠損が地図ごと巻き込む。
- * 投げる代わりに `console.error` へ出す。
- * 遮断版スモーク（`scripts/smoke.ts`）が同一オリジンの 4xx と `console.error` を見るので、複製漏れも 404 の HTML を掴んだ形も `pnpm check` で赤くなる。
+ * throw しないのは、エピソードが 0 件でも `SeriesDetailCard` を開くためである。
+ * 失敗は `scripts/smoke.ts` のスモークが `console.error` と 4xx で検出する。
  */
 export async function fetchEpisodes(): Promise<EpisodesResult> {
   try {
@@ -57,18 +54,18 @@ export async function fetchEpisodes(): Promise<EpisodesResult> {
       episodes: parseEpisodes(await response.json()).episodes,
     };
   } catch (cause) {
-    console.error(`エピソードを取れなかった: ${EPISODES_URL}`, cause);
+    console.error(`エピソードの取得に失敗した: ${EPISODES_URL}`, cause);
 
     return { kind: "error" };
   }
 }
 
 /**
- * 一つのシリーズに割り当たったエピソードを、配信の古い順に返す。
- * 割当の無い回（`seriesId` が null）はどのシリーズにも入らない。
+ * `seriesId` が一致するエピソードを、`pubDate` の古い順に返す。
+ * 一致するエピソードが無ければ空配列を返す。
  *
- * 並べ替えの鍵は `pubDate` を時刻へ直した値である。
- * ISO 8601 は秒の小数部を書いても書かなくてもよく、文字列のまま比べると `...00Z` が `...00.000Z` より後ろに来る。
+ * 比較は `Date.parse` の値で行う。
+ * ISO 8601 は秒の小数部が任意なので、文字列のまま比較すると `...00Z` が `...00.000Z` より後ろに並ぶ。
  */
 export function episodesForSeries(
   episodes: Episode[],
