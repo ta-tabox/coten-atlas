@@ -13,10 +13,10 @@ const sparta = {
   anchor: "sparta-city",
   timeRange: { start: -900, end: -200 },
   summary: "",
-  region: "ギリシア",
+  region: "ヨーロッパ",
   season: 2,
   links: [],
-  tags: ["古代", "ギリシア"],
+  tags: ["集団", "戦争"],
 };
 
 /** 正例を部分的に差し替えた 1 件を作る。 */
@@ -32,7 +32,9 @@ describe("seriesListSchema", () => {
   });
 
   it("位置なしの印を anchor に受ける", () => {
-    const parsed = parseSeries([seriesWith({ anchor: "unlocated" })]);
+    const parsed = parseSeries([
+      seriesWith({ kind: "concept", anchor: "unlocated" }),
+    ]);
 
     expect(parsed[0].anchor).toBe("unlocated");
   });
@@ -93,6 +95,74 @@ describe("seriesListSchema", () => {
     const result = seriesListSchema.safeParse([twoSpotify]);
 
     expect(result.success).toBe(false);
+  });
+});
+
+describe("ADR-0034 が決めた語彙の検査", () => {
+  it("一覧に無い region を拒否する", () => {
+    const result = seriesListSchema.safeParse([
+      seriesWith({ region: "ギリシア" }),
+    ]);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("種別を 1 つも持たない tags を拒否する", () => {
+    const result = seriesListSchema.safeParse([seriesWith({ tags: ["戦争"] })]);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("種別が 2 つある tags を受ける", () => {
+    const parsed = parseSeries([seriesWith({ tags: ["人物", "出来事"] })]);
+
+    expect(parsed[0].tags).toEqual(["人物", "出来事"]);
+  });
+
+  it("tags が 5 個ある 1 件を拒否する", () => {
+    const result = seriesListSchema.safeParse([
+      seriesWith({ tags: ["人物", "幕末", "思想", "教育", "戦争"] }),
+    ]);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("era と同じ粒度の時代名を持つ tags を拒否する", () => {
+    const result = seriesListSchema.safeParse([
+      seriesWith({ tags: ["集団", "古代"] }),
+    ]);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("era より細かい時代名を持つ tags を受ける", () => {
+    const parsed = parseSeries([seriesWith({ tags: ["人物", "幕末"] })]);
+
+    expect(parsed[0].tags).toEqual(["人物", "幕末"]);
+  });
+
+  it("番組内のコーナー名で始まる title を拒否する", () => {
+    const result = seriesListSchema.safeParse([
+      seriesWith({ title: "ショート 紫式部" }),
+    ]);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("kind が place で anchor が位置なしの 1 件を拒否する", () => {
+    const result = seriesListSchema.safeParse([
+      seriesWith({ kind: "place", anchor: "unlocated" }),
+    ]);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("kind が concept なら代表点を持ってよい", () => {
+    const parsed = parseSeries([
+      seriesWith({ kind: "concept", tags: ["概念史"] }),
+    ]);
+
+    expect(parsed[0].anchor).toBe("sparta-city");
   });
 });
 

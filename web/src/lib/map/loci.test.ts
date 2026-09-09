@@ -29,9 +29,9 @@ function seriesOf(fixture: SeriesFixture): Series {
   return {
     title: fixture.id,
     summary: "",
-    region: "テスト",
+    region: "ヨーロッパ",
     links: [],
-    tags: [],
+    tags: ["集団"],
     ...fixture,
   };
 }
