@@ -19,7 +19,7 @@
 1. 従わせる規則（コーディング・文章・UI・言語固有の作法）は `.claude/rules/` に置く。
    `writing.md` は frontmatter の `paths` を持たず起動時に読み込まれ、`coding.md`・`design.md`・`languages/*.md` は `paths` の glob に当たるファイルを Read した時点で読み込まれる
 2. `docs/CODING.md` は消す。
-   本文は `.claude/rules/writing.md`（文章・コミットの粒度）と `coding.md`（命名〜テスト）に分かれ、この器で足した「比喩は使う場所で解けるときだけ」は `coding.md` の「プロジェクト固有」欄へ移す
+   本文は `.claude/rules/writing.md`（文章・コミットの粒度）と `coding.md`（命名〜テスト）に分かれ、このリポジトリで足した「比喩は使う場所で解けるときだけ」は `coding.md` の「プロジェクト固有」欄へ移す
 3. skill `coding-standards` の `languages/typescript.md` は `.claude/rules/languages/` へ移す。
    SKILL.md は判断基準集のまま skill に残す
 4. `DESIGN.md` は `.claude/rules/design.md` として持つ。
@@ -51,7 +51,7 @@ rules は一度注入されると以後の全ターンに残るので、コー�
 - `.claude/rules/{writing,coding,design}.md` と `.claude/rules/languages/typescript.md` が雛形からの写しに加わる。
   `CLAUDE.md`「配布物の追随」の一覧は `docs/CODING.md` でなく `.claude/rules/` を指す
 - `design.md` は雛形の骨格のままで、各項は UI に着手する次のセッションで埋める。
-  埋めたものは「プロジェクト固有」欄でなく各節に書く（骨格の見出しは器が埋める前提で配られている）
+  埋めたものは「プロジェクト固有」欄でなく各節に書く（骨格の見出しはリポジトリが埋める前提で配られている）
 - 0031 までのレコードが名指しする `CODING.md` は `.claude/rules/coding.md` または `writing.md` と読む。
   `docs/adr/README.md` の読み替え規則に足す
 - `web/biome.json` の `noRestrictedImports` のメッセージと `web/scripts/lint-comments.ts` のコメントは `.claude/rules/` を指す。

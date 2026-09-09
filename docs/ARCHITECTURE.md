@@ -355,7 +355,7 @@ catalog/
 ├── LICENSE                # GitHub がライセンス欄に出す
 ├── CLAUDE.md              # セッションの入口（規約・git）
 ├── catalog/               # 人間キュレーション層と時代区分。アプリの外なのでルート側
-├── docs/                  # 器自身の文書
+├── docs/                  # リポジトリ自身の文書
 │   ├── ARCHITECTURE.md    # この文書（現況）
 │   ├── ROADMAP.md         # 作る順序
 │   ├── HARNESS.md         # 検証と実行環境
