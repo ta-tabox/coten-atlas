@@ -67,6 +67,14 @@ jobs:
       # ubuntu-latest ランナーにこのディレクトリは既定で無いので、先に作っておく。
       - run: mkdir -p "$HOME/.local/bin"
 
+      # system prompt は default branch の版を使う。
+      # このイベントで actions/checkout が取り出すのは default branch だが、claude-code-action は
+      # open PR のときそのあと PR ブランチへ checkout し直す（src/github/operations/branch.ts）。
+      # 作業ディレクトリのファイルを直に指すと、PR が歴史側の指示そのものを書き換えられる。
+      # checkout が動く前に RUNNER_TEMP へ写しておけば、どのブランチをレビューしても指示は
+      # default branch の版で固定される（YAML へ直書きしていたときと同じ性質）。
+      - run: cp .github/historian-prompt.md "$RUNNER_TEMP/historian-prompt.md"
+
       - name: Run Claude Code
         id: historian
         uses: anthropics/claude-code-action@v1
@@ -79,7 +87,7 @@ jobs:
 
           # prompt は空のままにする。
           # 空なら起動したコメントの本文がそのまま依頼になり、「この 6 件の年代を見て」のように範囲を絞って呼べる。
-          # 役割と方法は下の system prompt が固定する。
+          # 役割と方法は .github/historian-prompt.md が固定する。
 
           # WebSearch と WebFetch がこのレーンの本体である。
           # 外部の典拠を参照しない第二の意見は、一次と同じ種類の誤りを二重に確認した外形付きで返す（ADR-0035）。
@@ -89,9 +97,8 @@ jobs:
           # 言語・文体の指定は prompt でなく system prompt へ置く（既存二本と同じ理由。prompt の中身は
           # スラッシュコマンドの引数として解釈されうるので、指示が届く保証が無い）。
           #
-          # system prompt が典拠の格も縛る（#151）。初回実走（#143）で弱い典拠が座標に集中したためで、
-          # latitude.to と geodatos.net はスクレイプ由来の集約サイトなので誤りが混じっても検出できない。
-          # 座標を Pleiades / GeoNames / Wikidata に限り、URL はその行の主張を直接含むページに限り、
-          # 各行へ典拠の格を書かせ、日本語圏の主題には日本語の典拠にも当たらせる。
+          # system prompt の本文は .github/historian-prompt.md が持つ。
+          # 1 行の YAML スカラへ直書きすると、このレーンで一番よく直す文が一番読めない場所に載る。
+          # md なら見出しと表が使え、差分もレビューできる。
           # 人間が読む要約は docs/HARNESS.md「歴史の裏どりを呼ぶ」にある。
-          claude_args: '--allowedTools "WebSearch,WebFetch,Read,Grep,Glob,mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh issue view:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*)" --append-system-prompt "あなたが担うのは歴史上の事実の裏どりだけである。コードの品質・設計・実装は見ない（それは @claude と自動レビューの担当）。見るのは catalog/series.json と catalog/loci.geojson の 5 つ——timeRange・代表点の座標・region・kind・title。データモデルの説明は docs/ARCHITECTURE.md §3 にあるので先に読む。loci.geojson の coordinates は GeoJSON なので [経度, 緯度] の順である。緯度経度の順と読み違えない。記憶だけで断定せず、指摘には WebSearch か WebFetch で取った典拠の URL を必ず付ける。典拠の URL は、その行の主張を直接含むページに限る。別の地名や別の人物の記事を、近いからという理由で典拠にしない。座標の典拠は権威のあるデータベースに限る。古代の地名は Pleiades（pleiades.stoa.org）、近現代の地名は GeoNames、どちらへも Wikidata から辿れる。latitude.to や geodatos.net のようなスクレイプ由来の集約サイトを座標の典拠にしない。Wikipedia は本文でなく脚注の一次・二次文献へ辿る。辿れなければ Wikipedia を典拠として明記する。日本・中国・朝鮮半島の主題は日本語の典拠にも当たる。コトバンク経由で国史大辞典と日本大百科全書を参照できるので、英語の検索だけで済ませない。典拠が割れているとき（伝承・推定年代・実在が定説でない人物）は、どちらか一方に決めず、割れていること自体を書く。出力はすべて日本語で、文体は だ・である調。識別子・パス・座標・年は原文のまま残す。指摘ごとに現在の値・典拠が示す値・典拠の URL・典拠の格の四つを並べる。格は 一次 / 二次 / 三次 / 参考程度 のどれかを書く。一次は同時代の史料、二次は研究、三次は事典と百科、参考程度はそれ以外である。指摘が無い項目についても、何を確認して問題無しと判断したかを残す。黙って省くと確認して問題無しだったのか確認していないのかを読み手が区別できないので、確認できなかった項目は確認できなかったと明示する。断定と推測を混ぜず、推測の箇所は推測だと書く。permissions が contents: read でファイルは書けないので、修正は提案までにする。サブエージェントは run_in_background を使わず、同じターンで結果を待って起動する。非対話で走るので完了通知が届かず、待つ形にすると結果を受け取れないまま終わる。"'
+          claude_args: '--allowedTools "WebSearch,WebFetch,Read,Grep,Glob,mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh issue view:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*)" --append-system-prompt-file ${{ runner.temp }}/historian-prompt.md'
