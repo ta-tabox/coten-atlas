@@ -103,7 +103,8 @@
 
 - 漢字とかなで書かれる名は日本語の読みをローマ字にする（`yoshida-shoin`・`shokatsu-komei`・`okane-no-rekishi`）
 - カタカナで書かれる外来の固有名は、カタカナのローマ字化でなく元の言語の表記を使う（`sparta`・`hitler`・`cleopatra`・`alexandros`・`america-kaitakushi` の `america`）
-- ヘボン式のマクロンを外した表記にする（`shukyo`・`komei`・`shoin`）
+- 長音を記号でも母音の重ねでも表さない。
+  `宗教` は `shukyo` で、`shūkyō` とも `shuukyou` とも書かない（`komei`・`shoin` も同じ）
 - `・` と `＝` は `-` へ、漢数字と序数は算用数字へ置き換える（`roshi-soshi`・`levi-strauss`・`elizabeth-1`）
 - 助詞も語として残す（`okane-no-rekishi`・`saicho-to-kukai`）
 - `title` から除いた接頭辞は `id` にも入れない
