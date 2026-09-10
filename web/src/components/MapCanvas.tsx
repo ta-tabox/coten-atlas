@@ -1,7 +1,13 @@
 "use client";
 
 /**
- * ベースマップを画面いっぱいに描き、その上へシリーズのレイヤを載せる。
+ * ベースマップを画面いっぱいに描き、その上へシリーズのレイヤと詳細カードを載せる。
+ *
+ * 選択されたシリーズを保持するのは、このコンポーネントの `selectedSeriesId` だけである。
+ * S5（一覧パネルとの双方向同期）が同じ state を読むので、子コンポーネントに複製すると同期が state の突き合わせになる。
+ *
+ * エピソードはマウント直後に `fetchEpisodes` で取得する（docs/ARCHITECTURE.md §3「配り方」）。
+ * `SeriesDetailCard` を開いてから取得を始めると、クリックのたびに 750 件を超える JSON の到着を待つ。
  *
  * react-map-gl は maplibre 本体を実行時に動的 import するので、プリレンダでは空のコンテナだけが出る。
  * この層を `next/dynamic` の `ssr: false` で包む必要は無い。
@@ -16,29 +22,111 @@
  * 地図の上に置くものは React 側の overlay として書く。
  */
 
+import { useEffect, useState } from "react";
+import type { MapLayerMouseEvent } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
+import SeriesDetailCard from "@/components/SeriesDetailCard";
 import SeriesLayers from "@/components/SeriesLayers";
+import {
+  type EpisodesState,
+  episodesForSeries,
+  fetchEpisodes,
+} from "@/lib/episodes";
 import {
   BASEMAP_STYLE_URL,
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
 } from "@/lib/map/config";
 import type { MapLocusCollection } from "@/lib/map/loci";
+import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
+import type { Series, SeriesList } from "@/lib/schema/series";
 
 type MapCanvasProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */
   loci: MapLocusCollection;
+  /**
+   * シリーズの全件。
+   * 地図のクリックが返すのは `Locus` なので、`seriesId` に一致する `Series` をこの配列から検索する。
+   */
+  series: SeriesList;
 };
 
-export default function MapCanvas({ loci }: MapCanvasProps) {
+/**
+ * `event` の最前面にある `Locus` の `seriesId` を返す。
+ * `Locus` が無い地点をクリックしたときは null を返す。
+ *
+ * MapLibre は `properties` の値を `any` で返すので、文字列でなければ null にする。
+ */
+function selectedSeriesIdOf(event: MapLayerMouseEvent): string | null {
+  const seriesId = event.features?.[0]?.properties.seriesId;
+
+  return typeof seriesId === "string" ? seriesId : null;
+}
+
+/**
+ * `state` を `seriesId` に割り当てられたエピソードだけに絞り込んで返す。
+ * `loading` と `error` はそのまま返す。
+ *
+ * 絞り込めるのは `loaded` になった後だけである。
+ */
+function episodesOf(state: EpisodesState, seriesId: string): EpisodesState {
+  if (state.kind !== "loaded") {
+    return state;
+  }
+
+  return {
+    kind: "loaded",
+    episodes: episodesForSeries(state.episodes, seriesId),
+  };
+}
+
+export default function MapCanvas({ loci, series }: MapCanvasProps) {
+  const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
+  const [episodes, setEpisodes] = useState<EpisodesState>({ kind: "loading" });
+  const [isHoveringLocus, setIsHoveringLocus] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    void fetchEpisodes().then((fetched) => {
+      if (mounted) {
+        setEpisodes(fetched);
+      }
+    });
+
+    // アンマウント後に setEpisodes を呼ばない。
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // 「選択が無い」を null に統一する。
+  // find の undefined をそのまま保持すると、同じ状態が null と undefined の 2 通りで表れる。
+  const selectedSeries: Series | null =
+    series.find((one) => one.id === selectedSeriesId) ?? null;
+
   return (
     <MapLibreMap
       mapStyle={BASEMAP_STYLE_URL}
       initialViewState={INITIAL_VIEW_STATE}
       workerUrl={MAP_WORKER_URL}
       style={{ width: "100%", height: "100dvh" }}
+      interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
+      onClick={(event) => setSelectedSeriesId(selectedSeriesIdOf(event))}
+      // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
+      // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
+      cursor={isHoveringLocus ? "pointer" : undefined}
+      onMouseEnter={() => setIsHoveringLocus(true)}
+      onMouseLeave={() => setIsHoveringLocus(false)}
     >
       <SeriesLayers loci={loci} />
+      {selectedSeries !== null && (
+        <SeriesDetailCard
+          series={selectedSeries}
+          episodes={episodesOf(episodes, selectedSeries.id)}
+          onClose={() => setSelectedSeriesId(null)}
+        />
+      )}
     </MapLibreMap>
   );
 }
