@@ -67,7 +67,7 @@ opacity と同時代ハイライトは地図の上の表示で、一覧パネル
   opacity を求める関数は、地図に出るシリーズだけを受け取るので `SeriesTimeRange` のまま受ける
 - `web/src/lib/map/loci.ts` が throw する経路は、`references.ts` の `brokenAnchors` が位置なしのシリーズの事物を名指すので、ビルドまで残らない
 - S7 の各 issue は、種別が `概念史` だけで位置なしのシリーズの `timeRange` をこの線で書く。
-  `timeRange` は 0034 の語彙の外なので、skill `series-vocabulary` は変わらない
+  skill `series-vocabulary` は、この線を `tags` と代表点の後に当てる手順として持つ
 - `ARCHITECTURE.md` §8 に、時期なしのシリーズの見せ方と、概念史以外で現在まで続く主題の `end` の書き方を開いた問いとして残す
 
 ## 覆る条件
