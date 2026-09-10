@@ -2,7 +2,7 @@ name: Deploy
 
 # main の内容を GitHub Pages へ配信する（docs/adr/0007-github-pages.md）。
 # 品質の判定は持たない（型・静的・テストは check.yml の pnpm check が見る）。
-# 配信の後にしか分からないので、配信されたページから参照へ到達できるかだけは deploy ジョブの後段が検証する（docs/adr/0036-post-deploy-reachability.md）。
+# 配信の後にしか分からないので、配信されたページの src・href のパスへ到達できるかだけは deploy ジョブの後段が検証する（docs/adr/0036-post-deploy-reachability.md）。
 # ランタイムの立て方は check.yml と揃える（食い違うと、check が緑の commit で配信だけが落ちる）。
 
 on:
@@ -81,7 +81,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v5
 
-      # 配信されたページを一度取得し、そのページが名指している参照へ到達できるかだけを検証する。
+      # 配信されたページを一度取得し、HTML の src・href 属性に書かれた `/` で始まるパスへ到達できるかだけを検証する。
       #
       # 対象の URL は deploy-pages の出力から取る。
       # ワークフローへ書き下ろすと、next.config.ts の basePath と出所が二つになる。
@@ -101,31 +101,31 @@ jobs:
 
           origin=$(printf '%s' "$PAGE_URL" | cut -d/ -f1-3)
 
-          # 参照は取得した HTML から集める。
+          # 到達を確かめるパスは、取得した HTML の src・href 属性から集める。
           # 接頭辞をこのスクリプトへ書くと、検証する接頭辞と配信する接頭辞の出所が二つになり、その食い違いを検出するという目的が消える。
-          # `"/` で始まる参照だけを集めるので、外部のオリジンへの参照は入らない。
-          # 参照が 0 件のとき grep は 1 を返し、pipefail と set -e がこの代入でスクリプトを終了させるので、`|| true` で終了コードを 0 にして下の検証へ渡す。
+          # `"/` で始まる値だけを集めるので、外部のオリジンを指す URL は入らない。
+          # パスが 0 件のとき grep は 1 を返し、pipefail と set -e がこの代入でスクリプトを終了させるので、`|| true` で終了コードを 0 にして下の検証へ渡す。
           # 渡さないと、下の if へ到達しないまま失敗し、0 件だったのか grep が壊れたのかがログに残らない。
-          refs=$(printf '%s' "$html" | grep -oE '(src|href)="/[^"]*"' | sed 's/^[^"]*"//; s/"$//' | sort -u || true)
+          paths=$(printf '%s' "$html" | grep -oE '(src|href)="/[^"]*"' | sed 's/^[^"]*"//; s/"$//' | sort -u || true)
 
-          # 参照の取得が壊れると 0 件になり、何も検証しないまま成功するので、0 件は失敗させる。
-          if [ -z "$refs" ]; then
-            echo "::error::$PAGE_URL から参照を 1 件も取得できなかった。参照の取得が壊れている疑い。"
+          # パスの抽出が壊れると 0 件になり、何も検証しないまま成功するので、0 件は失敗させる。
+          if [ -z "$paths" ]; then
+            echo "::error::$PAGE_URL の HTML から src・href のパスを 1 件も抽出できなかった。抽出の grep が壊れている疑い。"
             exit 1
           fi
 
-          # 4xx はこの検証が検出したいものなので、参照の取得には --retry-all-errors を足さない。
-          # 足すと、到達できない参照の数だけ再試行を待ってから失敗する。
+          # 4xx はこの検証が検出したいものなので、パスの取得には --retry-all-errors を足さない。
+          # 足すと、到達できないパスの数だけ再試行を待ってから失敗する。
           unreachable=""
-          while IFS= read -r ref; do
-            if ! curl -fsS --retry 3 -o /dev/null "${origin}${ref}"; then
-              unreachable="${unreachable}${ref} "
+          while IFS= read -r path; do
+            if ! curl -fsS --retry 3 -o /dev/null "${origin}${path}"; then
+              unreachable="${unreachable}${path} "
             fi
-          done <<< "$refs"
+          done <<< "$paths"
 
           if [ -n "$unreachable" ]; then
             echo "::error::配信物へ到達できていない: $unreachable"
             exit 1
           fi
 
-          echo "参照 $(printf '%s\n' "$refs" | wc -l | tr -d ' ') 件へ到達できた"
+          echo "src・href のパス $(printf '%s\n' "$paths" | wc -l | tr -d ' ') 件へ到達できた"
