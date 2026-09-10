@@ -22,7 +22,7 @@ era 空間は `catalog/eras.json` の各区間を等幅に並べた 0..1 の数�
 | 区間の端 | 窓は `timeRange` と同じく両端を含む閉区間で扱う。era の半開区間（`end` を含まない）を扱うのは `positionToYear` だけにする |
 | 重なり率 | 重なる年数を、窓と `timeRange` のうち短い方の年数で割る。年数は `end - start + 1` で数える |
 | 重なり率から opacity | smoothstep（`r² (3 - 2r)`）を通す |
-| `"present"` の右端 | 現在年。`positionToYear` と `currentWindow` が `presentEnd` で受け取り、時計を読むのは `presentEndOf(now)` だけにする |
+| `"present"` の右端 | 現在年。`positionToYear` と `currentWindow` が `presentEnd` で受け取り、時計を読むのは `presentEndOf(presentDate)` だけにする |
 | 置き場 | `web/src/lib/era/`。`scale.ts`（位置 → 年）と `window.ts`（窓 → opacity）に分け、`node:fs`・React・MapLibre を import しない |
 
 ## 理由

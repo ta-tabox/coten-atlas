@@ -74,7 +74,7 @@ describe("positionToYear", () => {
 });
 
 describe("presentEndOf", () => {
-  it("渡した時刻の年を返す", () => {
+  it("渡した日付の年を返す", () => {
     expect(presentEndOf(new Date(2026, 5, 15))).toBe(2026);
   });
 });

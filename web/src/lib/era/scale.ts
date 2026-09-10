@@ -29,13 +29,13 @@ type EraYears = {
 };
 
 /**
- * `now` の西暦年を返す。
+ * `presentDate` の西暦年を返す。
  *
  * `end` が `ERA_END_PRESENT` の era の右端に当たる年で、`positionToYear` と `currentWindow` へ渡す。
- * 時刻を引数で受け取るのは、同じ引数へ常に同じ年を返すため。
+ * 日付を引数で受け取るのは、同じ引数へ常に同じ年を返すため。
  */
-export function presentEndOf(now: Date): number {
-  return now.getFullYear();
+export function presentEndOf(presentDate: Date): number {
+  return presentDate.getFullYear();
 }
 
 /**
