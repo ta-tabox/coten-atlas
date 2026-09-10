@@ -48,12 +48,18 @@ main を取り込むたびに、この二つを数え直す。
 
 | `title` の部分 | 規則 | 例 |
 |---|---|---|
-| 漢字とかな | 日本語の読みをローマ字にする | `yoshida-shoin`・`shokatsu-komei` |
-| カタカナの外来固有名 | 元の言語の表記を使う | `sparta`（`suparuta` でない）・`hitler`・`cleopatra` |
-| ラテン文字で書かない言語の固有名 | カタカナの語形に合う綴りのうち、英語の文献で通用するものを使う。発音区別符号（`š`・`ā` など）を付けない | `alexandros`（`alexander` でない）・`cleopatra`（`kleopatra` でない）・`gilgamesh`（`gilgameš` でない） |
-| 長音 | 記号でも母音の重ねでも表さない | `shukyo`（`shūkyō`・`shuukyou` でない）・`komei` |
-| `・`・`＝`・序数 | `-` と算用数字へ置き換える | `roshi-soshi`・`levi-strauss`・`elizabeth-1` |
-| 助詞 | 語として残す | `okane-no-rekishi`・`saicho-to-kukai` |
+| 漢字とかな | 日本語の読みをヘボン式でローマ字にする（`し`・`ち`・`つ`・`ふ`・`じ` は `shi`・`chi`・`tsu`・`fu`・`ji`） | `yoshida-shoin`・`shokatsu-komei` |
+| 長音 | 記号でも母音の重ねでも表さない。`ou`・`oo` は `o`、`uu` は `u` にし、`ei`・`ii` はそのまま書く | `shukyo`（`shūkyō`・`shuukyou` でない）・`komei`・`teisei-roma` |
+| 長音に続く同じ母音の字 | 長音と別の字として書く | `kou-to-ryuho`（`項羽` は `こう` と `う`） |
+| `ん` | 後ろの音によらず `n` にする | `sandai`・`genpei`（`gempei` でない） |
+| 語の区切り | 語と語の境目と、助詞の前後に `-` を入れる。辞書に一語で載る語と、接頭辞・接尾辞の付いた語は割らない | `sekai-sandai-shukyo`・`shin-no-shikotei`（`shi-kotei` でない）・`america-kaitakushi`（`kaitaku-shi` でない）・`okane-no-rekishi` |
+| 助詞 | 語として残す。`title` の表記に無くても、読みに在れば書く | `saicho-to-kukai`・`sugawara-no-michizane`（`菅原道真`） |
+| カタカナの外来固有名 | カタカナの語形に合うラテン文字の綴りを使う。語形に合う綴りが複数あれば、英語の文献で通用するものを使う | `sparta`（`suparuta` でない）・`hitler`・`alexandros`（`alexander` はアレクサンダーの語形）・`cleopatra`（`kleopatra` でない）・`chinggis-khan`（`genghis-khan` はジンギスの語形） |
+| 発音区別符号（`š`・`ü`・`é` など） | 付けず、元の字だけを書く | `gilgamesh`（`gilgameš` でない）・`levi-strauss`（`lévi-strauss` でない） |
+| 大文字 | 小文字にする | `hitler`（`Hitler` でない） |
+| `・`・`＝`・空白 | `-` に置き換える | `roshi-soshi`・`levi-strauss`・`julius-caesar` |
+| `'`・`.` | 除く | `jeanne-darc`（ジャンヌ・ダルク） |
+| 序数 | 算用数字にする | `elizabeth-1` |
 | コーナー名 | `title` と同じく除く | |
 
 1 つの `title` に漢字とカタカナが混ざるときは、部分ごとに上の規則を当てる（`america-kaitakushi`・`teisei-roma`）。
