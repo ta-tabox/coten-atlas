@@ -30,7 +30,7 @@ function positionIn(index: number, within: number): number {
 
 /** `position` が指す年を、`ERAS` と `PRESENT_END` で求めて返す。 */
 function yearAt(position: number): number {
-  return positionToYear(position, ERAS, PRESENT_END);
+  return positionToYear({ position, eras: ERAS, presentEnd: PRESENT_END });
 }
 
 describe("positionToYear", () => {
@@ -67,7 +67,9 @@ describe("positionToYear", () => {
   });
 
   it("presentEnd が末尾の era の始まりより後ろに無ければ throw する", () => {
-    expect(() => positionToYear(1, ERAS, 1900)).toThrow(/modern20b/);
+    expect(() =>
+      positionToYear({ position: 1, eras: ERAS, presentEnd: 1900 }),
+    ).toThrow(/modern20b/);
   });
 });
 

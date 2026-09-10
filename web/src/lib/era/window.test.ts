@@ -31,21 +31,26 @@ const PRESENT_END = 2026;
 /** `modern19`（1800〜1900）の真ん中に取った窓。 */
 const WINDOW_IN_19C: CurrentWindow = { start: 1825, end: 1875 };
 
+/** `position` の周りの現在窓を、`ERAS` と `PRESENT_END` で求めて返す。 */
+function windowAt(position: number): CurrentWindow {
+  return currentWindow({ position, eras: ERAS, presentEnd: PRESENT_END });
+}
+
 describe("currentWindow", () => {
   it("区間の真ん中では、その区間の幅の半分を取る", () => {
-    expect(currentWindow(4.5 / 7, ERAS, PRESENT_END)).toEqual(WINDOW_IN_19C);
+    expect(windowAt(4.5 / 7)).toEqual(WINDOW_IN_19C);
   });
 
   it("同じ幅でも、era が変われば跨る年数が変わる", () => {
     // 先史は 9200 年幅なので、19 世紀の 50 年に対して 4600 年の窓になる。
-    expect(currentWindow(0.5 / 7, ERAS, PRESENT_END)).toEqual({
+    expect(windowAt(0.5 / 7)).toEqual({
       start: -7700,
       end: -3100,
     });
   });
 
   it("era 空間の端では、窓の端が外へ出るぶん狭くなる", () => {
-    expect(currentWindow(0, ERAS, PRESENT_END)).toEqual({
+    expect(windowAt(0)).toEqual({
       start: -10000,
       end: -7700,
     });

@@ -13,6 +13,17 @@
 
 import { ERA_END_PRESENT, type Era, type EraList } from "@/lib/schema/era";
 
+/**
+ * `positionToYear` と `currentWindow` が受け取る、era 空間の位置と変換に要る値の組。
+ *
+ * `position` は 0..1 の位置で、`presentEnd` は `end` が `ERA_END_PRESENT` の era の右端に置く年。
+ */
+export type EraSpacePosition = {
+  position: number;
+  eras: EraList;
+  presentEnd: number;
+};
+
 /** 両端とも年で持つ区間。 */
 type EraYears = {
   start: number;
@@ -56,11 +67,11 @@ function yearsOf(era: Era, presentEnd: number): EraYears {
  * 年は `catalog/` のどの欄も整数なので、補間の結果も四捨五入する。
  * `position` が 0 未満なら `eras` の最初の年を、1 を超えるなら最後の年を返す。
  */
-export function positionToYear(
-  position: number,
-  eras: EraList,
-  presentEnd: number,
-): number {
+export function positionToYear({
+  position,
+  eras,
+  presentEnd,
+}: EraSpacePosition): number {
   const clamped = Math.min(Math.max(position, 0), 1);
 
   // `clamped` が 1 のとき添字が `eras.length` になるので、最後の要素へ丸める。

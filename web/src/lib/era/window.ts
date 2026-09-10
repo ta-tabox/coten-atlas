@@ -10,8 +10,7 @@
  * `circle-opacity` へ配線するのは `web/src/lib/map/series-layer.ts` で、このモジュールは 0..1 の数値を返すまでを担当する。
  */
 
-import { positionToYear } from "@/lib/era/space";
-import type { EraList } from "@/lib/schema/era";
+import { type EraSpacePosition, positionToYear } from "@/lib/era/space";
 import type { SeriesTimeRange } from "@/lib/schema/series";
 
 /**
@@ -32,16 +31,16 @@ export type CurrentWindow = {
  * era 空間で `WINDOW_WIDTH_IN_ERAS` ぶんの幅を取り、両端を `positionToYear` で年へ変換する。
  * `position` が 0 や 1 に近いと窓の端が era 空間の外へ出て、`positionToYear` が 0 と 1 へ丸めるぶん窓が狭くなる。
  */
-export function currentWindow(
-  position: number,
-  eras: EraList,
-  presentEnd: number,
-): CurrentWindow {
+export function currentWindow({
+  position,
+  eras,
+  presentEnd,
+}: EraSpacePosition): CurrentWindow {
   const halfWidth = WINDOW_WIDTH_IN_ERAS / eras.length / 2;
 
   return {
-    start: positionToYear(position - halfWidth, eras, presentEnd),
-    end: positionToYear(position + halfWidth, eras, presentEnd),
+    start: positionToYear({ position: position - halfWidth, eras, presentEnd }),
+    end: positionToYear({ position: position + halfWidth, eras, presentEnd }),
   };
 }
 
