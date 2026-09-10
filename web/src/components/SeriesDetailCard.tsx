@@ -102,6 +102,7 @@ function EpisodeList({ state }: { state: EpisodesState }) {
 /**
  * シリーズの詳細カードを表示する。
  * 縦のスクロールはエピソードの一覧だけに限る。
+ * カードの高さは 36rem を上限にし、画面の高さから 2rem を引いた値がそれより小さければその値を上限にする。
  *
  * カード全体をスクロールさせると、エピソードの多いシリーズでシリーズ名と年代が画面の外に出る。
  */
@@ -113,7 +114,7 @@ export default function SeriesDetailCard({
   return (
     <aside
       aria-labelledby={TITLE_ID}
-      className="absolute top-4 right-4 z-10 flex max-h-[calc(100dvh-2rem)] w-[22rem] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg bg-white/95 px-5 py-4 font-sans leading-[1.7] text-zinc-900 shadow-lg"
+      className="absolute top-4 right-4 z-10 flex max-h-[min(36rem,calc(100dvh-2rem))] w-[22rem] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg bg-white/95 px-5 py-4 font-sans leading-[1.7] text-zinc-900 shadow-lg"
     >
       <header className="flex items-start gap-3 border-b border-zinc-200 pb-3">
         <div className="grow">
