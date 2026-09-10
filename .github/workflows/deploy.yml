@@ -2,7 +2,7 @@ name: Deploy
 
 # main の内容を GitHub Pages へ配信する（docs/adr/0007-github-pages.md）。
 # 品質の判定は持たない（型・静的・テストは check.yml の pnpm check が見る）。
-# 配信の後にしか分からないので、配信されたページの src・href のパスへ到達できるかだけは deploy ジョブの後段が検証する（docs/adr/0036-post-deploy-reachability.md）。
+# 配信の後にしか分からないので、配信されたページの src・href のパスへ到達できるかだけは deploy ジョブの後段の到達テストが検証する（docs/adr/0036-post-deploy-reachability.md）。
 # ランタイムの立て方は check.yml と揃える（食い違うと、check が緑の commit で配信だけが落ちる）。
 
 on:
@@ -81,12 +81,12 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v5
 
-      # 配信されたページを一度取得し、HTML の src・href 属性に書かれた `/` で始まるパスへ到達できるかだけを検証する。
+      # 到達テスト。配信されたページを一度取得し、HTML の src・href 属性に書かれた `/` で始まるパスへ到達できるかだけを検証する。
       #
       # 対象の URL は deploy-pages の出力から取る。
       # ワークフローへ書き下ろすと、next.config.ts の basePath と出所が二つになる。
       # PAGE_URL を run: の中で展開せず env: で受けるのは、値がそのままシェルの構文として解釈されるのを防ぐため。
-      - name: Verify the deployed site can reach what it references
+      - name: Reachability test
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
@@ -114,7 +114,7 @@ jobs:
             exit 1
           fi
 
-          # 4xx はこの検証が検出したいものなので、パスの取得には --retry-all-errors を足さない。
+          # 4xx は到達テストが検出したいものなので、パスの取得には --retry-all-errors を足さない。
           # 足すと、到達できないパスの数だけ再試行を待ってから失敗する。
           unreachable=""
           while IFS= read -r path; do
