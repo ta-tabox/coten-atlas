@@ -359,7 +359,8 @@ catalog/
 │   ├── ARCHITECTURE.md    # この文書（現況）
 │   ├── ROADMAP.md         # 作る順序
 │   ├── HARNESS.md         # 検証と実行環境
-│   └── adr/               # 決定と経緯。1決定1レコード
+│   ├── adr/               # 決定と経緯。1決定1レコード
+│   └── sources/           # `catalog/` の値の典拠。1 シリーズ 1 ファイル
 ├── mise.toml              # [tools] のみ。ランタイム版管理
 ├── .github/               # workflows・issue / PR テンプレ
 ├── .claude/               # settings・hooks・同梱 skill・rules/（規範。共有の雛形からの写し）
@@ -380,6 +381,8 @@ catalog/
 ルートに残るのは、道具がその位置を要求するものだけである（[ADR-0032](adr/0032-docs-under-docs.md)）。
 
 まだ存在しないもの: `docs/VISION.md`（#41）。
+`docs/sources/` は 66 シリーズのうち 6 件しか持たない（[ADR-0037](adr/0037-sources-layer.md)）。
+ファイルが在ることが裏どりの済んだ印なので、無い 60 件は未調査である。
 `catalog/` はアプリの外なので**ルート側**に置く。
 
 `web/scripts/` はこれと別枠になる。`tsconfig.json` の `paths` も vitest の alias も `web/` の中で

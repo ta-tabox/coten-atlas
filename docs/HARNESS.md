@@ -123,6 +123,9 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
   `claude.yml` の `if:` が `contains(github.event.comment.body, '@claude')` なので、含む語は二本を同時に起動する
 - 返るのは典拠の URL を添えた指摘までで、代表点を動かすかどうかの採否は人間が決める。
   `permissions` は `claude.yml` と同じ `contents: read` である
+- **返ってきた典拠を `docs/sources/<シリーズ id>.md` へ写す**（[ADR-0037](adr/0037-sources-layer.md)）。
+  ワークフローは `contents: read` なのでファイルを書けず、写すのは人間かセッションである。
+  同じ欄を二度裏どりしたときは、後の回の典拠だけを残す
 
 歴史側への指示は **`.github/historian-prompt.md`** が全文を持つ。
 役割・対象・典拠の規則・報告の書式・実行の制約の 5 節で、直すのはこのファイルである。
