@@ -83,6 +83,7 @@ function episodesOf(state: EpisodesState, seriesId: string): EpisodesState {
 export default function MapCanvas({ loci, series }: MapCanvasProps) {
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
   const [episodes, setEpisodes] = useState<EpisodesState>({ kind: "loading" });
+  const [isHoveringLocus, setIsHoveringLocus] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -112,6 +113,11 @@ export default function MapCanvas({ loci, series }: MapCanvasProps) {
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={(event) => setSelectedSeriesId(selectedSeriesIdOf(event))}
+      // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
+      // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
+      cursor={isHoveringLocus ? "pointer" : undefined}
+      onMouseEnter={() => setIsHoveringLocus(true)}
+      onMouseLeave={() => setIsHoveringLocus(false)}
     >
       <SeriesLayers loci={loci} />
       {selectedSeries !== null && (

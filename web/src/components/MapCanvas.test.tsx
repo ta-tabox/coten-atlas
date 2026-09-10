@@ -71,17 +71,17 @@ function childOfType(type: unknown): ReactNode | undefined {
 }
 
 /**
- * `seriesId` を持つ `Locus` を 1 件返すクリックイベントを作る。
+ * `seriesId` を持つ `Locus` を 1 件返すマウスイベントを作る。
  * MapCanvas が読むのは最前面の feature の `seriesId` だけなので、他の欄は埋めない。
  */
-function clickOn(seriesId: string): MapLayerMouseEvent {
+function mouseEventOn(seriesId: string): MapLayerMouseEvent {
   return {
     features: [{ properties: { seriesId } }],
   } as unknown as MapLayerMouseEvent;
 }
 
-/** `Locus` が無い地点のクリックイベントを作る。 */
-function clickOnBlank(): MapLayerMouseEvent {
+/** `Locus` が無い地点のマウスイベントを作る。 */
+function mouseEventOnBlank(): MapLayerMouseEvent {
   return { features: [] } as unknown as MapLayerMouseEvent;
 }
 
@@ -121,6 +121,20 @@ describe("MapCanvas", () => {
     expect(lastProps().interactiveLayerIds).toEqual([SERIES_CIRCLE_LAYER.id]);
   });
 
+  it("Locus に入ったときだけ cursor を pointer にする", () => {
+    render(<MapCanvas loci={LOCI} series={SERIES} />);
+
+    expect(lastProps().cursor).not.toBe("pointer");
+
+    act(() => lastProps().onMouseEnter?.(mouseEventOn("sparta")));
+
+    expect(lastProps().cursor).toBe("pointer");
+
+    act(() => lastProps().onMouseLeave?.(mouseEventOnBlank()));
+
+    expect(lastProps().cursor).not.toBe("pointer");
+  });
+
   it("選択が無いうちは詳細カードを置かない", () => {
     render(<MapCanvas loci={LOCI} series={SERIES} />);
 
@@ -130,7 +144,7 @@ describe("MapCanvas", () => {
   it("事物のクリックで、その seriesId のシリーズを詳細カードへ渡す", () => {
     render(<MapCanvas loci={LOCI} series={SERIES} />);
 
-    act(() => lastProps().onClick?.(clickOn("sparta")));
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
 
     expect(childOfType(SeriesDetailCard)).toMatchObject({
       props: { series: SPARTA },
@@ -140,8 +154,8 @@ describe("MapCanvas", () => {
   it("事物の無い所のクリックで選択を外す", () => {
     render(<MapCanvas loci={LOCI} series={SERIES} />);
 
-    act(() => lastProps().onClick?.(clickOn("sparta")));
-    act(() => lastProps().onClick?.(clickOnBlank()));
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+    act(() => lastProps().onClick?.(mouseEventOnBlank()));
 
     expect(childOfType(SeriesDetailCard)).toBeUndefined();
   });
