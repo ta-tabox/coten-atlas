@@ -95,7 +95,7 @@
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [115.486, 33.861] },
       "properties": {
-        "id": "luyi",
+        "id": "ku",
         "seriesId": "roshi-soshi",
         "timeRange": "series"
       }

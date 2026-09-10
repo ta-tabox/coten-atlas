@@ -5,7 +5,7 @@
 | `series.json` の `id` | `roshi-soshi` |
 | `series.json` の `season` | 55 |
 | `series.json` の `timeRange` | -571..-286 |
-| `loci.geojson` の `anchor` | `luyi` |
+| `loci.geojson` の `anchor` | `ku` |
 | `loci.geojson` の座標 | `[115.486, 33.861]` |
 
 ## `timeRange`
@@ -53,7 +53,7 @@ GlobalSecurity.org は一次資料でないので、参考程度の情報源と�
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
 | 老子の生年 | -571 | 前604年説と前581年説が並立し、実在そのものが定説でない |
-| 代表点 | `luyi`（鹿邑） | 位置なしにすれば、実在が定説でない人物に点を置かずに済む |
+| 代表点 | `ku`（苦県。現在の鹿邑） | 位置なしにすれば、実在が定説でない人物に点を置かずに済む |
 
 ## 裏どりの出所
 
