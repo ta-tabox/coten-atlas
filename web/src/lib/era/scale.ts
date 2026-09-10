@@ -7,7 +7,6 @@
  * 終わっていない era の右端の年（`presentEnd`）は目盛りの定義に含まれるので、このモジュールで扱う。
  *
  * シリーズと現在窓は `window.ts` に置き、描画（React・MapLibre）はどちらのモジュールにも置かない。
- * 決定と採らなかった案は `docs/adr/0038-era-space-window.md` にある。
  */
 
 import { ERA_END_PRESENT, type Era, type EraList } from "@/lib/schema/era";
