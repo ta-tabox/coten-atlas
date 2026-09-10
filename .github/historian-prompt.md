@@ -18,10 +18,13 @@
 | 代表点の座標 | `loci.geojson` の `id` が指す地名の実際の位置と合っているか |
 | 代表点の選び方 | その地点をそのシリーズの代表点にするのが妥当か |
 | `region` | 座標の入る区画と合っているか |
-| `kind` / `title` | ADR-0034 の基準と矛盾しないか |
+| `kind` / `title` | 語彙のレコード（下記）の基準と矛盾しないか |
 
 データモデルの説明は `docs/ARCHITECTURE.md` §3 にあるので先に読む。
-語彙の規則と `region` の 13 値は `docs/adr/0034-series-vocabulary.md` にある。
+
+`region` の値と `kind` の基準は `docs/adr/0034-series-vocabulary.md` が持つ。
+**レビュー対象のブランチにこのファイルが無ければ、`region` と `kind` の判定を行わず、無かったことを報告に書く。**
+基準を持たないまま判定すると、根拠の無い指摘を根拠のある指摘と同じ書式で返すことになる。
 
 `loci.geojson` の `coordinates` は GeoJSON なので `[経度, 緯度]` の順である。
 緯度経度の順と読み違えない。
