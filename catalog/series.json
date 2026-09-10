@@ -24,6 +24,30 @@
     "tags": ["集団", "戦争"]
   },
   {
+    "id": "jinrui-no-komyunikeshonshi",
+    "title": "人類のコミュニケーション史",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": -3200, "end": 2019 },
+    "summary": "",
+    "region": "地域なし",
+    "season": 3,
+    "links": [],
+    "tags": ["メディア", "技術", "概念史"]
+  },
+  {
+    "id": "tenno",
+    "title": "天皇",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": 673, "end": 2019 },
+    "summary": "",
+    "region": "日本",
+    "season": 4,
+    "links": [],
+    "tags": ["政治", "宗教", "概念史"]
+  },
+  {
     "id": "shin-no-shikotei",
     "title": "秦の始皇帝",
     "kind": "place",
@@ -120,6 +144,54 @@
     "tags": ["人物", "帝国", "戦争"]
   },
   {
+    "id": "kyoiku-no-rekishi",
+    "title": "教育の歴史",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": -2500, "end": 1852 },
+    "summary": "",
+    "region": "地域なし",
+    "season": 25,
+    "links": [],
+    "tags": ["教育", "概念史"]
+  },
+  {
+    "id": "sei-no-rekishi",
+    "title": "性の歴史",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": -10000, "end": 2021 },
+    "summary": "",
+    "region": "地域なし",
+    "season": 26,
+    "links": [],
+    "tags": ["性", "宗教", "概念史"]
+  },
+  {
+    "id": "shihonshugi",
+    "title": "資本主義",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": 1776, "end": 2022 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 28,
+    "links": [],
+    "tags": ["経済", "思想", "概念史"]
+  },
+  {
+    "id": "seppuku",
+    "title": "切腹",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": 988, "end": 1868 },
+    "summary": "",
+    "region": "日本",
+    "season": 31,
+    "links": [],
+    "tags": ["武士", "死", "概念史"]
+  },
+  {
     "id": "cleopatra",
     "title": "クレオパトラ",
     "kind": "place",
@@ -130,6 +202,42 @@
     "season": 33,
     "links": [],
     "tags": ["人物", "帝国"]
+  },
+  {
+    "id": "oi-to-shi-no-rekishi",
+    "title": "老いと死の歴史",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": -10000, "end": 2022 },
+    "summary": "",
+    "region": "地域なし",
+    "season": 36,
+    "links": [],
+    "tags": ["死", "宗教", "概念史"]
+  },
+  {
+    "id": "shogai-no-rekishi",
+    "title": "障害の歴史",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": -10000, "end": 2023 },
+    "summary": "",
+    "region": "地域なし",
+    "season": 37,
+    "links": [],
+    "tags": ["障害", "福祉", "科学", "概念史"]
+  },
+  {
+    "id": "shakaifukushi-no-rekishi",
+    "title": "社会福祉の歴史",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": 1349, "end": 2023 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 38,
+    "links": [],
+    "tags": ["福祉", "経済", "概念史"]
   },
   {
     "id": "hannibal",
@@ -144,6 +252,30 @@
     "tags": ["人物", "戦争", "遠征"]
   },
   {
+    "id": "ryu-no-rekishi",
+    "title": "龍の歴史",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": -4400, "end": 2023 },
+    "summary": "",
+    "region": "中国",
+    "season": 43,
+    "links": [],
+    "tags": ["宗教", "概念史"]
+  },
+  {
+    "id": "minshushugi-no-rekishi",
+    "title": "民主主義の歴史",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": -508, "end": 2023 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 46,
+    "links": [],
+    "tags": ["政治", "思想", "概念史"]
+  },
+  {
     "id": "roshi-soshi",
     "title": "老子・荘子",
     "kind": "concept",
@@ -154,6 +286,18 @@
     "season": 55,
     "links": [],
     "tags": ["人物", "思想"]
+  },
+  {
+    "id": "kagaku-gijutsu-no-rekishi",
+    "title": "科学技術の歴史",
+    "kind": "concept",
+    "anchor": "unlocated",
+    "timeRange": { "start": -10000, "end": 2025 },
+    "summary": "",
+    "region": "地域なし",
+    "season": 58,
+    "links": [],
+    "tags": ["科学", "技術", "概念史"]
   },
   {
     "id": "kou-to-ryuho",
