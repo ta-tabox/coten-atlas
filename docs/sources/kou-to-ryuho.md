@@ -8,9 +8,6 @@
 | `loci.geojson` の `anchor` | `pengcheng` |
 | `loci.geojson` の座標 | `[117.185, 34.262]` |
 
-ファイルの型・「典拠」の語の範囲・裏どりの出所は [README.md](README.md) が持つ。
-座標に添えた典拠の格の定義は [ADR-0037](../adr/0037-sources-layer.md) が持つ。
-
 ## `timeRange`
 
 | 欄 | 値 | 何の年か | 典拠 | 並立する説 |
