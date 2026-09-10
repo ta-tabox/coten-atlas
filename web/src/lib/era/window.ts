@@ -1,13 +1,13 @@
 /**
- * 現在窓とシリーズの `timeRange` の重なりから、表示 opacity を求める。
- * 現在窓は、スライダーが指す位置の周りに取る年の範囲を指す。
+ * スライダーが指す時代に、各シリーズがどれだけ当てはまるかを扱う。
+ * スライダーの位置の周りに年の範囲（現在窓）を取り、シリーズの `timeRange` と比べて 0..1 の値にする。
  *
- * 窓の幅は年でなく era 空間の位置で決める。
- * 窓も `timeRange` も両端を含む閉区間で扱い、era の半開区間は `space.ts` の中で閉じている。
- * 幅の決め方と採らなかった案は `docs/adr/0038-era-space-window.md` にある。
+ * 現在窓の取り方、窓とシリーズの重なり、重なりから表示の濃さへの変換はこのモジュールに置く。
+ * 現在窓でシリーズを絞る処理や並べる処理も、窓とシリーズの比較なのでこのモジュールに置く。
+ * 窓もシリーズの `timeRange` も、両端の年を含む範囲として比べる。
  *
- * MapLibre の paint を組み立てない。
- * `circle-opacity` へ配線するのは `web/src/lib/map/series-layer.ts` で、このモジュールは 0..1 の数値を返すまでを担当する。
+ * 位置と年の対応は `space.ts` に置き、描画（React・MapLibre）はどちらのモジュールにも置かない。
+ * 決定と採らなかった案は `docs/adr/0038-era-space-window.md` にある。
  */
 
 import { type EraSpacePosition, positionToYear } from "@/lib/era/space";

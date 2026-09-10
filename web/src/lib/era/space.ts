@@ -1,14 +1,13 @@
 /**
- * era 空間の位置（0..1）を西暦の年へ変換する。
- * era 空間は、`eras` の各区間を等幅に並べた 0..1 の数直線を指す。
+ * era スライダーの目盛りを扱う。
+ * 目盛りは era の列（`EraList`）の各区間を年の幅によらず等幅に並べた 0..1 の数直線（era 空間）で、区間の中は年を線形に割り振る。
  *
- * 区間ごとに年の幅が違うので、位置を同じだけ動かしても進む年数は区間ごとに変わる（`docs/ARCHITECTURE.md` §3）。
- * 各区間は `start` を含み `end` を含まない半開区間で、境目の位置は後ろの区間に属する。
+ * era 空間の位置・西暦の年・era の三つのうち、どれかから別のどれかを求める処理はこのモジュールに置く。
+ * 区間は `start` を含み `end` を含まないので、境目は後ろの era に属する。
+ * 終わっていない era の右端の年（`presentEnd`）は目盛りの定義に含まれるので、このモジュールで扱う。
  *
- * `end` が `ERA_END_PRESENT` の era は右端の年を持たないので、呼び出し元が `presentEnd` で渡す。
+ * シリーズと現在窓は `window.ts` に置き、描画（React・MapLibre）はどちらのモジュールにも置かない。
  * 決定と採らなかった案は `docs/adr/0038-era-space-window.md` にある。
- *
- * `node:fs`・React・MapLibre を import しない。
  */
 
 import { ERA_END_PRESENT, type Era, type EraList } from "@/lib/schema/era";
