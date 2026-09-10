@@ -45,10 +45,10 @@ const SPARTA: Series = {
   anchor: "sparta-city",
   timeRange: { start: -900, end: -200 },
   summary: "",
-  region: "ギリシア",
+  region: "ヨーロッパ",
   season: 2,
   links: [],
-  tags: [],
+  tags: ["集団"],
 };
 
 const SERIES: SeriesList = [SPARTA];

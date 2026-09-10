@@ -29,10 +29,10 @@ const SPARTA: Series = {
   anchor: "sparta-city",
   timeRange: { start: -900, end: -200 },
   summary: "軍事に全振りした都市国家の話。",
-  region: "ギリシア",
+  region: "ヨーロッパ",
   season: 2,
   links: [],
-  tags: ["古代"],
+  tags: ["集団"],
 };
 
 const EPISODE_URL =
