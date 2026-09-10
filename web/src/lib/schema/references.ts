@@ -22,7 +22,11 @@
 import type { EpisodeCollection } from "@/lib/schema/episode";
 import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
 import { type LocusCollection, TIME_RANGE_OF_SERIES } from "@/lib/schema/locus";
-import { ANCHOR_UNLOCATED, type SeriesList } from "@/lib/schema/series";
+import {
+  ANCHOR_UNLOCATED,
+  type SeriesList,
+  TIME_RANGE_UNTIMED,
+} from "@/lib/schema/series";
 
 /**
  * `seriesId` の参照が壊れているエピソードを、理由の文で返す。
@@ -141,6 +145,8 @@ export function brokenLocusSeriesReferences(
  * `TIME_RANGE_OF_SERIES` の事物は定義上はみ出しようがないので見ない。
  * `seriesId` の指す先が無い事物も見ない。
  * 比べる相手が居ないだけで、それを名指すのは brokenLocusSeriesReferences の仕事である。
+ * `timeRange` が `TIME_RANGE_UNTIMED` のシリーズの事物も、比べる年が無いので見ない。
+ * そのシリーズは位置なしなので、事物を持つこと自体を brokenAnchors が名指す。
  */
 export function lociOutsideSeriesTimeRange(
   loci: LocusCollection,
@@ -161,7 +167,7 @@ export function lociOutsideSeriesTimeRange(
 
     const span = timeRangesBySeriesId.get(seriesId);
 
-    if (span === undefined) {
+    if (span === undefined || span === TIME_RANGE_UNTIMED) {
       continue;
     }
 
@@ -183,6 +189,7 @@ export function lociOutsideSeriesTimeRange(
  * era 空間は先頭 era の `start` に始まり（この年を含む）、末尾 era の `end` が年ならそこで終わる（この年を含まない）。
  * 末尾が `ERA_END_PRESENT` の間は後ろへ開いているので、右側の検査は掛からない。
  * 右端をどの年へ解決して描くか（S4、docs/adr/0019-era-open-end.md の帰結）とは独立で、ここは era の列そのものだけを見る。
+ * `timeRange` が `TIME_RANGE_UNTIMED` のシリーズは年を持たないので見ない。
  */
 export function seriesOutsideEraSpace(
   series: SeriesList,
@@ -194,6 +201,10 @@ export function seriesOutsideEraSpace(
   const problems: string[] = [];
 
   for (const { id, timeRange } of series) {
+    if (timeRange === TIME_RANGE_UNTIMED) {
+      continue;
+    }
+
     if (timeRange.end < spaceStart) {
       problems.push(
         `series ${id}: timeRange の end（${timeRange.end}）が最初の era の start（${spaceStart}）より前で、スライダーのどの位置にも現れない`,

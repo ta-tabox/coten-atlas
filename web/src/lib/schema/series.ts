@@ -24,6 +24,12 @@ import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 export const ANCHOR_UNLOCATED = "unlocated";
 
 /**
+ * 時期を持たないことを表す `timeRange` の値。
+ * 置けるのは種別が `概念史` だけで位置なしのシリーズに限る（docs/adr/0039-untimed-concept-series.md）。
+ */
+export const TIME_RANGE_UNTIMED = "untimed";
+
+/**
  * 描画スタイルの分岐キー。
  * 場所が一意に決まるかどうかだけを分ける（docs/adr/0023-kind-place-or-concept.md）。
  */
@@ -145,10 +151,10 @@ export const seriesSchema = z
     anchor: trimmedNonEmptyStringSchema,
 
     /**
-     * シリーズが扱う年代の範囲。
+     * シリーズが扱う年代の範囲か、時期を持たないことを表す `TIME_RANGE_UNTIMED`。
      * era スライダーの現在窓との重なり率（0..1）をイージングに通した値が、表示 opacity になる。
      */
-    timeRange: seriesTimeRangeSchema,
+    timeRange: z.union([seriesTimeRangeSchema, z.literal(TIME_RANGE_UNTIMED)]),
 
     /**
      * 自前で書く要約。
@@ -196,6 +202,26 @@ export const seriesSchema = z
         code: "custom",
         message: `kind が place なのに anchor が ${ANCHOR_UNLOCATED} である`,
       });
+    }
+
+    if (series.timeRange === TIME_RANGE_UNTIMED) {
+      const categories = series.tags.filter((tag) =>
+        SERIES_CATEGORY_TAGS.some((c) => c === tag),
+      );
+
+      if (categories.length !== 1 || categories[0] !== "概念史") {
+        ctx.addIssue({
+          code: "custom",
+          message: `timeRange が ${TIME_RANGE_UNTIMED} なのに、tags の種別が概念史だけでない`,
+        });
+      }
+
+      if (series.anchor !== ANCHOR_UNLOCATED) {
+        ctx.addIssue({
+          code: "custom",
+          message: `timeRange が ${TIME_RANGE_UNTIMED} なのに、anchor が ${ANCHOR_UNLOCATED} でない`,
+        });
+      }
     }
 
     if (

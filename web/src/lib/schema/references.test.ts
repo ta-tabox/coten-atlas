@@ -13,7 +13,12 @@ import {
   lociOutsideSeriesTimeRange,
   seriesOutsideEraSpace,
 } from "@/lib/schema/references";
-import { ANCHOR_UNLOCATED, type SeriesList } from "@/lib/schema/series";
+import {
+  ANCHOR_UNLOCATED,
+  type Series,
+  type SeriesList,
+  TIME_RANGE_UNTIMED,
+} from "@/lib/schema/series";
 
 /** 検査に要る欄（id・season・anchor・timeRange）だけを差し替えたシリーズ一覧を作る。 */
 function seriesListOf(
@@ -21,7 +26,7 @@ function seriesListOf(
     id: string;
     season: number;
     anchor?: string;
-    timeRange?: { start: number; end: number };
+    timeRange?: Series["timeRange"];
   }[]
 ): SeriesList {
   return entries.map(({ id, season, anchor, timeRange }) => ({
@@ -196,6 +201,20 @@ describe("seriesOutsideEraSpace", () => {
 
     expect(problems).toEqual([expect.stringContaining("late")]);
   });
+
+  it("timeRange が時期を持たない値のシリーズは見ない", () => {
+    const problems = seriesOutsideEraSpace(
+      seriesListOf({
+        id: "okane",
+        season: 12,
+        anchor: ANCHOR_UNLOCATED,
+        timeRange: TIME_RANGE_UNTIMED,
+      }),
+      closed,
+    );
+
+    expect(problems).toEqual([]);
+  });
 });
 
 describe("brokenAnchors", () => {
@@ -338,6 +357,24 @@ describe("lociOutsideSeriesTimeRange", () => {
         timeRange: { start: -3000, end: -2000 },
       }),
       sparta,
+    );
+
+    expect(problems).toEqual([]);
+  });
+
+  it("timeRange が時期を持たない値のシリーズの事物は見ない", () => {
+    const problems = lociOutsideSeriesTimeRange(
+      lociOf({
+        id: "lydia",
+        seriesId: "okane",
+        timeRange: { start: -600, end: -546 },
+      }),
+      seriesListOf({
+        id: "okane",
+        season: 12,
+        anchor: ANCHOR_UNLOCATED,
+        timeRange: TIME_RANGE_UNTIMED,
+      }),
     );
 
     expect(problems).toEqual([]);

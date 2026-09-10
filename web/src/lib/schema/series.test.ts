@@ -3,6 +3,7 @@ import {
   parseSeries,
   seriesListSchema,
   seriesTimeRangeSchema,
+  TIME_RANGE_UNTIMED,
 } from "@/lib/schema/series";
 
 /** docs/ARCHITECTURE.md「データモデル」の例をそのまま写した 1 件。 */
@@ -181,6 +182,38 @@ describe("seriesTimeRangeSchema", () => {
 
   it("start が end より後なら落とす", () => {
     const result = seriesTimeRangeSchema.safeParse({ start: 280, end: 180 });
+
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("時期を持たないことを表す timeRange", () => {
+  /** 種別が概念史だけで位置なしのシリーズへ差し替える欄。 */
+  const untimedConcept = {
+    kind: "concept",
+    anchor: "unlocated",
+    timeRange: TIME_RANGE_UNTIMED,
+    tags: ["経済", "概念史"],
+  };
+
+  it("種別が概念史だけで位置なしのシリーズなら受ける", () => {
+    const parsed = parseSeries([seriesWith(untimedConcept)]);
+
+    expect(parsed[0].timeRange).toBe(TIME_RANGE_UNTIMED);
+  });
+
+  it("種別に人物を含むシリーズなら拒否する", () => {
+    const result = seriesListSchema.safeParse([
+      seriesWith({ ...untimedConcept, tags: ["人物", "概念史"] }),
+    ]);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("代表点を持つシリーズなら拒否する", () => {
+    const result = seriesListSchema.safeParse([
+      seriesWith({ ...untimedConcept, anchor: "sparta-city" }),
+    ]);
 
     expect(result.success).toBe(false);
   });
