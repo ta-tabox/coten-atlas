@@ -172,7 +172,7 @@
     "title": "ギルガメシュ",
     "kind": "place",
     "anchor": "uruk",
-    "timeRange": { "start": -2800, "end": -2600 },
+    "timeRange": { "start": -2800, "end": -2500 },
     "summary": "",
     "region": "西アジア",
     "season": 63,
