@@ -76,6 +76,7 @@
 | [0033](0033-rules-under-claude.md) | 従わせる規則は `.claude/rules/` に置き、`docs/` には記述だけを残す | 2026-09-06 | 採用 |
 | [0034](0034-series-vocabulary.md) | 手で書く欄の語彙を決め、`region` は地図の区画・`tags` は種別と主題だけを持つ | 2026-09-07 | 採用 |
 | [0035](0035-history-review-lane.md) | 歴史の裏どりを `@historian` の別レーンに分け、Web 検索を許す | 2026-09-09 | 採用 |
+| [0036](0036-post-deploy-reachability.md) | 配信の直後に到達テストを走らせる（ブラウザを立てず、`src`・`href` のパスへの到達だけを検証する） | 2026-09-07 | 採用 |
 | [0037](0037-sources-layer.md) | `catalog/` の値の典拠を `docs/sources/<シリーズ id>.md` に置く | 2026-09-10 | 採用 |
 | [0038](0038-era-space-window.md) | 現在窓の幅は era 空間の位置で決め、`"present"` の右端は呼び出し元が渡す現在年にする | 2026-09-07 | 採用 |
 
