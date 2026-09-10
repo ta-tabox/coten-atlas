@@ -1,14 +1,16 @@
 # 項羽と劉邦（`kou-to-ryuho`・season 60）
 
-`catalog/series.json` の `kou-to-ryuho` と `catalog/loci.geojson` の `pengcheng` が持つ値の典拠を残す。
-値の正は `catalog/` の側にあり、このファイルは根拠だけを持つ。
-ファイルの書式と「典拠」の語の範囲は [README.md](README.md) が持つ。
+| `catalog/` の鍵 | 値 |
+|---|---|
+| `series.json` の `id` | `kou-to-ryuho` |
+| `series.json` の `season` | 60 |
+| `series.json` の `timeRange` | -256..-195 |
+| `loci.geojson` の `anchor` | `pengcheng` |
+| `loci.geojson` の座標 | `[117.185, 34.262]` |
 
-`@historian`（[ADR-0035](../adr/0035-history-review-lane.md)）の裏どりが 2 回走った。
-[1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902)が全欄を見て、[2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216)が座標の典拠を取り直した。
-**座標の典拠は 2 回目が正である。**
+ファイルの型・「典拠」の語の範囲・典拠の格・裏どりの出所は [README.md](README.md) が持つ。
 
-## `timeRange`（-256..-195）
+## `timeRange`
 
 | 欄 | 値 | 何の年か | 典拠 | 並立する説 |
 |---|---|---|---|---|
@@ -18,11 +20,10 @@
 劉邦の生年は前256年説と前247年説が並立し、どちらが正しいとは確定していない。
 項羽の生没年（前232年生・前202年没。[Wikipedia: Xiang Yu](https://en.wikipedia.org/wiki/Xiang_Yu)）は、どちらの説を採っても現在の `timeRange` に収まる。
 
-## 代表点（`pengcheng`）
+## 代表点
 
 | 欄 | 値 |
 |---|---|
-| 座標 | `[117.185, 34.262]` |
 | 典拠が示す値 | 117.18587, 34.26104（現在値との差は経度約80m・緯度約107m） |
 | 典拠 | [Wikidata Q57719](https://www.wikidata.org/wiki/Q57719)（徐州。古名が彭城であることも同項目内で確認した） |
 | 典拠の格 | 三次 |

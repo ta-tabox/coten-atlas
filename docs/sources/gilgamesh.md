@@ -1,14 +1,16 @@
 # ギルガメシュ（`gilgamesh`・season 63）
 
-`catalog/series.json` の `gilgamesh` と `catalog/loci.geojson` の `uruk` が持つ値の典拠を残す。
-値の正は `catalog/` の側にあり、このファイルは根拠だけを持つ。
-ファイルの書式と「典拠」の語の範囲は [README.md](README.md) が持つ。
+| `catalog/` の鍵 | 値 |
+|---|---|
+| `series.json` の `id` | `gilgamesh` |
+| `series.json` の `season` | 63 |
+| `series.json` の `timeRange` | -2800..-2600 |
+| `loci.geojson` の `anchor` | `uruk` |
+| `loci.geojson` の座標 | `[45.637, 31.324]` |
 
-`@historian`（[ADR-0035](../adr/0035-history-review-lane.md)）の裏どりが 2 回走った。
-[1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902)が全欄を見て、[2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216)が座標の典拠を取り直した。
-**座標の典拠は 2 回目が正である。**
+ファイルの型・「典拠」の語の範囲・典拠の格・裏どりの出所は [README.md](README.md) が持つ。
 
-## `timeRange`（-2800..-2600）
+## `timeRange`
 
 | 欄 | 値 | 何の年か | 典拠 | 並立する説 |
 |---|---|---|---|---|
@@ -19,11 +21,10 @@
 始期の前2800年はおおむね一致するのに対し、終期の見積もりは前2600年から前2500年まで割れており、現在値の -2600 は前2600年の側の端に当たる。
 シュメール王朝表はギルガメシュの治世を 126 年と記すが、現代の歴史学はこの在位年数を文字どおりには採らない。
 
-## 代表点（`uruk`）
+## 代表点
 
 | 欄 | 値 |
 |---|---|
-| 座標 | `[45.637, 31.324]` |
 | 典拠が示す値 | 45.6394, 31.3234（現在値との差は経度約230m・緯度約67m。OSM/CIGS の実測地物からの重心） |
 | 典拠 | [Pleiades 912986](https://pleiades.stoa.org/places/912986) |
 | 典拠の格 | 二次 |

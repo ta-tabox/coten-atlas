@@ -1,14 +1,16 @@
 # 秦の始皇帝（`shin-no-shikotei`・season 5）
 
-`catalog/series.json` の `shin-no-shikotei` と `catalog/loci.geojson` の `xianyang` が持つ値の典拠を残す。
-値の正は `catalog/` の側にあり、このファイルは根拠だけを持つ。
-ファイルの書式と「典拠」の語の範囲は [README.md](README.md) が持つ。
+| `catalog/` の鍵 | 値 |
+|---|---|
+| `series.json` の `id` | `shin-no-shikotei` |
+| `series.json` の `season` | 5 |
+| `series.json` の `timeRange` | -259..-210 |
+| `loci.geojson` の `anchor` | `xianyang` |
+| `loci.geojson` の座標 | `[108.709, 34.333]` |
 
-`@historian`（[ADR-0035](../adr/0035-history-review-lane.md)）の裏どりが 2 回走った。
-[1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902)が全欄を見て、[2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216)が座標の典拠を取り直した。
-**座標の典拠は 2 回目が正である。**
+ファイルの型・「典拠」の語の範囲・典拠の格・裏どりの出所は [README.md](README.md) が持つ。
 
-## `timeRange`（-259..-210）
+## `timeRange`
 
 | 欄 | 値 | 何の年か | 典拠 | 並立する説 |
 |---|---|---|---|---|
@@ -17,11 +19,10 @@
 
 生没年に学説の割れは見当たらなかった。
 
-## 代表点（`xianyang`）
+## 代表点
 
 | 欄 | 値 |
 |---|---|
-| 座標 | `[108.709, 34.333]` |
 | 典拠が示す値 | 108.70917, 34.32972 |
 | 典拠 | [Wikidata Q497341](https://www.wikidata.org/wiki/Q497341) |
 | 典拠の格 | 三次 |

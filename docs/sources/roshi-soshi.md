@@ -1,14 +1,16 @@
 # 老子・荘子（`roshi-soshi`・season 55）
 
-`catalog/series.json` の `roshi-soshi` と `catalog/loci.geojson` の `luyi` が持つ値の典拠を残す。
-値の正は `catalog/` の側にあり、このファイルは根拠だけを持つ。
-ファイルの書式と「典拠」の語の範囲は [README.md](README.md) が持つ。
+| `catalog/` の鍵 | 値 |
+|---|---|
+| `series.json` の `id` | `roshi-soshi` |
+| `series.json` の `season` | 55 |
+| `series.json` の `timeRange` | -571..-286 |
+| `loci.geojson` の `anchor` | `luyi` |
+| `loci.geojson` の座標 | `[115.486, 33.861]` |
 
-`@historian`（[ADR-0035](../adr/0035-history-review-lane.md)）の裏どりが 2 回走った。
-[1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902)が全欄を見て、[2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216)が座標の典拠を取り直した。
-**座標の典拠は 2 回目が正である。**
+ファイルの型・「典拠」の語の範囲・典拠の格・裏どりの出所は [README.md](README.md) が持つ。
 
-## `timeRange`（-571..-286）
+## `timeRange`
 
 | 欄 | 値 | 何の年か | 典拠 | 並立する説 |
 |---|---|---|---|---|
@@ -21,11 +23,10 @@ GlobalSecurity.org は一次資料でないので、参考程度の情報源と�
 
 荘子の没年は前286年で、前369年生とあわせて複数の典拠が一致する。
 
-## 代表点（`luyi`）
+## 代表点
 
 | 欄 | 値 |
 |---|---|
-| 座標 | `[115.486, 33.861]` |
 | 典拠が示す値 | 115.48092, 33.86042（現在値との差は経度約470m・緯度約65m） |
 | 典拠 | [Wikidata Q1198911](https://www.wikidata.org/wiki/Q1198911) |
 | 典拠の格 | 三次 |

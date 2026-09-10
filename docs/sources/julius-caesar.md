@@ -1,14 +1,16 @@
 # ユリウス・カエサル（`julius-caesar`・season 20）
 
-`catalog/series.json` の `julius-caesar` と `catalog/loci.geojson` の `forum-romanum` が持つ値の典拠を残す。
-値の正は `catalog/` の側にあり、このファイルは根拠だけを持つ。
-ファイルの書式と「典拠」の語の範囲は [README.md](README.md) が持つ。
+| `catalog/` の鍵 | 値 |
+|---|---|
+| `series.json` の `id` | `julius-caesar` |
+| `series.json` の `season` | 20 |
+| `series.json` の `timeRange` | -100..-44 |
+| `loci.geojson` の `anchor` | `forum-romanum` |
+| `loci.geojson` の座標 | `[12.485, 41.893]` |
 
-`@historian`（[ADR-0035](../adr/0035-history-review-lane.md)）の裏どりが 2 回走った。
-[1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902)が全欄を見て、[2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216)が座標の典拠を取り直した。
-**座標の典拠は 2 回目が正である。**
+ファイルの型・「典拠」の語の範囲・典拠の格・裏どりの出所は [README.md](README.md) が持つ。
 
-## `timeRange`（-100..-44）
+## `timeRange`
 
 | 欄 | 値 | 何の年か | 典拠 | 並立する説 |
 |---|---|---|---|---|
@@ -18,11 +20,10 @@
 前102年説は、執政官などの就任年齢が規定より若すぎることを理由に採る研究者がいる。
 どちらが正しいかは確定していない。
 
-## 代表点（`forum-romanum`）
+## 代表点
 
 | 欄 | 値 |
 |---|---|
-| 座標 | `[12.485, 41.893]` |
 | 典拠が示す値 | OSM 境界ポリゴン（経度 12.4833〜12.4909、緯度 41.8902〜41.8932）。現在値はその内側の北端付近 |
 | 典拠 | [Pleiades 502866838](https://pleiades.stoa.org/places/502866838) |
 | 典拠の格 | 二次 |

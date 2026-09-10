@@ -1,14 +1,16 @@
 # ハンニバル（`hannibal`・season 42）
 
-`catalog/series.json` の `hannibal` と `catalog/loci.geojson` の `carthage` が持つ値の典拠を残す。
-値の正は `catalog/` の側にあり、このファイルは根拠だけを持つ。
-ファイルの書式と「典拠」の語の範囲は [README.md](README.md) が持つ。
+| `catalog/` の鍵 | 値 |
+|---|---|
+| `series.json` の `id` | `hannibal` |
+| `series.json` の `season` | 42 |
+| `series.json` の `timeRange` | -247..-183 |
+| `loci.geojson` の `anchor` | `carthage` |
+| `loci.geojson` の座標 | `[10.323, 36.853]` |
 
-`@historian`（[ADR-0035](../adr/0035-history-review-lane.md)）の裏どりが 2 回走った。
-[1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902)が全欄を見て、[2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216)が座標の典拠を取り直した。
-**座標の典拠は 2 回目が正である。**
+ファイルの型・「典拠」の語の範囲・典拠の格・裏どりの出所は [README.md](README.md) が持つ。
 
-## `timeRange`（-247..-183）
+## `timeRange`
 
 | 欄 | 値 | 何の年か | 典拠 | 並立する説 |
 |---|---|---|---|---|
@@ -17,11 +19,10 @@
 
 没年は前183年とする典拠が主流だが、前181年とする文献もある。
 
-## 代表点（`carthage`）
+## 代表点
 
 | 欄 | 値 |
 |---|---|
-| 座標 | `[10.323, 36.853]` |
 | 典拠が示す値 | 10.323056, 36.853056 |
 | 典拠 | [Pleiades 314921](https://pleiades.stoa.org/places/314921) |
 | 典拠の格 | 二次 |
