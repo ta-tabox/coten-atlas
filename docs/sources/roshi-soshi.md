@@ -8,7 +8,8 @@
 | `loci.geojson` の `anchor` | `luyi` |
 | `loci.geojson` の座標 | `[115.486, 33.861]` |
 
-ファイルの型・「典拠」の語の範囲・典拠の格・裏どりの出所は [README.md](README.md) が持つ。
+ファイルの型・「典拠」の語の範囲・裏どりの出所は [README.md](README.md) が持つ。
+座標に添えた典拠の格の定義は [ADR-0037](../adr/0037-sources-layer.md) が持つ。
 
 ## `timeRange`
 
