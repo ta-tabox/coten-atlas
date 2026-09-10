@@ -26,6 +26,7 @@
 | 失敗にする条件 | ページを取得できない・参照が 0 件・参照のどれかが 4xx か 5xx |
 | ブラウザ | 立てない。canvas と実行時エラーは検証しない |
 | `pnpm check` との関係 | 連鎖に入れず、層の番号も与えない。close してよいかの判定は `pnpm check` のまま |
+| L4 スモーク | `web/tests/smoke/` と `web/playwright.config.ts` の `smoke` project は変えない |
 | 実装 | `run:` のシェル。checkout を足さない |
 
 ## 理由
