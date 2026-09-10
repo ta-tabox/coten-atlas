@@ -30,6 +30,72 @@ export const ANCHOR_UNLOCATED = "unlocated";
 export const seriesKindSchema = z.enum(["place", "concept"]);
 
 /**
+ * `region` に置ける区画の一覧。
+ * 陸地を重ならないように割った 12 の区画と、区画を一つ選ぶと嘘になるシリーズが使う `地域なし` である。
+ * 区画の境目と、値を足すときの手順は docs/adr/0034-series-vocabulary.md が持つ。
+ */
+export const SERIES_REGIONS = [
+  "日本",
+  "朝鮮半島",
+  "中国",
+  "東南アジア",
+  "南アジア",
+  "中央ユーラシア",
+  "西アジア",
+  "アフリカ",
+  "ヨーロッパ",
+  "北アメリカ",
+  "南アメリカ",
+  "オセアニア",
+  "地域なし",
+] as const;
+
+/**
+ * `region` の値。
+ * 関連シリーズ行が等値で照合するので、閉じた集合にする（docs/adr/0034-series-vocabulary.md）。
+ */
+export const seriesRegionSchema = z.enum(SERIES_REGIONS);
+
+/**
+ * `tags` へ最低 1 つ入れる種別。
+ * そのシリーズの主語が誰かを表す（docs/adr/0034-series-vocabulary.md）。
+ */
+export const SERIES_CATEGORY_TAGS = [
+  "人物",
+  "集団",
+  "出来事",
+  "概念史",
+] as const;
+
+/**
+ * `tags` へ入れない時代名。
+ * `eras.json` の区分と同じ粒度の語で、`timeRange` と era スライダーが既に表す。
+ * `幕末` や `三国志` のようにそれより細かい時代の名は、主題として入れてよい。
+ */
+const ERA_GRADE_TAGS = [
+  "先史",
+  "古代",
+  "中世",
+  "近世",
+  "近代",
+  "19世紀",
+  "20世紀",
+  "戦後",
+];
+
+/**
+ * 1 シリーズが持てる `tags` の数の上限。
+ * tag 絞り込みのパネルは現在窓のタグを全部並べるので、1 件あたりを絞らないと一覧が読めなくなる。
+ */
+const MAX_TAGS = 4;
+
+/**
+ * `title` に残さない番組内のコーナー名。
+ * `title` はシリーズの主題を指す名の列で、コーナー名は主題でない（docs/adr/0034-series-vocabulary.md）。
+ */
+const TITLE_PREFIXES = ["ショート", "ジンブンガク"];
+
+/**
  * シリーズが扱う年代の範囲。
  * 負値は紀元前を指す。
  * start == end の 1 年の出来事を表せるよう、両端を含む閉区間とする。
@@ -53,66 +119,110 @@ export const seriesTimeRangeSchema = z
  * シリーズ 1 件。
  * 地図の描画・一覧パネル・詳細カード・RSS 同期の全部がここを読む。
  */
-export const seriesSchema = z.strictObject({
-  /** エピソードの `seriesId` と事物の `seriesId` が指す先。 */
-  id: trimmedNonEmptyStringSchema,
+export const seriesSchema = z
+  .strictObject({
+    /** エピソードの `seriesId` と事物の `seriesId` が指す先。 */
+    id: trimmedNonEmptyStringSchema,
 
-  /**
-   * シリーズ名。
-   * 番組から引いてよいのは題号までなので、説明文をここへ入れない（docs/adr/0008-quote-titles-only.md）。
-   */
-  title: trimmedNonEmptyStringSchema,
+    /**
+     * シリーズ名。
+     * 番組から引いてよいのは題号までなので、説明文をここへ入れない（docs/adr/0008-quote-titles-only.md）。
+     */
+    title: trimmedNonEmptyStringSchema,
 
-  /**
-   * 描画スタイルの分岐キー。
-   * `concept` は場所が一意に決まらないもので、控えめに描く（docs/adr/0023-kind-place-or-concept.md）。
-   */
-  kind: seriesKindSchema,
+    /**
+     * 描画スタイルの分岐キー。
+     * `concept` は場所が一意に決まらないもので、控えめに描く（docs/adr/0023-kind-place-or-concept.md）。
+     */
+    kind: seriesKindSchema,
 
-  /**
-   * 代表点の事物 id か、位置なしを表す `ANCHOR_UNLOCATED`。
-   * そのシリーズの事物のうちどれが代表点かを示す印であって、シリーズと事物の紐づけではない（docs/adr/0027-series-and-loci.md）。
-   * 紐づけは事物側の `seriesId` が担う。
-   * 指す先が実在するかは 2 つのファイルを並べないと見えないので、`references.ts` が見る。
-   */
-  anchor: trimmedNonEmptyStringSchema,
+    /**
+     * 代表点の事物 id か、位置なしを表す `ANCHOR_UNLOCATED`。
+     * そのシリーズの事物のうちどれが代表点かを示す印であって、シリーズと事物の紐づけではない（docs/adr/0027-series-and-loci.md）。
+     * 紐づけは事物側の `seriesId` が担う。
+     * 指す先が実在するかは 2 つのファイルを並べないと見えないので、`references.ts` が見る。
+     */
+    anchor: trimmedNonEmptyStringSchema,
 
-  /**
-   * シリーズが扱う年代の範囲。
-   * era スライダーの現在窓との重なり率（0..1）をイージングに通した値が、表示 opacity になる。
-   */
-  timeRange: seriesTimeRangeSchema,
+    /**
+     * シリーズが扱う年代の範囲。
+     * era スライダーの現在窓との重なり率（0..1）をイージングに通した値が、表示 opacity になる。
+     */
+    timeRange: seriesTimeRangeSchema,
 
-  /**
-   * 自前で書く要約。
-   * 番組の説明文を引かない代わりに置いた欄なので、書かれるまでは空である（docs/adr/0008-quote-titles-only.md）。
-   */
-  summary: z.string(),
+    /**
+     * 自前で書く要約。
+     * 番組の説明文を引かない代わりに置いた欄なので、書かれるまでは空である（docs/adr/0008-quote-titles-only.md）。
+     */
+    summary: z.string(),
 
-  /**
-   * 大まかな地域名。
-   * `tags` と並べて、近接の判定（関連シリーズ行）が読む。
-   */
-  region: trimmedNonEmptyStringSchema,
+    /**
+     * そのシリーズが扱う地理の広がりを表す区画。
+     * 代表点の在り処ではないので、`anchor` の値とは独立に決まる。
+     * `tags` と並べて、近接の判定（関連シリーズ行）が読む。
+     */
+    region: seriesRegionSchema,
 
-  /**
-   * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
-   * 1 シリーズ = 1 値で、複数を束ねない。
-   */
-  season: z.int().positive(),
+    /**
+     * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
+     * 1 シリーズ = 1 値で、複数を束ねない。
+     */
+    season: z.int().positive(),
 
-  /**
-   * 配信ページへの導線。
-   * 配信側にシリーズ単位のページが無いので、指す先は未決定である（当面は空）。
-   */
-  links: linksSchema,
+    /**
+     * 配信ページへの導線。
+     * 配信側にシリーズ単位のページが無いので、指す先は未決定である（当面は空）。
+     */
+    links: linksSchema,
 
-  /**
-   * 主題のラベル。
-   * 主題の近さは地図にも era スライダーにも現れないので、これだけが表す。
-   */
-  tags: z.array(trimmedNonEmptyStringSchema),
-});
+    /**
+     * 種別と主題のラベル。
+     * 主題の近さは地図にも era スライダーにも現れないので、これだけが表す。
+     */
+    tags: z.array(trimmedNonEmptyStringSchema),
+  })
+  .superRefine((series, ctx) => {
+    const prefix = TITLE_PREFIXES.find((name) => series.title.startsWith(name));
+
+    if (prefix !== undefined) {
+      ctx.addIssue({
+        code: "custom",
+        message: `title が番組内のコーナー名で始まっている: ${prefix}`,
+      });
+    }
+
+    if (series.kind === "place" && series.anchor === ANCHOR_UNLOCATED) {
+      ctx.addIssue({
+        code: "custom",
+        message: `kind が place なのに anchor が ${ANCHOR_UNLOCATED} である`,
+      });
+    }
+
+    if (
+      !series.tags.some((tag) => SERIES_CATEGORY_TAGS.some((c) => c === tag))
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: `tags に種別が 1 つも無い（${SERIES_CATEGORY_TAGS.join(" / ")} のどれかを入れる）`,
+      });
+    }
+
+    if (series.tags.length > MAX_TAGS) {
+      ctx.addIssue({
+        code: "custom",
+        message: `tags が ${MAX_TAGS} 個を超えている: ${series.tags.length} 個`,
+      });
+    }
+
+    for (const tag of series.tags.filter((tag) =>
+      ERA_GRADE_TAGS.includes(tag),
+    )) {
+      ctx.addIssue({
+        code: "custom",
+        message: `tags に era と同じ粒度の時代名がある: ${tag}`,
+      });
+    }
+  });
 
 /**
  * シリーズ全件。

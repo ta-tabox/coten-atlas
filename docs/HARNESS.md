@@ -91,6 +91,8 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
   push は `synchronize` なので拾わず、レビュー指摘へ対応して push しても再レビューは来ない
 - **再レビューが要るなら PR コメントで `@claude` を名指しする**（起動するのは `claude.yml` の側）。
   人間が `ready_for_review` か再オープンで掛け直す手もあるが、そちらは人間の操作である
+- **歴史の裏どり（`claude-history-review.yml`）は自動では走らない**。
+  `@historian` を含むコメントだけが起動する（[ADR-0035](adr/0035-history-review-lane.md)）
 
 ### レビューを掛け直す
 
@@ -109,6 +111,26 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 `claude.yml` の `permissions` は `contents: read` である。
 Actions 経由の Claude はコメントしか残せないので、レビューへ「直しておいて」と投げても直らない。
 修正を書くのは常にセッションの側になる。
+
+### 歴史の裏どりを呼ぶ
+
+`catalog/series.json` の `timeRange` と `catalog/loci.geojson` の座標は人手で決める値で、生没年が 50 年ずれていても `pnpm check` は緑になる。
+裏どりは三本目のワークフロー（`claude-history-review.yml`）が担い、コードのレビューとは別の起動語で呼ぶ（[ADR-0035](adr/0035-history-review-lane.md)）。
+
+- `gh pr comment <PR番号> --body "@historian この 6 件の timeRange と代表点を裏どりして"` で呼ぶ。
+  issue コメントでも同じように起動するので、`catalog/` へ載せる前に対象表へ対して呼べる
+- **起動語に `@claude` を含めない**。
+  `claude.yml` の `if:` が `contains(github.event.comment.body, '@claude')` なので、含む語は二本を同時に起動する
+- 返るのは典拠の URL を添えた指摘までで、代表点を動かすかどうかの採否は人間が決める。
+  `permissions` は `claude.yml` と同じ `contents: read` である
+
+歴史側への指示は **`.github/historian-prompt.md`** が全文を持つ。
+役割・対象・典拠の規則・報告の書式・実行の制約の 5 節で、直すのはこのファイルである。
+ワークフローは `--append-system-prompt-file` でこれを渡すだけなので、YAML の側に指示は書かれていない。
+
+**渡すのは default branch の版に固定してある。**
+`claude-code-action` は open PR のとき PR ブランチへ checkout し直すので、作業ディレクトリのファイルを直に指すと PR が歴史側の指示そのものを書き換えられる。
+checkout の前に `RUNNER_TEMP` へ写してから渡している。
 
 ## 3. 実行環境
 
