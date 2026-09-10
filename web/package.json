@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "sync-map-worker": "mkdir -p public && cp node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs node_modules/maplibre-gl/dist/maplibre-gl-shared.mjs public/",
-    "predev": "pnpm sync-map-worker",
+    "sync-catalog": "mkdir -p public/catalog && cp ../catalog/episodes.json public/catalog/",
+    "predev": "pnpm sync-map-worker && pnpm sync-catalog",
     "dev": "next dev",
-    "prebuild": "pnpm sync-map-worker",
+    "prebuild": "pnpm sync-map-worker && pnpm sync-catalog",
     "build": "next build",
     "typecheck": "tsc --noEmit",
     "lint": "biome ci . && node scripts/lint-comments.ts",
