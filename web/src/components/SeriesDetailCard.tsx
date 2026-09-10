@@ -82,9 +82,15 @@ function EpisodeList({ state }: { state: EpisodesState }) {
           <a
             href={spotifyUrlOf(episode)}
             title={episode.title}
+            // 地図の選択状態を残すため、Spotify は別タブで開く。
+            // noopener は開いた Spotify のページに window.opener を渡さず、noreferrer は Spotify へ Referer ヘッダを送らない。
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-start gap-2 rounded-md border border-zinc-200 px-3 py-2 hover:border-zinc-300 hover:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
           >
             <span className="line-clamp-2 min-w-0 grow">{episode.title}</span>
+            {/* ExternalLinkIcon は aria-hidden なので、別タブで開くことをスクリーンリーダーには文字で伝える。 */}
+            <span className="sr-only">（新しいタブで開く）</span>
             <ExternalLinkIcon className="mt-[0.3em] size-[1em] flex-none text-zinc-400" />
           </a>
         </li>

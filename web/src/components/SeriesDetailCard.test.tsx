@@ -71,8 +71,29 @@ describe("SeriesDetailCard", () => {
     );
 
     expect(
-      screen.getByRole("link", { name: "【2-1】スパルタ編1" }),
+      screen.getByRole("link", {
+        name: "【2-1】スパルタ編1（新しいタブで開く）",
+      }),
     ).toHaveAttribute("href", EPISODE_URL);
+  });
+
+  it("エピソードのリンクを、opener と Referer を渡さずに別タブで開く", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        episodes={{ kind: "loaded", episodes: EPISODES }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const link = screen.getByRole("link", {
+      name: "【2-1】スパルタ編1（新しいタブで開く）",
+    });
+
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link.getAttribute("rel")?.split(" ")).toEqual(
+      expect.arrayContaining(["noopener", "noreferrer"]),
+    );
   });
 
   it("配信リンクを持たない回は番組そのものへ向ける", () => {
@@ -90,7 +111,7 @@ describe("SeriesDetailCard", () => {
     );
 
     expect(
-      screen.getByRole("link", { name: "リンク無しの回" }),
+      screen.getByRole("link", { name: "リンク無しの回（新しいタブで開く）" }),
     ).toHaveAttribute(
       "href",
       "https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f",
