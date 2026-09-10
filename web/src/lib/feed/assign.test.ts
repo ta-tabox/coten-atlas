@@ -15,7 +15,7 @@ function series(id: string, season: number): Series {
     region: "ヨーロッパ",
     season,
     links: [],
-    tags: [],
+    tags: ["集団"],
   };
 }
 
