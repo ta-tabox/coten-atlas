@@ -4,7 +4,7 @@
  *
  * 窓の幅は年でなく era 空間の位置で決める。
  * 窓も `timeRange` も両端を含む閉区間で扱い、era の半開区間は `space.ts` の中で閉じている。
- * 幅の決め方と採らなかった案は `docs/adr/0035-era-space-window.md` にある。
+ * 幅の決め方と採らなかった案は `docs/adr/0038-era-space-window.md` にある。
  *
  * MapLibre の paint を組み立てない。
  * `circle-opacity` へ配線するのは `web/src/lib/map/series-layer.ts` で、このモジュールは 0..1 の数値を返すまでを担当する。

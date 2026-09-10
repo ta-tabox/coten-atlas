@@ -6,7 +6,7 @@
  * 各区間は `start` を含み `end` を含まない半開区間で、境目の位置は後ろの区間に属する。
  *
  * `end` が `ERA_END_PRESENT` の era は右端の年を持たないので、呼び出し元が `presentEnd` で渡す。
- * 決定と採らなかった案は `docs/adr/0035-era-space-window.md` にある。
+ * 決定と採らなかった案は `docs/adr/0038-era-space-window.md` にある。
  *
  * `node:fs`・React・MapLibre を import しない。
  */
