@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { positionToYear, presentEndOf } from "@/lib/era/space";
+import { positionToYear, presentEndOf } from "@/lib/era/scale";
 import { ERA_END_PRESENT, parseEras } from "@/lib/schema/era";
 
 /** `docs/ARCHITECTURE.md` §3 が挙げている 7 区分。 */

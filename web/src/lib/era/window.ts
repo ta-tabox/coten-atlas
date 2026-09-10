@@ -6,11 +6,11 @@
  * 現在窓でシリーズを絞る処理や並べる処理も、窓とシリーズの比較なのでこのモジュールに置く。
  * 窓もシリーズの `timeRange` も、両端の年を含む範囲として比べる。
  *
- * 位置と年の対応は `space.ts` に置き、描画（React・MapLibre）はどちらのモジュールにも置かない。
+ * 位置と年の対応は `scale.ts` に置き、描画（React・MapLibre）はどちらのモジュールにも置かない。
  * 決定と採らなかった案は `docs/adr/0038-era-space-window.md` にある。
  */
 
-import { type EraSpacePosition, positionToYear } from "@/lib/era/space";
+import { type EraSpacePosition, positionToYear } from "@/lib/era/scale";
 import type { SeriesTimeRange } from "@/lib/schema/series";
 
 /**
