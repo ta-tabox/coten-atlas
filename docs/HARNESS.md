@@ -124,6 +124,14 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
 - 返るのは典拠の URL を添えた指摘までで、代表点を動かすかどうかの採否は人間が決める。
   `permissions` は `claude.yml` と同じ `contents: read` である
 
+歴史側への指示は **`.github/historian-prompt.md`** が全文を持つ。
+役割・対象・典拠の規則・報告の書式・実行の制約の 5 節で、直すのはこのファイルである。
+ワークフローは `--append-system-prompt-file` でこれを渡すだけなので、YAML の側に指示は書かれていない。
+
+**渡すのは default branch の版に固定してある。**
+`claude-code-action` は open PR のとき PR ブランチへ checkout し直すので、作業ディレクトリのファイルを直に指すと PR が歴史側の指示そのものを書き換えられる。
+checkout の前に `RUNNER_TEMP` へ写してから渡している。
+
 ## 3. 実行環境
 
 手元（native fs）とリモート（Claude Code on the web）の二つで走る。差は次のとおり。
