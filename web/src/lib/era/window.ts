@@ -36,11 +36,21 @@ export function currentWindow({
   eras,
   presentEnd,
 }: EraSpacePosition): CurrentWindow {
-  const halfWidth = WINDOW_WIDTH_IN_ERAS / eras.length / 2;
+  const eraWidthInPosition = 1 / eras.length;
+  const windowWidthInPosition = WINDOW_WIDTH_IN_ERAS * eraWidthInPosition;
+  const halfWindowWidth = windowWidthInPosition / 2;
 
   return {
-    start: positionToYear({ position: position - halfWidth, eras, presentEnd }),
-    end: positionToYear({ position: position + halfWidth, eras, presentEnd }),
+    start: positionToYear({
+      position: position - halfWindowWidth,
+      eras,
+      presentEnd,
+    }),
+    end: positionToYear({
+      position: position + halfWindowWidth,
+      eras,
+      presentEnd,
+    }),
   };
 }
 
