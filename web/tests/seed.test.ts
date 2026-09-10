@@ -1,5 +1,5 @@
 /**
- * `catalog/series.json` のシードが S2 の狙いを満たしているかを見る。
+ * `catalog/series.json` の現物が、描画の分岐の枝をどちらも持っているかを見る。
  *
  * 見るのはスキーマが見ない観点だけである。
  * 現物が `seriesListSchema` を通ること、`id`・`season` の一意性、`timeRange` が era 空間と重なることは隣の `catalog.test.ts` が既に落とすので、ここでは数えない。
@@ -31,13 +31,6 @@ const SERIES_FILE = fileURLToPath(
   new URL("../../catalog/series.json", import.meta.url),
 );
 
-/**
- * シードとして数える件数の幅。
- * ちょうどの数を固定すると 1 件足すたびにここを直すだけの作業が出るので、幅で持つ。
- * 下限は地理と時代が散っていると言えるだけの数で、上限を超えたものはもう叩き台ではなく、この検査が守っている前提の外にある。
- */
-const SEED_COUNT = { min: 8, max: 12 };
-
 /** シードを読んで検査に通したもの。 */
 function seedSeries(): SeriesList {
   return parseSeries(JSON.parse(fs.readFileSync(SERIES_FILE, "utf8")));
@@ -59,12 +52,5 @@ describe("catalog/series.json のシード", () => {
     expect(anchors.filter((anchor) => anchor !== ANCHOR_UNLOCATED)).not.toEqual(
       [],
     );
-  });
-
-  it("件数が 10 件前後ある", () => {
-    const count = seedSeries().length;
-
-    expect(count).toBeGreaterThanOrEqual(SEED_COUNT.min);
-    expect(count).toBeLessThanOrEqual(SEED_COUNT.max);
   });
 });

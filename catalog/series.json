@@ -9,7 +9,7 @@
     "region": "日本",
     "season": 1,
     "links": [],
-    "tags": ["人物", "幕末", "日本"]
+    "tags": ["人物", "幕末", "思想", "教育"]
   },
   {
     "id": "sparta",
@@ -18,10 +18,22 @@
     "anchor": "sparta-city",
     "timeRange": { "start": -900, "end": -200 },
     "summary": "",
-    "region": "ギリシア",
+    "region": "ヨーロッパ",
     "season": 2,
     "links": [],
-    "tags": ["古代", "ギリシア"]
+    "tags": ["集団", "戦争"]
+  },
+  {
+    "id": "shin-no-shikotei",
+    "title": "秦の始皇帝",
+    "kind": "place",
+    "anchor": "xianyang",
+    "timeRange": { "start": -259, "end": -210 },
+    "summary": "",
+    "region": "中国",
+    "season": 5,
+    "links": [],
+    "tags": ["人物", "帝国"]
   },
   {
     "id": "shokatsu-komei",
@@ -33,7 +45,7 @@
     "region": "中国",
     "season": 6,
     "links": [],
-    "tags": ["人物", "三国志", "中国"]
+    "tags": ["人物", "三国志", "戦争"]
   },
   {
     "id": "sekai-sandai-shukyo",
@@ -42,7 +54,7 @@
     "anchor": "unlocated",
     "timeRange": { "start": -560, "end": 632 },
     "summary": "",
-    "region": "ユーラシア",
+    "region": "地域なし",
     "season": 7,
     "links": [],
     "tags": ["宗教", "概念史"]
@@ -54,10 +66,10 @@
     "anchor": "berlin",
     "timeRange": { "start": 1889, "end": 1945 },
     "summary": "",
-    "region": "ドイツ",
+    "region": "ヨーロッパ",
     "season": 8,
     "links": [],
-    "tags": ["人物", "20世紀", "ドイツ"]
+    "tags": ["人物", "戦争"]
   },
   {
     "id": "alexandros",
@@ -66,10 +78,10 @@
     "anchor": "pella",
     "timeRange": { "start": -356, "end": -323 },
     "summary": "",
-    "region": "地中海〜西アジア",
+    "region": "ヨーロッパ",
     "season": 11,
     "links": [],
-    "tags": ["人物", "遠征", "古代"]
+    "tags": ["人物", "遠征", "帝国"]
   },
   {
     "id": "okane-no-rekishi",
@@ -78,7 +90,7 @@
     "anchor": "unlocated",
     "timeRange": { "start": -600, "end": 2020 },
     "summary": "",
-    "region": "ユーラシア",
+    "region": "地域なし",
     "season": 12,
     "links": [],
     "tags": ["経済", "概念史"]
@@ -93,7 +105,19 @@
     "region": "北アメリカ",
     "season": 15,
     "links": [],
-    "tags": ["開拓", "近代", "アメリカ"]
+    "tags": ["出来事", "開拓"]
+  },
+  {
+    "id": "julius-caesar",
+    "title": "ユリウス・カエサル",
+    "kind": "place",
+    "anchor": "forum-romanum",
+    "timeRange": { "start": -100, "end": -44 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 20,
+    "links": [],
+    "tags": ["人物", "帝国", "戦争"]
   },
   {
     "id": "cleopatra",
@@ -102,10 +126,58 @@
     "anchor": "alexandria",
     "timeRange": { "start": -69, "end": -30 },
     "summary": "",
-    "region": "エジプト",
+    "region": "アフリカ",
     "season": 33,
     "links": [],
-    "tags": ["人物", "古代", "エジプト"]
+    "tags": ["人物", "帝国"]
+  },
+  {
+    "id": "hannibal",
+    "title": "ハンニバル",
+    "kind": "place",
+    "anchor": "carthage",
+    "timeRange": { "start": -247, "end": -183 },
+    "summary": "",
+    "region": "アフリカ",
+    "season": 42,
+    "links": [],
+    "tags": ["人物", "戦争", "遠征"]
+  },
+  {
+    "id": "roshi-soshi",
+    "title": "老子・荘子",
+    "kind": "concept",
+    "anchor": "luyi",
+    "timeRange": { "start": -571, "end": -286 },
+    "summary": "",
+    "region": "中国",
+    "season": 55,
+    "links": [],
+    "tags": ["人物", "思想"]
+  },
+  {
+    "id": "kou-to-ryuho",
+    "title": "項羽と劉邦",
+    "kind": "place",
+    "anchor": "pengcheng",
+    "timeRange": { "start": -256, "end": -195 },
+    "summary": "",
+    "region": "中国",
+    "season": 60,
+    "links": [],
+    "tags": ["人物", "戦争"]
+  },
+  {
+    "id": "gilgamesh",
+    "title": "ギルガメシュ",
+    "kind": "place",
+    "anchor": "uruk",
+    "timeRange": { "start": -2800, "end": -2600 },
+    "summary": "",
+    "region": "西アジア",
+    "season": 63,
+    "links": [],
+    "tags": ["人物", "文学"]
   },
   {
     "id": "teisei-roma",
@@ -114,9 +186,9 @@
     "anchor": "rome",
     "timeRange": { "start": -27, "end": 476 },
     "summary": "",
-    "region": "地中海",
+    "region": "ヨーロッパ",
     "season": 66,
     "links": [],
-    "tags": ["帝国", "古代", "ローマ"]
+    "tags": ["集団", "帝国"]
   }
 ]
