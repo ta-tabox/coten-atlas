@@ -82,7 +82,6 @@ jobs:
         uses: actions/deploy-pages@v5
 
       # 配信されたページを一度取得し、そのページが名指している参照へ到達できるかだけを検証する。
-      # ブラウザを立てない理由と、canvas を検証しない理由は docs/adr/0036-post-deploy-reachability.md が持つ。
       #
       # 対象の URL は deploy-pages の出力から取る。
       # ワークフローへ書き下ろすと、next.config.ts の basePath と出所が二つになる。
