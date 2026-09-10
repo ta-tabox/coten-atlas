@@ -54,3 +54,15 @@ GlobalSecurity.org は一次資料でないので、参考程度の情報源と�
 |---|---|---|
 | 老子の生年 | -571 | 前604年説と前581年説が並立し、実在そのものが定説でない |
 | 代表点 | `luyi`（鹿邑） | 位置なしにすれば、実在が定説でない人物に点を置かずに済む |
+
+## 裏どりの出所
+
+| 出所 | 何を持つか |
+|---|---|
+| [`@historian` 1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902) | `timeRange`・座標・`region`・`kind`・`title` の裏どり |
+| [`@historian` 2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216) | 座標の典拠の取り直し |
+| [#143 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/143) | 代表点を選んだ判断と候補 |
+| [#154 のレビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/154) | 仮決定 |
+
+1 回目は座標の典拠に Wikipedia の Laozi の記事を使っていたので、2 回目が Wikidata Q1198911 へ差し替えた。
+**座標の典拠は 2 回目が正である。**

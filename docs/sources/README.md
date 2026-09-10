@@ -31,19 +31,7 @@
 | 代表点 | 典拠が示す座標・典拠・典拠の格。代表点を選んだ判断と候補 |
 | `region`・`kind`・`title` | 裏どりが見た結果 |
 | 仮決定と論点 | 人間が決着させた値と、覆りうる根拠 |
-
-## 裏どりの出所
-
-S7 古代の 6 シリーズ（[#101](https://github.com/ta-tabox/coten-atlas/issues/101)）の典拠は、`@historian`（[ADR-0035](../adr/0035-history-review-lane.md)）の裏どりが 2 回走った結果である。
-
-| 回 | 見たもの |
-|---|---|
-| [1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902) | `timeRange`・座標・`region`・`kind`・`title` |
-| [2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216) | 座標の典拠の取り直し |
-
-**座標の典拠は 2 回目が正である。**
-1 回目は `latitude.to` と `geodatos.net` を座標の典拠にしており、彭城の座標に鹿邑県の記事 URL が付く誤りも含む。
-代表点を選んだ判断と候補は [#143](https://github.com/ta-tabox/coten-atlas/pull/143) の PR 本文から写した。
+| 裏どりの出所 | 典拠を返した裏どりの回と、判断が出た PR。同じ欄を二度裏どりしたときは、どの回の典拠が正かを書く |
 
 ## 典拠の格
 

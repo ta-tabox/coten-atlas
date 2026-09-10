@@ -46,3 +46,15 @@
 |---|---|---|
 | 没年 | -183 | 前181年とする文献がある |
 | 代表点 | `carthage`（カルタゴ） | カンナエに置けば `region` が `ヨーロッパ` になり、第二次ポエニ戦争の主戦場と揃う |
+
+## 裏どりの出所
+
+| 出所 | 何を持つか |
+|---|---|
+| [`@historian` 1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902) | `timeRange`・座標・`region`・`kind`・`title` の裏どり |
+| [`@historian` 2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216) | 座標の典拠の取り直し |
+| [#143 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/143) | 代表点を選んだ判断と候補 |
+| [#154 のレビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/154) | 仮決定 |
+
+1 回目は座標の典拠に `geodatos.net` と Wikipedia の Archaeological site of Carthage の記事を使っていたので、2 回目が Pleiades 314921 へ差し替えた。
+**座標の典拠は 2 回目が正である。**

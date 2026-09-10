@@ -41,3 +41,15 @@
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
 | 生年 | -100（伝統説） | 執政官などの就任年齢が規定より若すぎることを理由に、前102年説を採る研究者がいる |
+
+## 裏どりの出所
+
+| 出所 | 何を持つか |
+|---|---|
+| [`@historian` 1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902) | `timeRange`・座標・`region`・`kind`・`title` の裏どり |
+| [`@historian` 2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216) | 座標の典拠の取り直し |
+| [#143 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/143) | 代表点を選んだ判断と候補 |
+| [#154 のレビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/154) | 仮決定 |
+
+1 回目は座標の典拠に `latitude.to` を使っていたので、2 回目が Pleiades 502866838 へ差し替えた。
+**座標の典拠は 2 回目が正である。**

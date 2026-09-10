@@ -37,3 +37,14 @@
 
 論点は無い。
 生没年に学説の割れが無く、代表点の候補も挙がっていない。
+
+## 裏どりの出所
+
+| 出所 | 何を持つか |
+|---|---|
+| [`@historian` 1 回目（2026-09-09）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610048902) | `timeRange`・座標・`region`・`kind`・`title` の裏どり |
+| [`@historian` 2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216) | 座標の典拠の取り直し |
+| [#143 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/143) | 代表点を選んだ判断と候補 |
+
+1 回目は座標の典拠に Wikipedia の Xianyang の記事を使っていたので、2 回目が Wikidata Q497341 へ差し替えた。
+**座標の典拠は 2 回目が正である。**
