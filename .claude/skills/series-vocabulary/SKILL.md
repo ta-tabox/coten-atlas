@@ -14,7 +14,7 @@ description: シリーズを `catalog/series.json` と `catalog/loci.geojson` �
 
 下の 9 手順を上から順に行う。
 代表点と `region` の判定は種別を使うので、`tags` を先に決める。
-`timeRange` を年で書くか時期なしにするかの判定は種別と `anchor` を使うので、代表点の後に決める。
+`timeRange` を年で書くか時期なしにするかの判定は手順 4 の種別と手順 5 の `anchor` を使うので、その二つより後の手順 7 で決める。
 `timeRange` の年の値・`season`・`summary`・`links` は語彙の規則を持たないので、この手順は扱わない。
 欄の形は `docs/ARCHITECTURE.md` §3（データモデル）が持つ。
 
