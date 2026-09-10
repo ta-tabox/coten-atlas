@@ -21,6 +21,15 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [108.709, 34.333] },
+      "properties": {
+        "id": "xianyang",
+        "seriesId": "shin-no-shikotei",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [104.07, 30.66] },
       "properties": {
         "id": "chengdu",
@@ -57,10 +66,55 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [12.485, 41.893] },
+      "properties": {
+        "id": "forum-romanum",
+        "seriesId": "julius-caesar",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [29.92, 31.2] },
       "properties": {
         "id": "alexandria",
         "seriesId": "cleopatra",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [10.323, 36.853] },
+      "properties": {
+        "id": "carthage",
+        "seriesId": "hannibal",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [115.486, 33.861] },
+      "properties": {
+        "id": "ku",
+        "seriesId": "roshi-soshi",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [117.185, 34.262] },
+      "properties": {
+        "id": "pengcheng",
+        "seriesId": "kou-to-ryuho",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [45.637, 31.324] },
+      "properties": {
+        "id": "uruk",
+        "seriesId": "gilgamesh",
         "timeRange": "series"
       }
     },
