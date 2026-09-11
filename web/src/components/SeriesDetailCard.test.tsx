@@ -61,7 +61,7 @@ describe("SeriesDetailCard", () => {
     );
 
     expect(screen.getByRole("heading", { name: "スパルタ" })).toBeVisible();
-    expect(screen.getByText("紀元前900年〜紀元前200年")).toBeVisible();
+    expect(screen.getByText("前900年〜前200年")).toBeVisible();
     expect(screen.getByText(SPARTA.summary)).toBeVisible();
   });
 
@@ -87,7 +87,7 @@ describe("SeriesDetailCard", () => {
     );
 
     expect(screen.getByRole("heading", { name: "お金の歴史" })).toBeVisible();
-    expect(screen.queryByText(/紀元/)).toBeNull();
+    expect(screen.queryByText(/\d+年/)).toBeNull();
   });
 
   it("エピソードのリンクをその回の配信ページへ向ける", () => {

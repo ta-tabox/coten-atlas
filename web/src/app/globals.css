@@ -6,6 +6,31 @@
 
    色・余白・重なり順のトークンは、この下の `@theme` へ置く。
    最初に使う画面が現れた時点で書き始める。
-   いま置くと、使う側が無いまま値だけが正になる。 */
+   いま置くと、使う側が無いまま値だけが正になる。
+
+   ユーティリティを擬似要素へ当てるためのバリアントも、この下の `@custom-variant` へ置く。 */
 
 @import "tailwindcss";
+
+/* `range-thumb:` と `range-track:` は、`<input type="range">` のつまみとトラックへユーティリティを当てる。
+   擬似要素の名前はブラウザごとに違う。
+   2 つの擬似要素を 1 つのセレクタリストにまとめると、片方を解釈できないブラウザが規則ごと捨てるので、WebKit と Firefox の規則を別々のブロックに書く。 */
+@custom-variant range-thumb {
+  &::-webkit-slider-thumb {
+    @slot;
+  }
+
+  &::-moz-range-thumb {
+    @slot;
+  }
+}
+
+@custom-variant range-track {
+  &::-webkit-slider-runnable-track {
+    @slot;
+  }
+
+  &::-moz-range-track {
+    @slot;
+  }
+}

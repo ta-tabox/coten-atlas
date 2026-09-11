@@ -17,6 +17,7 @@ vi.mock("@/components/MapCanvas", () => ({
 vi.mock("@/lib/catalog-dir", () => ({
   loadSeries: () => [],
   loadLoci: () => ({ type: "FeatureCollection", features: [] }),
+  loadEras: () => [],
 }));
 
 describe("Page", () => {
