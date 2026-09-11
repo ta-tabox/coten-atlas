@@ -174,9 +174,9 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [-74.006, 40.713] },
+      "geometry": { "type": "Point", "coordinates": [-76.977, 42.869] },
       "properties": {
-        "id": "new-york",
+        "id": "geneva",
         "seriesId": "elizabeth-blackwell",
         "timeRange": "series"
       }
