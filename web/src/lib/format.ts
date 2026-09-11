@@ -9,7 +9,7 @@ import type { SeriesTimeRange } from "@/lib/schema/series";
  * `year` を「紀元前800年」「紀元550年」の形式の文字列へ整形する。
  * 負値が紀元前、0 と正値が紀元である（符号の意味は `@/lib/schema/series` の `seriesTimeRangeSchema` が正）。
  */
-function formatYear(year: number): string {
+export function formatYear(year: number): string {
   return year < 0 ? `紀元前${-year}年` : `紀元${year}年`;
 }
 
