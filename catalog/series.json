@@ -96,6 +96,18 @@
     "tags": ["人物", "戦争"]
   },
   {
+    "id": "france-kakumei",
+    "title": "フランス革命",
+    "kind": "place",
+    "anchor": "paris",
+    "timeRange": { "start": 1789, "end": 1799 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 9,
+    "links": [],
+    "tags": ["出来事", "政治", "思想"]
+  },
+  {
     "id": "alexandros",
     "title": "アレクサンドロス",
     "kind": "place",
@@ -120,6 +132,18 @@
     "tags": ["経済", "概念史"]
   },
   {
+    "id": "sanzohoshi-genjo",
+    "title": "三蔵法師玄奘",
+    "kind": "place",
+    "anchor": "changan",
+    "timeRange": { "start": 602, "end": 664 },
+    "summary": "",
+    "region": "中国",
+    "season": 13,
+    "links": [],
+    "tags": ["人物", "宗教", "旅"]
+  },
+  {
     "id": "america-kaitakushi",
     "title": "アメリカ開拓史",
     "kind": "place",
@@ -132,6 +156,42 @@
     "tags": ["出来事", "開拓"]
   },
   {
+    "id": "chinggis-khan",
+    "title": "チンギス・カン",
+    "kind": "place",
+    "anchor": "avraga",
+    "timeRange": { "start": 1162, "end": 1227 },
+    "summary": "",
+    "region": "中央ユーラシア",
+    "season": 17,
+    "links": [],
+    "tags": ["人物", "帝国", "戦争", "遠征"]
+  },
+  {
+    "id": "osman-teikoku",
+    "title": "オスマン帝国",
+    "kind": "place",
+    "anchor": "constantinople",
+    "timeRange": { "start": 1299, "end": 1922 },
+    "summary": "",
+    "region": "西アジア",
+    "season": 18,
+    "links": [],
+    "tags": ["集団", "帝国", "戦争"]
+  },
+  {
+    "id": "saicho-to-kukai",
+    "title": "最澄と空海",
+    "kind": "place",
+    "anchor": "mount-hiei",
+    "timeRange": { "start": 767, "end": 835 },
+    "summary": "",
+    "region": "日本",
+    "season": 19,
+    "links": [],
+    "tags": ["人物", "宗教"]
+  },
+  {
     "id": "julius-caesar",
     "title": "ユリウス・カエサル",
     "kind": "place",
@@ -142,6 +202,42 @@
     "season": 20,
     "links": [],
     "tags": ["人物", "帝国", "戦争"]
+  },
+  {
+    "id": "shukyokaikaku",
+    "title": "宗教改革",
+    "kind": "place",
+    "anchor": "wittenberg",
+    "timeRange": { "start": 1517, "end": 1648 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 21,
+    "links": [],
+    "tags": ["出来事", "宗教"]
+  },
+  {
+    "id": "elizabeth-1",
+    "title": "エリザベス1世",
+    "kind": "place",
+    "anchor": "whitehall",
+    "timeRange": { "start": 1533, "end": 1603 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 23,
+    "links": [],
+    "tags": ["人物", "政治", "戦争"]
+  },
+  {
+    "id": "oda-nobunaga",
+    "title": "織田信長",
+    "kind": "place",
+    "anchor": "azuchi",
+    "timeRange": { "start": 1534, "end": 1582 },
+    "summary": "",
+    "region": "日本",
+    "season": 24,
+    "links": [],
+    "tags": ["人物", "武士", "戦争", "政治"]
   },
   {
     "id": "kyoiku-no-rekishi",
@@ -168,6 +264,18 @@
     "tags": ["性", "宗教", "概念史"]
   },
   {
+    "id": "bu-sokuten",
+    "title": "武則天",
+    "kind": "place",
+    "anchor": "luoyang",
+    "timeRange": { "start": 624, "end": 705 },
+    "summary": "",
+    "region": "中国",
+    "season": 27,
+    "links": [],
+    "tags": ["人物", "政治", "帝国"]
+  },
+  {
     "id": "shihonshugi",
     "title": "資本主義",
     "kind": "concept",
@@ -178,6 +286,18 @@
     "season": 28,
     "links": [],
     "tags": ["経済", "思想", "概念史"]
+  },
+  {
+    "id": "friedrich-daio",
+    "title": "フリードリヒ大王",
+    "kind": "place",
+    "anchor": "potsdam",
+    "timeRange": { "start": 1712, "end": 1786 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 30,
+    "links": [],
+    "tags": ["人物", "戦争", "思想", "政治"]
   },
   {
     "id": "seppuku",
@@ -202,6 +322,18 @@
     "season": 33,
     "links": [],
     "tags": ["人物", "帝国"]
+  },
+  {
+    "id": "kamakurabushi",
+    "title": "鎌倉武士",
+    "kind": "place",
+    "anchor": "kamakura",
+    "timeRange": { "start": 1180, "end": 1333 },
+    "summary": "",
+    "region": "日本",
+    "season": 34,
+    "links": [],
+    "tags": ["集団", "武士", "戦争", "政治"]
   },
   {
     "id": "oi-to-shi-no-rekishi",
@@ -240,6 +372,18 @@
     "tags": ["福祉", "経済", "概念史"]
   },
   {
+    "id": "saladin-to-jujigun",
+    "title": "サラディンと十字軍",
+    "kind": "place",
+    "anchor": "jerusalem",
+    "timeRange": { "start": 1096, "end": 1291 },
+    "summary": "",
+    "region": "西アジア",
+    "season": 40,
+    "links": [],
+    "tags": ["人物", "出来事", "戦争", "宗教"]
+  },
+  {
     "id": "hannibal",
     "title": "ハンニバル",
     "kind": "place",
@@ -264,6 +408,18 @@
     "tags": ["宗教", "概念史"]
   },
   {
+    "id": "sugawara-no-michizane",
+    "title": "菅原道真",
+    "kind": "place",
+    "anchor": "heian-kyo",
+    "timeRange": { "start": 845, "end": 903 },
+    "summary": "",
+    "region": "日本",
+    "season": 45,
+    "links": [],
+    "tags": ["人物", "政治", "文学"]
+  },
+  {
     "id": "minshushugi-no-rekishi",
     "title": "民主主義の歴史",
     "kind": "concept",
@@ -276,6 +432,66 @@
     "tags": ["政治", "思想", "概念史"]
   },
   {
+    "id": "murasaki-shikibu",
+    "title": "紫式部",
+    "kind": "place",
+    "anchor": "ichijo-in",
+    "timeRange": { "start": 973, "end": 1014 },
+    "summary": "",
+    "region": "日本",
+    "season": 49,
+    "links": [],
+    "tags": ["人物", "文学"]
+  },
+  {
+    "id": "jeanne-darc",
+    "title": "ジャンヌ・ダルク",
+    "kind": "place",
+    "anchor": "orleans",
+    "timeRange": { "start": 1412, "end": 1431 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 50,
+    "links": [],
+    "tags": ["人物", "戦争", "宗教"]
+  },
+  {
+    "id": "nurhaci",
+    "title": "ヌルハチ",
+    "kind": "place",
+    "anchor": "hetu-ala",
+    "timeRange": { "start": 1559, "end": 1626 },
+    "summary": "",
+    "region": "中国",
+    "season": 51,
+    "links": [],
+    "tags": ["人物", "戦争"]
+  },
+  {
+    "id": "hideyoshi-ieyasu",
+    "title": "秀吉・家康",
+    "kind": "place",
+    "anchor": "osaka",
+    "timeRange": { "start": 1537, "end": 1616 },
+    "summary": "",
+    "region": "日本",
+    "season": 52,
+    "links": [],
+    "tags": ["人物", "武士", "戦争", "政治"]
+  },
+  {
+    "id": "mughal-teikoku",
+    "title": "ムガール帝国",
+    "kind": "place",
+    "anchor": "agra",
+    "timeRange": { "start": 1526, "end": 1857 },
+    "summary": "",
+    "region": "南アジア",
+    "season": 54,
+    "links": [],
+    "tags": ["集団", "帝国", "宗教"]
+  },
+  {
     "id": "roshi-soshi",
     "title": "老子・荘子",
     "kind": "concept",
@@ -286,6 +502,18 @@
     "season": 55,
     "links": [],
     "tags": ["人物", "思想"]
+  },
+  {
+    "id": "ganjin",
+    "title": "鑑真",
+    "kind": "place",
+    "anchor": "nara",
+    "timeRange": { "start": 688, "end": 763 },
+    "summary": "",
+    "region": "中国",
+    "season": 56,
+    "links": [],
+    "tags": ["人物", "宗教", "旅"]
   },
   {
     "id": "kagaku-gijutsu-no-rekishi",
