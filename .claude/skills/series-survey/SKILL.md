@@ -155,7 +155,8 @@ for it in ET.parse(sys.stdin).getroot().iter("item"):
    本文には、対象のシリーズの `timeRange`・`region`・`anchor`・座標（経度, 緯度）・選び方を表で並べ、特に見てほしい点を名指す。
    起動語に `@claude` を含めない
 2. コメントが起こした run を拾う。
-   PR を開いたときや bot のコメントも `issue_comment` の run を起こし、それは `skipped` で終わるので、直近の 1 件を取ると別の run を拾う
+   `claude-history-review.yml` はコメントの投稿のたびに run を起こし、PR に付く bot のコメント（自動レビューの進捗や結果）が起こした run は `skipped` で終わる。
+   そのため直近の 1 件を取ると、依頼の run でなく bot のコメントの run を拾うことがある
 
 ```bash
 since=$(date -u +%Y-%m-%dT%H:%M:%SZ)
