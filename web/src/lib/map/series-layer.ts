@@ -5,7 +5,8 @@
  * `['geometry-type']` で図形を分ける枝は第二段階まで無い。
  *
  * 不透明度は `kind` の濃さと、era スライダーの現在窓から求めた事物ごとの濃さの積である。
- * 事物ごとの濃さは `@/lib/era/window` の関数で求めて式へ数値で埋め込み、同じ計算を MapLibre の式で書き直さない（docs/adr/0040-era-fade-wiring.md）。
+ * 事物ごとの濃さは `@/lib/era/window` の関数で求めて式へ数値で埋め込み、同じ計算を MapLibre の式で書き直さない。
+ * 書き直さない理由は docs/adr/0040-era-fade-wiring.md が持つ。
  *
  * 色は MapLibre のスタイル式が読むので、Tailwind のトークンでなく生の値を置く。
  * 地図の中で閉じる指定であって、overlay の見た目とは別物である（docs/adr/0022-map-dom-boundary.md）。

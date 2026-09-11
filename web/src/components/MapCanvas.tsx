@@ -47,7 +47,7 @@ import type { Series, SeriesList } from "@/lib/schema/series";
 
 /**
  * 地図を開いたときに、era スライダーが指す era の id。
- * 値の選び方は docs/adr/0040-era-fade-wiring.md が正。
+ * 古代を選んだ理由は docs/adr/0040-era-fade-wiring.md が持つ。
  */
 const INITIAL_ERA_ID = "ancient";
 
