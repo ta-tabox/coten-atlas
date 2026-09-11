@@ -188,8 +188,9 @@ catalog/
   シリーズの属性なので事物には持たせず、地図の濃淡に要る分は地図へ渡す形を組むときに `seriesId` で引いて写す（[ADR-0024](adr/0024-map-feature-carries-key-only.md)）
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
-- `region` は陸地を重ならないように割った 12 区画と `地域なし` の 13 値で、区画を一つ選ぶと嘘になるシリーズが `地域なし` を書く（[ADR-0034](adr/0034-series-vocabulary.md)）。
-  区画の境目の決め方と、値を足すときの手順も同じレコードが持つ。
+- `region` は陸地を重ならないように割った 12 区画と `地域なし` の 13 値で、区画を一つ選ぶと嘘になるシリーズが `地域なし` を書く（[ADR-0041](adr/0041-series-vocabulary-tiebreaks.md)）。
+  区画の境目の決め方は skill `series-vocabulary` の手順 6 が持つ。
+  値を足すときは、`web/src/lib/schema/series.ts` の `SERIES_REGIONS` と同じ skill の一覧を両方書き換え、足す理由を新しい ADR に書く。
   `tags` は種別（`人物` / `集団` / `出来事` / `概念史` の閉じた集合から最低 1 つ）と主題を合わせて 4 個以内で、`eras.json` の区分と同じ粒度の時代名と地域名を入れない。
   `幕末` や `三国志` のように era より細かい時代の名は主題として入れてよい
 - `region` の 13 値・種別が最低 1 つ在ること・`tags` の上限・era 級の時代名の禁止・`title` が `ショート` と `ジンブンガク` で始まらないこと・`kind: place` と `ANCHOR_UNLOCATED` を組まないこと・`"untimed"` を置いたシリーズの種別が `概念史` だけで位置なしであることは、`web/src/lib/schema/series.ts` が検査する。
@@ -281,7 +282,7 @@ catalog/
 - 地図の上に載る overlay は React + Tailwind で書く。MapLibre 由来の DOM は canvas コンテナと attribution だけで、Popup も built-in control も使わない（[ADR-0022](adr/0022-map-dom-boundary.md)）
 
 地図の画面のほかに、出典表記の置き場を二つ持つ。
-何を載せるかは ADR-0008 が持つ。
+載せる文言の全文は `web/src/app/about/page.tsx` が持ち、何を載せるかを決めた理由は [ADR-0008](adr/0008-quote-titles-only.md) が持つ。
 
 公開サイトの外に、手元でだけ立つ管理画面を持つ（[ADR-0028](adr/0028-local-only-admin.md)）。
 シリーズを選んで地図をクリックすると代表点が置かれ、`series.json` と `loci.geojson` へ書かれる。
