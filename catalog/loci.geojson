@@ -138,9 +138,9 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [36.306, 33.511] },
+      "geometry": { "type": "Point", "coordinates": [35.234, 31.777] },
       "properties": {
-        "id": "damascus",
+        "id": "jerusalem",
         "seriesId": "saladin-to-jujigun",
         "timeRange": "series"
       }
@@ -165,9 +165,9 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [135.765, 35.025] },
+      "geometry": { "type": "Point", "coordinates": [135.748, 35.029] },
       "properties": {
-        "id": "tsuchimikado-dono",
+        "id": "ichijo-in",
         "seriesId": "murasaki-shikibu",
         "timeRange": "series"
       }
@@ -192,9 +192,9 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [119.42, 32.39] },
+      "geometry": { "type": "Point", "coordinates": [135.84, 34.689] },
       "properties": {
-        "id": "yangzhou",
+        "id": "nara",
         "seriesId": "ganjin",
         "timeRange": "series"
       }
