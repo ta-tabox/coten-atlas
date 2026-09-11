@@ -120,9 +120,9 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [2.352, 48.857] },
+      "geometry": { "type": "Point", "coordinates": [2.346, 48.849] },
       "properties": {
-        "id": "paris",
+        "id": "college-de-france",
         "seriesId": "levi-strauss",
         "timeRange": "series"
       }
