@@ -38,7 +38,8 @@ export const seriesKindSchema = z.enum(["place", "concept"]);
 /**
  * `region` に置ける区画の一覧。
  * 陸地を重ならないように割った 12 の区画と、区画を一つ選ぶと嘘になるシリーズが使う `地域なし` である。
- * 区画の境目と、値を足すときの手順は docs/adr/0041-series-vocabulary-tiebreaks.md が持つ。
+ * 区画の境目は `.claude/skills/series-vocabulary/SKILL.md` の手順 6 が持つ。
+ * 値を足すときは、この一覧と同じスキルの一覧を両方書き換え、足す理由を新しい ADR に書く。
  */
 export const SERIES_REGIONS = [
   "日本",
