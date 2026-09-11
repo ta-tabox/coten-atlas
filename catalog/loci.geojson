@@ -48,6 +48,15 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [2.349, 48.853] },
+      "properties": {
+        "id": "paris",
+        "seriesId": "france-kakumei",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [72.581, 23.061] },
       "properties": {
         "id": "ahmedabad",
@@ -61,6 +70,15 @@
       "properties": {
         "id": "pella",
         "seriesId": "alexandros",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [108.94, 34.26] },
+      "properties": {
+        "id": "changan",
+        "seriesId": "sanzohoshi-genjo",
         "timeRange": "series"
       }
     },
@@ -84,6 +102,33 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [109.153, 47.094] },
+      "properties": {
+        "id": "avraga",
+        "seriesId": "chinggis-khan",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [28.976, 41.008] },
+      "properties": {
+        "id": "constantinople",
+        "seriesId": "osman-teikoku",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.841, 35.07] },
+      "properties": {
+        "id": "mount-hiei",
+        "seriesId": "saicho-to-kukai",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [12.485, 41.893] },
       "properties": {
         "id": "forum-romanum",
@@ -93,10 +138,55 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [12.643, 51.866] },
+      "properties": {
+        "id": "wittenberg",
+        "seriesId": "shukyokaikaku",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [5.383, 49.16] },
       "properties": {
         "id": "verdun",
         "seriesId": "daiichijisekaitaisen",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.126, 51.504] },
+      "properties": {
+        "id": "whitehall",
+        "seriesId": "elizabeth-1",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [136.14, 35.156] },
+      "properties": {
+        "id": "azuchi",
+        "seriesId": "oda-nobunaga",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [112.454, 34.681] },
+      "properties": {
+        "id": "luoyang",
+        "seriesId": "bu-sokuten",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [13.038, 52.404] },
+      "properties": {
+        "id": "potsdam",
+        "seriesId": "friedrich-daio",
         "timeRange": "series"
       }
     },
@@ -120,6 +210,15 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [139.556, 35.326] },
+      "properties": {
+        "id": "kamakura",
+        "seriesId": "kamakurabushi",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [2.346, 48.849] },
       "properties": {
         "id": "college-de-france",
@@ -133,6 +232,15 @@
       "properties": {
         "id": "wilhelmplatz",
         "seriesId": "goebbels",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [35.234, 31.777] },
+      "properties": {
+        "id": "jerusalem",
+        "seriesId": "saladin-to-jujigun",
         "timeRange": "series"
       }
     },
@@ -165,6 +273,15 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.742, 35.014] },
+      "properties": {
+        "id": "heian-kyo",
+        "seriesId": "sugawara-no-michizane",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [32.854, 39.925] },
       "properties": {
         "id": "ankara",
@@ -183,10 +300,64 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.748, 35.029] },
+      "properties": {
+        "id": "ichijo-in",
+        "seriesId": "murasaki-shikibu",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [1.904, 47.902] },
+      "properties": {
+        "id": "orleans",
+        "seriesId": "jeanne-darc",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [124.858, 41.702] },
+      "properties": {
+        "id": "hetu-ala",
+        "seriesId": "nurhaci",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.526, 34.687] },
+      "properties": {
+        "id": "osaka",
+        "seriesId": "hideyoshi-ieyasu",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [78.021, 27.18] },
+      "properties": {
+        "id": "agra",
+        "seriesId": "mughal-teikoku",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [115.486, 33.861] },
       "properties": {
         "id": "ku",
         "seriesId": "roshi-soshi",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.84, 34.689] },
+      "properties": {
+        "id": "nara",
+        "seriesId": "ganjin",
         "timeRange": "series"
       }
     },
@@ -201,19 +372,19 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [-74.006, 40.713] },
+      "geometry": { "type": "Point", "coordinates": [117.185, 34.262] },
       "properties": {
-        "id": "new-york",
-        "seriesId": "nikola-tesla",
+        "id": "pengcheng",
+        "seriesId": "kou-to-ryuho",
         "timeRange": "series"
       }
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [117.185, 34.262] },
+      "geometry": { "type": "Point", "coordinates": [-74.006, 40.713] },
       "properties": {
-        "id": "pengcheng",
-        "seriesId": "kou-to-ryuho",
+        "id": "new-york",
+        "seriesId": "nikola-tesla",
         "timeRange": "series"
       }
     },
