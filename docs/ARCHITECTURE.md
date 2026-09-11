@@ -282,7 +282,7 @@ catalog/
 - 地図の上に載る overlay は React + Tailwind で書く。MapLibre 由来の DOM は canvas コンテナと attribution だけで、Popup も built-in control も使わない（[ADR-0022](adr/0022-map-dom-boundary.md)）
 
 地図の画面のほかに、出典表記の置き場を二つ持つ。
-何を載せるかは ADR-0008 が持つ。
+載せる文言の全文は `web/src/app/about/page.tsx` が持ち、何を載せるかを決めた理由は [ADR-0008](adr/0008-quote-titles-only.md) が持つ。
 
 公開サイトの外に、手元でだけ立つ管理画面を持つ（[ADR-0028](adr/0028-local-only-admin.md)）。
 シリーズを選んで地図をクリックすると代表点が置かれ、`series.json` と `loci.geojson` へ書かれる。
