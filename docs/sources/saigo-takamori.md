@@ -70,12 +70,12 @@ Wikidata の座標の参照元は日本語版ウィキペディアで、GeoNames
 
 2026-09-11 に Claude が `@historian` の結果を見て仮決定し、同日に #171 の決定（ADR-0041）で代表点の理由を事績の中心として当て直した。
 値は変わらなかった。
-事績の中心をどこに置くかの人間の判定は [#165](https://github.com/ta-tabox/coten-atlas/pull/165) で待っている。
+2026-09-11 に人間が仮決定を採用して決着させ、見直しを [#190](https://github.com/ta-tabox/coten-atlas/issues/190)（西郷隆盛（saigo-takamori）の代表点を鹿児島と京都のどちらにするか）へ切り出した。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
 | 生年 | 1828 | 元号の年をそのまま西暦に当てる事典（精選版日本国語大辞典など）は 1827 と書く |
-| 代表点 | 鹿児島（事績の中心） | 明治維新での働き（第 6〜10 回）を主な事績と見れば京都になる |
+| 代表点 | 鹿児島（事績の中心） | 明治維新での働き（第 6〜10 回）を主な事績と見れば京都になる。見直しは #190 で行う |
 
 ## 裏どりの出所
 
@@ -86,6 +86,7 @@ Wikidata の座標の参照元は日本語版ウィキペディアで、GeoNames
 | [`@historian` 3 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/165#issuecomment-5633765389) | 京都・江戸・東京・鹿児島での事績の裏どり |
 | [#165 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/165) | 代表点を選んだ判断と候補 |
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171#issuecomment-5629453137) | 拠点が複数あるときに、事績の中心を代表点にする判断 |
+| [#190（見直し）](https://github.com/ta-tabox/coten-atlas/issues/190) | 採用した仮決定を人間が見直す論点と案 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う主題 |
 
 1 回目は没年と座標の典拠を URL 無しで返したので、2 回目が URL と値を返した。
