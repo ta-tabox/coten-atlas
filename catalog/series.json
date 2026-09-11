@@ -96,6 +96,18 @@
     "tags": ["人物", "戦争"]
   },
   {
+    "id": "gandhi",
+    "title": "ガンディー",
+    "kind": "place",
+    "anchor": "ahmedabad",
+    "timeRange": { "start": 1869, "end": 1948 },
+    "summary": "",
+    "region": "南アジア",
+    "season": 10,
+    "links": [],
+    "tags": ["人物", "思想", "宗教", "政治"]
+  },
+  {
     "id": "alexandros",
     "title": "アレクサンドロス",
     "kind": "place",
@@ -132,6 +144,18 @@
     "tags": ["出来事", "開拓"]
   },
   {
+    "id": "helen-keller-to-anne-sullivan",
+    "title": "ヘレン・ケラーとアン・サリヴァン",
+    "kind": "place",
+    "anchor": "tuscumbia",
+    "timeRange": { "start": 1866, "end": 1968 },
+    "summary": "",
+    "region": "北アメリカ",
+    "season": 16,
+    "links": [],
+    "tags": ["人物", "障害", "教育", "福祉"]
+  },
+  {
     "id": "julius-caesar",
     "title": "ユリウス・カエサル",
     "kind": "place",
@@ -142,6 +166,18 @@
     "season": 20,
     "links": [],
     "tags": ["人物", "帝国", "戦争"]
+  },
+  {
+    "id": "daiichijisekaitaisen",
+    "title": "第一次世界大戦",
+    "kind": "place",
+    "anchor": "verdun",
+    "timeRange": { "start": 1914, "end": 1918 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 22,
+    "links": [],
+    "tags": ["出来事", "戦争", "帝国", "技術"]
   },
   {
     "id": "kyoiku-no-rekishi",
@@ -192,6 +228,18 @@
     "tags": ["武士", "死", "概念史"]
   },
   {
+    "id": "nichirosenso",
+    "title": "日露戦争",
+    "kind": "place",
+    "anchor": "lushun",
+    "timeRange": { "start": 1904, "end": 1905 },
+    "summary": "",
+    "region": "中国",
+    "season": 32,
+    "links": [],
+    "tags": ["出来事", "戦争", "帝国", "外交"]
+  },
+  {
     "id": "cleopatra",
     "title": "クレオパトラ",
     "kind": "place",
@@ -202,6 +250,18 @@
     "season": 33,
     "links": [],
     "tags": ["人物", "帝国"]
+  },
+  {
+    "id": "levi-strauss",
+    "title": "レヴィ＝ストロース",
+    "kind": "place",
+    "anchor": "paris",
+    "timeRange": { "start": 1908, "end": 2009 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 35,
+    "links": [],
+    "tags": ["人物", "思想"]
   },
   {
     "id": "oi-to-shi-no-rekishi",
@@ -240,6 +300,30 @@
     "tags": ["福祉", "経済", "概念史"]
   },
   {
+    "id": "goebbels",
+    "title": "ゲッベルス",
+    "kind": "place",
+    "anchor": "wilhelmplatz",
+    "timeRange": { "start": 1897, "end": 1945 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 39,
+    "links": [],
+    "tags": ["人物", "メディア", "政治", "戦争"]
+  },
+  {
+    "id": "wrightkyodai",
+    "title": "ライト兄弟",
+    "kind": "place",
+    "anchor": "dayton",
+    "timeRange": { "start": 1867, "end": 1948 },
+    "summary": "",
+    "region": "北アメリカ",
+    "season": 41,
+    "links": [],
+    "tags": ["人物", "技術"]
+  },
+  {
     "id": "hannibal",
     "title": "ハンニバル",
     "kind": "place",
@@ -264,6 +348,18 @@
     "tags": ["宗教", "概念史"]
   },
   {
+    "id": "schindler",
+    "title": "シンドラー",
+    "kind": "place",
+    "anchor": "krakow",
+    "timeRange": { "start": 1908, "end": 1974 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 44,
+    "links": [],
+    "tags": ["人物", "戦争", "虐殺"]
+  },
+  {
     "id": "minshushugi-no-rekishi",
     "title": "民主主義の歴史",
     "kind": "concept",
@@ -276,6 +372,30 @@
     "tags": ["政治", "思想", "概念史"]
   },
   {
+    "id": "kemal-ataturk",
+    "title": "ケマル・アタテュルク",
+    "kind": "place",
+    "anchor": "ankara",
+    "timeRange": { "start": 1881, "end": 1938 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 47,
+    "links": [],
+    "tags": ["人物", "政治", "戦争", "帝国"]
+  },
+  {
+    "id": "yanase-takashi",
+    "title": "やなせたかし",
+    "kind": "place",
+    "anchor": "shinjuku",
+    "timeRange": { "start": 1919, "end": 2013 },
+    "summary": "",
+    "region": "日本",
+    "season": 48,
+    "links": [],
+    "tags": ["人物", "文学", "美術", "戦争"]
+  },
+  {
     "id": "roshi-soshi",
     "title": "老子・荘子",
     "kind": "concept",
@@ -286,6 +406,18 @@
     "season": 55,
     "links": [],
     "tags": ["人物", "思想"]
+  },
+  {
+    "id": "ito-noe",
+    "title": "伊藤野枝",
+    "kind": "place",
+    "anchor": "tokyo",
+    "timeRange": { "start": 1895, "end": 1923 },
+    "summary": "",
+    "region": "日本",
+    "season": 57,
+    "links": [],
+    "tags": ["人物", "性", "思想", "メディア"]
   },
   {
     "id": "kagaku-gijutsu-no-rekishi",
@@ -310,6 +442,18 @@
     "season": 60,
     "links": [],
     "tags": ["人物", "戦争"]
+  },
+  {
+    "id": "nikola-tesla",
+    "title": "ニコラ・テスラ",
+    "kind": "place",
+    "anchor": "manhattan",
+    "timeRange": { "start": 1856, "end": 1943 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 61,
+    "links": [],
+    "tags": ["人物", "技術", "科学"]
   },
   {
     "id": "gilgamesh",
