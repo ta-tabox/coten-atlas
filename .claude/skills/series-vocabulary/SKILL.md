@@ -55,7 +55,7 @@ main を取り込むたびに、この二つを数え直す。
 | 長音 | 記号でも母音の重ねでも表さない。`ou`・`oo` は `o`、`uu` は `u` にし、`ei`・`ii` はそのまま書く | `shukyo`（`shūkyō`・`shuukyou` でない）・`komei`・`teisei-roma` |
 | 長音に続く同じ母音の字 | 長音と別の字として書く | `kou-to-ryuho`（`項羽` は `こう` と `う`） |
 | `ん` | 後ろの音によらず `n` にする | `sandai`・`genpei`（`gempei` でない） |
-| 語の区切り | 語と語の境目と、助詞の前後に `-` を入れる。辞書に一語で載る語と、接頭辞・接尾辞の付いた語は割らない | `sekai-sandai-shukyo`・`shin-no-shikotei`（`shi-kotei` でない）・`america-kaitakushi`（`kaitaku-shi` でない）・`okane-no-rekishi` |
+| 語の区切り | 語と語の境目と、助詞の前後に `-` を入れる。辞書に一語で載る語と、接頭辞・接尾辞の付いた語は割らない。辞書に一語で載るかは、コトバンクで引けるデジタル大辞泉と精選版日本国語大辞典の見出しで判定し、どちらか一方に一語の見出しがあれば割らない | `sekai-sandai-shukyo`・`shin-no-shikotei`（`shi-kotei` でない）・`america-kaitakushi`（`kaitaku-shi` でない）・`okane-no-rekishi`・`kamakurabushi`（精選版日本国語大辞典にだけ「かまくら‐ぶし」の見出しがある） |
 | 助詞 | 語として残す。`title` の表記に無くても、読みに在れば書く | `saicho-to-kukai`・`sugawara-no-michizane`（`菅原道真`） |
 | カタカナの外来固有名 | カタカナの語形に合うラテン文字の綴りを使う。語形に合う綴りが複数あれば、英語の文献で通用するものを使う | `sparta`（`suparuta` でない）・`hitler`・`alexandros`（`alexander` はアレクサンダーの語形）・`cleopatra`（`kleopatra` でない）・`chinggis-khan`（`genghis-khan` はジンギスの語形） |
 | 発音区別符号（`š`・`ü`・`é` など） | 付けず、元の字だけを書く | `gilgamesh`（`gilgameš` でない）・`levi-strauss`（`lévi-strauss` でない） |
