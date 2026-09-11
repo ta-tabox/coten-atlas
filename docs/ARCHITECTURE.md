@@ -17,7 +17,7 @@
 | 項目 | 確定 | 根拠 |
 |---|---|---|
 | スタック | Next.js (App Router) + TypeScript、static export（`output: 'export'`） | [ADR-0001](adr/0001-nextjs-static-export.md) |
-| スタイル | Tailwind v4（`globals.css` が `@import "tailwindcss"` と `@theme` のトークンを持つ）。`*.module.css` は持たない | [ADR-0021](adr/0021-tailwind-v4.md) |
+| スタイル | Tailwind v4（`globals.css` が `@import "tailwindcss"`、`@theme` のトークン、擬似要素へユーティリティを当てる `@custom-variant` を持つ）。`*.module.css` は持たない | [ADR-0021](adr/0021-tailwind-v4.md) |
 | 地図の DOM 境界 | overlay は React + Tailwind。MapLibre 由来の DOM は canvas コンテナと attribution だけ | [ADR-0022](adr/0022-map-dom-boundary.md) |
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-0003](adr/0003-maplibre.md) |
 | ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-0004](adr/0004-openfreemap-positron.md) |
@@ -230,15 +230,15 @@ catalog/
   隙間があるとそこを指した位置に対応する年が無く、重なりがあると同じ年が二箇所から指される。
   検査は `eraListSchema` が持つ
 - **終わっていない era の `end` には年を書かず `"present"` を置く**（[ADR-0019](adr/0019-era-open-end.md)）。
-  置けるのは末尾だけで、この区間を補間するには右端に当たる年が要る。決め方は S4
+  置けるのは末尾だけで、この区間を補間するときの右端はビルドした時点の年である（[ADR-0038](adr/0038-era-space-window.md)、[ADR-0040](adr/0040-era-fade-wiring.md)）
 - era の刻みはデータが揃ってから密度に合わせて調整する（S7 の後に見直し）
 
 **年からシリーズの opacity へ**——スライダーが指すのは 1 点だが、シリーズは `timeRange` という幅を持つので、点と幅は直接比べられない。
 そこで点の周りに幅を持つ**現在窓**（年範囲）を取り、`timeRange` との重なり率（0..1）をイージングに通した値を opacity にする。
 窓の端で滑らかにフェードイン / アウトする。
 
-- **現在窓の幅は未決定**（S4 の決定）。
-  幅が決まらないと重なり率が決まらず、opacity も決まらない
+- 現在窓の幅は era 空間の 1 区間の半分（`WINDOW_WIDTH_IN_ERAS`）で、窓の両端を年へ変換してから `timeRange` と比べる。
+  重なり率は重なる年数を窓と `timeRange` のうち短い方の年数で割り、smoothstep に通して濃さにする（[ADR-0038](adr/0038-era-space-window.md)）
 
 ### 配り方
 
@@ -266,7 +266,8 @@ catalog/
 
 ## 4. UI 構成
 
-- 全画面マップ + 下部に era スライダー（ラベルは era 名、位置は補間年を薄く表示）
+- 全画面マップ + 下部に era スライダー（era 名を等幅のセルに並べ、下に区間の境目の年を置く。現在窓の年の範囲を、文字とセルの上の帯で示す）。
+  地図の点の濃さは `kind` の濃さと現在窓の濃さの積で、現在窓と重ならない事物は地図に描かない
 - 左に開閉パネル: 現在窓に表示中のシリーズ一覧。クリックで該当オブジェクトを
   選択（flyTo + ハイライト）。地図側の選択もパネルに同期（単一の selection state）
 - 位置なしのシリーズ（`anchor` が `ANCHOR_UNLOCATED`）は地図に出ない。
