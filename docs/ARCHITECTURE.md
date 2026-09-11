@@ -196,7 +196,7 @@ catalog/
   外の知識が要る判定（区画を一つ選ぶと嘘になるか、`id` の表記が読みどおりか）は検査に入らない
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。
   この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/catalog.test.ts`）が `catalog/` 全体をそれに掛ける。
-  ファイル単体の検査に加えて、ファイルをまたぐ整合——`episodes.json` の `seriesId` が実在する id と season を指すか、`series.json` の `anchor` が実在する事物を指すか、事物の `seriesId` が実在するシリーズを指すか、`timeRange` が `eras.json` の era 空間と重なるか（`"untimed"` のシリーズを除く）——も同じテストが見る（`web/src/lib/schema/references.ts`）
+  ファイル単体の検査に加えて、ファイルをまたぐ整合——`episodes.json` の `seriesId` が実在する id と season を指すか、`series.json` の `anchor` が実在する事物を指すか、事物の `seriesId` が実在するシリーズを指すか、`timeRange` が `eras.json` の era 空間に収まるか（`"untimed"` のシリーズを除く）——も同じテストが見る（`web/src/lib/schema/references.ts`）
 - 人物伝（吉田松陰など）は活動の中心地を代表点、生涯年代を `timeRange` とする
 
 ### 時系列（era）モデル
@@ -426,6 +426,3 @@ RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを impo
 - 位置なしのシリーズに第二段階の事物を持たせるか。
   第一段階の規則は「事物を持たない」で、代表点を持たないことは段階を問わず決まっている。
   #111 に着手するときに決める
-- `series.timeRange` が era 空間からはみ出しても、いまは赤くならない。
-  検査は入っている（`web/src/lib/schema/references.ts` の `seriesOutsideEraSpace`）が、見るのは**重なるかどうかだけ**で、収まっているかは見ていない。
-  era 空間の外へ伸びる `timeRange` を書けてしまうので、S4 を割るときに現在窓の幅と一緒に拾う

@@ -2,7 +2,7 @@
  * `catalog/series.json` の現物が、描画の分岐の枝をどちらも持っているかを見る。
  *
  * 見るのはスキーマが見ない観点だけである。
- * 現物が `seriesListSchema` を通ること、`id`・`season` の一意性、`timeRange` が era 空間と重なることは隣の `catalog.test.ts` が既に落とすので、ここでは数えない。
+ * 現物が `seriesListSchema` を通ること、`id`・`season` の一意性、`timeRange` が era 空間に収まることは隣の `catalog.test.ts` が既に検査するので、ここでは数えない。
  *
  * 描画は `kind` の 2 値で濃さを分け（docs/adr/0023-kind-place-or-concept.md）、位置なしのシリーズは地図に出さず一覧の別区画へ回す（docs/adr/0026-two-phase-location.md）。
  * 分岐の枝に対応する現物が無いと、その枝は一度も描かれないまま描画のステップへ渡り、見た目の検証からも漏れる。

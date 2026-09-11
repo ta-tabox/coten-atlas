@@ -9,8 +9,8 @@
  *   指す先を欠いた代表点も、事物を持ってしまった位置なしも、地図には「その点が無い」としか出ない
  * - loci → series（brokenLocusSeriesReferences・lociOutsideSeriesTimeRange）: `seriesId` が実在すること、年を書いた事物がシリーズの年代に収まること。
  *   参照を外した事物は濃淡を引く先を持たず、はみ出した年の事物はシリーズが一覧に出ない時代の地図へ現れる
- * - series → eras（seriesOutsideEraSpace）: `timeRange` が era 空間と重なること。
- *   重ならないシリーズはスライダーのどの位置でも現在窓に掛からず、地図に一度も現れない
+ * - series → eras（seriesOutsideEraSpace）: `timeRange` が era 空間に収まること。
+ *   はみ出した年はスライダーのどの位置でも現在窓に入らず、era 空間の完全に外にあるシリーズは地図に一度も現れない
  *
  * episode が `season` を持つのに `seriesId` が null の状態は見ない。
  * 差分同期は新規の回にしか割当を掛けないので、シリーズが後から増えたときに正しく起きる状態である。
@@ -182,21 +182,31 @@ export function lociOutsideSeriesTimeRange(
 }
 
 /**
- * era 空間と重ならない `timeRange` を持つシリーズを、理由の文で返す。
- * 重なりが無ければそのシリーズはスライダーのどの位置にも現れないので、直すのは timeRange か、era の列を伸ばすかのどちらか。
+ * `timeRange` が era 空間からはみ出しているシリーズを、はみ出した側ごとに理由の文で返す。
+ * 直すのは `timeRange` の年か、`eras.json` の刻みのどちらかである。
  * 壊れていなければ空。
  *
- * era 空間は先頭 era の `start` に始まり（この年を含む）、末尾 era の `end` が年ならそこで終わる（この年を含まない）。
- * 末尾が `ERA_END_PRESENT` の間は後ろへ開いているので、右側の検査は掛からない。
- * 右端をどの年へ解決して描くか（S4、docs/adr/0019-era-open-end.md の帰結）とは独立で、ここは era の列そのものだけを見る。
+ * era 空間の年は、先頭 era の `start` から末尾 era の右端までで、両端を含む。
+ * 右端は、末尾 era の `end` が年ならその年、`ERA_END_PRESENT` なら `presentEnd` である。
+ * `positionToYear` は位置 1 で右端の年を返すので、era の `end` を含まない区間の規則をここへ持ち込まない。
  * `timeRange` が `TIME_RANGE_UNTIMED` のシリーズは年を持たないので見ない。
  */
-export function seriesOutsideEraSpace(
-  series: SeriesList,
-  eras: EraList,
-): string[] {
+export function seriesOutsideEraSpace({
+  series,
+  eras,
+  presentEnd,
+}: {
+  series: SeriesList;
+  eras: EraList;
+  presentEnd: number;
+}): string[] {
   const spaceStart = eras[0].start;
   const lastEnd = eras[eras.length - 1].end;
+  const spaceEnd = lastEnd === ERA_END_PRESENT ? presentEnd : lastEnd;
+  const spaceEndSource =
+    lastEnd === ERA_END_PRESENT
+      ? `最後の era の end が ${ERA_END_PRESENT} なので presentEnd`
+      : "最後の era の end";
 
   const problems: string[] = [];
 
@@ -205,16 +215,15 @@ export function seriesOutsideEraSpace(
       continue;
     }
 
-    if (timeRange.end < spaceStart) {
+    if (timeRange.start < spaceStart) {
       problems.push(
-        `series ${id}: timeRange の end（${timeRange.end}）が最初の era の start（${spaceStart}）より前で、スライダーのどの位置にも現れない`,
+        `series ${id}: timeRange の start（${timeRange.start}）が era 空間の始まり（最初の era の start、${spaceStart}）より前へはみ出している`,
       );
-      continue;
     }
 
-    if (lastEnd !== ERA_END_PRESENT && timeRange.start >= lastEnd) {
+    if (timeRange.end > spaceEnd) {
       problems.push(
-        `series ${id}: timeRange の start（${timeRange.start}）が最後の era の end（${lastEnd}）以後で、スライダーのどの位置にも現れない`,
+        `series ${id}: timeRange の end（${timeRange.end}）が era 空間の終わり（${spaceEndSource}、${spaceEnd}）より後ろへはみ出している`,
       );
     }
   }
