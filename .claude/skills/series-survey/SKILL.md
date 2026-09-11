@@ -20,7 +20,7 @@ description: 配信フィードに回が在るのに `catalog/series.json` に�
 
 | 順 | 手順 | 出すもの |
 |---|---|---|
-| 1 | 束を決めて着手する | 対象の season とシリーズ名の表、main から切ったブランチ |
+| 1 | 束を決めて着手する | 対象の season とシリーズ名の表（並行するなら束の issue）、main から切ったブランチ |
 | 2 | 現物を数える | 主題の語と事物の `id` の一覧（並行する PR のブランチを含む） |
 | 3 | 配信フィードを読む | 各シリーズが扱う年代・地域・拠点のメモ |
 | 4 | 値を決めて書く | `feat(catalog):` のコミット |
@@ -66,6 +66,14 @@ comm -23 \
 `catalog/episodes.json` は最後に `pnpm sync` を回した時点の配信までしか持たない。
 それより後に始まった season は、手順 3 のコマンドで配信フィードの season を直接並べて拾う。
 
+並行するセッションが束を決めて、まだ PR を開いていない season は、どのブランチの `series.json` にも現れない。
+その season は題が `シーズン調査:` で始まる開いた issue の対象表に在るので、上の差からさらに除く。
+
+```bash
+gh issue list --state open --search 'シーズン調査: in:title' --json number,title,body \
+  --jq '.[] | "#\(.number) \(.title)\n\(.body)"'
+```
+
 3. 各 season のシリーズ名を、その season の回の題から取る。
    題は `【<season>-<回>】…【COTEN RADIO <シリーズ名>編<回>】` の形で、ショートの回は `COTEN RADIOショート` と書かれる
 
@@ -75,9 +83,10 @@ git show origin/main:catalog/episodes.json \
 ```
 
 4. 1 本の PR で扱う season の束を決める。
-   並行するセッションで進めるなら、時代で束ねると、`timeRange` の重なりと、同じ地名の取り合いが束の間で減る。
-   束を issue にするなら、本文に season とシリーズ名の対象表を置く
-5. `origin/main` からブランチ `feat/series-<束の名前>` を切る
+   並行するセッションで進めるなら、時代で束ねると、`timeRange` の重なりと、同じ地名の取り合いが束の間で減る
+5. 並行するセッションで進めるなら、値を書く前に、題を `シーズン調査: <束の名前>` にした issue を起こし、本文に season とシリーズ名の対象表を置く。
+   PR を開くまでの間は束の season がどのブランチの `series.json` にも現れないので、issue で先に宣言しないと、他のセッションが同じ season を束に入れる
+6. `origin/main` からブランチ `feat/series-<束の名前>` を切る
 
 ## 2. 現物を数える
 
