@@ -8,21 +8,28 @@
  *
  * 渡す形を組むのは `@/lib/map/loci` である。
  * ここは組み終わった値を source へ載せるだけで、シリーズを引き直さない。
+ * 円の不透明度を現在窓から組むのは `@/lib/map/series-layer` の `seriesCircleLayerIn` である。
  */
 
 import { Layer, Source } from "react-map-gl/maplibre";
+import type { CurrentWindow } from "@/lib/era/window";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { SERIES_CIRCLE_LAYER, SERIES_SOURCE_ID } from "@/lib/map/series-layer";
+import { SERIES_SOURCE_ID, seriesCircleLayerIn } from "@/lib/map/series-layer";
 
 type SeriesLayersProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */
   loci: MapLocusCollection;
+  /** 円の不透明度を決める、era スライダーの現在窓。 */
+  currentWindow: CurrentWindow;
 };
 
-export default function SeriesLayers({ loci }: SeriesLayersProps) {
+export default function SeriesLayers({
+  loci,
+  currentWindow,
+}: SeriesLayersProps) {
   return (
     <Source id={SERIES_SOURCE_ID} type="geojson" data={loci}>
-      <Layer {...SERIES_CIRCLE_LAYER} />
+      <Layer {...seriesCircleLayerIn(currentWindow, loci)} />
     </Source>
   );
 }
