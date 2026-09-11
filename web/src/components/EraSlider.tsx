@@ -5,7 +5,8 @@
  *
  * 位置を保持しない。
  * 表示するのは props で受け取った `position` で、動かされた位置は `onPositionChange` で返す。
- * 位置から現在窓への変換は `@/lib/era/window`、年の整形は `@/lib/format` が担当する。
+ * 位置から現在窓への変換は `@/lib/era/window` が担当する。
+ * 年の数値を「前800年」「550年」の形の文字列にする処理は `@/lib/format` が担当する。
  *
  * MapLibre の DOM へ入れない理由は docs/adr/0022-map-dom-boundary.md が正。
  */
