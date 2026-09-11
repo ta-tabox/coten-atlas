@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { loadLoci, loadSeries } from "@/lib/catalog-dir";
+import { loadEras, loadLoci, loadSeries } from "@/lib/catalog-dir";
 
 describe("loadSeries", () => {
   it("現物を読んで検査に通す", () => {
@@ -17,5 +17,11 @@ describe("loadSeries", () => {
 describe("loadLoci", () => {
   it("現物を読んで検査に通す", () => {
     expect(loadLoci().features.length).toBeGreaterThan(0);
+  });
+});
+
+describe("loadEras", () => {
+  it("現物を読んで検査に通す", () => {
+    expect(loadEras().length).toBeGreaterThan(0);
   });
 });

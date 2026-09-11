@@ -14,6 +14,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { type EraList, parseEras } from "@/lib/schema/era";
 import { type LocusCollection, parseLoci } from "@/lib/schema/locus";
 import { parseSeries, type SeriesList } from "@/lib/schema/series";
 
@@ -37,4 +38,9 @@ export function loadSeries(): SeriesList {
 /** 事物の全件を検査して返す。 */
 export function loadLoci(): LocusCollection {
   return parseLoci(readCatalogFile("loci.geojson"));
+}
+
+/** 時代区分の全件を検査して返す。 */
+export function loadEras(): EraList {
+  return parseEras(readCatalogFile("eras.json"));
 }
