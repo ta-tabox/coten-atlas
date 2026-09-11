@@ -23,7 +23,7 @@
 
 データモデルの説明は `docs/ARCHITECTURE.md` §3 にあるので先に読む。
 
-`region` の値と `kind` の基準は `docs/adr/0034-series-vocabulary.md` が持つ。
+`region` の値と `kind` の基準は `docs/adr/0041-series-vocabulary-tiebreaks.md` が持つ。
 `timeRange` に年を書くか `"untimed"` を置くかの線は `docs/adr/0039-untimed-concept-series.md` が持つ。
 **レビュー対象のブランチにどちらかのファイルが無ければ、そのファイルが持つ基準の判定を行わず、無かったことを報告に書く。**
 基準を持たないまま判定すると、根拠の無い指摘を根拠のある指摘と同じ書式で返すことになる。
