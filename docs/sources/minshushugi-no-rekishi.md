@@ -4,24 +4,25 @@
 |---|---|
 | `series.json` の `id` | `minshushugi-no-rekishi` |
 | `series.json` の `season` | 46 |
-| `series.json` の `timeRange` | -508..2023 |
+| `series.json` の `timeRange` | `"untimed"` |
 | `series.json` の `anchor` | `"unlocated"` |
 | `series.json` の `region` | `ヨーロッパ` |
 | `loci.geojson` の事物 | 無し |
 
 ## `timeRange`
 
-| 欄 | 値 | 何の年か | 典拠 | 並立する説 |
-|---|---|---|---|---|
-| `start` | -508 | アテナイでのクレイステネスの改革 | [Wikipedia: Cleisthenes](https://en.wikipedia.org/wiki/Cleisthenes)（参考程度） | 無し |
-| `end` | 2023 | 最終回（46-12）の配信年 | `catalog/episodes.json` の `pubDate`（2023-12-20） | 無し |
+`"untimed"`（時期なし）である。
+主題の民主主義は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-0039](../adr/0039-untimed-concept-series.md)）の表の 3 行目に当たる。
 
 配信フィードの各回の説明によれば、第 1 回がギリシア以前の民主主義の起源とダレイオスの逸話、第 2 回がアテナイの民主制、第 3 回がローマとイタリアの共和制、第 4 回がイギリスの議会制、第 5〜7 回がホッブズ・ロック・ルソーの社会契約説、第 8 回が革命後のフランス、第 9 回がワイマール共和国、第 10 回がアメリカ、第 11 回がイギリスと日本、第 12 回が現代の課題を扱う。
-第 2 回が扱うアテナイの民主制の成立をクレイステネスの改革とみて、その年を `start` にした。
-第 12 回が現代を扱うので、`end` は最終回の配信年にした。
-現代まで扱うシリーズの `end` を最終回の配信年にする揃え方は、`okane-no-rekishi` の `end` 2020 が最終回の配信日（2020-01-12）の年と一致することに合わせている。
 
-`start` の典拠は英語版 Wikipedia 止まりで、`@historian` は脚注の先の文献までは辿れなかった。
+裏どりで確かめた年は、`catalog/` の値には使わず、年代の見せ方を決めるときの材料として次の表に残す。
+
+| 端 | 年 | 何の年か | 典拠 | 並立する説 |
+|---|---|---|---|---|
+| 始まり | -508 | アテナイでのクレイステネスの改革（第 2 回が扱うアテナイの民主制の成立） | [Wikipedia: Cleisthenes](https://en.wikipedia.org/wiki/Cleisthenes)（参考程度） | 無し |
+
+始まりの典拠は英語版 Wikipedia 止まりで、`@historian` は脚注の先の文献までは辿れなかった。
 
 ## 代表点
 
@@ -43,18 +44,20 @@
 
 ## 仮決定と論点
 
-2026-09-10 に Claude が `@historian` の結果を見て現在の値で仮決定した。
+2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-0039 に従って `timeRange` を `"untimed"` にした。
 人間の判定は [#157](https://github.com/ta-tabox/coten-atlas/pull/157) で待っている。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
-| `start` と `region` | -508 と `ヨーロッパ` | 第 1 回はギリシア以前の民主主義の起源に触れる。その起源を起点に数えれば `start` が早まり、起源がヨーロッパの外なら本拠も変わる（配信フィードの説明からは起源の場所が読み取れず、典拠は取っていない） |
+| `region` | `ヨーロッパ` | 第 1 回はギリシア以前の民主主義の起源に触れる。その起源がヨーロッパの外なら本拠が変わる（配信フィードの説明からは起源の場所が読み取れず、典拠は取っていない） |
+| 時期を持つか | `"untimed"` | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、クレイステネスの改革（-508）を使える。第 1 回が触れるギリシア以前の起源を起点に数えれば、始まりの年が早まる |
 
 ## 裏どりの出所
 
 | 出所 | 何を持つか |
 |---|---|
-| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | `timeRange` の両端・`region` を支える事実・`kind` の裏どり |
+| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりの年・`region` を支える事実・`kind` の裏どり |
 | [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-0034 の規則の突き合わせ |
-| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各端を決めた回と、`region` と `id` の判断 |
+| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容から決めた年と、`region` と `id` の判断 |
+| [#160（ADR-0039）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |

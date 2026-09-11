@@ -4,22 +4,23 @@
 |---|---|
 | `series.json` の `id` | `jinrui-no-komyunikeshonshi` |
 | `series.json` の `season` | 3 |
-| `series.json` の `timeRange` | -3200..2019 |
+| `series.json` の `timeRange` | `"untimed"` |
 | `series.json` の `anchor` | `"unlocated"` |
 | `series.json` の `region` | `地域なし` |
 | `loci.geojson` の事物 | 無し |
 
 ## `timeRange`
 
-| 欄 | 値 | 何の年か | 典拠 | 並立する説 |
-|---|---|---|---|---|
-| `start` | -3200 | ウルクで楔形文字が発達した時期 | [World History Encyclopedia: Cuneiform](https://www.worldhistory.org/cuneiform/)（三次） | 同じ典拠が、シュメール人による文字の発明そのものを前3600〜前3500年頃に置く |
-| `end` | 2019 | 最終回（3-4）の配信年 | `catalog/episodes.json` の `pubDate`（2019-03-01） | 無し |
+`"untimed"`（時期なし）である。
+主題のコミュニケーションは現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-0039](../adr/0039-untimed-concept-series.md)）の表の 3 行目に当たる。
 
 配信フィードの各回の説明によれば、第 1 回がインターネット、第 2 回が文字の成立、第 3 回が活版印刷、第 4 回が電気通信を扱う。
-最も古い主題は第 2 回の文字の成立なので、`start` を楔形文字の年代に置いた。
-第 1 回が現代のインターネットを扱うので、`end` は最終回の配信年にした。
-現代まで扱うシリーズの `end` を最終回の配信年にする揃え方は、`okane-no-rekishi` の `end` 2020 が最終回の配信日（2020-01-12）の年と一致することに合わせている。
+
+裏どりで確かめた年は、`catalog/` の値には使わず、年代の見せ方を決めるときの材料として次の表に残す。
+
+| 端 | 年 | 何の年か | 典拠 | 並立する説 |
+|---|---|---|---|---|
+| 始まり | -3200 | ウルクで楔形文字が発達した時期（第 2 回が扱う文字の成立） | [World History Encyclopedia: Cuneiform](https://www.worldhistory.org/cuneiform/)（三次） | 同じ典拠が、シュメール人による文字の発明そのものを前3600〜前3500年頃に置く |
 
 ## 代表点
 
@@ -42,19 +43,20 @@
 
 ## 仮決定と論点
 
-2026-09-10 に Claude が `@historian` の結果を見て現在の値で仮決定した。
+2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-0039 に従って `timeRange` を `"untimed"` にした。
 人間の判定は [#157](https://github.com/ta-tabox/coten-atlas/pull/157) で待っている。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
-| `start` | -3200（ウルクでの楔形文字の発達） | 文字の発明そのものを起点にすれば前3600〜前3500年頃になる |
+| 時期を持つか | `"untimed"` | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、ウルクでの楔形文字の発達（前3200年頃）か、文字の発明（前3600〜前3500年頃）を使える |
 | `id` の表記 | `komyunikeshonshi` | カタカナの普通名詞にもラテン文字の綴りを使うなら `communication` を含む形になる。ADR-0034 はカタカナの普通名詞を名指ししていない |
 
 ## 裏どりの出所
 
 | 出所 | 何を持つか |
 |---|---|
-| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | `timeRange` の両端・`kind` の裏どり |
+| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりの年・`kind` の裏どり |
 | [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-0034 の規則の突き合わせ |
-| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各端を決めた回と、`region` と `id` の判断 |
+| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容から決めた年と、`region` と `id` の判断 |
+| [#160（ADR-0039）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |

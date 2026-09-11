@@ -4,22 +4,23 @@
 |---|---|
 | `series.json` の `id` | `ryu-no-rekishi` |
 | `series.json` の `season` | 43 |
-| `series.json` の `timeRange` | -4400..2023 |
+| `series.json` の `timeRange` | `"untimed"` |
 | `series.json` の `anchor` | `"unlocated"` |
 | `series.json` の `region` | `中国` |
 | `loci.geojson` の事物 | 無し |
 
 ## `timeRange`
 
-| 欄 | 値 | 何の年か | 典拠 | 並立する説 |
-|---|---|---|---|---|
-| `start` | -4400 | 西水坡遺跡（河南省濮陽市、仰韶文化）の貝殻を並べた龍の年代 | [Wikipedia: Xishuipo](https://en.wikipedia.org/wiki/Xishuipo)（参考程度） | 約 6,500 年前（前 4500 年頃）・前 5300 年頃とする記述があり、[University of Michigan Library の 45 号墓の図版の説明](https://quod.lib.umich.edu/u/umdvrc1ic/x-d08-12253/d08-12253)（参考程度）は前 4510 年とする |
-| `end` | 2023 | 最終回（43-4）の配信年 | `catalog/episodes.json` の `pubDate`（2023-08-20） | 無し |
+`"untimed"`（時期なし）である。
+主題の龍の造形と信仰は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-0039](../adr/0039-untimed-concept-series.md)）の表の 3 行目に当たる。
 
 配信フィードの各回の説明によれば、第 1 回が龍の生まれた場所と古代と現代の龍の違い、第 2 回が龍の原型を大型のワニに求める仮説、第 3 回が古生物・ナーガと仏教の龍・姿が統一された時代、第 4 回が人間が空想の動物を創る理由と支配者の権威を扱う。
-第 1 回が龍の生まれた場所を扱うので、龍の造形として古いものに数えられる西水坡遺跡の年代を `start` にした。
-第 4 回が現代の人間の認知を扱うので、`end` は最終回の配信年にした。
-現代まで扱うシリーズの `end` を最終回の配信年にする揃え方は、`okane-no-rekishi` の `end` 2020 が最終回の配信日（2020-01-12）の年と一致することに合わせている。
+
+裏どりで確かめた年は、`catalog/` の値には使わず、年代の見せ方を決めるときの材料として次の表に残す。
+
+| 端 | 年 | 何の年か | 典拠 | 並立する説 |
+|---|---|---|---|---|
+| 始まり | -4400 | 西水坡遺跡（河南省濮陽市、仰韶文化）の貝殻を並べた龍の年代（第 1 回が扱う龍の生まれた場所） | [Wikipedia: Xishuipo](https://en.wikipedia.org/wiki/Xishuipo)（参考程度） | 約 6,500 年前（前 4500 年頃）・前 5300 年頃とする記述があり、[University of Michigan Library の 45 号墓の図版の説明](https://quod.lib.umich.edu/u/umdvrc1ic/x-d08-12253/d08-12253)（参考程度）は前 4510 年とする |
 
 `@historian` は、西水坡遺跡の年代の推定が典拠ごとに割れており、-4400 はその幅の内側に収まるが単一の定説ではないと報告した。
 年代測定を報告した個別の考古学論文（炭素 14 年代測定の一次データ）までは辿れず、二次・三次の記述の幅を並べるに留まった。
@@ -44,19 +45,20 @@
 
 ## 仮決定と論点
 
-2026-09-10 に Claude が `@historian` の結果を見て現在の値で仮決定した。
+2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-0039 に従って `timeRange` を `"untimed"` にした。
 人間の判定は [#157](https://github.com/ta-tabox/coten-atlas/pull/157) で待っている。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
-| `start` | -4400 | 西水坡遺跡の年代は前 5300 年頃から前 4400 年頃まで典拠ごとに割れている。どの典拠も参考程度で、年代測定の一次データまで辿れていない |
+| 時期を持つか | `"untimed"` | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、西水坡遺跡の年代を使える。ただし年代は前 5300 年頃から前 4400 年頃まで典拠ごとに割れ、どの典拠も参考程度で、年代測定の一次データまで辿れていない |
 | `region` | `中国` | 西洋のドラゴンを同じ主題に含めれば、複数の区画で別々に生まれたものとして表の 3 行目で `地域なし` になる |
 
 ## 裏どりの出所
 
 | 出所 | 何を持つか |
 |---|---|
-| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | `timeRange` の両端・西水坡遺跡の年代の並立説・`region` を支える事実・`kind` の裏どり |
+| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりの年・西水坡遺跡の年代の並立説・`region` を支える事実・`kind` の裏どり |
 | [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-0034 の規則の突き合わせ |
-| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各端を決めた回と、`region` と `tags` の判断 |
+| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容から決めた年と、`region` と `tags` の判断 |
+| [#160（ADR-0039）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |

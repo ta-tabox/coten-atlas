@@ -16,6 +16,10 @@
 | `start` | 988 | 藤原保輔の自害（永延 2 年 6 月 17 日に獄中で死去） | [コトバンク: 藤原保輔（デジタル版日本人名大辞典+Plus）](https://kotobank.jp/word/藤原保輔-1106544)（三次） | 無し |
 | `end` | 1868 | 堺事件で土佐藩士が切腹した年（慶応 4 年 2 月 23 日） | [堺市: 土佐十一烈士墓](https://www.city.sakai.lg.jp/kanko/rekishi/bunkazai/bunkazai/shokai/bunya/shiseki/tosaresshihaka.html)（三次） | 無し |
 
+種別が `概念史` だけの位置なしのシリーズだが、年を書く。
+主題の切腹の慣行は終わっていて、両端を史実の年で言えるので、skill `series-vocabulary` の手順 7（[ADR-0039](../adr/0039-untimed-concept-series.md)）の表の 2 行目に当たる。
+skill の手順 7 の表は、2 行目の例に「ショート 切腹」を挙げている。
+
 配信フィードの各回の説明によれば、第 1 回が日本最古の切腹とされる貴族の事例と時代による切腹の違い、第 2 回が作法と身体観、第 3 回が刑罰としての切腹と殉死、第 4 回が源義経の切腹からフランス人の前で行われた集団切腹までの事例を扱う。
 第 1 回が日本最古の切腹として扱う藤原保輔の年を `start` にした。
 第 4 回が扱う事例のうち最も遅いものが堺事件なので、その年を `end` にした。
@@ -40,6 +44,7 @@ ADR-0034 はこの表の 1 行目の例に「ショート 切腹（位置なし�
 ## 仮決定と論点
 
 2026-09-10 に Claude が `@historian` の結果を見て現在の値で仮決定した。
+2026-09-11 に ADR-0039 の線を当て、年を持つ側に当たることを確かめた。
 人間の判定は [#157](https://github.com/ta-tabox/coten-atlas/pull/157) で待っている。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
@@ -53,4 +58,5 @@ ADR-0034 はこの表の 1 行目の例に「ショート 切腹（位置なし�
 | [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | `timeRange` の両端・`kind` の裏どり |
 | [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-0034 の規則の突き合わせ |
 | [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各端を決めた回 |
+| [#160（ADR-0039）](https://github.com/ta-tabox/coten-atlas/pull/160) | 種別が `概念史` だけの位置なしのシリーズに年を残す線 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |
