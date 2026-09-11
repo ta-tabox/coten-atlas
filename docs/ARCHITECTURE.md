@@ -17,7 +17,7 @@
 | 項目 | 確定 | 根拠 |
 |---|---|---|
 | スタック | Next.js (App Router) + TypeScript、static export（`output: 'export'`） | [ADR-0001](adr/0001-nextjs-static-export.md) |
-| スタイル | Tailwind v4（`globals.css` が `@import "tailwindcss"` と `@theme` のトークンを持つ）。`*.module.css` は持たない | [ADR-0021](adr/0021-tailwind-v4.md) |
+| スタイル | Tailwind v4（`globals.css` が `@import "tailwindcss"`、`@theme` のトークン、擬似要素へユーティリティを当てる `@custom-variant` を持つ）。`*.module.css` は持たない | [ADR-0021](adr/0021-tailwind-v4.md) |
 | 地図の DOM 境界 | overlay は React + Tailwind。MapLibre 由来の DOM は canvas コンテナと attribution だけ | [ADR-0022](adr/0022-map-dom-boundary.md) |
 | 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-0003](adr/0003-maplibre.md) |
 | ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-0004](adr/0004-openfreemap-positron.md) |

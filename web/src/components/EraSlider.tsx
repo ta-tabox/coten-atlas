@@ -31,15 +31,16 @@ const SLIDER_ID = "era-slider";
  * era のセルの列に重ねる `<input type="range">` の className。
  * トラックを透明にしてセルの列を見せ、つまみはセルより少し高い細い縦棒にする。
  *
- * つまみとトラックの擬似要素はブラウザごとに名前が違うので、WebKit と Firefox の両方へ同じ指定を書く。
+ * `range-track:` と `range-thumb:` は、`globals.css` の `@custom-variant` が定義する、トラックとつまみの擬似要素へ当てるバリアントである。
  */
 const RANGE_CLASS = [
   "absolute inset-0 m-0 h-full w-full cursor-ew-resize appearance-none bg-transparent",
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-500",
-  "[&::-webkit-slider-runnable-track]:h-full [&::-webkit-slider-runnable-track]:bg-transparent",
-  "[&::-webkit-slider-thumb]:-mt-1 [&::-webkit-slider-thumb]:h-12 [&::-webkit-slider-thumb]:w-1 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-zinc-800",
-  "[&::-moz-range-track]:h-full [&::-moz-range-track]:bg-transparent",
-  "[&::-moz-range-thumb]:h-12 [&::-moz-range-thumb]:w-1 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-zinc-800",
+  "range-track:h-full range-track:bg-transparent",
+  "range-thumb:h-12 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-zinc-800",
+  // WebKit はつまみの上端をトラックの上端に揃え、Firefox は上下の中央に置く。
+  // セルより高いつまみを WebKit でも上下に均等にはみ出させるので、WebKit のつまみだけを上へずらす。
+  "[&::-webkit-slider-thumb]:-mt-1",
 ].join(" ");
 
 type EraSliderProps = {
