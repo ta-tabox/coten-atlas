@@ -173,7 +173,7 @@
 | 順 | 組 | 地名を使う側 | より具体的な地点名へ移る側 | 例 |
 |---|---|---|---|---|
 | 1 | 種別が `集団` か `出来事` のシリーズと、`人物` のシリーズ | `集団`・`出来事` | `人物` | `teisei-roma`（集団）が `rome`、`julius-caesar`（人物）が `forum-romanum` |
-| 2 | 1 に当たらず、一方だけが中心の場所を都市の中の一か所（建物・邸宅・区画）に絞れる | 絞れない側 | 絞れる側 | `sugawara-no-michizane` が `heian-kyo`、`murasaki-shikibu` が `tsuchimikado-dono` |
+| 2 | 1 に当たらず、一方だけが中心の場所を都市の中の一か所（建物・邸宅・区画）に絞れる | 絞れない側 | 絞れる側 | `marx-engels`（ロンドンの中で住まいが移った）が `london`、`elizabeth-1`（ホワイトホール宮殿に絞れる）が `whitehall` |
 | 3 | 1 にも 2 にも当たらない | `season` の小さい側 | `season` の大きい側 | `hitler`（8）が `berlin`、`goebbels`（39）が `wilhelmplatz` |
 
 ## 理由
