@@ -84,3 +84,9 @@
 
 ## プロジェクト固有（育てる欄）
 - （このプロジェクトで決めた逸脱・追加をここに追記する。理由を一行添える）
+- **いまの状態を持つ文書とソースコードは、規則や値の置き場として ADR を指さない**。
+  対象は、作業のたびに読まれていまの状態を持つ文書（ソースコードとそのコメント、`CLAUDE.md`、`.claude/` の rules と skill、`.github/` のワークフローとプロンプト、`docs/ARCHITECTURE.md`・`docs/HARNESS.md`・`docs/ROADMAP.md`・`docs/sources/README.md`）である。
+  各シリーズの典拠のファイル（`docs/sources/<シリーズ id>.md`）は値を決めた根拠の記録なので、当てた規則の ADR を経緯として指してよい。
+  ADR は決定の理由と経緯を持つ記録で、supersede されても本文が残るので、値の置き場として指すと、読み手が古い版を基準にするか、作業のたびに長い経緯を読むことになる。
+  値・一覧・判定の表は対象の文書の側に置き、ADR へは理由と経緯の参照だけを書く。
+  悪例は「区画の境目と、値を足すときの手順は `docs/adr/0041-series-vocabulary-tiebreaks.md` が持つ」、良例は「閉じた集合にする理由は `docs/adr/0041-series-vocabulary-tiebreaks.md` が持つ」（PR #173 のレビュー）
