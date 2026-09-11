@@ -47,8 +47,8 @@ describe("EraSlider", () => {
     // 0.25 は古代の区間の中央で、-800 年と 550 年の中間の -125 年を指す。
     const slider = renderAt(0.25);
 
-    expect(screen.getByText("紀元前125年")).toBeInTheDocument();
-    expect(slider).toHaveAttribute("aria-valuetext", "紀元前125年");
+    expect(screen.getByText("前125年")).toBeInTheDocument();
+    expect(slider).toHaveAttribute("aria-valuetext", "前125年");
   });
 
   it("position をスライダーの値に反映する", () => {
