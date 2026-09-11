@@ -156,7 +156,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [19.945, 50.065] },
+      "geometry": { "type": "Point", "coordinates": [19.937, 50.061] },
       "properties": {
         "id": "krakow",
         "seriesId": "schindler",
@@ -201,7 +201,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [-73.985, 40.748] },
+      "geometry": { "type": "Point", "coordinates": [-73.994, 40.753] },
       "properties": {
         "id": "manhattan",
         "seriesId": "nikola-tesla",
