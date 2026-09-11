@@ -93,7 +93,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [5.388, 49.16] },
+      "geometry": { "type": "Point", "coordinates": [5.383, 49.16] },
       "properties": {
         "id": "verdun",
         "seriesId": "daiichijisekaitaisen",
