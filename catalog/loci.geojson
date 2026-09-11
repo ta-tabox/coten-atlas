@@ -138,7 +138,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [124.83, 41.66] },
+      "geometry": { "type": "Point", "coordinates": [124.858, 41.702] },
       "properties": {
         "id": "hetu-ala",
         "seriesId": "nurhaci",
