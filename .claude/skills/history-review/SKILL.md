@@ -3,7 +3,7 @@ name: history-review
 description: シリーズの値（`catalog/series.json`・`catalog/loci.geojson`）と典拠（`docs/sources/`）を足す・直す PR で人間が仮決定をまとめて採用すると決めたときと、ラベル `history-review` の issue に人間が決定をコメントしたときに開く。「仮決定を採用して決着」「見直しを issue に切り出す」「歴史確認の issue」「一件ずつ確認できるように」「見直しの決定を反映して」が合図。値の選び方は skill `series-vocabulary` が持ち、このスキルは持たない。
 ---
 
-# 歴史の見直し — 仮決定を採用し、見直す論点を issue にする
+# 歴史確認 — 採用した仮決定を、人間が一件ずつ見直せる issue にする
 
 シリーズの値を足す・直す PR は、代表点の選択や年の端の多くを Claude の仮決定で置き、候補と覆りうる根拠を `docs/sources/<シリーズ id>.md` の「仮決定と論点」節に残す。
 論点の数が多いと、人間が PR の中で全部を見ることはできない。
