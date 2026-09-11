@@ -77,7 +77,7 @@
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [109.153, 47.094] },
       "properties": {
-        "id": "aurag",
+        "id": "avraga",
         "seriesId": "chinggis-khan",
         "timeRange": "series"
       }
