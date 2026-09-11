@@ -57,6 +57,15 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [130.941, 33.957] },
+      "properties": {
+        "id": "shimonoseki",
+        "seriesId": "takasugi-shinsaku",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [-90.2, 38.63] },
       "properties": {
         "id": "st-louis",
@@ -70,6 +79,15 @@
       "properties": {
         "id": "forum-romanum",
         "seriesId": "julius-caesar",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.128, 51.507] },
+      "properties": {
+        "id": "london",
+        "seriesId": "marx-engels",
         "timeRange": "series"
       }
     },
@@ -93,10 +111,28 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [4.628, 43.677] },
+      "properties": {
+        "id": "arles",
+        "seriesId": "gogh",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [115.486, 33.861] },
       "properties": {
         "id": "ku",
         "seriesId": "roshi-soshi",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [139.717, 35.238] },
+      "properties": {
+        "id": "uraga",
+        "seriesId": "perry-raiko",
         "timeRange": "series"
       }
     },
@@ -111,10 +147,37 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-77.037, 38.907] },
+      "properties": {
+        "id": "washington",
+        "seriesId": "lincoln",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [45.637, 31.324] },
       "properties": {
         "id": "uruk",
         "seriesId": "gilgamesh",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [130.555, 31.598] },
+      "properties": {
+        "id": "kagoshima",
+        "seriesId": "saigo-takamori",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-74.006, 40.713] },
+      "properties": {
+        "id": "new-york",
+        "seriesId": "elizabeth-blackwell",
         "timeRange": "series"
       }
     },

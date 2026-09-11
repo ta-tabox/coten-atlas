@@ -120,6 +120,18 @@
     "tags": ["経済", "概念史"]
   },
   {
+    "id": "takasugi-shinsaku",
+    "title": "高杉晋作",
+    "kind": "place",
+    "anchor": "shimonoseki",
+    "timeRange": { "start": 1839, "end": 1867 },
+    "summary": "",
+    "region": "日本",
+    "season": 14,
+    "links": [],
+    "tags": ["人物", "幕末", "戦争"]
+  },
+  {
     "id": "america-kaitakushi",
     "title": "アメリカ開拓史",
     "kind": "place",
@@ -178,6 +190,18 @@
     "season": 28,
     "links": [],
     "tags": ["経済", "思想", "概念史"]
+  },
+  {
+    "id": "marx-engels",
+    "title": "マルクス・エンゲルス",
+    "kind": "place",
+    "anchor": "london",
+    "timeRange": { "start": 1818, "end": 1895 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 29,
+    "links": [],
+    "tags": ["人物", "思想", "経済", "政治"]
   },
   {
     "id": "seppuku",
@@ -276,6 +300,18 @@
     "tags": ["政治", "思想", "概念史"]
   },
   {
+    "id": "gogh",
+    "title": "ゴッホ",
+    "kind": "place",
+    "anchor": "arles",
+    "timeRange": { "start": 1853, "end": 1890 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 53,
+    "links": [],
+    "tags": ["人物", "美術"]
+  },
+  {
     "id": "roshi-soshi",
     "title": "老子・荘子",
     "kind": "concept",
@@ -300,6 +336,18 @@
     "tags": ["科学", "技術", "概念史"]
   },
   {
+    "id": "perry-raiko",
+    "title": "ペリー来航",
+    "kind": "place",
+    "anchor": "uraga",
+    "timeRange": { "start": 1853, "end": 1854 },
+    "summary": "",
+    "region": "日本",
+    "season": 59,
+    "links": [],
+    "tags": ["出来事", "人物", "幕末", "外交"]
+  },
+  {
     "id": "kou-to-ryuho",
     "title": "項羽と劉邦",
     "kind": "place",
@@ -312,6 +360,18 @@
     "tags": ["人物", "戦争"]
   },
   {
+    "id": "lincoln",
+    "title": "リンカン",
+    "kind": "place",
+    "anchor": "washington",
+    "timeRange": { "start": 1809, "end": 1865 },
+    "summary": "",
+    "region": "北アメリカ",
+    "season": 62,
+    "links": [],
+    "tags": ["人物", "奴隷", "政治", "戦争"]
+  },
+  {
     "id": "gilgamesh",
     "title": "ギルガメシュ",
     "kind": "place",
@@ -322,6 +382,30 @@
     "season": 63,
     "links": [],
     "tags": ["人物", "文学"]
+  },
+  {
+    "id": "saigo-takamori",
+    "title": "西郷隆盛",
+    "kind": "place",
+    "anchor": "kagoshima",
+    "timeRange": { "start": 1828, "end": 1877 },
+    "summary": "",
+    "region": "日本",
+    "season": 64,
+    "links": [],
+    "tags": ["人物", "幕末", "戦争", "政治"]
+  },
+  {
+    "id": "elizabeth-blackwell",
+    "title": "エリザベス・ブラックウェル",
+    "kind": "place",
+    "anchor": "new-york",
+    "timeRange": { "start": 1821, "end": 1910 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 65,
+    "links": [],
+    "tags": ["人物", "科学", "性", "教育"]
   },
   {
     "id": "teisei-roma",
