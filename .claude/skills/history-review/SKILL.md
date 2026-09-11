@@ -1,6 +1,6 @@
 ---
 name: history-review
-description: シリーズの値（`catalog/series.json`・`catalog/loci.geojson`）と典拠（`docs/sources/`）を足す・直す PR で、人間が仮決定の採用を決めたときに、ゆっくり見直す価値のある歴史の論点（代表点の選択・`timeRange` の端・未確認の座標・`region`）だけをラベル `history-review` の issue へ 1 シリーズ 1 件で切り出し、典拠のファイルと PR 本文を「採用して決着」へ書き換える手順と、見直しの issue に人間が決定をコメントした後に、その決定を反映して issue を閉じる手順。skill `series-survey` の手順 11 から呼ぶ。「仮決定を採用して決着」「見直しを issue に切り出す」「歴史確認の issue」「history-review」「一件ずつ確認できるように」「見直しの決定を反映して」が合図。値の選び方は skill `series-vocabulary` が持ち、このスキルは持たない。
+description: シリーズの値（`catalog/series.json`・`catalog/loci.geojson`）と典拠（`docs/sources/`）を足す・直す PR で人間が仮決定をまとめて採用すると決めたときと、ラベル `history-review` の issue に人間が決定をコメントしたときに開く。「仮決定を採用して決着」「見直しを issue に切り出す」「歴史確認の issue」「一件ずつ確認できるように」「見直しの決定を反映して」が合図。値の選び方は skill `series-vocabulary` が持ち、このスキルは持たない。
 ---
 
 # 歴史の見直し — 仮決定を採用し、見直す論点を issue にする

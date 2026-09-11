@@ -1,6 +1,6 @@
 ---
 name: series-survey
-description: 配信フィードに回が在るのに `catalog/series.json` にまだ無い season（シリーズ未作成の season）を束ね、各 season のシリーズのエントリを `catalog/series.json` と `catalog/loci.geojson` へ起こし、マージできる PR まで進める作業の順序。未作成の season の拾い方、配信フィードで年代・地域・拠点を確かめる読み方、skill `series-vocabulary` で決めた値の書き方、PR の開き方、`@historian` の裏どりの呼び方、典拠の写し方、並行する PR との数え直し、人間が仮決定を採用した後に skill `history-review` で見直しの issue を切り出すまでを、この順に行う。「シーズン調査」「未作成の season を載せる」「新しいシリーズのエントリを起こす」「series.json へシリーズを足して PR にする」「@historian を呼ぶ」「裏どりの結果を典拠に写す」「並行する PR と数え直す」「main を取り込んで当て直す」が合図。値そのものの選び方は skill `series-vocabulary` が持ち、このスキルは持たない。
+description: 配信フィードに回が在るのに `catalog/series.json` にシリーズが無い season から、シリーズのエントリを起こして PR にするときに開く。着手のときだけでなく、`@historian` の裏どり・典拠の記録・並行する PR や main との突き合わせの途中から再開するときも対象。「シーズン調査」「未作成の season を載せる」「新しいシリーズのエントリを起こす」「@historian を呼ぶ」「裏どりの結果を典拠に写す」「並行する PR と数え直す」「main を取り込んで当て直す」が合図。値の選び方は skill `series-vocabulary`、仮決定の採用と見直しの issue は skill `history-review` が持つ。
 ---
 
 # シーズン調査 — エピソードの season からシリーズのエントリを起こす手順
