@@ -54,11 +54,11 @@
 2026-09-11 に Claude が `@historian` の結果を見て現在の値で仮決定した。
 同じ日に人間が #171 で拠点や舞台が複数あるときの選び方を決め、Claude がその規則で代表点を当て直した。
 値は変わらない。
-人間の判定は [#169](https://github.com/ta-tabox/coten-atlas/pull/169) で待っている。
+2026-09-11 に人間が仮決定を採用して決着させ、見直しを [#179](https://github.com/ta-tabox/coten-atlas/issues/179)（織田信長（oda-nobunaga）の代表点を安土と岐阜のどちらにするか）へ切り出した。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
-| 代表点 | `azuchi`（安土） | 事績の中心を上洛と信長包囲網との戦い（第 8〜9 回）に置けば岐阜になる。事績の中心をどこに置くかは人間の判定を待つ |
+| 代表点 | `azuchi`（安土） | 事績の中心を上洛と信長包囲網との戦い（第 8〜9 回）に置けば岐阜になる。見直しは #179 で行う |
 
 ## 裏どりの出所
 
@@ -68,4 +68,5 @@
 | [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/169#issuecomment-5628201381) | `region` の値・`anchor` と事物の対応・`tags` の規則の突き合わせ |
 | [#169 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/169) | 代表点を選んだ判断と候補 |
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171) | 拠点や舞台が複数あるときに、番組が扱う主な事績が起きた地を中心の場所とする規則 |
+| [#179（見直し）](https://github.com/ta-tabox/coten-atlas/issues/179) | 採用した仮決定を人間が見直す論点と案 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う年代と舞台 |
