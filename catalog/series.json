@@ -447,7 +447,7 @@
     "id": "nikola-tesla",
     "title": "ニコラ・テスラ",
     "kind": "place",
-    "anchor": "manhattan",
+    "anchor": "new-york",
     "timeRange": { "start": 1856, "end": 1943 },
     "summary": "",
     "region": "ヨーロッパ",

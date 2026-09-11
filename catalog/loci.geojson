@@ -201,9 +201,9 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [-73.994, 40.753] },
+      "geometry": { "type": "Point", "coordinates": [-74.006, 40.713] },
       "properties": {
-        "id": "manhattan",
+        "id": "new-york",
         "seriesId": "nikola-tesla",
         "timeRange": "series"
       }
