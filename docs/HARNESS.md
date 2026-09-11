@@ -132,7 +132,9 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
   `claude.yml` の `if:` が `contains(github.event.comment.body, '@claude')` なので、含む語は二本を同時に起動する
 - 返るのは典拠の URL を添えた指摘までで、代表点を動かすかどうかの採否は人間が決める。
   `permissions` は `claude.yml` と同じ `contents: read` である
-- **返ってきた典拠を `docs/sources/<シリーズ id>.md` へ写す**（[ADR-0037](adr/0037-sources-layer.md)）。
+- `timeRange` が `"untimed"` のシリーズについては、年の妥当性でなく、主題が現在まで続いているか・端を史実の年で言えないかを見る。
+  年を書くか `"untimed"` を置くかの線は skill `series-vocabulary` の手順 7 が持つ
+- **返ってきた典拠を `docs/sources/<シリーズ id>.md` へ写す**（ファイルの型と典拠の格は `docs/sources/README.md` が持つ）。
   ワークフローは `contents: read` なのでファイルを書けず、写すのは人間かセッションである。
   同じ欄を二度裏どりしたときは、後の回の典拠だけを残す
 

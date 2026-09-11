@@ -10,20 +10,23 @@
 
 ## 対象
 
-見るのは `catalog/series.json` と `catalog/loci.geojson` の 5 つ。
+見るのは `catalog/series.json` と `catalog/loci.geojson` の次の欄である。
 
 | 欄 | 見ること |
 |---|---|
-| `timeRange` | 両端が生没年か、シリーズが扱う年代の範囲として妥当か |
+| `timeRange`（年の閉区間） | 両端が生没年か、シリーズが扱う年代の範囲として妥当か。種別が `概念史` だけで `anchor` が `"unlocated"` のシリーズなら、主題が終わっていて両端を史実の年で言えるかも見る |
+| `timeRange`（`"untimed"`） | 主題が現在まで続いているか、端を史実の年で言えないか。年が書かれていないことを誤りとして指摘しない |
 | 代表点の座標 | `loci.geojson` の `id` が指す地名の実際の位置と合っているか |
 | 代表点の選び方 | その地点をそのシリーズの代表点にするのが妥当か |
 | `region` | 座標の入る区画と合っているか |
-| `kind` / `title` | 語彙のレコード（下記）の基準と矛盾しないか |
+| `kind` / `title` | 語彙の規則（下記）と矛盾しないか |
 
 データモデルの説明は `docs/ARCHITECTURE.md` §3 にあるので先に読む。
 
-`region` の値と `kind` の基準は `docs/adr/0034-series-vocabulary.md` が持つ。
-**レビュー対象のブランチにこのファイルが無ければ、`region` と `kind` の判定を行わず、無かったことを報告に書く。**
+語彙の規則の正本は skill `series-vocabulary`（`.claude/skills/series-vocabulary/SKILL.md`）である。
+`title` は手順 2、代表点の選び方・`kind`・事物の `id` は手順 5、`region` は手順 6、`timeRange` に年を書くか `"untimed"` を置くかは手順 7 の表を基準にする。
+`docs/adr/` は規則を決めた理由と経緯を持つ記録なので、基準として読まない。
+**レビュー対象のブランチにこの skill のファイルが無ければ、語彙の規則の判定を行わず、無かったことを報告に書く。**
 基準を持たないまま判定すると、根拠の無い指摘を根拠のある指摘と同じ書式で返すことになる。
 
 `loci.geojson` の `coordinates` は GeoJSON なので `[経度, 緯度]` の順である。
