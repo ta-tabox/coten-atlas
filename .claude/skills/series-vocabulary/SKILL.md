@@ -248,7 +248,7 @@ era より細かい固有の時代名で、別の区画に同じ名の時代が�
 
 `@historian`（`.github/workflows/claude-history-review.yml`）の裏どりが返り、人間が値を決めた後に、典拠を `docs/sources/<シリーズ id>.md` へ記録する。
 ファイルが在ることがそのシリーズの裏どりが済んだ印になるので、裏どりの前にファイルを作らない。
-レコードの書式は [ADR-0037（典拠の層）](../../../docs/adr/0037-sources-layer.md) が持ち、節の並びは `docs/sources/README.md` が持つ。
+ファイルの置き方・節の並び・典拠の格は `docs/sources/README.md` が持つ。
 `pnpm check` はファイルと `catalog/` の値の対応を見ないので、記録した後に `catalog/` の値を動かしたら同じファイルも直す。
 
 ## 規則が決めていない表記に当たったとき
