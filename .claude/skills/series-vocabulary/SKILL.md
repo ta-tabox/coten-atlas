@@ -1,6 +1,6 @@
 ---
 name: series-vocabulary
-description: シリーズを `catalog/series.json` と `catalog/loci.geojson` へ 1 件書くときの、手で書く欄（`title`・`id`・`anchor`・`kind`・`region`・`tags`・事物の `id`）の値と、`timeRange` を年で書くか `"untimed"`（時期なし）にするかを、書く順に決める手順。**値を書く前に開く**。シリーズを足す・直す作業のすべてが対象で、S7 の時代別の issue（中世から通史・概念史まで）の着手が該当する。「シリーズを載せる」「series.json に足す」「region はどれにする?」「地域なしにする?」「時期なしにする?」「timeRange を untimed にする?」「id の表記は?」「代表点を置く?」「tags を決める」「典拠を docs/sources に記録する」が合図。`pnpm check` は区画の選び方・`id` の読み・事物の `id` が地名か・主題が終わっているかを見ないので、検査が緑でも語彙は揃わない。規則の理由は `docs/adr/0041-series-vocabulary-tiebreaks.md` と `docs/adr/0039-untimed-concept-series.md` が持ち、本スキルは持たない。
+description: シリーズを `catalog/series.json` と `catalog/loci.geojson` へ 1 件書くときの、手で書く欄（`title`・`id`・`anchor`・`kind`・`region`・`tags`・事物の `id`）の値と、`timeRange` を年で書くか `"untimed"`（時期なし）にするかを、書く順に決める手順。**値を書く前に開く**。シリーズを足す・直す作業のすべてが対象で、S7 の時代別の issue（中世から通史・概念史まで）の着手が該当する。「シリーズを載せる」「series.json に足す」「region はどれにする?」「地域なしにする?」「時期なしにする?」「timeRange を untimed にする?」「id の表記は?」「代表点を置く?」「tags を決める」「典拠を docs/sources に記録する」が合図。`pnpm check` は区画の選び方・`id` の読み・事物の `id` が地名か・主題が終わっているかを見ないので、検査が緑でも語彙は揃わない。語彙の規則の正本は本スキルである。
 ---
 
 # シリーズの語彙 — `series.json` へ 1 件書く手順
@@ -8,9 +8,8 @@ description: シリーズを `catalog/series.json` と `catalog/loci.geojson` �
 `catalog/series.json` と `catalog/loci.geojson` へシリーズを 1 件足すときに、人手で書く欄の値を書く順に決める手順である。
 `pnpm check`（`web/src/lib/schema/series.ts`）が見るのは 1 件の中で閉じる規則だけなので、読み・地理・主題の知識が要る判定は、検査が緑でもセッションごとに揃わない。
 
-各規則をそう決めた理由は [ADR-0041（手で書く欄の語彙）](../../../docs/adr/0041-series-vocabulary-tiebreaks.md) が持つ。
-`timeRange` を年で書くか時期なしにするかの線だけは、[ADR-0039（時期なしの概念史のシリーズ）](../../../docs/adr/0039-untimed-concept-series.md) が持つ。
-このスキルと二つの ADR が食い違ったら ADR に従い、このスキルを直す。
+このスキルが語彙の規則の正本で、値を書くときに読むのはこのスキルだけでよい。
+各規則を決めた理由と採らなかった案は `docs/adr/` のレコードが持つが、規則を変えるとき以外は開かない。
 
 下の 9 手順を上から順に行う。
 代表点と `region` の判定は種別を使うので、`tags` を先に決める。
@@ -254,5 +253,5 @@ era より細かい固有の時代名で、別の区画に同じ名の時代が�
 
 ## 規則が決めていない表記に当たったとき
 
-ADR-0041 と ADR-0039 が決めていない表記に当たったら、既存の現物に揃え、選んだ表記と根拠を PR 本文に書く。
-規則の正は二つの ADR なので、規則はこのスキルへ先に書き足さず、ADR に足してからこのスキルを追随させる。
+このスキルの規則が決めていない表記に当たったら、既存の現物に揃え、選んだ表記と根拠を PR 本文に書く。
+規則を足すか変えるときは、同じ PR でこのスキルの表を直し、決めた理由と採らなかった案を新しい ADR に書く。
