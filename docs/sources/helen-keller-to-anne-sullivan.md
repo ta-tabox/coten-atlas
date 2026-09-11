@@ -6,8 +6,8 @@
 | `series.json` の `season` | 16 |
 | `series.json` の `timeRange` | 1866..1968 |
 | `series.json` の `region` | `北アメリカ` |
-| `loci.geojson` の `anchor` | `forest-hills` |
-| `loci.geojson` の座標 | `[-73.85, 40.716]` |
+| `loci.geojson` の `anchor` | `tuscumbia` |
+| `loci.geojson` の座標 | `[-87.703, 34.731]` |
 
 ## `timeRange`
 
@@ -24,46 +24,52 @@
 
 | 欄 | 値 |
 |---|---|
-| 典拠が示す値 | -73.85, 40.716111 |
-| 典拠 | [Wikidata Q1202211](https://www.wikidata.org/wiki/Q1202211)（GeoNames 6332488 と対応） |
+| 典拠が示す値 | -87.7028, 34.7308 |
+| 典拠 | [Wikidata Q79606](https://www.wikidata.org/wiki/Q79606)（GeoNames 4094484 と対応） |
 | 典拠の格 | 三次 |
 
-`@historian` は格を二次と報告したが、[ADR-0037](../adr/0037-sources-layer.md) の定義で Wikidata の座標は三次に当たるので、三次にした。
-[Wikipedia: Forest Hills, Queens](https://en.wikipedia.org/wiki/Forest_Hills,_Queens)（三次）の Infobox は -73.845, 40.715 を示す。
+`@historian` は格を二次と報告したが、[典拠の格の定義](README.md)で Wikidata の座標は三次に当たるので、三次にした。
 
-代表点は二度動いた。
+代表点は三度動いた。
 
 | 版 | 代表点 | 座標 | 動かした理由 |
 |---|---|---|---|
 | 最初の値 | タスカンビア（`tuscumbia`） | `[-87.702, 34.731]` | ヘレン・ケラーの生地で、アン・サリヴァンの教育が始まった地として置いた |
-| 2 番目の値（コミット 50ee742） | フォレストヒルズ（`forest-hills`） | `[-73.845, 40.72]` | 2 回目の裏どりが、タスカンビアは生地で、[ADR-0034](../adr/0034-series-vocabulary.md) の代表点の選び方の表の 4 行目（中心の場所が伝わらないときの生地）の選び方になっていると指摘した。二人の活動の拠点は伝わっているので、3 行目を当ててフォレストヒルズへ移した |
-| 現在の値 | フォレストヒルズ（`forest-hills`） | `[-73.85, 40.716]` | 4 回目の裏どりが、2 番目の値は Wikidata の値から約 600m ずれていると報告したので、典拠の値を小数 3 桁に丸めた値へ直した |
+| 2 番目の値（コミット 50ee742 ） | フォレストヒルズ（`forest-hills`） | `[-73.845, 40.72]` | 2 回目の裏どりが、タスカンビアは生地で、[ADR-0034](../adr/0034-series-vocabulary.md) の代表点の選び方の表の 4 行目（中心の場所が伝わらないときの生地）の選び方になっていると指摘した。二人の活動の拠点は伝わっているので、3 行目を当てて、二人が 1917 年から暮らした地へ移した |
+| 3 番目の値（コミット 9db7f3c ） | フォレストヒルズ（`forest-hills`） | `[-73.85, 40.716]` | 4 回目の裏どりが、2 番目の値は Wikidata Q1202211 の値から約 600m ずれていると報告したので、典拠の値へ寄せた |
+| 現在の値（コミット d5c1b0b ） | タスカンビア（`tuscumbia`） | `[-87.703, 34.731]` | 拠点が複数あるときは番組が扱う主な事績が起きた地を中心の場所とすると決まった（#171、[ADR-0041](../adr/0041-series-vocabulary-tiebreaks.md)）。二人の主な事績の教育が起きた地へ戻した |
 
-タスカンビアの座標は、2 回目の裏どりで Wikidata Q79606 の値（-87.7028, 34.7308）と一致すると確認していた。
+現在の値は、最初の値と同じ地点を、生地としてでなく事績の地として表の 3 行目で置いている。
 
-代表点をフォレストヒルズに置いたのは、二人が 1917 年から暮らし、ヘレン・ケラーがアメリカ盲人援護協会のための活動の拠点にし、アン・サリヴァンが没した地だからである。
-4 回目の裏どりが返した典拠は次のとおりである。
+番組は、第 3〜5 回の 3 回をアン・サリヴァンによる教育に割き、フォレストヒルズを拠点にした社会福祉の活動は第 6 回の 1 回だけである。
+代表点をタスカンビアに置いたのは、二人の主な事績の教育と、その象徴の井戸のポンプの出来事が、タスカンビアのケラー家（アイヴィー・グリーン）で起きたためである。
+5 回目の裏どりが返した事実は次のとおりである。
 
 | 事実 | 典拠 | 典拠の格 |
 |---|---|---|
-| 1917 年にクイーンズのフォレストヒルズへ移った | [QNS: Anne Sullivan's journey ended in Forest Hills](https://qns.com/2017/04/anne-sullivans-journey-ended-in-forest-hills/) | 参考程度（地域紙） |
-| アン・サリヴァンが 1936 年 10 月 20 日にフォレストヒルズの自宅で没した | [Encyclopedia.com: Macy, Anne Sullivan (1866–1936)](https://www.encyclopedia.com/women/dictionaries-thesauruses-pictures-and-press-releases/macy-anne-sullivan-1866-1936) | 三次 |
-| ヘレン・ケラーがフォレストヒルズの家をアメリカ盲人援護協会のための活動の拠点にした | [Wikipedia: Helen Keller](https://en.wikipedia.org/wiki/Helen_Keller) | 三次 |
+| アン・サリヴァンが 1887 年 3 月 3 日にタスカンビアのケラー家（アイヴィー・グリーン）に着き、教育を始めた | [HISTORY: Helen Keller meets her miracle worker](https://www.history.com/this-day-in-history/march-3/helen-keller-meets-her-miracle-worker)、[AFB: Teaching Helen](https://afb.org/about-afb/history/online-museums/anne-sullivan-miracle-worker/anne-teacher/teaching-helen) | 三次 |
+| 井戸のポンプの出来事は 1887 年 4 月 5 日に、ケラー家の敷地の井戸で起きた | 同上の HISTORY、[Encyclopedia of Alabama: Helen Keller Water Pump](https://encyclopediaofalabama.org/media/water-pump/) | 三次 |
+| 1888 年 5 月にアン・サリヴァンがヘレン・ケラーをボストンのパーキンス盲学校へ連れて行き、1888〜1890 年の冬をパーキンスで過ごした | [Perkins School for the Blind: Helen Keller](https://www.perkins.org/helen-keller/) | 三次 |
 
-アメリカ盲人援護協会の事務所そのものはマンハッタンに在った（[AFB: Our History](https://afb.org/afb100/our-history)、三次）。
-フォレストヒルズの家は協会の本部でなく、ヘレン・ケラーが講演の旅・執筆・募金を組み立てた個人の拠点である。
+タスカンビアでの教育の期間は、1887 年 3 月から 1888 年 5 月までの約 14 か月である。
+
+4 回目の裏どりが返したフォレストヒルズの事実は次のとおりである。
+
+| 事実 | 典拠 | 典拠の格 |
+|---|---|---|
+| 二人が 1917 年にクイーンズのフォレストヒルズへ移り、1936 年まで暮らした | [QNS: Anne Sullivan's journey ended in Forest Hills](https://qns.com/2017/04/anne-sullivans-journey-ended-in-forest-hills/) | 参考程度（地域紙） |
+| アン・サリヴァンが 1936 年 10 月 20 日にフォレストヒルズの自宅で没した | [Encyclopedia.com: Macy, Anne Sullivan (1866–1936)](https://www.encyclopedia.com/women/dictionaries-thesauruses-pictures-and-press-releases/macy-anne-sullivan-1866-1936) | 三次 |
+| ヘレン・ケラーがフォレストヒルズの家をアメリカ盲人援護協会のための活動の拠点にした。協会の事務所そのものはマンハッタンに在った | [Wikipedia: Helen Keller](https://en.wikipedia.org/wiki/Helen_Keller)、[AFB: Our History](https://afb.org/afb100/our-history) | 三次 |
 
 | 候補 | 置くと何が起きるか |
 |---|---|
-| フォレストヒルズ（現在値） | 二人が 1917〜1936 年の 19 年間暮らし、協会のための活動をした地に点が立つ |
-| レンサム（マサチューセッツ州。1904〜1917 年の 13 年間の住まい） | 二人の住まいに点が立つが、期間はフォレストヒルズより短い（[AFB: The House in Wrentham](https://afb.org/about-afb/history/online-museums/anne-sullivan-miracle-worker/wrentham-massachusetts)、三次） |
+| タスカンビア（現在値） | 教育が始まり、井戸のポンプの出来事が起きた地に点が立つ |
+| ボストン（パーキンス盲学校。1888 年 5 月から） | 教育の続きの地に点が立つ |
+| レンサム（マサチューセッツ州。1904〜1917 年の住まい） | 二人の住まいに点が立つ（[AFB: The House in Wrentham](https://afb.org/about-afb/history/online-museums/anne-sullivan-miracle-worker/wrentham-massachusetts)、三次） |
+| フォレストヒルズ（1917〜1936 年の住まい。第 6 回の社会福祉の活動の拠点） | 最も長く二人が暮らした地に点が立つ |
 | イーストン（コネチカット州。アン・サリヴァンの没後のヘレン・ケラーの住まい） | ヘレン・ケラーが一人で移った地で、二人を扱うシリーズの中心の場所としては弱い |
-| タスカンビア（ヘレン・ケラーの生地。第 3〜5 回の教育の始まり） | 活動の拠点が伝わっているのに生地に点を置くことになる |
-| ボストンの近郊（パーキンス盲学校・ラドクリフ・カレッジ） | 教育を受けた時期の地に点が立つ |
 
-事物の `id` の `forest-hills` は、地区の名を空白で区切った英語の綴りを `-` でつないだ。
-`@historian` は、地区の名が 1906 年に付けられ、1917 年の転居の時点で既に Forest Hills と呼ばれ、綴りが現在まで変わっていないと確認した。
-フォレストヒルズはニューヨーク市の中の地区なので、`elizabeth-blackwell` の `new-york` と地名は重ならない。
+事物の `id` の `tuscumbia` は、2 回目の裏どりで標準の英語の綴りと一致すると確認した。
 
 ## `region`・`kind`・`title`
 
@@ -76,12 +82,12 @@
 
 ## 仮決定と論点
 
-2026-09-11 に Claude が `@historian` の結果を見て仮決定した。
-人間の判定は [#168](https://github.com/ta-tabox/coten-atlas/pull/168) で待っている。
+2026-09-11 に Claude が `@historian` の結果を見て仮決定し、同日に #171 の決定（ADR-0041）で代表点をタスカンビアへ当て直した。
+事績の中心をどこに置くかの人間の判定は [#168](https://github.com/ta-tabox/coten-atlas/pull/168) で待っている。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
-| 代表点 | フォレストヒルズ | 第 3〜5 回の教育を主題の中心と見ればタスカンビアかボストンの近郊、協会の組織を中心と見ればマンハッタンになる |
+| 代表点 | タスカンビア（事績の中心） | 期間で数えれば、タスカンビアでの教育（約 14 か月）はフォレストヒルズ（19 年）やレンサム（13 年）より短い。第 6 回の社会福祉の活動を主な事績と見ればフォレストヒルズになる |
 
 ## 裏どりの出所
 
@@ -89,9 +95,11 @@
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/168#issuecomment-5628185774) | 差分を読む前にエラーで止まり、結果を返していない |
 | [`@historian` 2 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/168#issuecomment-5628319996) | `timeRange`・`region`・タスカンビアの座標の裏どりと、代表点の選び方の指摘 |
-| [`@historian` 4 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/168#issuecomment-5628471492) | フォレストヒルズに暮らした期間・活動の拠点・座標・事物の `id` の裏どり |
+| [`@historian` 4 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/168#issuecomment-5628471492) | フォレストヒルズに暮らした期間・活動の拠点・座標の裏どり |
+| [`@historian` 5 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/168#issuecomment-5633756847) | タスカンビアでの教育の始まり・井戸のポンプの出来事・パーキンス盲学校への移動の裏どり |
 | [#168 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/168) | 代表点を選んだ判断と候補 |
+| [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171#issuecomment-5629453137) | 拠点が複数あるときに、事績の中心を代表点にする判断 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う主題 |
 
 3 回目（後半 6 件）はこのシリーズを対象にしていない。
-**代表点と座標の典拠は 4 回目が正である。**
+**タスカンビアの座標の典拠は 2 回目、教育の事実の典拠は 5 回目が正である。**
