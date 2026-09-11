@@ -108,6 +108,18 @@
     "tags": ["出来事", "政治", "思想"]
   },
   {
+    "id": "gandhi",
+    "title": "ガンディー",
+    "kind": "place",
+    "anchor": "ahmedabad",
+    "timeRange": { "start": 1869, "end": 1948 },
+    "summary": "",
+    "region": "南アジア",
+    "season": 10,
+    "links": [],
+    "tags": ["人物", "思想", "宗教", "政治"]
+  },
+  {
     "id": "alexandros",
     "title": "アレクサンドロス",
     "kind": "place",
@@ -144,6 +156,18 @@
     "tags": ["人物", "宗教", "旅"]
   },
   {
+    "id": "takasugi-shinsaku",
+    "title": "高杉晋作",
+    "kind": "place",
+    "anchor": "shimonoseki",
+    "timeRange": { "start": 1839, "end": 1867 },
+    "summary": "",
+    "region": "日本",
+    "season": 14,
+    "links": [],
+    "tags": ["人物", "幕末", "戦争"]
+  },
+  {
     "id": "america-kaitakushi",
     "title": "アメリカ開拓史",
     "kind": "place",
@@ -154,6 +178,18 @@
     "season": 15,
     "links": [],
     "tags": ["出来事", "開拓"]
+  },
+  {
+    "id": "helen-keller-to-anne-sullivan",
+    "title": "ヘレン・ケラーとアン・サリヴァン",
+    "kind": "place",
+    "anchor": "tuscumbia",
+    "timeRange": { "start": 1866, "end": 1968 },
+    "summary": "",
+    "region": "北アメリカ",
+    "season": 16,
+    "links": [],
+    "tags": ["人物", "障害", "教育", "福祉"]
   },
   {
     "id": "chinggis-khan",
@@ -214,6 +250,18 @@
     "season": 21,
     "links": [],
     "tags": ["出来事", "宗教"]
+  },
+  {
+    "id": "daiichijisekaitaisen",
+    "title": "第一次世界大戦",
+    "kind": "place",
+    "anchor": "verdun",
+    "timeRange": { "start": 1914, "end": 1918 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 22,
+    "links": [],
+    "tags": ["出来事", "戦争", "帝国", "技術"]
   },
   {
     "id": "elizabeth-1",
@@ -288,6 +336,18 @@
     "tags": ["経済", "思想", "概念史"]
   },
   {
+    "id": "marx-engels",
+    "title": "マルクス・エンゲルス",
+    "kind": "place",
+    "anchor": "london",
+    "timeRange": { "start": 1818, "end": 1895 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 29,
+    "links": [],
+    "tags": ["人物", "思想", "経済", "政治"]
+  },
+  {
     "id": "friedrich-daio",
     "title": "フリードリヒ大王",
     "kind": "place",
@@ -312,6 +372,18 @@
     "tags": ["武士", "死", "概念史"]
   },
   {
+    "id": "nichirosenso",
+    "title": "日露戦争",
+    "kind": "place",
+    "anchor": "port-arthur",
+    "timeRange": { "start": 1904, "end": 1905 },
+    "summary": "",
+    "region": "中国",
+    "season": 32,
+    "links": [],
+    "tags": ["出来事", "戦争", "帝国", "外交"]
+  },
+  {
     "id": "cleopatra",
     "title": "クレオパトラ",
     "kind": "place",
@@ -334,6 +406,18 @@
     "season": 34,
     "links": [],
     "tags": ["集団", "武士", "戦争", "政治"]
+  },
+  {
+    "id": "levi-strauss",
+    "title": "レヴィ＝ストロース",
+    "kind": "place",
+    "anchor": "college-de-france",
+    "timeRange": { "start": 1908, "end": 2009 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 35,
+    "links": [],
+    "tags": ["人物", "思想"]
   },
   {
     "id": "oi-to-shi-no-rekishi",
@@ -372,6 +456,18 @@
     "tags": ["福祉", "経済", "概念史"]
   },
   {
+    "id": "goebbels",
+    "title": "ゲッベルス",
+    "kind": "place",
+    "anchor": "wilhelmplatz",
+    "timeRange": { "start": 1897, "end": 1945 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 39,
+    "links": [],
+    "tags": ["人物", "メディア", "政治", "戦争"]
+  },
+  {
     "id": "saladin-to-jujigun",
     "title": "サラディンと十字軍",
     "kind": "place",
@@ -382,6 +478,18 @@
     "season": 40,
     "links": [],
     "tags": ["人物", "出来事", "戦争", "宗教"]
+  },
+  {
+    "id": "wrightkyodai",
+    "title": "ライト兄弟",
+    "kind": "place",
+    "anchor": "dayton",
+    "timeRange": { "start": 1867, "end": 1948 },
+    "summary": "",
+    "region": "北アメリカ",
+    "season": 41,
+    "links": [],
+    "tags": ["人物", "技術"]
   },
   {
     "id": "hannibal",
@@ -408,6 +516,18 @@
     "tags": ["宗教", "概念史"]
   },
   {
+    "id": "schindler",
+    "title": "シンドラー",
+    "kind": "place",
+    "anchor": "krakow",
+    "timeRange": { "start": 1908, "end": 1974 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 44,
+    "links": [],
+    "tags": ["人物", "戦争", "虐殺"]
+  },
+  {
     "id": "sugawara-no-michizane",
     "title": "菅原道真",
     "kind": "place",
@@ -430,6 +550,30 @@
     "season": 46,
     "links": [],
     "tags": ["政治", "思想", "概念史"]
+  },
+  {
+    "id": "kemal-ataturk",
+    "title": "ケマル・アタテュルク",
+    "kind": "place",
+    "anchor": "ankara",
+    "timeRange": { "start": 1881, "end": 1938 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 47,
+    "links": [],
+    "tags": ["人物", "政治", "戦争", "帝国"]
+  },
+  {
+    "id": "yanase-takashi",
+    "title": "やなせたかし",
+    "kind": "place",
+    "anchor": "shinjuku",
+    "timeRange": { "start": 1919, "end": 2013 },
+    "summary": "",
+    "region": "日本",
+    "season": 48,
+    "links": [],
+    "tags": ["人物", "文学", "美術", "戦争"]
   },
   {
     "id": "murasaki-shikibu",
@@ -480,6 +624,18 @@
     "tags": ["人物", "武士", "戦争", "政治"]
   },
   {
+    "id": "gogh",
+    "title": "ゴッホ",
+    "kind": "place",
+    "anchor": "arles",
+    "timeRange": { "start": 1853, "end": 1890 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 53,
+    "links": [],
+    "tags": ["人物", "美術"]
+  },
+  {
     "id": "mughal-teikoku",
     "title": "ムガール帝国",
     "kind": "place",
@@ -516,6 +672,18 @@
     "tags": ["人物", "宗教", "旅"]
   },
   {
+    "id": "ito-noe",
+    "title": "伊藤野枝",
+    "kind": "place",
+    "anchor": "tokyo",
+    "timeRange": { "start": 1895, "end": 1923 },
+    "summary": "",
+    "region": "日本",
+    "season": 57,
+    "links": [],
+    "tags": ["人物", "性", "思想", "メディア"]
+  },
+  {
     "id": "kagaku-gijutsu-no-rekishi",
     "title": "科学技術の歴史",
     "kind": "concept",
@@ -526,6 +694,18 @@
     "season": 58,
     "links": [],
     "tags": ["科学", "技術", "概念史"]
+  },
+  {
+    "id": "perry-raiko",
+    "title": "ペリー来航",
+    "kind": "place",
+    "anchor": "uraga",
+    "timeRange": { "start": 1853, "end": 1854 },
+    "summary": "",
+    "region": "日本",
+    "season": 59,
+    "links": [],
+    "tags": ["出来事", "人物", "幕末", "外交"]
   },
   {
     "id": "kou-to-ryuho",
@@ -540,6 +720,30 @@
     "tags": ["人物", "戦争"]
   },
   {
+    "id": "nikola-tesla",
+    "title": "ニコラ・テスラ",
+    "kind": "place",
+    "anchor": "new-york",
+    "timeRange": { "start": 1856, "end": 1943 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 61,
+    "links": [],
+    "tags": ["人物", "技術", "科学"]
+  },
+  {
+    "id": "lincoln",
+    "title": "リンカン",
+    "kind": "place",
+    "anchor": "washington",
+    "timeRange": { "start": 1809, "end": 1865 },
+    "summary": "",
+    "region": "北アメリカ",
+    "season": 62,
+    "links": [],
+    "tags": ["人物", "奴隷", "政治", "戦争"]
+  },
+  {
     "id": "gilgamesh",
     "title": "ギルガメシュ",
     "kind": "place",
@@ -550,6 +754,30 @@
     "season": 63,
     "links": [],
     "tags": ["人物", "文学"]
+  },
+  {
+    "id": "saigo-takamori",
+    "title": "西郷隆盛",
+    "kind": "place",
+    "anchor": "kagoshima",
+    "timeRange": { "start": 1828, "end": 1877 },
+    "summary": "",
+    "region": "日本",
+    "season": 64,
+    "links": [],
+    "tags": ["人物", "幕末", "戦争", "政治"]
+  },
+  {
+    "id": "elizabeth-blackwell",
+    "title": "エリザベス・ブラックウェル",
+    "kind": "place",
+    "anchor": "geneva",
+    "timeRange": { "start": 1821, "end": 1910 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 65,
+    "links": [],
+    "tags": ["人物", "科学", "性", "教育"]
   },
   {
     "id": "teisei-roma",
