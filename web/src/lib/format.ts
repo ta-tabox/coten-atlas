@@ -6,11 +6,16 @@
 import type { SeriesTimeRange } from "@/lib/schema/series";
 
 /**
- * `year` を「前800年」「550年」の形式の文字列へ整形する。
+ * `year` を「前800」「550」の形式の、単位「年」を付けない文字列へ整形する。
  * 負値は紀元前なので「前」を付け、0 と正値は数字だけにする（符号の意味は `@/lib/schema/series` の `seriesTimeRangeSchema` が正）。
  */
+export function formatYearWithoutUnit(year: number): string {
+  return year < 0 ? `前${-year}` : `${year}`;
+}
+
+/** `year` を「前800年」「550年」の形式の文字列へ整形する。 */
 export function formatYear(year: number): string {
-  return year < 0 ? `前${-year}年` : `${year}年`;
+  return `${formatYearWithoutUnit(year)}年`;
 }
 
 /**
