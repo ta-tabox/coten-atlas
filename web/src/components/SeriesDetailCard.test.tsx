@@ -7,7 +7,11 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import SeriesDetailCard from "@/components/SeriesDetailCard";
 import type { Episode } from "@/lib/schema/episode";
-import type { Series } from "@/lib/schema/series";
+import {
+  ANCHOR_UNLOCATED,
+  type Series,
+  TIME_RANGE_UNTIMED,
+} from "@/lib/schema/series";
 
 /** エピソードのうち、カードが読む欄。 */
 type EpisodeFixture = Pick<Episode, "guid" | "title" | "links">;
@@ -59,6 +63,31 @@ describe("SeriesDetailCard", () => {
     expect(screen.getByRole("heading", { name: "スパルタ" })).toBeVisible();
     expect(screen.getByText("紀元前900年〜紀元前200年")).toBeVisible();
     expect(screen.getByText(SPARTA.summary)).toBeVisible();
+  });
+
+  it("時期を持たないシリーズは年代の行を出さない", () => {
+    const okane: Series = {
+      ...SPARTA,
+      id: "okane-no-rekishi",
+      title: "お金の歴史",
+      kind: "concept",
+      anchor: ANCHOR_UNLOCATED,
+      timeRange: TIME_RANGE_UNTIMED,
+      region: "地域なし",
+      season: 12,
+      tags: ["経済", "概念史"],
+    };
+
+    render(
+      <SeriesDetailCard
+        series={okane}
+        episodes={{ kind: "loaded", episodes: [] }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "お金の歴史" })).toBeVisible();
+    expect(screen.queryByText(/紀元/)).toBeNull();
   });
 
   it("エピソードのリンクをその回の配信ページへ向ける", () => {

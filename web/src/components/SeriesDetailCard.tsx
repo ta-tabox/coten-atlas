@@ -13,7 +13,7 @@ import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
 import type { EpisodesState } from "@/lib/episodes";
 import { formatTimeRange } from "@/lib/format";
 import type { Episode } from "@/lib/schema/episode";
-import type { Series } from "@/lib/schema/series";
+import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 
 /**
  * 番組全体の Spotify ページ。
@@ -122,9 +122,12 @@ export default function SeriesDetailCard({
             {series.title}
           </h2>
 
-          <p className="mt-1 text-[0.85rem] text-zinc-500">
-            {formatTimeRange(series.timeRange)}
-          </p>
+          {/* timeRange が TIME_RANGE_UNTIMED のシリーズは年を持たないので、年代の行を出さない。 */}
+          {series.timeRange !== TIME_RANGE_UNTIMED && (
+            <p className="mt-1 text-[0.85rem] text-zinc-500">
+              {formatTimeRange(series.timeRange)}
+            </p>
+          )}
         </div>
 
         <button

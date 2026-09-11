@@ -16,6 +16,7 @@ import {
   ANCHOR_UNLOCATED,
   type Series,
   type SeriesList,
+  TIME_RANGE_UNTIMED,
 } from "@/lib/schema/series";
 
 /** シリーズのうち、写しの規則に関わる欄。 */
@@ -142,5 +143,19 @@ describe("toMapLoci", () => {
     };
 
     expect(() => toMapLoci(lociOf(orphan), SERIES)).toThrow("missing-series");
+  });
+
+  it("指す先のシリーズが時期を持たなければ投げる", () => {
+    const untimed = seriesOf({
+      id: "sekai-sandai-shukyo",
+      kind: "concept",
+      anchor: ANCHOR_UNLOCATED,
+      season: 7,
+      timeRange: TIME_RANGE_UNTIMED,
+    });
+
+    expect(() => toMapLoci(lociOf(MECCA), [untimed])).toThrow(
+      "sekai-sandai-shukyo",
+    );
   });
 });

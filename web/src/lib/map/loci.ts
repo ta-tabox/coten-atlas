@@ -14,7 +14,12 @@
 
 import type { Locus, LocusCollection } from "@/lib/schema/locus";
 import { TIME_RANGE_OF_SERIES } from "@/lib/schema/locus";
-import type { Series, SeriesKind, SeriesList } from "@/lib/schema/series";
+import {
+  type Series,
+  type SeriesKind,
+  type SeriesList,
+  TIME_RANGE_UNTIMED,
+} from "@/lib/schema/series";
 
 /**
  * 地図へ渡す事物 1 件の属性。
@@ -44,7 +49,7 @@ export type MapLocusCollection = {
 /**
  * 事物 1 件へ、シリーズから `kind` と年を写す。
  *
- * 指す先が無ければ投げる。
+ * 指す先が無いか、指す先のシリーズの `timeRange` が `TIME_RANGE_UNTIMED` で年を解決できなければ throw する。
  * 参照の壊れは `references.ts` が `pnpm test` で落とすので、ビルドまで残っていれば検査そのものが素通りしている。
  */
 function toMapLocus(
@@ -60,6 +65,12 @@ function toMapLocus(
 
   const years =
     timeRange === TIME_RANGE_OF_SERIES ? series.timeRange : timeRange;
+
+  if (years === TIME_RANGE_UNTIMED) {
+    throw new Error(
+      `locus ${id}: シリーズ ${seriesId} は時期を持たないので、年を解決できない`,
+    );
+  }
 
   return {
     type: "Feature",
