@@ -1,17 +1,17 @@
 ---
 name: history-review
-description: S7 のシリーズの PR で人間が仮決定の採用を決めたときに、ゆっくり見直す価値のある歴史の論点（代表点の選択・`timeRange` の端・未確認の座標・`region`）だけをラベル `history-review` の issue へ 1 シリーズ 1 件で切り出し、典拠のファイルと PR 本文を「採用して決着」へ書き換える手順と、見直しの issue に人間が決定をコメントした後に、その決定を反映して issue を閉じる手順。skill `series-survey` の手順 11 から呼ぶ。「仮決定を採用して決着」「見直しを issue に切り出す」「歴史確認の issue」「history-review」「一件ずつ確認できるように」「見直しの決定を反映して」が合図。値の選び方は skill `series-vocabulary` が持ち、このスキルは持たない。
+description: シリーズの値（`catalog/series.json`・`catalog/loci.geojson`）と典拠（`docs/sources/`）を足す・直す PR で、人間が仮決定の採用を決めたときに、ゆっくり見直す価値のある歴史の論点（代表点の選択・`timeRange` の端・未確認の座標・`region`）だけをラベル `history-review` の issue へ 1 シリーズ 1 件で切り出し、典拠のファイルと PR 本文を「採用して決着」へ書き換える手順と、見直しの issue に人間が決定をコメントした後に、その決定を反映して issue を閉じる手順。skill `series-survey` の手順 11 から呼ぶ。「仮決定を採用して決着」「見直しを issue に切り出す」「歴史確認の issue」「history-review」「一件ずつ確認できるように」「見直しの決定を反映して」が合図。値の選び方は skill `series-vocabulary` が持ち、このスキルは持たない。
 ---
 
 # 歴史の見直し — 仮決定を採用し、見直す論点を issue にする
 
-S7 のシリーズの PR は、代表点の選択や年の端の多くを Claude の仮決定で置き、候補と覆りうる根拠を `docs/sources/<シリーズ id>.md` の「仮決定と論点」節に残す。
+シリーズの値を足す・直す PR は、代表点の選択や年の端の多くを Claude の仮決定で置き、候補と覆りうる根拠を `docs/sources/<シリーズ id>.md` の「仮決定と論点」節に残す。
 論点の数が多いと、人間が PR の中で全部を見ることはできない。
 そこで、人間が仮決定をまとめて採用して一度決着させ、ゆっくり見直す価値のある論点だけを、1 件ずつ開いて決められる issue にする。
 
 - ラベル `history-review`（補助: 採用済みの歴史データを人間が一件ずつ見直す）と `human` を付ける
 - 一覧は `gh issue list --state open --label history-review` か、GitHub の `label:history-review` で引く
-- 手本は #174（代表点の選択と未確認の座標の二論点）・#178（`timeRange` の端）・#180（代表点と `region`）と、PR #167 の本文の「人間に見てほしい」節である
+- 手本は #174（紫式部の代表点。代表点の選択と未確認の座標の二論点）・#178（鎌倉武士の `timeRange` の終わり）・#180（ムガール帝国の代表点と `region`）と、PR #167（中世の 11 シリーズを series.json へ載せる）の本文の「人間に見てほしい」節である
 
 このスキルは二つの手順を持つ。
 
@@ -118,7 +118,7 @@ gh issue create --label history-review --label human \
 
 ### 5. 検査してコミットする
 
-`web/` で `pnpm check` を緑にし、`docs(sources): S7 <時代>の仮決定を採用して決着とし、見直しの論点を issue へ向ける` の 1 コミットにして push する。
+`web/` で `pnpm check` を緑にし、`docs(sources): <PR の対象>の仮決定を採用して決着とし、見直しの論点を issue へ向ける` の 1 コミットにして push する。
 `catalog/` の値は変えない。
 
 並行するセッションの PR は、そのセッションが自分の PR で A を行う。
