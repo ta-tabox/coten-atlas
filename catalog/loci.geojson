@@ -57,10 +57,46 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [108.94, 34.26] },
+      "properties": {
+        "id": "changan",
+        "seriesId": "sanzohoshi-genjo",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [-90.2, 38.63] },
       "properties": {
         "id": "st-louis",
         "seriesId": "america-kaitakushi",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [109.153, 47.094] },
+      "properties": {
+        "id": "avraga",
+        "seriesId": "chinggis-khan",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [28.976, 41.008] },
+      "properties": {
+        "id": "constantinople",
+        "seriesId": "osman-teikoku",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.841, 35.07] },
+      "properties": {
+        "id": "mount-hiei",
+        "seriesId": "saicho-to-kukai",
         "timeRange": "series"
       }
     },
@@ -75,10 +111,37 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [112.454, 34.681] },
+      "properties": {
+        "id": "luoyang",
+        "seriesId": "bu-sokuten",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [29.92, 31.2] },
       "properties": {
         "id": "alexandria",
         "seriesId": "cleopatra",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [139.556, 35.326] },
+      "properties": {
+        "id": "kamakura",
+        "seriesId": "kamakurabushi",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [35.234, 31.777] },
+      "properties": {
+        "id": "jerusalem",
+        "seriesId": "saladin-to-jujigun",
         "timeRange": "series"
       }
     },
@@ -93,10 +156,46 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.742, 35.014] },
+      "properties": {
+        "id": "heian-kyo",
+        "seriesId": "sugawara-no-michizane",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.748, 35.029] },
+      "properties": {
+        "id": "ichijo-in",
+        "seriesId": "murasaki-shikibu",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [1.904, 47.902] },
+      "properties": {
+        "id": "orleans",
+        "seriesId": "jeanne-darc",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [115.486, 33.861] },
       "properties": {
         "id": "ku",
         "seriesId": "roshi-soshi",
+        "timeRange": "series"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.84, 34.689] },
+      "properties": {
+        "id": "nara",
+        "seriesId": "ganjin",
         "timeRange": "series"
       }
     },
