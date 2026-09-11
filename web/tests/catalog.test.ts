@@ -14,6 +14,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { presentEndOf } from "@/lib/era/scale";
 import {
   CATALOG_VALIDATORS,
   unvalidatedNames,
@@ -119,12 +120,13 @@ describe("catalog/", () => {
 
   // series.json が無いうちは、era 空間と突き合わせる相手が居ない。
   it.skipIf(!fs.existsSync(seriesFile) || !fs.existsSync(erasFile))(
-    "series.json の timeRange が eras.json の era 空間と重なる",
+    "series.json の timeRange が eras.json の era 空間に収まる",
     () => {
       const series = parseSeries(readCatalogFile("series.json"));
       const eras = parseEras(readCatalogFile("eras.json"));
+      const presentEnd = presentEndOf(new Date());
 
-      expect(seriesOutsideEraSpace(series, eras)).toEqual([]);
+      expect(seriesOutsideEraSpace({ series, eras, presentEnd })).toEqual([]);
     },
   );
 });

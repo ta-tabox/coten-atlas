@@ -129,89 +129,112 @@ describe("brokenSeriesReferences", () => {
 });
 
 describe("seriesOutsideEraSpace", () => {
-  /** -800 に始まり、末尾が終わっていない 2 区間の era 空間。 */
+  /** -1000 に始まり、末尾が終わっていない 2 区間の era 空間。 */
   const openEnded = eraListOf(
-    { start: -800, end: 550 },
+    { start: -1000, end: 550 },
     { start: 550, end: ERA_END_PRESENT },
   );
 
-  /** -800 に始まり 1450 で終わる、閉じた 2 区間の era 空間。 */
+  /** -1000 に始まり 1450 で終わる、閉じた 2 区間の era 空間。 */
   const closed = eraListOf(
-    { start: -800, end: 550 },
+    { start: -1000, end: 550 },
     { start: 550, end: 1450 },
   );
 
-  it("era 空間と重なる timeRange なら空", () => {
-    const problems = seriesOutsideEraSpace(
-      seriesListOf({ id: "sparta", season: 2 }),
-      openEnded,
-    );
+  /** `openEnded` の末尾の era の右端に置く年。 */
+  const presentEnd = 2026;
+
+  it("era 空間に収まる timeRange なら空", () => {
+    const problems = seriesOutsideEraSpace({
+      series: seriesListOf({ id: "sparta", season: 2 }),
+      eras: openEnded,
+      presentEnd,
+    });
 
     expect(problems).toEqual([]);
   });
 
-  it("最初の era より前に終わる timeRange を名指す", () => {
-    const problems = seriesOutsideEraSpace(
-      seriesListOf({
-        id: "primordial",
+  it("両端が era 空間の両端と同じ年なら収まっていると見る（timeRange は閉区間）", () => {
+    const problems = seriesOutsideEraSpace({
+      series: seriesListOf({
+        id: "whole",
         season: 3,
-        timeRange: { start: -5000, end: -1000 },
+        timeRange: { start: -1000, end: presentEnd },
       }),
-      openEnded,
-    );
+      eras: openEnded,
+      presentEnd,
+    });
+
+    expect(problems).toEqual([]);
+  });
+
+  it("最初の era の start より前へはみ出す timeRange を名指す", () => {
+    const problems = seriesOutsideEraSpace({
+      series: seriesListOf({
+        id: "primordial",
+        season: 4,
+        timeRange: { start: -1003, end: -900 },
+      }),
+      eras: openEnded,
+      presentEnd,
+    });
 
     expect(problems).toEqual([expect.stringContaining("primordial")]);
   });
 
-  it("end が最初の era の start と同じ年なら重なる（timeRange は閉区間）", () => {
-    const problems = seriesOutsideEraSpace(
-      seriesListOf({
-        id: "edge",
-        season: 4,
-        timeRange: { start: -2000, end: -800 },
-      }),
-      openEnded,
-    );
-
-    expect(problems).toEqual([]);
-  });
-
-  it("末尾の era が終わっていなければ、後ろ側はどこまでも重なる", () => {
-    const problems = seriesOutsideEraSpace(
-      seriesListOf({
+  it("末尾の era が終わっていなければ、presentEnd より後ろへはみ出す timeRange を名指す", () => {
+    const problems = seriesOutsideEraSpace({
+      series: seriesListOf({
         id: "future",
         season: 5,
-        timeRange: { start: 3000, end: 3100 },
+        timeRange: { start: 2000, end: presentEnd + 1 },
       }),
-      openEnded,
-    );
+      eras: openEnded,
+      presentEnd,
+    });
 
-    expect(problems).toEqual([]);
+    expect(problems).toEqual([expect.stringContaining("future")]);
   });
 
-  it("末尾の era の end が年なら、それ以後に始まる timeRange を名指す", () => {
-    const problems = seriesOutsideEraSpace(
-      seriesListOf({
+  it("末尾の era の end が年なら、その年より後ろへはみ出す timeRange を名指す", () => {
+    const problems = seriesOutsideEraSpace({
+      series: seriesListOf({
         id: "late",
         season: 6,
-        timeRange: { start: 1450, end: 1500 },
+        timeRange: { start: 1400, end: 1451 },
       }),
-      closed,
-    );
+      eras: closed,
+      presentEnd,
+    });
 
     expect(problems).toEqual([expect.stringContaining("late")]);
   });
 
+  it("末尾の era の end が年なら、その年で終わる timeRange は収まっていると見る", () => {
+    const problems = seriesOutsideEraSpace({
+      series: seriesListOf({
+        id: "edge",
+        season: 7,
+        timeRange: { start: 1400, end: 1450 },
+      }),
+      eras: closed,
+      presentEnd,
+    });
+
+    expect(problems).toEqual([]);
+  });
+
   it("timeRange が時期を持たない値のシリーズは見ない", () => {
-    const problems = seriesOutsideEraSpace(
-      seriesListOf({
+    const problems = seriesOutsideEraSpace({
+      series: seriesListOf({
         id: "okane",
         season: 12,
         anchor: ANCHOR_UNLOCATED,
         timeRange: TIME_RANGE_UNTIMED,
       }),
-      closed,
-    );
+      eras: closed,
+      presentEnd,
+    });
 
     expect(problems).toEqual([]);
   });
