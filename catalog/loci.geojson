@@ -104,7 +104,7 @@
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [121.261, 38.812] },
       "properties": {
-        "id": "lushun",
+        "id": "port-arthur",
         "seriesId": "nichirosenso",
         "timeRange": "series"
       }
