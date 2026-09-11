@@ -75,9 +75,9 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [-73.85, 40.716] },
+      "geometry": { "type": "Point", "coordinates": [-87.703, 34.731] },
       "properties": {
-        "id": "forest-hills",
+        "id": "tuscumbia",
         "seriesId": "helen-keller-to-anne-sullivan",
         "timeRange": "series"
       }
