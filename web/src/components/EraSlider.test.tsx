@@ -6,7 +6,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import EraSlider from "@/components/EraSlider";
-import type { EraList } from "@/lib/schema/era";
+import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
 
 const ERAS: EraList = [
   { id: "ancient", label: "古代", start: -800, end: 550 },
@@ -15,14 +15,15 @@ const ERAS: EraList = [
 
 const PRESENT_END = 2026;
 
-/** `position` を指す EraSlider を描画し、スライダーの要素を返す。 */
+/** `position` を指す EraSlider を `eras` で描画し、スライダーの要素を返す。 */
 function renderAt(
   position: number,
   onPositionChange: (position: number) => void = () => {},
+  eras: EraList = ERAS,
 ): HTMLInputElement {
   render(
     <EraSlider
-      eras={ERAS}
+      eras={eras}
       presentEnd={PRESENT_END}
       position={position}
       onPositionChange={onPositionChange}
@@ -30,6 +31,13 @@ function renderAt(
   );
 
   return screen.getByRole<HTMLInputElement>("slider", { name: "時代" });
+}
+
+/** 描画された境目の年の文字を、左から順に返す。 */
+function boundaryYearTexts(): (string | null)[] {
+  return screen
+    .getAllByTestId("era-boundary-year")
+    .map((year) => year.textContent);
 }
 
 describe("EraSlider", () => {
@@ -43,6 +51,20 @@ describe("EraSlider", () => {
     expect(labels).toEqual(["古代", "中世"]);
   });
 
+  it("区間の境目の年を、左端から右端まで並べる", () => {
+    renderAt(0);
+
+    expect(boundaryYearTexts()).toEqual(["前800", "550", "1450"]);
+  });
+
+  it("終わっていない区間の右端には presentEnd の年を置く", () => {
+    renderAt(0, () => {}, [
+      { id: "modern20b", label: "戦後", start: 1945, end: ERA_END_PRESENT },
+    ]);
+
+    expect(boundaryYearTexts()).toEqual(["1945", "2026"]);
+  });
+
   it("現在窓の年の範囲を表示し、読み上げの値にも使う", () => {
     // 0.25 は古代の区間の中央で、窓は古代の 1/4 から 3/4 まで（前462.5年〜212.5年を四捨五入）を取る。
     const slider = renderAt(0.25);
@@ -51,7 +73,7 @@ describe("EraSlider", () => {
     expect(slider).toHaveAttribute("aria-valuetext", "前462年〜213年");
   });
 
-  it("現在窓の両端の位置を、トラックの背後の帯の位置と幅にする", () => {
+  it("現在窓の両端の位置を、帯の位置と幅にする", () => {
     // 区間が 2 つなので、窓の幅は era 空間の 0.25 で、0.25 を中心に 0.125 から 0.375 までを取る。
     renderAt(0.25);
 
