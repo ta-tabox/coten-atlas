@@ -1,10 +1,11 @@
 "use client";
 
 /**
- * ベースマップを画面いっぱいに描き、その上へシリーズのレイヤと詳細カードを載せる。
+ * ベースマップを画面いっぱいに描き、その上へシリーズのレイヤ・era スライダー・詳細カードを載せる。
  *
  * 選択されたシリーズを保持するのは、このコンポーネントの `selectedSeriesId` だけである。
  * S5（一覧パネルとの双方向同期）が同じ state を読むので、子コンポーネントに複製すると同期が state の突き合わせになる。
+ * 位置を読む `SeriesLayers` と `EraSlider` はどちらも `MapLibreMap` の子で、`page.tsx` との間に client wrapper を挟んでも位置はこのコンポーネントを props で通り抜けるだけなので、era スライダーの位置 `eraPosition` もこのコンポーネントに置く。
  *
  * エピソードはマウント直後に `fetchEpisodes` で取得する（docs/ARCHITECTURE.md §3「配り方」）。
  * `SeriesDetailCard` を開いてから取得を始めると、クリックのたびに 750 件を超える JSON の到着を待つ。
@@ -25,6 +26,7 @@
 import { useEffect, useState } from "react";
 import type { MapLayerMouseEvent } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
+import EraSlider from "@/components/EraSlider";
 import SeriesDetailCard from "@/components/SeriesDetailCard";
 import SeriesLayers from "@/components/SeriesLayers";
 import {
@@ -32,6 +34,7 @@ import {
   episodesForSeries,
   fetchEpisodes,
 } from "@/lib/episodes";
+import { currentWindow } from "@/lib/era/window";
 import {
   BASEMAP_STYLE_URL,
   INITIAL_VIEW_STATE,
@@ -39,7 +42,14 @@ import {
 } from "@/lib/map/config";
 import type { MapLocusCollection } from "@/lib/map/loci";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
+import type { EraList } from "@/lib/schema/era";
 import type { Series, SeriesList } from "@/lib/schema/series";
+
+/**
+ * 地図を開いたときに、era スライダーが指す era の id。
+ * 古代を選んだ理由は docs/adr/0040-era-fade-wiring.md が持つ。
+ */
+const INITIAL_ERA_ID = "ancient";
 
 type MapCanvasProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */
@@ -49,6 +59,10 @@ type MapCanvasProps = {
    * 地図のクリックが返すのは `Locus` なので、`seriesId` に一致する `Series` をこの配列から検索する。
    */
   series: SeriesList;
+  /** era スライダーの目盛りに並べる時代区分の全件。 */
+  eras: EraList;
+  /** `end` が `ERA_END_PRESENT` の era の右端に置く年。 */
+  presentEnd: number;
 };
 
 /**
@@ -80,8 +94,32 @@ function episodesOf(state: EpisodesState, seriesId: string): EpisodesState {
   };
 }
 
-export default function MapCanvas({ loci, series }: MapCanvasProps) {
+/**
+ * `eras` のうち id が `INITIAL_ERA_ID` の区間の、中央を指す era 空間の位置を返す。
+ * `INITIAL_ERA_ID` の区間が `eras` に無ければ throw する。
+ *
+ * era 空間は `eras` の各区間を等幅に並べるので（`@/lib/era/scale` が正）、`index` 番目の区間の中央は `(index + 0.5) / eras.length` である。
+ */
+function initialEraPositionOf(eras: EraList): number {
+  const index = eras.findIndex((era) => era.id === INITIAL_ERA_ID);
+
+  if (index === -1) {
+    throw new Error(`eras に id が ${INITIAL_ERA_ID} の区間が無い`);
+  }
+
+  return (index + 0.5) / eras.length;
+}
+
+export default function MapCanvas({
+  loci,
+  series,
+  eras,
+  presentEnd,
+}: MapCanvasProps) {
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
+  const [eraPosition, setEraPosition] = useState(() =>
+    initialEraPositionOf(eras),
+  );
   const [episodes, setEpisodes] = useState<EpisodesState>({ kind: "loading" });
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
 
@@ -119,7 +157,20 @@ export default function MapCanvas({ loci, series }: MapCanvasProps) {
       onMouseEnter={() => setIsHoveringLocus(true)}
       onMouseLeave={() => setIsHoveringLocus(false)}
     >
-      <SeriesLayers loci={loci} />
+      <SeriesLayers
+        loci={loci}
+        currentWindow={currentWindow({
+          position: eraPosition,
+          eras,
+          presentEnd,
+        })}
+      />
+      <EraSlider
+        eras={eras}
+        presentEnd={presentEnd}
+        position={eraPosition}
+        onPositionChange={setEraPosition}
+      />
       {selectedSeries !== null && (
         <SeriesDetailCard
           series={selectedSeries}

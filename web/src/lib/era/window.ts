@@ -25,32 +25,48 @@ export type CurrentWindow = {
   end: number;
 };
 
+/** 現在窓の両端を、era 空間の位置（0..1）で表したもの。 */
+export type CurrentWindowPositions = {
+  start: number;
+  end: number;
+};
+
+/**
+ * `position` の周りに取る現在窓の両端を、era 空間の位置（0..1）で返す。
+ *
+ * 幅は era 空間で `WINDOW_WIDTH_IN_ERAS` 区間ぶんである。
+ * `position` が 0 や 1 に近いと窓の端が era 空間の外へ出るので、その端は 0 と 1 へ丸める。
+ */
+export function currentWindowPositions({
+  position,
+  eras,
+}: Pick<EraSpacePosition, "position" | "eras">): CurrentWindowPositions {
+  const eraWidthInPosition = 1 / eras.length;
+  const windowWidthInPosition = WINDOW_WIDTH_IN_ERAS * eraWidthInPosition;
+  const halfWindowWidth = windowWidthInPosition / 2;
+
+  return {
+    start: Math.max(position - halfWindowWidth, 0),
+    end: Math.min(position + halfWindowWidth, 1),
+  };
+}
+
 /**
  * `position` の周りに取る現在窓の、両端の年を返す。
  *
- * era 空間で `WINDOW_WIDTH_IN_ERAS` ぶんの幅を取り、両端を `positionToYear` で年へ変換する。
- * `position` が 0 や 1 に近いと窓の端が era 空間の外へ出て、`positionToYear` が 0 と 1 へ丸めるぶん窓が狭くなる。
+ * `currentWindowPositions` が返す両端を、`positionToYear` で年へ変換する。
+ * `position` が 0 や 1 に近いと窓の端が 0 と 1 へ丸められるぶん、窓が狭くなる。
  */
 export function currentWindow({
   position,
   eras,
   presentEnd,
 }: EraSpacePosition): CurrentWindow {
-  const eraWidthInPosition = 1 / eras.length;
-  const windowWidthInPosition = WINDOW_WIDTH_IN_ERAS * eraWidthInPosition;
-  const halfWindowWidth = windowWidthInPosition / 2;
+  const positions = currentWindowPositions({ position, eras });
 
   return {
-    start: positionToYear({
-      position: position - halfWindowWidth,
-      eras,
-      presentEnd,
-    }),
-    end: positionToYear({
-      position: position + halfWindowWidth,
-      eras,
-      presentEnd,
-    }),
+    start: positionToYear({ position: positions.start, eras, presentEnd }),
+    end: positionToYear({ position: positions.end, eras, presentEnd }),
   };
 }
 

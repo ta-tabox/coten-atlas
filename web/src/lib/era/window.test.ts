@@ -1,5 +1,5 @@
 /**
- * `currentWindow`・`overlapRatio`・`fadeOpacity` の戻り値を検証する。
+ * `currentWindowPositions`・`currentWindow`・`overlapRatio`・`fadeOpacity` の戻り値を検証する。
  *
  * 窓も `timeRange` も両端を含む閉区間なので、端の 1 年を数えるかどうかで結果が変わる。
  * 窓の外側に接するだけの `timeRange` と、端の 1 年だけ重なる `timeRange` を並べて置く。
@@ -9,6 +9,7 @@ import { describe, expect, it } from "vitest";
 import {
   type CurrentWindow,
   currentWindow,
+  currentWindowPositions,
   fadeOpacity,
   overlapRatio,
 } from "@/lib/era/window";
@@ -35,6 +36,23 @@ const WINDOW_IN_19C: CurrentWindow = { start: 1825, end: 1875 };
 function windowAt(position: number): CurrentWindow {
   return currentWindow({ position, eras: ERAS, presentEnd: PRESENT_END });
 }
+
+describe("currentWindowPositions", () => {
+  it("区間の真ん中では、その区間の幅の半分を位置で取る", () => {
+    const positions = currentWindowPositions({
+      position: 4.5 / 7,
+      eras: ERAS,
+    });
+
+    expect(positions.start).toBeCloseTo(4.25 / 7);
+    expect(positions.end).toBeCloseTo(4.75 / 7);
+  });
+
+  it("era 空間の端では、外へ出た窓の端を 0 と 1 へ丸める", () => {
+    expect(currentWindowPositions({ position: 0, eras: ERAS }).start).toBe(0);
+    expect(currentWindowPositions({ position: 1, eras: ERAS }).end).toBe(1);
+  });
+});
 
 describe("currentWindow", () => {
   it("区間の真ん中では、その区間の幅の半分を取る", () => {
