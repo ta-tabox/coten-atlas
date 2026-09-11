@@ -62,7 +62,7 @@ Rotem Kowner の *Historical Dictionary of the Russo-Japanese War*（2006）は�
 ## 仮決定と論点
 
 2026-09-11 に Claude が `@historian` の結果を見て仮決定し、同日に #170・#171・#172 の決定（ADR-0041）で事物の `id` を `port-arthur` へ直し、代表点と `id` の区切りを当て直した。
-事の運びの舞台をどこに置くかの人間の判定は [#168](https://github.com/ta-tabox/coten-atlas/pull/168) で待っている。
+2026-09-11 に人間が仮決定を採用して決着させた。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|

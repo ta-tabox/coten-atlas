@@ -57,12 +57,12 @@
 
 2026-09-11 に Claude が `@historian` の結果を見て仮決定し、同日に #171 と #172 の決定（ADR-0041）で代表点と `id` の区切りを当て直した。
 値は変わらなかった。
-事績の中心をどこに置くかの人間の判定は [#168](https://github.com/ta-tabox/coten-atlas/pull/168) で待っている。
+2026-09-11 に人間が仮決定を採用して決着させ、見直しを [#185](https://github.com/ta-tabox/coten-atlas/issues/185)（ライト兄弟（wrightkyodai）の代表点をデイトンとキティホークのどちらにするか）へ切り出した。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
-| 代表点 | デイトン（事績の中心） | 1903 年の初飛行を主な事績と見ればキティホークになる |
-| 座標の典拠 | Wikipedia の Infobox（参考程度） | GeoNames か Wikidata で取り直せば格が上がる |
+| 代表点 | デイトン（事績の中心） | 1903 年の初飛行を主な事績と見ればキティホークになる。見直しは #185 で行う |
+| 座標の典拠 | Wikipedia の Infobox（参考程度） | GeoNames か Wikidata で取り直せば格が上がる。見直しは #185 で行う |
 
 ## 裏どりの出所
 
@@ -73,6 +73,7 @@
 | [#168 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/168) | 代表点を選んだ判断と候補 |
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171#issuecomment-5629453137) | 拠点が複数あるときに、事績の中心を代表点にする判断 |
 | [#172 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/172#issuecomment-5629510570) | 二つの辞書のどちらかに一語の見出しがあれば割らない判断 |
+| [#185（見直し）](https://github.com/ta-tabox/coten-atlas/issues/185) | 採用した仮決定を人間が見直す論点と案 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う主題 |
 
 2 回目・4 回目・5 回目はこのシリーズを対象にしていない。
