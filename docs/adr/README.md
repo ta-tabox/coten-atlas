@@ -80,7 +80,7 @@
 | [0037](0037-sources-layer.md) | `catalog/` の値の典拠を `docs/sources/<シリーズ id>.md` に置く | 2026-09-10 | 採用 |
 | [0038](0038-era-space-window.md) | 現在窓の幅は era 空間の位置で決め、`"present"` の右端は呼び出し元が渡す現在年にする | 2026-09-07 | 採用 |
 | [0039](0039-untimed-concept-series.md) | 時代を跨いで続く概念史のシリーズは、`timeRange` に年を書かず時期なしの印を置く | 2026-09-10 | 採用 |
-| [0040](0040-era-fade-wiring.md) | 現在窓の濃さは事物ごとに TypeScript で求めて円のレイヤの式へ埋め込み、窓と重ならない事物は filter で除く | 2026-09-11 | 採用 |
+| [0040](0040-era-fade-wiring.md) | 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値を MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く | 2026-09-11 | 採用 |
 | [0041](0041-series-vocabulary-tiebreaks.md) | 手で書く欄の語彙を決め、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を足す（0034 を supersede） | 2026-09-11 | 採用 |
 
 **0019 までのレコードは `テーマ` の語で書かれている。**
