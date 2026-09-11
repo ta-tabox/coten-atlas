@@ -75,7 +75,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [-73.845, 40.72] },
+      "geometry": { "type": "Point", "coordinates": [-73.85, 40.716] },
       "properties": {
         "id": "forest-hills",
         "seriesId": "helen-keller-to-anne-sullivan",
