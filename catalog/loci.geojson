@@ -129,7 +129,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [139.717, 35.238] },
+      "geometry": { "type": "Point", "coordinates": [139.714, 35.248] },
       "properties": {
         "id": "uraga",
         "seriesId": "perry-raiko",
@@ -147,7 +147,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [-77.037, 38.907] },
+      "geometry": { "type": "Point", "coordinates": [-77.037, 38.895] },
       "properties": {
         "id": "washington",
         "seriesId": "lincoln",
