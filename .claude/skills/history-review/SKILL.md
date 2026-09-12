@@ -10,7 +10,9 @@ description: シリーズの値（`catalog/series.json`・`catalog/loci.geojson`
 そこで、人間が仮決定をまとめて採用して一度決着させ、ゆっくり見直す価値のある論点だけを、1 件ずつ開いて決められる issue にする。
 
 - ラベル `history-review`（補助: 採用済みの歴史データを人間が一件ずつ見直す）と `human` を付ける
-- 一覧は `gh issue list --state open --label history-review` か、GitHub の `label:history-review` で引く
+- 手順 A-1 の表で優先度を下げる論点には、ラベル `low-priority`（補助: 急がない。優先度の付いていない issue の後に見る）も付ける
+- 一覧は `gh issue list --state open --label history-review` か、GitHub の `label:history-review` で引く。
+  優先度を下げた分を外すなら、GitHub の検索に `-label:low-priority` を足す
 - 手本は #174（紫式部の代表点。代表点の選択と未確認の座標の二論点）・#178（鎌倉武士の `timeRange` の終わり）・#180（ムガール帝国の代表点と `region`）と、PR #167（中世の 11 シリーズを series.json へ載せる）の本文の「人間に見てほしい」節である
 
 このスキルは二つの手順を持つ。
@@ -32,7 +34,8 @@ PR 本文の「人間に見てほしい」節と、対象の全シリーズの�
 | issue にする | `timeRange` の端の選び方で、era スライダーに濃く出る期間が大きく変わる |
 | issue にする | 座標や地点の事実を典拠で確かめられていない |
 | issue にする | `region` の選び方が割れる |
-| 仮決定で決着とする | 生没年の並立説・綴りの揺れ・同じ都市の中での数百 m の座標の差・規則で一つに決まった論点 |
+| issue にし、`low-priority` を付ける | 規則と各回の配分でいまの値に決まったが、事績の重みの見方や学説の区切りを変えると、別の都市の代表点や別の年が候補として立つ |
+| 仮決定で決着とする | 生没年の並立説・綴りの揺れ・同じ都市の中での数百 m の座標の差・規則だけで一つに決まり別の候補が立たない論点 |
 
 1 シリーズに issue にする論点が複数あれば、1 件にまとめる。
 決着とする論点は、典拠のファイルに残すだけで issue にしない。
@@ -41,6 +44,7 @@ PR 本文の「人間に見てほしい」節と、対象の全シリーズの�
 
 題は `見直し: <シリーズ名>（<シリーズ id>）の<論点>を<A>と<B>のどちらにするか` の形にする。
 ラベルは `history-review` と `human` を付ける。
+手順 1 の表で `low-priority` を付ける論点なら、`--label low-priority` も足し、本文の 1 行目に `／ **優先度**: 低い（<いまの値に決めた規則と各回の配分>）` を足す。
 
 ```bash
 gh issue create --label history-review --label human \
