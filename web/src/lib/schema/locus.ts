@@ -8,7 +8,7 @@
  * 通す geometry は Point だけである（docs/adr/0026-two-phase-location.md）。
  *
  * 地図の source へ渡す形はここが組まない。
- * `kind` と、シリーズと一致する `timeRange` を写すのはビルド時の仕事で、`catalog/` の形は動かさない（docs/adr/0024-map-feature-carries-key-only.md）。
+ * シリーズと一致する `timeRange` を年へ写すのはビルド時の仕事で、`catalog/` の形は動かさない（docs/adr/0024-map-feature-carries-key-only.md）。
  *
  * 入口は parseLoci。
  */

@@ -34,7 +34,6 @@ const LOCI: MapLocusCollection = {
       properties: {
         id: "sparta-city",
         seriesId: "sparta",
-        kind: "place",
         timeStart: -900,
         timeEnd: -200,
       },

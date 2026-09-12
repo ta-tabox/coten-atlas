@@ -86,13 +86,15 @@ const MECCA: Locus["properties"] = {
 };
 
 describe("toMapLoci", () => {
-  it("kind をその事物のシリーズから写す", () => {
-    const { features } = toMapLoci(lociOf(SPARTA_CITY, MECCA), SERIES);
+  it("properties を鍵の 2 欄と年の 2 欄だけにする", () => {
+    const { features } = toMapLoci(lociOf(SPARTA_CITY), SERIES);
 
-    expect(features.map(({ properties }) => properties.kind)).toEqual([
-      "place",
-      "concept",
-    ]);
+    expect(features[0].properties).toEqual({
+      id: "sparta-city",
+      seriesId: "sparta",
+      timeStart: -900,
+      timeEnd: -200,
+    });
   });
 
   it("代表点の年をシリーズの timeRange から解決する", () => {

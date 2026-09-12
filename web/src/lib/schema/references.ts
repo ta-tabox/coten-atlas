@@ -8,7 +8,7 @@
  * - series → loci（brokenAnchors）: `anchor` の宣言が現物と合うこと。
  *   指す先を欠いた代表点も、事物を持ってしまった位置なしも、地図には「その点が無い」としか出ない
  * - loci → series（brokenLocusSeriesReferences・lociOutsideSeriesTimeRange）: `seriesId` が実在すること、年を書いた事物がシリーズの年代に収まること。
- *   参照を外した事物は濃淡を引く先を持たず、はみ出した年の事物はシリーズが一覧に出ない時代の地図へ現れる
+ *   参照を外した事物は年を解決するシリーズを持たず、はみ出した年の事物はシリーズが一覧に出ない時代の地図へ現れる
  * - series → eras（seriesOutsideEraSpace）: `timeRange` が era 空間に収まること。
  *   はみ出した年はスライダーのどの位置でも現在窓に入らず、era 空間の完全に外にあるシリーズは地図に一度も現れない
  *
@@ -119,7 +119,7 @@ export function brokenAnchors(
 
 /**
  * `seriesId` がどのシリーズも指していない事物を、理由の文で返す。
- * 指す先が無い事物は、描画の濃淡に要る `kind` を引けない。
+ * 指す先が無い事物は、地図へ渡す形を組む `toMapLoci` が年を解決できずに throw する。
  * 壊れていなければ空。
  */
 export function brokenLocusSeriesReferences(

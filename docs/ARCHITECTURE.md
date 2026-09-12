@@ -126,7 +126,7 @@ catalog/
 ]
 ```
 
-**loci.geojson**（事物。GeoJSON FeatureCollection で、地図の source の元。渡す形はビルド時に `kind` と `timeRange` を properties へ写して組む）:
+**loci.geojson**（事物。GeoJSON FeatureCollection で、地図の source の元。渡す形はビルド時に `timeRange` を年へ解決して properties へ写して組む）:
 
 ```jsonc
 {
@@ -267,7 +267,8 @@ catalog/
 ## 4. UI 構成
 
 - 全画面マップ + 下部に era スライダー（era 名を等幅のセルに並べ、下に区間の境目の年を置く。現在窓の年の範囲を、文字とセルの上の帯で示す）。
-  地図の点の濃さは `kind` の濃さと現在窓の濃さの積で、現在窓と重ならない事物は地図に描かない
+  地図の点の濃さは現在窓の濃さだけで決まり、代表点を持つシリーズはどれも同じ規則で描く。
+  現在窓と重ならない事物は地図に描かない
 - 左に開閉パネル: 現在窓に表示中のシリーズ一覧。クリックで該当オブジェクトを
   選択（flyTo + ハイライト）。地図側の選択もパネルに同期（単一の selection state）
 - 位置なしのシリーズ（`anchor` が `ANCHOR_UNLOCATED`）は地図に出ない。
