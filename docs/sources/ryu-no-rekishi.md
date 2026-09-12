@@ -46,12 +46,12 @@
 ## 仮決定と論点
 
 2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-0039 に従って `timeRange` を `"untimed"` にした。
-人間の判定は [#157](https://github.com/ta-tabox/coten-atlas/pull/157) で待っている。
+2026-09-12 に人間が仮決定を採用して決着させ、見直しを [#211](https://github.com/ta-tabox/coten-atlas/issues/211)（龍の歴史（ryu-no-rekishi）の region を中国と地域なしのどちらにするか）へ切り出した。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
 | 時期を持つか | `"untimed"` | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、西水坡遺跡の年代を使える。ただし年代は前 5300 年頃から前 4400 年頃まで典拠ごとに割れ、どの典拠も参考程度で、年代測定の一次データまで辿れていない |
-| `region` | `中国` | 西洋のドラゴンを同じ主題に含めれば、複数の区画で別々に生まれたものとして表の 3 行目で `地域なし` になる |
+| `region` | `中国` | 西洋のドラゴンを同じ主題に含めれば、複数の区画で別々に生まれたものとして表の 3 行目で `地域なし` になる。見直しは #211 で行う |
 
 ## 裏どりの出所
 
@@ -61,4 +61,5 @@
 | [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-0034 の規則の突き合わせ |
 | [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容から決めた年と、`region` と `tags` の判断 |
 | [#160（ADR-0039）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
+| [#211（見直し）](https://github.com/ta-tabox/coten-atlas/issues/211) | 採用した仮決定を人間が見直す論点と案 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |
