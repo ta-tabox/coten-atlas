@@ -37,11 +37,11 @@
 ## 仮決定と論点
 
 2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-0039 に従って `timeRange` を `"untimed"` にした。
-人間の判定は [#157](https://github.com/ta-tabox/coten-atlas/pull/157) で待っている。
+2026-09-12 に人間が仮決定を採用して決着させ、見直しを [#213](https://github.com/ta-tabox/coten-atlas/issues/213)（障害の歴史（shogai-no-rekishi）の region を地域なしとヨーロッパのどちらにするか）へ切り出した。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
-| `region` | `地域なし` | 第 3 回以降は啓蒙主義・優生学・ノーマライゼーションと、ヨーロッパで生まれて広がった考えを追う。後半を主題と見れば、表の 2 行目で `ヨーロッパ` になる |
+| `region` | `地域なし` | 第 3 回以降は啓蒙主義・優生学・ノーマライゼーションと、ヨーロッパで生まれて広がった考えを追う。後半を主題と見れば、表の 2 行目で `ヨーロッパ` になる。見直しは #213 で行う |
 | 時期を持つか | `"untimed"` | 無し。始まりが era 空間の始端より古く、終わりも無いので、年で書く値が無い |
 
 ## 裏どりの出所
@@ -52,4 +52,5 @@
 | [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-0034 の規則の突き合わせ |
 | [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容と、`region` の判断 |
 | [#160（ADR-0039）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
+| [#213（見直し）](https://github.com/ta-tabox/coten-atlas/issues/213) | 採用した仮決定を人間が見直す論点と案 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |

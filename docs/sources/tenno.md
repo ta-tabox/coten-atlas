@@ -47,11 +47,11 @@ ADR-0034 の `集団` の定義は「国家・帝国・社会層など、続く�
 ## 仮決定と論点
 
 2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-0039 に従って `timeRange` を `"untimed"` にした。
-人間の判定は [#157](https://github.com/ta-tabox/coten-atlas/pull/157) で待っている。
+2026-09-12 に人間が仮決定を採用して決着させ、見直しを [#214](https://github.com/ta-tabox/coten-atlas/issues/214)（天皇（tenno）の種別を概念史だけと集団のどちらにするか）へ切り出した。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
-| 種別 | `概念史` だけ | 皇室を続く人の集まりと見れば `集団` も当たり、代表点を置く `place` になる |
+| 種別 | `概念史` だけ | 皇室を続く人の集まりと見れば `集団` も当たり、代表点を置く `place` になる。見直しは #214 で行う |
 | 時期を持つか | `"untimed"` | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、天皇号の成立を使える。成立は天武朝説（673）と推古朝説が並立し、大王の時代（ヤマト王権の成立）から数える案もある |
 
 ## 裏どりの出所
@@ -62,4 +62,5 @@ ADR-0034 の `集団` の定義は「国家・帝国・社会層など、続く�
 | [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-0034 の規則の突き合わせ |
 | [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 種別を `概念史` だけにした判断と候補 |
 | [#160（ADR-0039）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
+| [#214（見直し）](https://github.com/ta-tabox/coten-atlas/issues/214) | 採用した仮決定を人間が見直す論点と案 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |

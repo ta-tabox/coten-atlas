@@ -45,11 +45,11 @@
 ## 仮決定と論点
 
 2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-0039 に従って `timeRange` を `"untimed"` にした。
-人間の判定は [#157](https://github.com/ta-tabox/coten-atlas/pull/157) で待っている。
+2026-09-12 に人間が仮決定を採用して決着させ、見直しを [#210](https://github.com/ta-tabox/coten-atlas/issues/210)（民主主義の歴史（minshushugi-no-rekishi）の region をヨーロッパ・起源の区画・地域なしのどれにするか）へ切り出した。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
-| `region` | `ヨーロッパ` | 第 1 回はギリシア以前の民主主義の起源に触れる。その起源がヨーロッパの外なら本拠が変わる（配信フィードの説明からは起源の場所が読み取れず、典拠は取っていない） |
+| `region` | `ヨーロッパ` | 第 1 回はギリシア以前の民主主義の起源に触れる。その起源がヨーロッパの外なら本拠が変わる（配信フィードの説明からは起源の場所が読み取れず、典拠は取っていない）。見直しは #210 で行う |
 | 時期を持つか | `"untimed"` | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、クレイステネスの改革（-508）を使える。第 1 回が触れるギリシア以前の起源を起点に数えれば、始まりの年が早まる |
 
 ## 裏どりの出所
@@ -60,4 +60,5 @@
 | [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-0034 の規則の突き合わせ |
 | [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容から決めた年と、`region` と `id` の判断 |
 | [#160（ADR-0039）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
+| [#210（見直し）](https://github.com/ta-tabox/coten-atlas/issues/210) | 採用した仮決定を人間が見直す論点と案 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |
