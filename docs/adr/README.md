@@ -63,7 +63,7 @@
 | [0020](0020-series-rename.md) | 地図の 1 エントリの呼び名を `series` にする | 2026-08-30 | 採用 |
 | [0021](0021-tailwind-v4.md) | スタイルを Tailwind v4 で書く（0015 を supersede） | 2026-08-31 | 採用 |
 | [0022](0022-map-dom-boundary.md) | 地図の上に載せるものは React 側で書き、MapLibre の DOM は canvas と attribution に限る | 2026-08-31 | 採用 |
-| [0023](0023-kind-place-or-concept.md) | `kind` は geometry から導けない差だけを持つ | 2026-08-31 | 採用 |
+| [0023](0023-kind-place-or-concept.md) | `kind` は geometry から導けない差だけを持つ | 2026-08-31 | supersede 済み（→ 0042） |
 | [0024](0024-map-feature-carries-key-only.md) | 地図から返る feature は鍵の運搬に限り、シリーズの属性は `data/` を読んだ値から引く | 2026-09-01 | 採用 |
 | [0025](0025-retire-next-md.md) | 申し送りの層（`NEXT.md`）を畳み、状態・順序・決定・現況の四つの外に層を作らない | 2026-09-01 | 採用 |
 | [0026](0026-two-phase-location.md) | 位置情報を二段階に分け、第一段階は代表点か位置なしに限る | 2026-09-02 | 採用 |
@@ -80,8 +80,14 @@
 | [0037](0037-sources-layer.md) | `catalog/` の値の典拠を `docs/sources/<シリーズ id>.md` に置く | 2026-09-10 | 採用 |
 | [0038](0038-era-space-window.md) | 現在窓の幅は era 空間の位置で決め、`"present"` の右端は呼び出し元が渡す現在年にする | 2026-09-07 | 採用 |
 | [0039](0039-untimed-concept-series.md) | 時代を跨いで続く概念史のシリーズは、`timeRange` に年を書かず時期なしの印を置く | 2026-09-10 | 採用 |
-| [0040](0040-era-fade-wiring.md) | 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値を MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く | 2026-09-11 | 採用 |
-| [0041](0041-series-vocabulary-tiebreaks.md) | 手で書く欄の語彙を決め、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を足す（0034 を supersede） | 2026-09-11 | 採用 |
+| [0040](0040-era-fade-wiring.md) | 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値を MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く | 2026-09-11 | supersede 済み（→ 0043） |
+| [0041](0041-series-vocabulary-tiebreaks.md) | 手で書く欄の語彙を決め、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を足す（0034 を supersede） | 2026-09-11 | supersede 済み（→ 0044） |
+| [0042](0042-drop-series-kind.md) | `series.json` の `kind` を廃止し、代表点を持つシリーズを同じ濃さで地図に描く（0023 を supersede） | 2026-09-11 | 採用 |
+| [0043](0043-era-fade-window-only.md) | 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値をそのまま MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く（0040 を supersede） | 2026-09-11 | 採用 |
+| [0044](0044-series-vocabulary-without-kind.md) | 手で書く欄の語彙と、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を、`kind` を除いて決め直す（0041 を supersede） | 2026-09-11 | 採用 |
+
+**0041 までのレコードは、シリーズが `kind` の欄を持つものとして書かれている。**
+`kind` は [0042](0042-drop-series-kind.md) で廃止したので、supersede されていないレコード（0008・0021・0026・0027・0035・0038・0039）にある `kind` の記述は、欄が在った時点の設計として読む。
 
 **0019 までのレコードは `テーマ` の語で書かれている。**
 地図の 1 エントリの呼び名を [0020](0020-series-rename.md) で `series`（シリーズ）へ揃えたので、それより前のレコードにある「テーマ」は「シリーズ」と読む。
