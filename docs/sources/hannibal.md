@@ -41,11 +41,12 @@
 ## 仮決定と論点
 
 2026-09-10 に人間が現在の値で決着させた。
+2026-09-12 に人間が、決着させた値に残る論点を見直すと決め、見直しを [#217](https://github.com/ta-tabox/coten-atlas/issues/217)（ハンニバル（hannibal）の代表点をカルタゴとカンナエのどちらにするか）へ切り出した。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
 | 没年 | -183 | 前181年とする文献がある |
-| 代表点 | `carthage`（カルタゴ） | カンナエに置けば `region` が `ヨーロッパ` になり、第二次ポエニ戦争の主戦場と揃う |
+| 代表点 | `carthage`（カルタゴ） | カンナエに置けば `region` が `ヨーロッパ` になり、第二次ポエニ戦争の主戦場と揃う。見直しは #217 で行う |
 
 ## 裏どりの出所
 
@@ -55,6 +56,7 @@
 | [`@historian` 2 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/143#issuecomment-5610686216) | 座標の典拠の取り直し |
 | [#143 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/143) | 代表点を選んだ判断と候補 |
 | [#154 のレビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/154) | 仮決定 |
+| [#217（見直し）](https://github.com/ta-tabox/coten-atlas/issues/217) | 人間が決着させた値を見直す論点と案 |
 
 1 回目は座標の典拠に `geodatos.net` と Wikipedia の Archaeological site of Carthage の記事を使っていたので、2 回目が Pleiades 314921 へ差し替えた。
 **座標の典拠は 2 回目が正である。**
