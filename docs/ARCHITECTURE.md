@@ -101,7 +101,6 @@ catalog/
   {
     "id": "sparta",
     "title": "スパルタ",
-    "kind": "place",                              // 描画の濃淡の分岐キー
     "anchor": "sparta-city",                      // 代表点の事物 id（loci.geojson の properties.id）
     "timeRange": { "start": -900, "end": -200 },  // 両端を含む閉区間。負値 = BC
     "summary": "",         // 自前の要約を入れる欄。番組の説明文は引かないので当面は空（ADR-0008）
@@ -113,7 +112,6 @@ catalog/
   {
     "id": "sekai-sandai-shukyo",
     "title": "世界三大宗教",
-    "kind": "concept",
     "anchor": "unlocated",  // 位置なし。JSON に定数は無いので文字列をそのまま書き、コードは ANCHOR_UNLOCATED の名で読む。地図に出ず、一覧パネルの別区画に出る（§4）
     "timeRange": "untimed",  // 時期なし。コードは TIME_RANGE_UNTIMED の名で読む。置けるのは種別が概念史だけの位置なしのシリーズに限る（ADR-0039）
     "summary": "",
@@ -183,9 +181,9 @@ catalog/
   `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む。
   エピソード側は RSS の `<link>` を入れる（[ADR-0006](adr/0006-rss-link-as-episode-url.md)）。
   配信側にシリーズ単位のページが無いので、**シリーズ側が何を指すかは未決定**である（#13 の実測）
-- `kind` は `place`（場所が一意に決まる）と `concept`（決まらない）の 2 値（[ADR-0023](adr/0023-kind-place-or-concept.md)）。
-  `anchor` とは別の欄で、`concept` でも代表点を置いてよい。
-  シリーズの属性なので事物には持たせず、地図の濃淡に要る分は地図へ渡す形を組むときに `seriesId` で引いて写す（[ADR-0024](adr/0024-map-feature-carries-key-only.md)）
+- 地図に出すか一覧にだけ出すかは `anchor` だけで決まり、シリーズは描き分けの欄を持たない。
+  代表点が主題の中心の場所でなく代わりに置いた点（生地など）でも、地図は他のシリーズと同じ規則で描く。
+  代わりの点であることと選んだ理由は、`docs/sources/<シリーズ id>.md` の「代表点」節が持つ（[ADR-0042](adr/0042-drop-series-kind.md)）
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
 - `region` は陸地を重ならないように割った 12 区画と `地域なし` の 13 値で、区画を一つ選ぶと嘘になるシリーズが `地域なし` を書く（[ADR-0044](adr/0044-series-vocabulary-without-kind.md)）。
@@ -193,7 +191,7 @@ catalog/
   値を足すときは、`web/src/lib/schema/series.ts` の `SERIES_REGIONS` と同じ skill の一覧を両方書き換え、足す理由を新しい ADR に書く。
   `tags` は種別（`人物` / `集団` / `出来事` / `概念史` の閉じた集合から最低 1 つ）と主題を合わせて 4 個以内で、`eras.json` の区分と同じ粒度の時代名と地域名を入れない。
   `幕末` や `三国志` のように era より細かい時代の名は主題として入れてよい
-- `region` の 13 値・種別が最低 1 つ在ること・`tags` の上限・era 級の時代名の禁止・`title` が `ショート` と `ジンブンガク` で始まらないこと・`kind: place` と `ANCHOR_UNLOCATED` を組まないこと・`"untimed"` を置いたシリーズの種別が `概念史` だけで位置なしであることは、`web/src/lib/schema/series.ts` が検査する。
+- `region` の 13 値・種別が最低 1 つ在ること・`tags` の上限・era 級の時代名の禁止・`title` が `ショート` と `ジンブンガク` で始まらないこと・`"untimed"` を置いたシリーズの種別が `概念史` だけで位置なしであることは、`web/src/lib/schema/series.ts` が検査する。
   外の知識が要る判定（区画を一つ選ぶと嘘になるか、`id` の表記が読みどおりか）は検査に入らない
 - スキーマの現物は `web/src/lib/schema/` の zod が持つ。
   この節と食い違ったらスキーマが正で、`pnpm test`（`web/tests/catalog.test.ts`）が `catalog/` 全体をそれに掛ける。

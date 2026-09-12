@@ -30,12 +30,6 @@ export const ANCHOR_UNLOCATED = "unlocated";
 export const TIME_RANGE_UNTIMED = "untimed";
 
 /**
- * 描画スタイルの分岐キー。
- * 場所が一意に決まるかどうかだけを分ける（docs/adr/0023-kind-place-or-concept.md）。
- */
-export const seriesKindSchema = z.enum(["place", "concept"]);
-
-/**
  * `region` に置ける区画の一覧。
  * 陸地を重ならないように割った 12 の区画と、区画を一つ選ぶと嘘になるシリーズが使う `地域なし` である。
  * 区画の境目は `.claude/skills/series-vocabulary/SKILL.md` の手順 6 が持つ。
@@ -138,12 +132,6 @@ export const seriesSchema = z
     title: trimmedNonEmptyStringSchema,
 
     /**
-     * 描画スタイルの分岐キー。
-     * `concept` は場所が一意に決まらないもので、控えめに描く（docs/adr/0023-kind-place-or-concept.md）。
-     */
-    kind: seriesKindSchema,
-
-    /**
      * 代表点の事物 id か、位置なしを表す `ANCHOR_UNLOCATED`。
      * そのシリーズの事物のうちどれが代表点かを示す印であって、シリーズと事物の紐づけではない（docs/adr/0027-series-and-loci.md）。
      * 紐づけは事物側の `seriesId` が担う。
@@ -195,13 +183,6 @@ export const seriesSchema = z
       ctx.addIssue({
         code: "custom",
         message: `title が番組内のコーナー名で始まっている: ${prefix}`,
-      });
-    }
-
-    if (series.kind === "place" && series.anchor === ANCHOR_UNLOCATED) {
-      ctx.addIssue({
-        code: "custom",
-        message: `kind が place なのに anchor が ${ANCHOR_UNLOCATED} である`,
       });
     }
 
@@ -274,7 +255,6 @@ export const seriesListSchema = z
   });
 
 export type Series = z.infer<typeof seriesSchema>;
-export type SeriesKind = z.infer<typeof seriesKindSchema>;
 export type SeriesList = z.infer<typeof seriesListSchema>;
 export type SeriesTimeRange = z.infer<typeof seriesTimeRangeSchema>;
 

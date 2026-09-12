@@ -20,10 +20,7 @@ import {
 } from "@/lib/schema/series";
 
 /** シリーズのうち、写しの規則に関わる欄。 */
-type SeriesFixture = Pick<
-  Series,
-  "id" | "kind" | "anchor" | "season" | "timeRange"
->;
+type SeriesFixture = Pick<Series, "id" | "anchor" | "season" | "timeRange">;
 
 /** 残りの欄を埋めて、スキーマの通るシリーズにする。 */
 function seriesOf(fixture: SeriesFixture): Series {
@@ -52,21 +49,18 @@ function lociOf(...properties: Locus["properties"][]): LocusCollection {
 const SERIES: SeriesList = [
   seriesOf({
     id: "sparta",
-    kind: "place",
     anchor: "sparta-city",
     season: 2,
     timeRange: { start: -900, end: -200 },
   }),
   seriesOf({
     id: "sekai-sandai-shukyo",
-    kind: "concept",
     anchor: "mecca",
     season: 7,
     timeRange: { start: -560, end: 632 },
   }),
   seriesOf({
     id: "okane-no-rekishi",
-    kind: "concept",
     anchor: ANCHOR_UNLOCATED,
     season: 12,
     timeRange: { start: -600, end: 2020 },
@@ -150,7 +144,6 @@ describe("toMapLoci", () => {
   it("指す先のシリーズが時期を持たなければ投げる", () => {
     const untimed = seriesOf({
       id: "sekai-sandai-shukyo",
-      kind: "concept",
       anchor: ANCHOR_UNLOCATED,
       season: 7,
       timeRange: TIME_RANGE_UNTIMED,
