@@ -47,14 +47,14 @@
 `@historian` は、英語の文献がドイツの占領下（1939〜1945 年）についても Kraków か Krakow と書き、Krakau は占領したドイツの当局の名だと報告した（[USHMM Holocaust Encyclopedia: The Krakow (Cracow) Ghetto](https://encyclopedia.ushmm.org/content/en/article/krakow-cracow)、三次）。
 代表点に選んだ時代の地点が複数の名を持つときは、現在の英語の文献がその時代のその地点を指すときに通用する名を使うと #170 で決まった（ADR-0041）ので、`krakow` のまま決着した。
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: ヨーロッパ` は、第 9 回が米国でのミルグラムの実験を扱って区画が跨るので [ADR-0034](../adr/0034-series-vocabulary.md) の `region` の選び方の表の 2 行目に当て、人物の本拠の生地（ツヴィッタウ。当時のオーストリア＝ハンガリー、現在のチェコ）で決めた。
 #168 の PR 本文の最初の版は 1 行目（一区画に収まる）と書いていたが、第 9 回の舞台を数えれば 2 行目に当たる。
 どちらの行でも値は `ヨーロッパ` である。
 `@historian` は、生地がツヴィッタウであることを確認した。
 
-`title: シンドラー` と `kind: place` に指摘は出なかった。
+`title: シンドラー` に指摘は出なかった。
 
 ## 仮決定と論点
 

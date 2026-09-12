@@ -30,12 +30,11 @@
 `tags` の種別が `概念史` だけなので、[ADR-0034](../adr/0034-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
 他の候補は挙がっていない。
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: ヨーロッパ` は、ADR-0034 の `region` の選び方の表の 2 行目で決めた。
 第 1 回が資本主義を封建制のヨーロッパから生まれ、西洋の価値観として世界へ広がったものとして扱うので、`概念史` の本拠（一つの区画で生まれて他へ広がったなら、生まれた区画）がヨーロッパに決まる。
 `@historian` は、『国富論』の著者アダム・スミスがスコットランドのグラスゴー大学の経済学者であることを [University of Glasgow: Adam Smith 300](https://www.gla.ac.uk/explore/adamsmith300/lifeworkandlegacy/keyworks/wealthofnations/)（三次）で確認し、現在の選択と矛盾しないと報告した。
-`kind: concept` は `tags` の種別が `概念史` だけであることと矛盾しないと `@historian` が確認した。
 `title: 資本主義` に指摘は出なかった。
 
 `id` の `shihonshugi` は「資本主義」を割らずに書いた。

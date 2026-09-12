@@ -61,14 +61,14 @@
 
 事物の `id` の `college-de-france` は、Collège de France の発音区別符号を除き、空白を `-` にした。
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: ヨーロッパ` は、扱う地理がブラジルと米国に跨るので [ADR-0034](../adr/0034-series-vocabulary.md) の `region` の選び方の表の 2 行目に当て、人物の本拠の生地（ブリュッセル）で決めた。
 `@historian` は、ブリュッセルの生まれであることと、パリの生まれとする説が誤りとして扱われていることを [Wikidata Q128126](https://www.wikidata.org/wiki/Q128126) で確認したが、一次と二次の文献には直接当たれなかった。
 
 `title: レヴィ＝ストロース` は、シリーズ名の「ジンブンガク レヴィ＝ストロース」からコーナー名を除いたものである。
 `id` の `levi-strauss` は、ADR-0034 の `id` の表の発音区別符号と `＝` の行の例と同じである。
-`kind: place` と `title` に指摘は出なかった。
+`title` に指摘は出なかった。
 
 ## 仮決定と論点
 
