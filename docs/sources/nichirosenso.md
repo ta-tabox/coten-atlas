@@ -63,10 +63,11 @@ Rotem Kowner の *Historical Dictionary of the Russo-Japanese War*（2006）は�
 
 2026-09-11 に Claude が `@historian` の結果を見て仮決定し、同日に #170・#171・#172 の決定（ADR-0041）で事物の `id` を `port-arthur` へ直し、代表点と `id` の区切りを当て直した。
 2026-09-11 に人間が仮決定を採用して決着させた。
+2026-09-12 に人間が、規則と各回の配分で決まった値に残る別の候補も優先度を下げて見直すと決め、見直しを [#205](https://github.com/ta-tabox/coten-atlas/issues/205)（日露戦争（nichirosenso）の代表点を旅順と奉天のどちらにするか）へ切り出した。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
 |---|---|---|
-| 代表点 | 旅順（主な事の運びの舞台） | 戦いの規模で数えれば、最大の陸戦の奉天になる |
+| 代表点 | 旅順（主な事の運びの舞台） | 戦いの規模で数えれば、最大の陸戦の奉天になる。見直しは #205 で行う |
 | `region` | `中国` | 日本の国家の歩みとして読む読み手には `日本` が自然だが、出来事の本拠（主な舞台）の基準を変えない限り値は変わらない |
 
 ## 裏どりの出所
@@ -80,3 +81,4 @@ Rotem Kowner の *Historical Dictionary of the Russo-Japanese War*（2006）は�
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171#issuecomment-5629453137) | 出来事の舞台が複数あるときに、主な事の運びが起きた舞台を代表点にする判断 |
 | [#172 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/172#issuecomment-5629510570) | 二つの辞書のどちらかに一語の見出しがあれば割らない判断 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う主題 |
+| [#205（見直し）](https://github.com/ta-tabox/coten-atlas/issues/205) | 採用した仮決定を人間が見直す論点と案 |
