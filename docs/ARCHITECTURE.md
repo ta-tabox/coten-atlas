@@ -188,7 +188,7 @@ catalog/
   シリーズの属性なので事物には持たせず、地図の濃淡に要る分は地図へ渡す形を組むときに `seriesId` で引いて写す（[ADR-0024](adr/0024-map-feature-carries-key-only.md)）
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である。
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
-- `region` は陸地を重ならないように割った 12 区画と `地域なし` の 13 値で、区画を一つ選ぶと嘘になるシリーズが `地域なし` を書く（[ADR-0041](adr/0041-series-vocabulary-tiebreaks.md)）。
+- `region` は陸地を重ならないように割った 12 区画と `地域なし` の 13 値で、区画を一つ選ぶと嘘になるシリーズが `地域なし` を書く（[ADR-0044](adr/0044-series-vocabulary-without-kind.md)）。
   区画の境目の決め方は skill `series-vocabulary` の手順 6 が持つ。
   値を足すときは、`web/src/lib/schema/series.ts` の `SERIES_REGIONS` と同じ skill の一覧を両方書き換え、足す理由を新しい ADR に書く。
   `tags` は種別（`人物` / `集団` / `出来事` / `概念史` の閉じた集合から最低 1 つ）と主題を合わせて 4 個以内で、`eras.json` の区分と同じ粒度の時代名と地域名を入れない。
@@ -230,7 +230,7 @@ catalog/
   隙間があるとそこを指した位置に対応する年が無く、重なりがあると同じ年が二箇所から指される。
   検査は `eraListSchema` が持つ
 - **終わっていない era の `end` には年を書かず `"present"` を置く**（[ADR-0019](adr/0019-era-open-end.md)）。
-  置けるのは末尾だけで、この区間を補間するときの右端はビルドした時点の年である（[ADR-0038](adr/0038-era-space-window.md)、[ADR-0040](adr/0040-era-fade-wiring.md)）
+  置けるのは末尾だけで、この区間を補間するときの右端はビルドした時点の年である（[ADR-0038](adr/0038-era-space-window.md)、[ADR-0043](adr/0043-era-fade-window-only.md)）
 - era の刻みはデータが揃ってから密度に合わせて調整する（S7 の後に見直し）
 
 **年からシリーズの opacity へ**——スライダーが指すのは 1 点だが、シリーズは `timeRange` という幅を持つので、点と幅は直接比べられない。

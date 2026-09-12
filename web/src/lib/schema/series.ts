@@ -59,13 +59,13 @@ export const SERIES_REGIONS = [
 
 /**
  * `region` の値。
- * 関連シリーズ行が等値で照合するので、閉じた集合にする（docs/adr/0041-series-vocabulary-tiebreaks.md）。
+ * 関連シリーズ行が等値で照合するので、閉じた集合にする（docs/adr/0044-series-vocabulary-without-kind.md）。
  */
 export const seriesRegionSchema = z.enum(SERIES_REGIONS);
 
 /**
  * `tags` へ最低 1 つ入れる種別。
- * そのシリーズの主語が誰かを表す（docs/adr/0041-series-vocabulary-tiebreaks.md）。
+ * そのシリーズの主語が誰かを表す（docs/adr/0044-series-vocabulary-without-kind.md）。
  */
 export const SERIES_CATEGORY_TAGS = [
   "人物",
@@ -98,7 +98,7 @@ const MAX_TAGS = 4;
 
 /**
  * `title` に残さない番組内のコーナー名。
- * `title` はシリーズの主題を指す名の列で、コーナー名は主題でない（docs/adr/0041-series-vocabulary-tiebreaks.md）。
+ * `title` はシリーズの主題を指す名の列で、コーナー名は主題でない（docs/adr/0044-series-vocabulary-without-kind.md）。
  */
 const TITLE_PREFIXES = ["ショート", "ジンブンガク"];
 

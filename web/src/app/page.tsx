@@ -8,7 +8,7 @@
  * エピソードだけはビルド時に読まず、`MapCanvas` が実行時に fetch する。
  *
  * `presentEnd` もビルドした時点の年で確定させ、ブラウザの時計を読まない。
- * ブラウザの時計を読まない理由は docs/adr/0040-era-fade-wiring.md が持つ。
+ * ブラウザの時計を読まない理由は docs/adr/0043-era-fade-window-only.md が持つ。
  */
 
 import MapCanvas from "@/components/MapCanvas";
