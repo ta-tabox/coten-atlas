@@ -11,19 +11,9 @@ import {
 } from "@/lib/era/window";
 import type { MapLocusCollection, MapLocusFeature } from "@/lib/map/loci";
 import {
-  CIRCLE_OPACITY_BY_KIND,
   SERIES_CIRCLE_LAYER,
   seriesCircleLayerIn,
 } from "@/lib/map/series-layer";
-
-/** `kind` だけで決まる円の不透明度の式。 */
-const OPACITY_BY_KIND = [
-  "match",
-  ["get", "kind"],
-  "concept",
-  CIRCLE_OPACITY_BY_KIND.concept,
-  CIRCLE_OPACITY_BY_KIND.place,
-];
 
 const WINDOW: CurrentWindow = { start: 100, end: 200 };
 
@@ -36,7 +26,7 @@ function locusOf(
   return {
     type: "Feature",
     geometry: { type: "Point", coordinates: [0, 0] },
-    properties: { id, seriesId: id, kind: "place", timeStart, timeEnd },
+    properties: { id, seriesId: id, timeStart, timeEnd },
   };
 }
 
@@ -45,39 +35,21 @@ function lociOf(...features: MapLocusFeature[]): MapLocusCollection {
   return { type: "FeatureCollection", features };
 }
 
-describe("SERIES_CIRCLE_LAYER", () => {
-  it("円の濃さを kind の 2 値で分ける", () => {
-    expect(SERIES_CIRCLE_LAYER.paint?.["circle-opacity"]).toEqual(
-      OPACITY_BY_KIND,
-    );
-  });
-
-  it("concept を place より薄く描く", () => {
-    expect(CIRCLE_OPACITY_BY_KIND.concept).toBeLessThan(
-      CIRCLE_OPACITY_BY_KIND.place,
-    );
-  });
-});
-
 describe("seriesCircleLayerIn", () => {
-  it("kind の濃さに、事物ごとの窓との重なりから求めた濃さを掛ける", () => {
+  it("事物ごとの窓との重なりから求めた濃さを、そのまま不透明度にする", () => {
     const inside = locusOf("inside", 120, 140);
     const partial = locusOf("partial", 190, 300);
 
     const layer = seriesCircleLayerIn(WINDOW, lociOf(inside, partial));
 
     expect(layer.paint?.["circle-opacity"]).toEqual([
-      "*",
-      OPACITY_BY_KIND,
-      [
-        "match",
-        ["get", "id"],
-        "inside",
-        1,
-        "partial",
-        fadeOpacity(overlapRatio(WINDOW, { start: 190, end: 300 })),
-        0,
-      ],
+      "match",
+      ["get", "id"],
+      "inside",
+      1,
+      "partial",
+      fadeOpacity(overlapRatio(WINDOW, { start: 190, end: 300 })),
+      0,
     ]);
   });
 
@@ -94,12 +66,12 @@ describe("seriesCircleLayerIn", () => {
     ]);
   });
 
-  it("窓と重なる事物が 1 件も無ければ、窓の濃さを 0 にする", () => {
+  it("窓と重なる事物が 1 件も無ければ、不透明度を 0 にする", () => {
     const outside = locusOf("outside", 500, 600);
 
     const layer = seriesCircleLayerIn(WINDOW, lociOf(outside));
 
-    expect(layer.paint?.["circle-opacity"]).toEqual(["*", OPACITY_BY_KIND, 0]);
+    expect(layer.paint?.["circle-opacity"]).toBe(0);
     expect(layer.filter).toEqual(["in", ["get", "id"], ["literal", []]]);
   });
 

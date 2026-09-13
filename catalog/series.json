@@ -2,7 +2,6 @@
   {
     "id": "yoshida-shoin",
     "title": "吉田松陰",
-    "kind": "place",
     "anchor": "hagi",
     "timeRange": { "start": 1830, "end": 1859 },
     "summary": "",
@@ -14,7 +13,6 @@
   {
     "id": "sparta",
     "title": "スパルタ",
-    "kind": "place",
     "anchor": "sparta-city",
     "timeRange": { "start": -900, "end": -200 },
     "summary": "",
@@ -26,7 +24,6 @@
   {
     "id": "jinrui-no-komyunikeshonshi",
     "title": "人類のコミュニケーション史",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -38,7 +35,6 @@
   {
     "id": "tenno",
     "title": "天皇",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -50,7 +46,6 @@
   {
     "id": "shin-no-shikotei",
     "title": "秦の始皇帝",
-    "kind": "place",
     "anchor": "xianyang",
     "timeRange": { "start": -259, "end": -210 },
     "summary": "",
@@ -62,7 +57,6 @@
   {
     "id": "shokatsu-komei",
     "title": "諸葛孔明",
-    "kind": "place",
     "anchor": "chengdu",
     "timeRange": { "start": 181, "end": 234 },
     "summary": "",
@@ -74,7 +68,6 @@
   {
     "id": "sekai-sandai-shukyo",
     "title": "世界三大宗教",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -86,7 +79,6 @@
   {
     "id": "hitler",
     "title": "ヒトラー",
-    "kind": "place",
     "anchor": "berlin",
     "timeRange": { "start": 1889, "end": 1945 },
     "summary": "",
@@ -98,7 +90,6 @@
   {
     "id": "france-kakumei",
     "title": "フランス革命",
-    "kind": "place",
     "anchor": "paris",
     "timeRange": { "start": 1789, "end": 1799 },
     "summary": "",
@@ -110,7 +101,6 @@
   {
     "id": "gandhi",
     "title": "ガンディー",
-    "kind": "place",
     "anchor": "ahmedabad",
     "timeRange": { "start": 1869, "end": 1948 },
     "summary": "",
@@ -122,7 +112,6 @@
   {
     "id": "alexandros",
     "title": "アレクサンドロス",
-    "kind": "place",
     "anchor": "pella",
     "timeRange": { "start": -356, "end": -323 },
     "summary": "",
@@ -134,7 +123,6 @@
   {
     "id": "okane-no-rekishi",
     "title": "お金の歴史",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -146,7 +134,6 @@
   {
     "id": "sanzohoshi-genjo",
     "title": "三蔵法師玄奘",
-    "kind": "place",
     "anchor": "changan",
     "timeRange": { "start": 602, "end": 664 },
     "summary": "",
@@ -158,7 +145,6 @@
   {
     "id": "takasugi-shinsaku",
     "title": "高杉晋作",
-    "kind": "place",
     "anchor": "shimonoseki",
     "timeRange": { "start": 1839, "end": 1867 },
     "summary": "",
@@ -170,7 +156,6 @@
   {
     "id": "america-kaitakushi",
     "title": "アメリカ開拓史",
-    "kind": "place",
     "anchor": "st-louis",
     "timeRange": { "start": 1607, "end": 1890 },
     "summary": "",
@@ -182,7 +167,6 @@
   {
     "id": "helen-keller-to-anne-sullivan",
     "title": "ヘレン・ケラーとアン・サリヴァン",
-    "kind": "place",
     "anchor": "tuscumbia",
     "timeRange": { "start": 1866, "end": 1968 },
     "summary": "",
@@ -194,7 +178,6 @@
   {
     "id": "chinggis-khan",
     "title": "チンギス・カン",
-    "kind": "place",
     "anchor": "avraga",
     "timeRange": { "start": 1162, "end": 1227 },
     "summary": "",
@@ -206,7 +189,6 @@
   {
     "id": "osman-teikoku",
     "title": "オスマン帝国",
-    "kind": "place",
     "anchor": "constantinople",
     "timeRange": { "start": 1299, "end": 1922 },
     "summary": "",
@@ -218,7 +200,6 @@
   {
     "id": "saicho-to-kukai",
     "title": "最澄と空海",
-    "kind": "place",
     "anchor": "mount-hiei",
     "timeRange": { "start": 767, "end": 835 },
     "summary": "",
@@ -230,7 +211,6 @@
   {
     "id": "julius-caesar",
     "title": "ユリウス・カエサル",
-    "kind": "place",
     "anchor": "forum-romanum",
     "timeRange": { "start": -100, "end": -44 },
     "summary": "",
@@ -242,7 +222,6 @@
   {
     "id": "shukyokaikaku",
     "title": "宗教改革",
-    "kind": "place",
     "anchor": "wittenberg",
     "timeRange": { "start": 1517, "end": 1648 },
     "summary": "",
@@ -254,7 +233,6 @@
   {
     "id": "daiichijisekaitaisen",
     "title": "第一次世界大戦",
-    "kind": "place",
     "anchor": "verdun",
     "timeRange": { "start": 1914, "end": 1918 },
     "summary": "",
@@ -266,7 +244,6 @@
   {
     "id": "elizabeth-1",
     "title": "エリザベス1世",
-    "kind": "place",
     "anchor": "whitehall",
     "timeRange": { "start": 1533, "end": 1603 },
     "summary": "",
@@ -278,7 +255,6 @@
   {
     "id": "oda-nobunaga",
     "title": "織田信長",
-    "kind": "place",
     "anchor": "azuchi",
     "timeRange": { "start": 1534, "end": 1582 },
     "summary": "",
@@ -290,7 +266,6 @@
   {
     "id": "kyoiku-no-rekishi",
     "title": "教育の歴史",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -302,7 +277,6 @@
   {
     "id": "sei-no-rekishi",
     "title": "性の歴史",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -314,7 +288,6 @@
   {
     "id": "bu-sokuten",
     "title": "武則天",
-    "kind": "place",
     "anchor": "luoyang",
     "timeRange": { "start": 624, "end": 705 },
     "summary": "",
@@ -326,7 +299,6 @@
   {
     "id": "shihonshugi",
     "title": "資本主義",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -338,7 +310,6 @@
   {
     "id": "marx-engels",
     "title": "マルクス・エンゲルス",
-    "kind": "place",
     "anchor": "london",
     "timeRange": { "start": 1818, "end": 1895 },
     "summary": "",
@@ -350,7 +321,6 @@
   {
     "id": "friedrich-daio",
     "title": "フリードリヒ大王",
-    "kind": "place",
     "anchor": "potsdam",
     "timeRange": { "start": 1712, "end": 1786 },
     "summary": "",
@@ -362,7 +332,6 @@
   {
     "id": "seppuku",
     "title": "切腹",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": { "start": 988, "end": 1868 },
     "summary": "",
@@ -374,7 +343,6 @@
   {
     "id": "nichirosenso",
     "title": "日露戦争",
-    "kind": "place",
     "anchor": "port-arthur",
     "timeRange": { "start": 1904, "end": 1905 },
     "summary": "",
@@ -386,7 +354,6 @@
   {
     "id": "cleopatra",
     "title": "クレオパトラ",
-    "kind": "place",
     "anchor": "alexandria",
     "timeRange": { "start": -69, "end": -30 },
     "summary": "",
@@ -398,7 +365,6 @@
   {
     "id": "kamakurabushi",
     "title": "鎌倉武士",
-    "kind": "place",
     "anchor": "kamakura",
     "timeRange": { "start": 1180, "end": 1333 },
     "summary": "",
@@ -410,7 +376,6 @@
   {
     "id": "levi-strauss",
     "title": "レヴィ＝ストロース",
-    "kind": "place",
     "anchor": "college-de-france",
     "timeRange": { "start": 1908, "end": 2009 },
     "summary": "",
@@ -422,7 +387,6 @@
   {
     "id": "oi-to-shi-no-rekishi",
     "title": "老いと死の歴史",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -434,7 +398,6 @@
   {
     "id": "shogai-no-rekishi",
     "title": "障害の歴史",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -446,7 +409,6 @@
   {
     "id": "shakaifukushi-no-rekishi",
     "title": "社会福祉の歴史",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -458,7 +420,6 @@
   {
     "id": "goebbels",
     "title": "ゲッベルス",
-    "kind": "place",
     "anchor": "wilhelmplatz",
     "timeRange": { "start": 1897, "end": 1945 },
     "summary": "",
@@ -470,7 +431,6 @@
   {
     "id": "saladin-to-jujigun",
     "title": "サラディンと十字軍",
-    "kind": "place",
     "anchor": "jerusalem",
     "timeRange": { "start": 1096, "end": 1291 },
     "summary": "",
@@ -482,7 +442,6 @@
   {
     "id": "wrightkyodai",
     "title": "ライト兄弟",
-    "kind": "place",
     "anchor": "dayton",
     "timeRange": { "start": 1867, "end": 1948 },
     "summary": "",
@@ -494,7 +453,6 @@
   {
     "id": "hannibal",
     "title": "ハンニバル",
-    "kind": "place",
     "anchor": "carthage",
     "timeRange": { "start": -247, "end": -183 },
     "summary": "",
@@ -506,7 +464,6 @@
   {
     "id": "ryu-no-rekishi",
     "title": "龍の歴史",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -518,7 +475,6 @@
   {
     "id": "schindler",
     "title": "シンドラー",
-    "kind": "place",
     "anchor": "krakow",
     "timeRange": { "start": 1908, "end": 1974 },
     "summary": "",
@@ -530,7 +486,6 @@
   {
     "id": "sugawara-no-michizane",
     "title": "菅原道真",
-    "kind": "place",
     "anchor": "heian-kyo",
     "timeRange": { "start": 845, "end": 903 },
     "summary": "",
@@ -542,7 +497,6 @@
   {
     "id": "minshushugi-no-rekishi",
     "title": "民主主義の歴史",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -554,7 +508,6 @@
   {
     "id": "kemal-ataturk",
     "title": "ケマル・アタテュルク",
-    "kind": "place",
     "anchor": "ankara",
     "timeRange": { "start": 1881, "end": 1938 },
     "summary": "",
@@ -566,7 +519,6 @@
   {
     "id": "yanase-takashi",
     "title": "やなせたかし",
-    "kind": "place",
     "anchor": "shinjuku",
     "timeRange": { "start": 1919, "end": 2013 },
     "summary": "",
@@ -578,7 +530,6 @@
   {
     "id": "murasaki-shikibu",
     "title": "紫式部",
-    "kind": "place",
     "anchor": "ichijo-in",
     "timeRange": { "start": 973, "end": 1014 },
     "summary": "",
@@ -590,7 +541,6 @@
   {
     "id": "jeanne-darc",
     "title": "ジャンヌ・ダルク",
-    "kind": "place",
     "anchor": "orleans",
     "timeRange": { "start": 1412, "end": 1431 },
     "summary": "",
@@ -602,7 +552,6 @@
   {
     "id": "nurhaci",
     "title": "ヌルハチ",
-    "kind": "place",
     "anchor": "hetu-ala",
     "timeRange": { "start": 1559, "end": 1626 },
     "summary": "",
@@ -614,7 +563,6 @@
   {
     "id": "hideyoshi-ieyasu",
     "title": "秀吉・家康",
-    "kind": "place",
     "anchor": "osaka",
     "timeRange": { "start": 1537, "end": 1616 },
     "summary": "",
@@ -626,7 +574,6 @@
   {
     "id": "gogh",
     "title": "ゴッホ",
-    "kind": "place",
     "anchor": "arles",
     "timeRange": { "start": 1853, "end": 1890 },
     "summary": "",
@@ -638,7 +585,6 @@
   {
     "id": "mughal-teikoku",
     "title": "ムガール帝国",
-    "kind": "place",
     "anchor": "agra",
     "timeRange": { "start": 1526, "end": 1857 },
     "summary": "",
@@ -650,7 +596,6 @@
   {
     "id": "roshi-soshi",
     "title": "老子・荘子",
-    "kind": "concept",
     "anchor": "ku",
     "timeRange": { "start": -571, "end": -286 },
     "summary": "",
@@ -662,7 +607,6 @@
   {
     "id": "ganjin",
     "title": "鑑真",
-    "kind": "place",
     "anchor": "nara",
     "timeRange": { "start": 688, "end": 763 },
     "summary": "",
@@ -674,7 +618,6 @@
   {
     "id": "ito-noe",
     "title": "伊藤野枝",
-    "kind": "place",
     "anchor": "tokyo",
     "timeRange": { "start": 1895, "end": 1923 },
     "summary": "",
@@ -686,7 +629,6 @@
   {
     "id": "kagaku-gijutsu-no-rekishi",
     "title": "科学技術の歴史",
-    "kind": "concept",
     "anchor": "unlocated",
     "timeRange": "untimed",
     "summary": "",
@@ -698,7 +640,6 @@
   {
     "id": "perry-raiko",
     "title": "ペリー来航",
-    "kind": "place",
     "anchor": "uraga",
     "timeRange": { "start": 1853, "end": 1854 },
     "summary": "",
@@ -710,7 +651,6 @@
   {
     "id": "kou-to-ryuho",
     "title": "項羽と劉邦",
-    "kind": "place",
     "anchor": "pengcheng",
     "timeRange": { "start": -256, "end": -195 },
     "summary": "",
@@ -722,7 +662,6 @@
   {
     "id": "nikola-tesla",
     "title": "ニコラ・テスラ",
-    "kind": "place",
     "anchor": "new-york",
     "timeRange": { "start": 1856, "end": 1943 },
     "summary": "",
@@ -734,7 +673,6 @@
   {
     "id": "lincoln",
     "title": "リンカン",
-    "kind": "place",
     "anchor": "washington",
     "timeRange": { "start": 1809, "end": 1865 },
     "summary": "",
@@ -746,7 +684,6 @@
   {
     "id": "gilgamesh",
     "title": "ギルガメシュ",
-    "kind": "place",
     "anchor": "uruk",
     "timeRange": { "start": -2800, "end": -2500 },
     "summary": "",
@@ -758,7 +695,6 @@
   {
     "id": "saigo-takamori",
     "title": "西郷隆盛",
-    "kind": "place",
     "anchor": "kagoshima",
     "timeRange": { "start": 1828, "end": 1877 },
     "summary": "",
@@ -770,7 +706,6 @@
   {
     "id": "elizabeth-blackwell",
     "title": "エリザベス・ブラックウェル",
-    "kind": "place",
     "anchor": "geneva",
     "timeRange": { "start": 1821, "end": 1910 },
     "summary": "",
@@ -782,7 +717,6 @@
   {
     "id": "teisei-roma",
     "title": "帝政ローマ",
-    "kind": "place",
     "anchor": "rome",
     "timeRange": { "start": -27, "end": 476 },
     "summary": "",

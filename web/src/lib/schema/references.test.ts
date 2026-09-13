@@ -32,7 +32,6 @@ function seriesListOf(
   return entries.map(({ id, season, anchor, timeRange }) => ({
     id,
     title: id,
-    kind: "place",
     anchor: anchor ?? `${id}-anchor`,
     timeRange: timeRange ?? { start: -900, end: -200 },
     summary: "",

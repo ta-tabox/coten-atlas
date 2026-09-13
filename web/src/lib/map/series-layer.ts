@@ -4,9 +4,9 @@
  * 第一段階の geometry は Point だけなので、レイヤは circle の 1 本で足りる（docs/adr/0026-two-phase-location.md）。
  * `['geometry-type']` で図形を分ける枝は第二段階まで無い。
  *
- * 不透明度は `kind` の濃さと、era スライダーの現在窓から求めた事物ごとの濃さの積である。
+ * 不透明度は、era スライダーの現在窓から求めた事物ごとの濃さだけで決まり、シリーズの属性で濃さを変えない。
  * 事物ごとの濃さは `@/lib/era/window` の関数で求めて式へ数値で埋め込み、同じ計算を MapLibre の式で書き直さない。
- * 書き直さない理由は docs/adr/0040-era-fade-wiring.md が持つ。
+ * 書き直さない理由は docs/adr/0043-era-fade-window-only.md が持つ。
  *
  * 色は MapLibre のスタイル式が読むので、Tailwind のトークンでなく生の値を置く。
  * 地図の中で閉じる指定であって、overlay の見た目とは別物である（docs/adr/0022-map-dom-boundary.md）。
@@ -20,35 +20,16 @@ import {
   overlapRatio,
 } from "@/lib/era/window";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import type { SeriesKind } from "@/lib/schema/series";
 
-/** 事物を引く source の id。 */
+/** 事物を取得する source の id。 */
 export const SERIES_SOURCE_ID = "series-loci";
-
-/**
- * `kind` ごとの円の不透明度。
- * `concept` は場所が一意に決まらないので、`place` より薄く置く（docs/adr/0023-kind-place-or-concept.md）。
- */
-export const CIRCLE_OPACITY_BY_KIND: Record<SeriesKind, number> = {
-  place: 0.85,
-  concept: 0.35,
-};
-
-/** 事物の `kind` から `CIRCLE_OPACITY_BY_KIND` の値を返す式。 */
-const OPACITY_BY_KIND: ExpressionSpecification = [
-  "match",
-  ["get", "kind"],
-  "concept",
-  CIRCLE_OPACITY_BY_KIND.concept,
-  CIRCLE_OPACITY_BY_KIND.place,
-];
 
 /**
  * 代表点を描く円のレイヤ。
  * `source` は `<Source>` の子に置くと react-map-gl が入れるので持たない。
  *
- * 不透明度は `kind` の濃さだけを持つ。
- * 現在窓の濃さを掛けたレイヤは `seriesCircleLayerIn` が返す。
+ * 不透明度を持たない。
+ * 現在窓から求めた濃さを不透明度にしたレイヤは `seriesCircleLayerIn` が返す。
  */
 export const SERIES_CIRCLE_LAYER: Omit<CircleLayerSpecification, "source"> = {
   id: "series-circle",
@@ -56,7 +37,6 @@ export const SERIES_CIRCLE_LAYER: Omit<CircleLayerSpecification, "source"> = {
   paint: {
     "circle-radius": 6,
     "circle-color": "#1f5673",
-    "circle-opacity": OPACITY_BY_KIND,
   },
 };
 
@@ -111,7 +91,7 @@ function fadeByLocusId(fades: LocusFade[]): ExpressionSpecification | number {
 }
 
 /**
- * `SERIES_CIRCLE_LAYER` の不透明度へ、`currentWindow` と `loci` の各事物の年の重なりから求めた濃さを掛けたレイヤを返す。
+ * `SERIES_CIRCLE_LAYER` に、`currentWindow` と `loci` の各事物の年の重なりから求めた濃さを不透明度として設定したレイヤを返す。
  *
  * 濃さが 0 の事物は `filter` で地図から除く。
  * 不透明度が 0 の円も MapLibre はクリックとホバーの対象に含めるので、除かないと何も見えない場所で詳細カードが開く。
@@ -127,7 +107,7 @@ export function seriesCircleLayerIn(
     filter: ["in", ["get", "id"], ["literal", fades.map(({ id }) => id)]],
     paint: {
       ...SERIES_CIRCLE_LAYER.paint,
-      "circle-opacity": ["*", OPACITY_BY_KIND, fadeByLocusId(fades)],
+      "circle-opacity": fadeByLocusId(fades),
       // MapLibre は feature ごとに値が変わる式を遷移の途中で補間せず、遷移が終わるまで前の値を描き続ける。
       // 既定の 300ms を残すと、スライダーを動かしている間は円の濃さが変わらない。
       "circle-opacity-transition": { duration: 0 },

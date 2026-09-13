@@ -42,14 +42,14 @@
 
 事物の `id` の `tokyo` は、`@historian` が、対象の期間（1895〜1923 年）には東京の名が定着しており呼び名の変わりが無いと確認した。
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: 日本` は、扱う地理が一区画に収まるので [ADR-0034](../adr/0034-series-vocabulary.md) の `region` の選び方の表の 1 行目で決めた。
 `@historian` は、生地と没地がどちらも日本に在ることを確認した。
 
 `title: 伊藤野枝` は、シリーズ名の「ショート 伊藤野枝」からコーナー名を除いたものである。
 `id` の `ito-noe` は、現物の `yoshida-shoin` に揃えて姓と名を別の語として割った。
-`kind: place` と `title` に指摘は出なかった。
+`title` に指摘は出なかった。
 
 ## 仮決定と論点
 

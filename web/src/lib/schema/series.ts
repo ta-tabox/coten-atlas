@@ -30,12 +30,6 @@ export const ANCHOR_UNLOCATED = "unlocated";
 export const TIME_RANGE_UNTIMED = "untimed";
 
 /**
- * 描画スタイルの分岐キー。
- * 場所が一意に決まるかどうかだけを分ける（docs/adr/0023-kind-place-or-concept.md）。
- */
-export const seriesKindSchema = z.enum(["place", "concept"]);
-
-/**
  * `region` に置ける区画の一覧。
  * 陸地を重ならないように割った 12 の区画と、区画を一つ選ぶと嘘になるシリーズが使う `地域なし` である。
  * 区画の境目は `.claude/skills/series-vocabulary/SKILL.md` の手順 6 が持つ。
@@ -59,13 +53,13 @@ export const SERIES_REGIONS = [
 
 /**
  * `region` の値。
- * 関連シリーズ行が等値で照合するので、閉じた集合にする（docs/adr/0041-series-vocabulary-tiebreaks.md）。
+ * 関連シリーズ行が等値で照合するので、閉じた集合にする（docs/adr/0044-series-vocabulary-without-kind.md）。
  */
 export const seriesRegionSchema = z.enum(SERIES_REGIONS);
 
 /**
  * `tags` へ最低 1 つ入れる種別。
- * そのシリーズの主語が誰かを表す（docs/adr/0041-series-vocabulary-tiebreaks.md）。
+ * そのシリーズの主語が誰かを表す（docs/adr/0044-series-vocabulary-without-kind.md）。
  */
 export const SERIES_CATEGORY_TAGS = [
   "人物",
@@ -98,7 +92,7 @@ const MAX_TAGS = 4;
 
 /**
  * `title` に残さない番組内のコーナー名。
- * `title` はシリーズの主題を指す名の列で、コーナー名は主題でない（docs/adr/0041-series-vocabulary-tiebreaks.md）。
+ * `title` はシリーズの主題を指す名の列で、コーナー名は主題でない（docs/adr/0044-series-vocabulary-without-kind.md）。
  */
 const TITLE_PREFIXES = ["ショート", "ジンブンガク"];
 
@@ -136,12 +130,6 @@ export const seriesSchema = z
      * 番組から引いてよいのは題号までなので、説明文をここへ入れない（docs/adr/0008-quote-titles-only.md）。
      */
     title: trimmedNonEmptyStringSchema,
-
-    /**
-     * 描画スタイルの分岐キー。
-     * `concept` は場所が一意に決まらないもので、控えめに描く（docs/adr/0023-kind-place-or-concept.md）。
-     */
-    kind: seriesKindSchema,
 
     /**
      * 代表点の事物 id か、位置なしを表す `ANCHOR_UNLOCATED`。
@@ -195,13 +183,6 @@ export const seriesSchema = z
       ctx.addIssue({
         code: "custom",
         message: `title が番組内のコーナー名で始まっている: ${prefix}`,
-      });
-    }
-
-    if (series.kind === "place" && series.anchor === ANCHOR_UNLOCATED) {
-      ctx.addIssue({
-        code: "custom",
-        message: `kind が place なのに anchor が ${ANCHOR_UNLOCATED} である`,
       });
     }
 
@@ -274,7 +255,6 @@ export const seriesListSchema = z
   });
 
 export type Series = z.infer<typeof seriesSchema>;
-export type SeriesKind = z.infer<typeof seriesKindSchema>;
 export type SeriesList = z.infer<typeof seriesListSchema>;
 export type SeriesTimeRange = z.infer<typeof seriesTimeRangeSchema>;
 

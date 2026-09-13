@@ -60,13 +60,13 @@
 
 事物の `id` の `geneva` は、3 回目の裏どりで、1847〜1849 年から現在まで英語の文献が Geneva, New York と書くと確かめた。
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: ヨーロッパ` は、扱う地理が米国と英国に跨るので [ADR-0034](../adr/0034-series-vocabulary.md) の `region` の選び方の表の 2 行目に当て、人物の本拠の生地（英国のブリストル）で決めた。
 `@historian` は、生地がブリストルであることを Britannica と Wikidata で確認し、代表点の区画（`北アメリカ`）と `region` が食い違うことは、`region` を `anchor` と独立に決める規則と矛盾しないと判断した。
 
 `title: エリザベス・ブラックウェル` は、シリーズ名の「ショート エリザベス・ブラックウェル」からコーナー名を除いたものである。
-`kind: place` と `title` に指摘は出なかった。
+`title` に指摘は出なかった。
 
 ## 仮決定と論点
 

@@ -1,10 +1,16 @@
-# 0040. 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値を MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く
+# 0043. 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値をそのまま MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く（0040 を supersede）
 
-- **状態**: supersede 済み（→ 0043）
-- **決定日**: 2026-09-11（#137）
-- **関係する ADR**: 0043（この決定を supersede する）、0022（地図の上に載せるもの）、0023（`kind`）、0026（位置の二段階）、0038（現在窓）
+- **状態**: 採用
+- **決定日**: 2026-09-11（#137・#161）
+- **関係する ADR**: 0040（これを supersede する）、0022（地図の上に載せるもの）、0026（位置の二段階）、0038（現在窓）、0042（`kind` の廃止）
 
 ## 文脈
+
+[0042](0042-drop-series-kind.md) が `kind` を廃止したので、[0040](0040-era-fade-wiring.md) の決定から `kind` の濃さとの積を除いた版をここに置く。
+変わるのは、決定の見出しの文と、表の `circle-opacity` と「窓より長いシリーズ」の行だけである。
+残りは 0040 を複写する。
+
+以下の 0040 の文脈は、スライダーを実装した時点のものである。
 
 [0038](0038-era-space-window.md) は era 空間の位置から表示の濃さまでを `web/src/lib/era/` の純関数に置き、次の 3 点をスライダーを実装する issue に委ねた。
 
@@ -19,14 +25,14 @@ MapLibre のクリックとホバーの判定は円の半径と縁の幅だけ�
 
 ## 決定
 
-**事物ごとの濃さは `web/src/lib/era/window.ts` の関数で求めて `match` 式へ数値で埋め込み、`kind` の濃さと掛ける。濃さが 0 の事物は `filter` で地図から除く。**
+**事物ごとの濃さは `web/src/lib/era/window.ts` の関数で求めて `match` 式へ数値で埋め込み、そのまま `circle-opacity` にする。濃さが 0 の事物は `filter` で地図から除く。**
 
 | 論点 | 決定 |
 |---|---|
 | 濃さを求める場所 | TypeScript。`seriesCircleLayerIn(currentWindow, loci)` が事物ごとに `fadeOpacity(overlapRatio(...))` を求める |
-| `circle-opacity` | `["*", <kind の濃さの式>, ["match", ["get", "id"], <id>, <濃さ>, …, 0]]`。窓と重なる事物が無ければ `match` の代わりに `0` を置く |
+| `circle-opacity` | `["match", ["get", "id"], <id>, <濃さ>, …, 0]`。窓と重なる事物が無ければ `match` の代わりに `0` を置く |
 | 窓と重ならない事物 | `filter` の `["in", ["get", "id"], ["literal", <濃さが 0 を超える事物の id の列>]]` で除く |
-| 窓より長いシリーズ | 薄くしない。濃さは `kind` の濃さと窓の濃さの積だけで決まる |
+| 窓より長いシリーズ | 薄くしない。濃さは窓の濃さだけで決まる |
 | 濃さの遷移 | `circle-opacity-transition` を `{ duration: 0 }` にする |
 | `presentEnd` | ビルドした時点の年。`web/src/app/page.tsx` が `presentEndOf(new Date())` を呼んで `MapCanvas` へ渡す |
 | スライダーの状態 | `MapCanvas` の `useState`（`eraPosition`）。`page.tsx` との間に client wrapper を足さない |
@@ -60,6 +66,7 @@ MapLibre のクリックとホバーの判定は円の半径と縁の幅だけ�
 
 ## 帰結
 
+- 窓に全部入った円の不透明度は 1 になる。0040 では `place` の円が 0.85、`concept` の円が 0.35 だった
 - スライダーを動かすたびに `match` 式と `filter` が変わり、MapLibre は source のタイルを読み直す（`Style.setPaintProperty` と `Style.setFilter` が `_updateLayer` を呼ぶ）。`match` の組と `filter` の id の列は事物の数だけ伸びる
 - `presentEnd` はデプロイし直すまで動かない。デプロイが途絶えると、戦後の区間の右端は最後にビルドした年に留まる
 - `catalog/eras.json` の区間を割り直して id `ancient` を消すと、`pnpm build` がプリレンダの throw で止まる

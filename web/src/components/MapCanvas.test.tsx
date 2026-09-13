@@ -49,7 +49,6 @@ const LOCI: MapLocusCollection = { type: "FeatureCollection", features: [] };
 const SPARTA: Series = {
   id: "sparta",
   title: "スパルタ",
-  kind: "place",
   anchor: "sparta-city",
   timeRange: { start: -900, end: -200 },
   summary: "",

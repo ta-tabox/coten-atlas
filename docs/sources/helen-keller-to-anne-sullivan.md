@@ -71,14 +71,14 @@
 
 事物の `id` の `tuscumbia` は、2 回目の裏どりで標準の英語の綴りと一致すると確認した。
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: 北アメリカ` は、扱う地理が米国で一区画に収まるので ADR-0034 の `region` の選び方の表の 1 行目で決めた。
 `@historian` は、生地・教育の地・活動の拠点・没地がすべて米国に在ることを確認した。
 
 `id` の `helen-keller-to-anne-sullivan` は、助詞の `と` を語として残した。
 現物の規則の例 `saicho-to-kukai` と同じ形である。
-`kind: place` と `title: ヘレン・ケラーとアン・サリヴァン` に指摘は出なかった。
+`title: ヘレン・ケラーとアン・サリヴァン` に指摘は出なかった。
 
 ## 仮決定と論点
 

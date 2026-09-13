@@ -29,7 +29,6 @@ function episodeOf(fixture: EpisodeFixture): Episode {
 const SPARTA: Series = {
   id: "sparta",
   title: "スパルタ",
-  kind: "place",
   anchor: "sparta-city",
   timeRange: { start: -900, end: -200 },
   summary: "軍事に全振りした都市国家の話。",
@@ -70,7 +69,6 @@ describe("SeriesDetailCard", () => {
       ...SPARTA,
       id: "okane-no-rekishi",
       title: "お金の歴史",
-      kind: "concept",
       anchor: ANCHOR_UNLOCATED,
       timeRange: TIME_RANGE_UNTIMED,
       region: "地域なし",

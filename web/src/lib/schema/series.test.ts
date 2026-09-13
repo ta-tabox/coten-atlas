@@ -10,7 +10,6 @@ import {
 const sparta = {
   id: "sparta",
   title: "スパルタ",
-  kind: "place",
   anchor: "sparta-city",
   timeRange: { start: -900, end: -200 },
   summary: "",
@@ -33,17 +32,9 @@ describe("seriesListSchema", () => {
   });
 
   it("位置なしの印を anchor に受ける", () => {
-    const parsed = parseSeries([
-      seriesWith({ kind: "concept", anchor: "unlocated" }),
-    ]);
+    const parsed = parseSeries([seriesWith({ anchor: "unlocated" })]);
 
     expect(parsed[0].anchor).toBe("unlocated");
-  });
-
-  it("未知の kind を落とす", () => {
-    const result = seriesListSchema.safeParse([seriesWith({ kind: "raster" })]);
-
-    expect(result.success).toBe(false);
   });
 
   it("geometry を持つ 1 件を落とす", () => {
@@ -99,7 +90,7 @@ describe("seriesListSchema", () => {
   });
 });
 
-describe("ADR-0041 が決めた語彙の検査", () => {
+describe("ADR-0044 が決めた語彙の検査", () => {
   it("一覧に無い region を拒否する", () => {
     const result = seriesListSchema.safeParse([
       seriesWith({ region: "ギリシア" }),
@@ -149,22 +140,6 @@ describe("ADR-0041 が決めた語彙の検査", () => {
 
     expect(result.success).toBe(false);
   });
-
-  it("kind が place で anchor が位置なしの 1 件を拒否する", () => {
-    const result = seriesListSchema.safeParse([
-      seriesWith({ kind: "place", anchor: "unlocated" }),
-    ]);
-
-    expect(result.success).toBe(false);
-  });
-
-  it("kind が concept なら代表点を持ってよい", () => {
-    const parsed = parseSeries([
-      seriesWith({ kind: "concept", tags: ["概念史"] }),
-    ]);
-
-    expect(parsed[0].anchor).toBe("sparta-city");
-  });
 });
 
 describe("seriesTimeRangeSchema", () => {
@@ -190,7 +165,6 @@ describe("seriesTimeRangeSchema", () => {
 describe("時期を持たないことを表す timeRange", () => {
   /** 種別が概念史だけで位置なしのシリーズへ差し替える欄。 */
   const untimedConcept = {
-    kind: "concept",
     anchor: "unlocated",
     timeRange: TIME_RANGE_UNTIMED,
     tags: ["経済", "概念史"],
@@ -221,7 +195,7 @@ describe("時期を持たないことを表す timeRange", () => {
 
 describe("parseSeries", () => {
   it("落とした理由を文脈付きで投げる", () => {
-    expect(() => parseSeries([seriesWith({ kind: "raster" })])).toThrow(
+    expect(() => parseSeries([seriesWith({ region: "ギリシア" })])).toThrow(
       /series/,
     );
   });
