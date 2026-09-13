@@ -17,10 +17,10 @@
 L0〜L4 は `pnpm check` の一本にまとまっている（下記）。
 番号が指すのはこの連鎖の中の位置で、安い順に並んでいる。
 
-**人間の目視は番号を持たない。** 連鎖に居らず、close も妨げないので、番号を与えると連鎖の続きに見える（[ADR-0045](adr/0045-no-layer-number-for-human-review.md)）。
+**人間の目視は番号を持たない。** 連鎖に居らず、close も妨げないので、番号を与えると連鎖の続きに見える。
 人間の判定が close を妨げない規約は `ROADMAP.md`「完了条件は二本に分ける」が持つ。
 
-`catalog/` の検査が L2 に居るのは、検査器が `web/src/lib/schema/` の zod スキーマそのもので、それを保証するのが同じ層の反例テストだから（[ADR-0046](adr/0046-catalog-check-in-unit-layer.md)）。
+`catalog/` の検査が L2 に居るのは、検査器が `web/src/lib/schema/` の zod スキーマそのもので、それを保証するのが同じ層の反例テストだから。
 `catalog/` の検査は `web/tests/catalog.test.ts` で、ファイル名が `*.test.ts` なので `pnpm test` が拾う。
 足すと同じ検査が二度走るので、連鎖へ別の段としては足さない。
 `pnpm validate:catalog` はその 1 本だけを名指す切り分け用で、「これが緑なら閉じてよい」と言えるのは変わらず `pnpm check` だけである。
