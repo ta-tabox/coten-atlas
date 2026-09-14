@@ -8,7 +8,7 @@
 | 層 | 何を見るか | 実体 |
 |---|---|---|
 | **L0 型** | 型が通るか | `tsc --noEmit` |
-| **L1 静的** | 規約・書式・明らかな誤り | `biome ci .` |
+| **L1 静的** | 規約・書式・明らかな誤り・コメントの禁止語 | `biome ci .` と `node scripts/lint-comments.ts` |
 | **L2 ユニット** | 関数とコンポーネントの振る舞いと、`catalog/` の現物がスキーマに合うか | `vitest run`（+ React Testing Library、jsdom） |
 | **L3 ビルド** | static export が実際に吐けるか | `next build` |
 | **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法） | ヘッドレスの Chromium で `out/` を開く（`playwright test`） |
@@ -85,6 +85,8 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
   人間が `ready_for_review` か再オープンで掛け直す手もあるが、そちらは人間の操作である
 - **歴史の裏どり（`claude-history-review.yml`）は自動では走らない**。
   `@historian` を含むコメントだけが起動する（[ADR-0035](adr/0035-history-review-lane.md)）
+- **`Lint PR body`（`lint-pr-body.yml`）は PR を開いた回と本文を編集した回に走る**。
+  PR 本文の禁止語を `scripts/lint-vocabulary.sh` で報告する（語の正は `.claude/rules/writing.md`「語彙と読み手」節の表）
 
 ### レビューを掛け直す
 
@@ -171,6 +173,10 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | `.claude/settings.json` | 権限（`permissions`）・`SessionStart` の配線 |
 | `.claude/hooks/session-start.sh` | リモートの環境準備（mise の導入・ランタイム・依存・shims の PATH の受け渡し） |
 | `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
+| `.githooks/commit-msg` | コミット本文の禁止語を commit の前で止める git フック |
+| `scripts/lint-vocabulary.sh` | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る |
+| `.github/workflows/lint-pr-body.yml` | PR 本文の禁止語を CI で報告する |
+| `.coding-standards-vocab-allow` | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語） |
 | クラウド環境の環境変数欄 | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義） |
 | `.claude/skills/` | 同梱の規約 skill。プラグインを入れていないので本体を置いてある。`karpathy-guidelines` は外部由来（出所 https://github.com/multica-ai/andrej-karpathy-skills の `skills/karpathy-guidelines/SKILL.md`、固定 2c60614、MIT。上流の更新は手で取り込む） |
 | `mise.toml`（ルート） | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む |
@@ -178,6 +184,9 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 
 リモートで効かせたい設定はリポジトリに置く。
 名義のようにリポジトリへ置けないものだけがクラウド環境の環境変数欄へ行く。
+
+`.githooks/commit-msg` は git の既定の `.git/hooks/` に無いので、クローンごとに `git config core.hooksPath .githooks` で有効にする。
+リモートでは `session-start.sh` がこの設定を入れる。
 
 ## 6. 意図的にやらないこと
 
