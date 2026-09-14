@@ -13,6 +13,7 @@
 /**
  * このリポジトリの写しが雛形と違う点。
  * - `comments/useJsDocOnFunction` の `severity` を error にしている（JSDoc の無い関数を 0 件にしたので、付け忘れを `pnpm lint` の失敗として止める）
+ * - `comments/maxReasonSentences` の `severity` を error にしている（理由が 3 文以上ある JSDoc を 0 件にし、例外として残す関数も無いので、3 文目を書いた JSDoc を `pnpm lint` の失敗として止める）
  */
 
 import { spawnSync } from "node:child_process";
