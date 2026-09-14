@@ -1,7 +1,7 @@
 /**
  * シリーズを描くレイヤの定義。
  *
- * 第一段階の geometry は Point だけなので、レイヤは circle の 1 本で足りる（docs/adr/0026-two-phase-location.md）。
+ * 第一段階の geometry は Point だけなので、レイヤは circle の 1 本で足りる。
  * `['geometry-type']` で図形を分ける枝は第二段階まで無い。
  *
  * 不透明度は `kind` の濃さと、era スライダーの現在窓から求めた事物ごとの濃さの積である。
@@ -9,7 +9,7 @@
  * 書き直さない理由は docs/adr/0040-era-fade-wiring.md が持つ。
  *
  * 色は MapLibre のスタイル式が読むので、Tailwind のトークンでなく生の値を置く。
- * 地図の中で閉じる指定であって、overlay の見た目とは別物である（docs/adr/0022-map-dom-boundary.md）。
+ * 地図の中で閉じる指定であって、overlay の見た目とは別物である。
  */
 
 import type { ExpressionSpecification } from "maplibre-gl";
@@ -27,7 +27,7 @@ export const SERIES_SOURCE_ID = "series-loci";
 
 /**
  * `kind` ごとの円の不透明度。
- * `concept` は場所が一意に決まらないので、`place` より薄く置く（docs/adr/0023-kind-place-or-concept.md）。
+ * `concept` は場所が一意に決まらないので、`place` より薄く置く。
  */
 export const CIRCLE_OPACITY_BY_KIND: Record<SeriesKind, number> = {
   place: 0.85,

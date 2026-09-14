@@ -1,8 +1,8 @@
 name: Deploy
 
-# main の内容を GitHub Pages へ配信する（docs/adr/0007-github-pages.md）。
+# main の内容を GitHub Pages へ配信する。
 # 品質の判定は持たない（型・静的・テストは check.yml の pnpm check が見る）。
-# 配信の後にしか分からないので、配信されたページの src・href のパスへ到達できるかだけは deploy ジョブの後段の到達テストが検証する（docs/adr/0036-post-deploy-reachability.md）。
+# 配信の後にしか分からないので、配信されたページの src・href のパスへ到達できるかだけは deploy ジョブの後段の到達テストが検証する。
 # ランタイムの立て方は check.yml と揃える（食い違うと、check が緑の commit で配信だけが落ちる）。
 
 on:
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
-    # アプリは web/ の中（#39）。run: のステップだけを web/ で回す。
+    # アプリは web/ の中。run: のステップだけを web/ で回す。
     # uses: のアクションには working-directory が効かないので、mise-action はリポジトリのルートに居たまま、ルートの mise.toml を読む。
     defaults:
       run:

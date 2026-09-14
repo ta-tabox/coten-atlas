@@ -7,7 +7,7 @@
  *
  * `episodes.json` はフィードから毎回組み直す。
  * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` の現状から引き直す。
- * 未割当を溜める置き場も持たない（docs/adr/0029-two-layer-data-without-inbox.md）。
+ * 未割当を溜める置き場も持たない。
  * 前回との差分を取るのは、新着を数えるためと、割当が外れた回を報せるためだけである。
  *
  * 失敗は黙って飲まずに落とす。
@@ -30,14 +30,14 @@ import { parseSeries, type SeriesList } from "@/lib/schema/series";
 
 /**
  * 公式 RSS の在り処。
- * Apple Podcasts の lookup API が返す `feedUrl` を 2026-08-23 に実取得した値で、以後はこれを直接叩く。
+ * Apple Podcasts の lookup API が返す `feedUrl` の値で、同期は lookup API を経由せずこの URL を直接叩く。
  */
 const FEED_URL = "https://anchor.fm/s/8c2088c/podcast/rss";
 
 /**
  * 取得を諦めるまでの時間。
  * 応答を返さない配信元に当たったとき、待ち続けると同期が終わりも失敗もしない状態で止まる。
- * 実測で 7.2 MB を 2 秒弱で引けているので、桁が二つ違えば異常と見てよい。
+ * 7.2 MB のフィードの取得は 2 秒弱で終わるので、桁が二つ違えば異常と見てよい。
  */
 const FETCH_TIMEOUT_MS = 60_000;
 
@@ -119,7 +119,7 @@ function readPreviousAssignments(file: string): Map<string, string | null> {
 /**
  * フィードの 1 件を `episodes.json` の 1 件へ直す。
  *
- * `link` は Spotify のエピソードページである（docs/adr/0006-rss-link-as-episode-url.md）。
+ * `link` は Spotify のエピソードページである。
  * `audioUrl`・`episodeNumber`・`durationSec` はスキーマに欄が無いので落とす。
  * `episodeSchema` は未知のキーを捨てずに落とすので、足すと `parseEpisodes` が赤になる。
  */

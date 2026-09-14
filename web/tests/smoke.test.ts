@@ -3,7 +3,7 @@
  * 観測から違反を出す `violationsOf` と、配信してよいパスを決める `resolveWithinRoot` である。
  * どちらもブラウザを立てずに済むので、ここ（L2）で回す。
  *
- * ブラウザが要る側は `tests/e2e/` の spec が持つ。
+ * ブラウザが要る側は `tests/smoke/` の spec が持つ。
  * 観測層が事故を拾えるかは `observation.spec.ts` の陽性対照が見る。
  */
 

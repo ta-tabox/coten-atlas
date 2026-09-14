@@ -12,7 +12,7 @@ import { duplicatesOf } from "@/lib/schema/duplicates";
 
 /**
  * 配信基盤。
- * RSS の `<link>` が指す先は Spotify のページである（docs/adr/0006-rss-link-as-episode-url.md）。
+ * RSS の `<link>` が指す先は Spotify のページである。
  */
 const platformSchema = z.enum(["spotify"]);
 

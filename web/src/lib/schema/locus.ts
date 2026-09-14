@@ -3,12 +3,13 @@
  * `catalog/loci.geojson` の形を、実行時に検査できるかたちで持つ。
  * 事物とは、シリーズが地図の上に持つもののことである。
  *
- * シリーズと事物は 1 対多で、多の側にある `seriesId` が一の側を指す（docs/adr/0027-series-and-loci.md）。
+ * シリーズと事物は 1 対多で、多の側にある `seriesId` が一の側を指す。
  * どの事物が代表点かはシリーズ側の `anchor` が示すので、役割の欄は持たない。
- * 通す geometry は Point だけである（docs/adr/0026-two-phase-location.md）。
+ * 通す geometry は Point だけである。
+ * Point だけに限る理由は docs/adr/0026-two-phase-location.md が持つ。
  *
  * 地図の source へ渡す形はここが組まない。
- * `kind` と、シリーズと一致する `timeRange` を写すのはビルド時の仕事で、`catalog/` の形は動かさない（docs/adr/0024-map-feature-carries-key-only.md）。
+ * `kind` と、シリーズと一致する `timeRange` を写すのはビルド時の仕事で、`catalog/` の形は動かさない。
  *
  * 入口は parseLoci。
  */

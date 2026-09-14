@@ -13,13 +13,13 @@
  * react-map-gl は maplibre 本体を実行時に動的 import するので、プリレンダでは空のコンテナだけが出る。
  * この層を `next/dynamic` の `ssr: false` で包む必要は無い。
  * worker の在り処は `workerUrl` で名指す。
- * 渡さないと maplibre はバンドル後のチャンク URL からの相対で worker を探し、404 の HTML を掴んで地図だけが描画されなくなる（docs/adr/0013-maplibre-worker-self-hosted.md）。
+ * 渡さないと maplibre はバンドル後のチャンク URL からの相対で worker を探し、404 の HTML を掴んで地図だけが描画されなくなる。
  * attributionControl は渡さない。
  * OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
  * style で寸法を渡す。
- * スタイルは Tailwind のユーティリティで書く決まりだが（docs/adr/0021-tailwind-v4.md）、MapLibreMap は container の `style` しか公開せず `className` を持たないので、寸法だけはここに残る。
+ * スタイルは Tailwind のユーティリティで書く決まりだが、MapLibreMap は container の `style` しか公開せず `className` を持たないので、寸法だけはここに残る。
  * built-in control（Navigation・Scale 等）はここへ足さない。
- * MapLibre が吐く DOM は `maplibre-gl.css` が素のカスケードで押さえており、レイヤに入った Tailwind のユーティリティが負けるので、当てても効かない（docs/adr/0022-map-dom-boundary.md）。
+ * MapLibre が吐く DOM は `maplibre-gl.css` が素のカスケードで押さえており、レイヤに入った Tailwind のユーティリティが負けるので、当てても効かない。
  * 地図の上に置くものは React 側の overlay として書く。
  */
 

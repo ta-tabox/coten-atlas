@@ -48,7 +48,7 @@ jobs:
       id-token: write
       actions: read # Claude が PR 上で CI の結果を読むのに要る
 
-    # アプリは web/ の中（#39）。run: のステップだけを web/ で回す。
+    # アプリは web/ の中。run: のステップだけを web/ で回す。
     # uses: のアクション（checkout / mise-action）には working-directory が効かないので、
     # mise-action はリポジトリのルートに居たまま、ルートの mise.toml を読む。
     # check.yml と同じ形。
@@ -67,8 +67,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # L4 のスモークがヘッドレスの Chromium を立てる（docs/adr/0014-e2e-offline-smoke.md）。
-      # 回すのは Playwright（docs/adr/0016-playwright-runner.md）で、CLI は @playwright/test が持つ。
+      # L4 のスモークがヘッドレスの Chromium を立てる。
+      # 回すのは Playwright で、CLI は @playwright/test が持つ。
       # バイナリは 356MB あるので、pnpm-lock.yaml が動くまでは取り直さない。
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -96,7 +96,7 @@ jobs:
           additional_permissions: |
             actions: read
 
-          # ワイルドカードにしない。判定の口は package.json の check スクリプト一本（docs/adr/0045-pnpm-check-current-form.md）なのでそれだけ名指しする。
+          # ワイルドカードにしない。判定の口は package.json の check スクリプト一本なのでそれだけ名指しする。
           # コマンド文字列が `pnpm --dir web check` なのは、Claude 自身の cwd がリポジトリのルートだから。
           # claude-code-action は composite action なので、上の defaults.run.working-directory は
           # このアクション内部の run: へ継承されない（GitHub Actions の仕様）。cwd を渡す input も無く、

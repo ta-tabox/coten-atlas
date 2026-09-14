@@ -35,7 +35,7 @@ Next.js (App Router) + TypeScript を static export する。
 番組そのものの権利は制作元の COTEN に帰属する。
 地図と時代区分の上への整理はこのプロジェクトが独自に行ったものであって、番組の見解ではない。
 
-載せるのはシリーズ名とエピソードタイトルだけで、番組の説明文・ロゴ・カバーアート・出演者画像は使わない（[ADR-0008](docs/adr/0008-quote-titles-only.md)）。
+載せるのはシリーズ名とエピソードタイトルだけで、番組の説明文・ロゴ・カバーアート・出演者画像は使わない（理由は [ADR-0008](docs/adr/0008-quote-titles-only.md)）。
 
 番組公式: <https://coten.co.jp/services/cotenradio/>
 
@@ -48,4 +48,4 @@ Next.js (App Router) + TypeScript を static export する。
 
 シリーズ名・エピソードタイトル・配信リンクも同じく範囲外で、権利は上の「出典と引用の範囲」のとおり制作元に帰属する。
 
-決定と理由は [ADR-0011](docs/adr/0011-license.md)。
+ライセンスをこの範囲に分ける理由は [ADR-0011](docs/adr/0011-license.md) が持つ。

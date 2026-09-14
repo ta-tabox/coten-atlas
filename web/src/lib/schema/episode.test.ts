@@ -5,7 +5,7 @@ import {
   parseEpisodes,
 } from "@/lib/schema/episode";
 
-/** #13 で実地確認したフィードの形を、正規化後のかたちへ直した 1 件。 */
+/** 配信元のフィードの形を、正規化後のかたちへ直した 1 件。 */
 const episode = {
   guid: "4d80b4a3-deee-41f3-8045-d06ade19132f",
   title: "【66-10】五賢帝時代はじまる！【COTEN RADIO 帝政ローマ編10】",

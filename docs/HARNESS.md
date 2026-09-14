@@ -25,9 +25,9 @@ L0〜L4 は `pnpm check` の一本にまとまっている（下記）。
 足すと同じ検査が二度走るので、連鎖へ別の段としては足さない。
 `pnpm validate:catalog` はその 1 本だけを名指す切り分け用で、「これが緑なら閉じてよい」と言えるのは変わらず `pnpm check` だけである。
 
-L3 を層に持つのは、static export にビルド時にしか壊れない失敗があり、L0〜L2 だけでは PR が緑のまま公開が落ちるためである（[ADR-0045](adr/0045-pnpm-check-current-form.md)）。
+L3 を層に持つのは、static export にビルド時にしか壊れない失敗があり、L0〜L2 だけでは PR が緑のまま公開が落ちるためである。
 
-L4 を層に持つのは、L3 までがどれも「配信物へ実際に到達できるか」を見ないためである（[ADR-0014](adr/0014-e2e-offline-smoke.md)）。
+L4 を層に持つのは、L3 までがどれも「配信物へ実際に到達できるか」を見ないためである。
 守らせるのは自足の一点で、外部への通信は遮断する。
 
 ## 2. 判定の口
@@ -40,7 +40,7 @@ cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next bui
 ```
 
 L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next build` の出力だからである。
-ブラウザを立てるのは L4 だけで、回すのは Playwright である（[ADR-0016](adr/0016-playwright-runner.md)）。
+ブラウザを立てるのは L4 だけで、回すのは Playwright である。
 スモークは project `smoke`（`web/tests/smoke/`）で、`pnpm smoke` がそれを名指す。
 操作を伴う E2E を足すときは project をもう一つ並べるので、スモークの範囲は動かない。
 
@@ -56,14 +56,14 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 - **赤のままコミットしない。** 回し方は「`pnpm check` → 緑ならコミット」
 - 口を増やさない。切り分けのために個別スクリプトを単体で叩くのは構わないが、
   「これが緑なら閉じてよい」と言えるのは `pnpm check` だけ
-- 決定と理由は [ADR-0045](adr/0045-pnpm-check-current-form.md)（[ADR-0009](adr/0009-pnpm-check.md) を supersede。0009 は [ADR-0002](adr/0002-mise-run-check.md) を supersede した）
+- 機械判定を `pnpm check` の一本にする理由は [ADR-0045](adr/0045-pnpm-check-current-form.md) が持つ
 - CI も同じ一本を回す（`.github/workflows/check.yml`）
 
 ランタイムの版は `mise.toml` の `[tools]` が固定する（node / pnpm）。
 固定を立てずに走らせると、手元と CI と意味が揃わない。
 
 タスクは `web/package.json` の scripts が持つので、打つ場所も `web/` の中である。
-`mise.toml` はルートに残って `[tools]` だけを持ち、`run = "pnpm check"` の薄いラッパは置かない（[ADR-0045](adr/0045-pnpm-check-current-form.md)）。
+`mise.toml` はルートに残って `[tools]` だけを持ち、`run = "pnpm check"` の薄いラッパは置かない。
 
 ### 到達テスト
 
@@ -84,7 +84,7 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 - **再レビューが要るなら PR コメントで `@claude` を名指しする**（起動するのは `claude.yml` の側）。
   人間が `ready_for_review` か再オープンで掛け直す手もあるが、そちらは人間の操作である
 - **歴史の裏どり（`claude-history-review.yml`）は自動では走らない**。
-  `@historian` を含むコメントだけが起動する（[ADR-0035](adr/0035-history-review-lane.md)）
+  `@historian` を含むコメントだけが起動する
 - **`Lint PR body`（`lint-pr-body.yml`）は PR を開いた回と本文を編集した回に走る**。
   PR 本文の禁止語を `scripts/lint-vocabulary.sh` で報告する（語の正は `.claude/rules/writing.md`「語彙と読み手」節の表）
 
@@ -109,7 +109,7 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
 ### 歴史の裏どりを呼ぶ
 
 `catalog/series.json` の `timeRange` と `catalog/loci.geojson` の座標は人手で決める値で、生没年が 50 年ずれていても `pnpm check` は緑になる。
-裏どりは三本目のワークフロー（`claude-history-review.yml`）が担い、コードのレビューとは別の起動語で呼ぶ（[ADR-0035](adr/0035-history-review-lane.md)）。
+裏どりは三本目のワークフロー（`claude-history-review.yml`）が担い、コードのレビューとは別の起動語で呼ぶ（分ける理由は [ADR-0035](adr/0035-history-review-lane.md)）。
 
 - `gh pr comment <PR番号> --body "@historian この 6 件の timeRange と代表点を裏どりして"` で呼ぶ。
   issue コメントでも同じように起動するので、`catalog/` へ載せる前に対象表へ対して呼べる
@@ -162,7 +162,7 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
   mise が要るのは、`mise.toml` が固定した node と pnpm を立てるためである（§3）
 - **`https://tiles.openfreemap.org`** — ベースマップのタイル。ブラウザプレビューから引く先。
   出られなければ地図の見た目はリモートで確認できない
-- **`https://anchor.fm/...`** — RSS（S6 の同期）。出られなければ同期スクリプトはリモートで動かない
+- **`https://anchor.fm/...`** — RSS（`pnpm sync` の取得先）。出られなければ同期スクリプトはリモートで動かない
 - **Playwright の配信元** — L4 のスモークが立てる Chromium のバイナリ。
   出られなければブラウザを入れられず、リモートでは `pnpm check` がスモークで落ちる
 
@@ -192,12 +192,12 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 
 - **E2E で地図の絵を検証しない**。ヘッドレスでも描画そのものは出るが、絵を判定するには
   実タイルかそのフィクスチャが要る。L4 が守るのは配信物が自足していることまでで、
-  見た目は人間の目視に残す（[ADR-0014](adr/0014-e2e-offline-smoke.md)）
+  見た目は人間の目視に残す
 - **実 API を自動テストで叩かない**。RSS もタイルサーバも外部の可用性に依存するので、
   テストが外部の都合で赤くなる。取得層はフィクスチャで検証する。
   L4 のスモークも同じで、タイルサーバへの通信は遮断してスタイルだけを合成のもので返す。
   到達テストはこの規則の対象外とする。
   検証の対象が配信された実物そのものなので、配信された実物へ到達できないことは外部の都合ではなく、この検査が検出したい事故そのものに当たる
-- **`claude.yml` の `on:` を絞らない**。起動の絞りは job 側の `if:` の一本
-  （[ADR-0010](adr/0010-gh-review-trigger-narrowing.md)）。run 一覧に `skipped` が
-  並ぶのは正常なので、異常と読んで調べ直さない
+- **`claude.yml` の `on:` を絞らない**。
+  起動の絞りは job 側の `if:` の一本で、`on:` を絞らない理由は [ADR-0010](adr/0010-gh-review-trigger-narrowing.md) が持つ。
+  run 一覧に `skipped` が並ぶのは正常なので、異常と読んで調べ直さない
