@@ -181,9 +181,10 @@ export default function EraSlider({
       </p>
 
       {/* ブラウザがトラックの上のタッチをスクロールや拡大に使うと pointercancel が届いて位置が止まるので、touch-none でタッチの既定の動作を止める。 */}
+      {/* つまみはセルの列より上下に 4px ずつはみ出して描かれ、`<input>` はポインタのイベントを受けないので、ポインタを受ける範囲を before 擬似要素で上下に 4px ずつ広げる。 */}
       <div
         data-testid="era-slider-track"
-        className="relative mt-1.5 cursor-ew-resize touch-none"
+        className="relative mt-1.5 cursor-ew-resize touch-none before:absolute before:inset-x-0 before:-inset-y-1"
         onPointerDown={startDragging}
         onPointerMove={continueDragging}
         onPointerUp={stopDragging}
