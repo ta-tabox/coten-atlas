@@ -92,14 +92,19 @@ function hits(content,   check, i) {
 BEGIN { nb = split(banned, bwords, "|"); ns = split(strip, swords, "|") }
 '
 
+# ファイル名を持つ `+++ b/...` の行は、`diff --git` から最初の `@@` までのヘッダにしか現れない。
+# hunk の中で `+++` や `---` から始まる行は、内容が `++` や `--` で始まる追加行・削除行なので、ヘッダと区別する。
 DIFF_AWK=$SCAN_AWK'
-/^\+\+\+ / { file = substr($0, 5); sub(/^b\//, "", file); next }
+/^diff --git / { in_header = 1; next }
+in_header && /^@@/ { in_header = 0 }
+in_header && /^\+\+\+ / { file = substr($0, 5); sub(/^b\//, "", file); next }
+in_header { next }
 /^@@/ {
   match($0, /\+[0-9]+/)
   lineno = substr($0, RSTART + 1, RLENGTH - 1) + 0
   next
 }
-/^\+/ && !/^\+\+\+/ {
+/^\+/ {
   content = substr($0, 2)
   if (hits(content)) print file ":" lineno ": " content
   lineno++
