@@ -37,10 +37,10 @@
 | 咸陽 | 秦の首都。`shin-no-shikotei` の代表点と同じ地点になる |
 | 長安 | 劉邦が漢の都に定めた地 |
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: 中国` に指摘は出なかった。
-`kind: place` と `title: 項羽と劉邦` にも指摘は出なかった。
+`title: 項羽と劉邦` にも指摘は出なかった。
 
 ## 仮決定と論点
 

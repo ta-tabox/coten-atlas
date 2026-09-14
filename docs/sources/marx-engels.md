@@ -54,11 +54,11 @@
 
 マルクスの住まいはロンドンの中の一か所に絞れず、`elizabeth-1` の中心の場所はホワイトホール宮殿に絞れるので、順 2 で `marx-engels` が `london` を使い、`elizabeth-1` が `whitehall` へ移る。
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: ヨーロッパ` は、扱う地理がドイツ・フランス・ベルギー・英国で一区画に収まるので、[ADR-0034](../adr/0034-series-vocabulary.md) の `region` の選び方の表の 1 行目で決めた。
 `@historian` は、活動の範囲が `ヨーロッパ` に収まることを確認した。
-`kind: place` と `title: マルクス・エンゲルス` に指摘は出なかった。
+`title: マルクス・エンゲルス` に指摘は出なかった。
 
 ## 仮決定と論点
 

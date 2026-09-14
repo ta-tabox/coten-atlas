@@ -12,7 +12,7 @@ description: 配信フィードに回が在るのに `catalog/series.json` に�
 複数の束を並行するセッションで同時に進めると、値を決めることより、並行する PR との突き合わせと、裏どりの待ち方で手戻りが出る。
 このスキルは、その突き合わせと待ち方も持つ。
 
-値の選び方（`title`・`id`・`anchor`・`kind`・`region`・`tags`・事物の `id`・`timeRange` を年で書くか）の正本は skill `series-vocabulary` で、このスキルは規則を写さない。
+値の選び方（`title`・`id`・`anchor`・`region`・`tags`・事物の `id`・`timeRange` を年で書くか）の正本は skill `series-vocabulary` で、このスキルは規則を写さない。
 典拠のファイルの節の並びと典拠の格は `docs/sources/README.md` が持つ。
 裏どりのワークフローの仕組みは `docs/HARNESS.md`「歴史の裏どりを呼ぶ」が持つ。
 

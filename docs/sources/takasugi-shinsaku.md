@@ -46,11 +46,11 @@ Wikidata の座標の参照元は日本語版ウィキペディアで、GeoNames
 代表点に選んだ時代の地点が複数の名を持つときは、現在の英語の文献がその時代のその地点を指すときに通用する名を使うと、#170 で決まった（ADR-0041）。
 英語の文献は 1863〜1864 年の砲撃戦を Shimonoseki campaign と書くので、`shimonoseki` のまま決着した。
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: 日本` は、第 6 回が上海への渡航を扱って区画が跨るので [ADR-0034](../adr/0034-series-vocabulary.md) の `region` の選び方の表の 2 行目に当て、人物の本拠の生地（萩）で決めた。
 `@historian` は、この判断が ADR-0034 の本拠の基準に沿うと確認した。
-`kind: place` と `title: 高杉晋作` に指摘は出なかった。
+`title: 高杉晋作` に指摘は出なかった。
 
 ## 仮決定と論点
 

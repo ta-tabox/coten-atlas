@@ -55,11 +55,10 @@ PR 本文の最初の版は、「神都」を都としての呼び名とみな�
 PR #173 の `@historian` は、現在の英語の文献が武則天の周の都を Luoyang と書き、Shendu は当時の正式な改称として言及するだけだと返した（[Wikipedia: Wu Zetian](https://en.wikipedia.org/wiki/Wu_Zetian)・[Encyclopedia.com: Wu Zetian](https://www.encyclopedia.com/women/encyclopedias-almanacs-transcripts-and-maps/wu-zetian-624-705)、参考程度から三次）。
 そのため `luoyang` のまま決着させた。
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: 中国` は、扱う地理が中国に収まるので、ADR-0041 の `region` の選び方の表の 1 行目で決めた。
 `@historian` は、異論は見つからず妥当だと確認した。
-`kind: place` は表の 3 行目に当たり、自動レビューは `place` と位置なしの組み合わせに当たらないことを確認した。
 `title: 武則天` はシリーズ名のままで、指摘は出なかった。
 `id` の `bu-sokuten` は、姓の「武」と「則天」の間で割った（現物の人名 `yoshida-shoin`・`shokatsu-komei` が姓と名を割っている）。
 コトバンクの「武則天」のページに、デジタル大辞泉と精選版日本国語大辞典の見出しは無い。

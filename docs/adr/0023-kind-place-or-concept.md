@@ -1,8 +1,8 @@
 # 0023. `kind` は geometry から導けない差だけを持つ
 
-- **状態**: 採用
+- **状態**: supersede 済み（→ 0042）
 - **決定日**: 2026-08-31（#88）
-- **関係する ADR**: 0003（MapLibre）、0018（割当キーを `itunes:season` にする）
+- **関係する ADR**: 0042（この決定を supersede する）、0003（MapLibre）、0018（割当キーを `itunes:season` にする）
 
 ## 文脈
 

@@ -1,7 +1,7 @@
 /**
  * 事物とシリーズを突き合わせて、地図の source へ渡す形を組む。
  *
- * 描画の濃淡が読む `kind` は事物の properties に無く、代表点の `timeRange` は `TIME_RANGE_OF_SERIES` のままなので、どちらも `seriesId` からシリーズを検索して写す。
+ * 代表点の `timeRange` は `TIME_RANGE_OF_SERIES` のままなので、`seriesId` でシリーズを取得して年を写す。
  * 写すのは properties だけで、geometry は触らない。
  * `catalog/` の形は動かさない。
  * 動かさない理由は docs/adr/0024-map-feature-carries-key-only.md が持つ。
@@ -17,19 +17,17 @@ import type { Locus, LocusCollection } from "@/lib/schema/locus";
 import { TIME_RANGE_OF_SERIES } from "@/lib/schema/locus";
 import {
   type Series,
-  type SeriesKind,
   type SeriesList,
   TIME_RANGE_UNTIMED,
 } from "@/lib/schema/series";
 
 /**
  * 地図へ渡す事物 1 件の属性。
- * 鍵の 2 欄はそのまま運び、残りはシリーズから写した値である。
+ * 鍵の 2 欄はそのまま運び、年の 2 欄は事物かシリーズの `timeRange` から写した値である。
  */
 export type MapLocusProperties = {
   id: string;
   seriesId: string;
-  kind: SeriesKind;
   timeStart: number;
   timeEnd: number;
 };
@@ -48,7 +46,8 @@ export type MapLocusCollection = {
 };
 
 /**
- * 事物 1 件へ、シリーズから `kind` と年を写す。
+ * 事物 1 件へ、年を写す。
+ * 事物の `timeRange` が `TIME_RANGE_OF_SERIES` なら、`seriesId` が指すシリーズの年を写す。
  *
  * 指す先が無いか、指す先のシリーズの `timeRange` が `TIME_RANGE_UNTIMED` で年を解決できなければ throw する。
  * 参照の壊れは `references.ts` が `pnpm test` で落とすので、ビルドまで残っていれば検査そのものが素通りしている。
@@ -79,7 +78,6 @@ function toMapLocus(
     properties: {
       id,
       seriesId,
-      kind: series.kind,
       timeStart: years.start,
       timeEnd: years.end,
     },

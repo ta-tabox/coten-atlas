@@ -8,7 +8,6 @@ function series(id: string, season: number): Series {
   return {
     id,
     title: id,
-    kind: "place",
     anchor: `${id}-anchor`,
     timeRange: { start: -27, end: 180 },
     summary: "",

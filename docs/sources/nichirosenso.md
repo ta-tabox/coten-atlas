@@ -49,7 +49,7 @@ Rotem Kowner の *Historical Dictionary of the Russo-Japanese War*（2006）は�
 代表点に選んだ時代の地点が複数の名を持つときは、現在の英語の文献がその時代のその地点を指すときに通用する名を使い、中国の地名にもこの慣用を先に当てると、#170 で決まった（ADR-0041）。
 それに従い、コミット fbc7fed で `lushun` を `port-arthur` へ直した。
 
-## `region`・`kind`・`title`
+## `region`・`title`
 
 `region: 中国` は、各回が朝鮮半島と日本も扱って区画が跨るので ADR-0034 の `region` の選び方の表の 2 行目に当て、出来事の本拠の主な舞台（満洲）で決めた。
 継ぎ目の表は、満洲を `中国` に入れる。
@@ -57,7 +57,7 @@ Rotem Kowner の *Historical Dictionary of the Russo-Japanese War*（2006）は�
 
 `id` の `nichirosenso` は、デジタル大辞泉と精選版日本国語大辞典に一語の見出し（にちろ‐せんそう）があるので割らなかった。
 二つの辞書のどちらかに一語の見出しがあれば割らないと #172 で決まり（ADR-0041）、値は変わらない。
-`kind: place` と `title: 日露戦争` に指摘は出なかった。
+`title: 日露戦争` に指摘は出なかった。
 
 ## 仮決定と論点
 
