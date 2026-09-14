@@ -50,7 +50,7 @@
 決定と経緯は `docs/adr/`——1決定1レコード・**追記のみ**・覆すときは supersede
 （規約は同 `README.md`）。状態と作業単位は GitHub Issues。
 
-コーディング規約は `.claude/rules/`（文章は常時、コードと言語別と UI は該当ファイルの Read で読み込まれる）。
+コーディング規約は `.claude/rules/`（文章は常時、コードと言語別と UI と置き場の表は該当ファイルの Read で読み込まれる）。
 **コードを書く前に** skill `coding-standards` / `karpathy-guidelines` を開く（レビューやリファクタに限らない）。
 隣接ファイルを読まずに新規ファイルを書くときは、先に `.claude/rules/coding.md` と該当言語の `languages/<lang>.md` を Read する。
 
