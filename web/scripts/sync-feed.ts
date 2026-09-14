@@ -100,7 +100,6 @@ function readSeries(file: string): SeriesList {
  * 前回の同期が書き出したエピソード一覧を読み、guid から seriesId を引ける対応表にして返す。
  * ファイルがまだ無い初回は空の対応表になり、フィードの全件が新着として扱われる。
  *
- * この対応表には二つの役目がある。
  * 鍵（guid）の有無が「その回が新着か」を決め、値（seriesId）が「前回付いていた割当が外れていないか」を決める。
  * 鍵だけでは、割当が null へ後退した回と元から未割当だった回を見分けられない。
  */
@@ -119,7 +118,6 @@ function readPreviousAssignments(file: string): Map<string, string | null> {
 /**
  * フィードの 1 件を `episodes.json` の 1 件へ直す。
  *
- * `link` は Spotify のエピソードページである。
  * `audioUrl`・`episodeNumber`・`durationSec` はスキーマに欄が無いので落とす。
  * `episodeSchema` は未知のキーを捨てずに落とすので、足すと `parseEpisodes` が赤になる。
  */

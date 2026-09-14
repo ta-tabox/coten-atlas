@@ -142,11 +142,10 @@ export function brokenLocusSeriesReferences(
  * はみ出した事物は、シリーズが一覧に出ない時代の地図へ現れる。
  * 壊れていなければ空。
  *
- * `TIME_RANGE_OF_SERIES` の事物は定義上はみ出しようがないので見ない。
- * `seriesId` の指す先が無い事物も見ない。
- * 比べる相手が居ないだけで、それを名指すのは brokenLocusSeriesReferences の仕事である。
- * `timeRange` が `TIME_RANGE_UNTIMED` のシリーズの事物も、比べる年が無いので見ない。
- * そのシリーズは位置なしなので、事物を持つこと自体を brokenAnchors が名指す。
+ * 次の事物は見ない。
+ * - `timeRange` が `TIME_RANGE_OF_SERIES` の事物（定義上はみ出しようがない）
+ * - `seriesId` の指す先が無い事物（比べる相手が居らず、指す先が無いことは `brokenLocusSeriesReferences` が名指す）
+ * - `timeRange` が `TIME_RANGE_UNTIMED` のシリーズの事物（比べる年が無く、位置なしのシリーズが事物を持つこと自体は `brokenAnchors` が名指す）
  */
 export function lociOutsideSeriesTimeRange(
   loci: LocusCollection,
@@ -187,9 +186,7 @@ export function lociOutsideSeriesTimeRange(
  * 壊れていなければ空。
  *
  * era 空間の年は、先頭 era の `start` から末尾 era の右端までで、両端を含む。
- * 右端は、末尾 era の `end` が年ならその年、`ERA_END_PRESENT` なら `presentEnd` である。
  * `positionToYear` は位置 1 で右端の年を返すので、era の `end` を含まない区間の規則をここへ持ち込まない。
- * `timeRange` が `TIME_RANGE_UNTIMED` のシリーズは年を持たないので見ない。
  */
 export function seriesOutsideEraSpace({
   series,

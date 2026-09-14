@@ -72,10 +72,10 @@ export function currentWindow({
 
 /**
  * `window` と `timeRange` が重なる年数の割合を、0..1 で返す。
+ * 重なる年が 1 年も無ければ 0 を返す。
  *
  * どちらも両端を含む閉区間なので、年数は `end - start + 1` で数える。
  * 分母は `window` と `timeRange` のうち年数が短い方なので、1 年のシリーズが `window` に収まれば 1 を、`window` を覆い尽くすシリーズも 1 を返す。
- * 重なる年が 1 年も無ければ 0 を返す。
  */
 export function overlapRatio(
   window: CurrentWindow,

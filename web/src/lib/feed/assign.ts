@@ -60,8 +60,6 @@ export function assignSeriesId(
  * season からシリーズの id を引く索引。
  *
  * season がシリーズ間で一意であることは `seriesListSchema` が見ているので、ここで衝突を数え直さない。
- * 索引は呼ばれるたびに組み直す。
- * シリーズは 66 件で、同期は 1 日に 1 度しか走らない。
  */
 function seasonIndexOf(series: SeriesList): Map<number, string> {
   return new Map(series.map(({ season, id }) => [season, id]));
