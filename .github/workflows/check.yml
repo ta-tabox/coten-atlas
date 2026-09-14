@@ -18,7 +18,7 @@ jobs:
       group: check-${{ github.ref }}
       cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
-    # アプリは web/ の中（#39）。run: のステップだけを web/ で回す。
+    # アプリは web/ の中。run: のステップだけを web/ で回す。
     # uses: のアクション（checkout / mise-action）には working-directory が効かないので、
     # mise-action はリポジトリのルートに居たまま、ルートの mise.toml を読む。
     defaults:
@@ -36,8 +36,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # L4 のスモークがヘッドレスの Chromium を立てる（docs/adr/0014-e2e-offline-smoke.md）。
-      # 回すのは Playwright（docs/adr/0016-playwright-runner.md）で、CLI は @playwright/test が持つ。
+      # L4 のスモークがヘッドレスの Chromium を立てる。
+      # 回すのは Playwright で、CLI は @playwright/test が持つ。
       # バイナリは 356MB あるので、pnpm-lock.yaml が動くまでは取り直さない。
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -49,5 +49,5 @@ jobs:
       # --with-deps の側は毎回要る（システムライブラリはキャッシュに載らない）。
       - run: pnpm exec playwright install --with-deps chromium
 
-      # 判定の口はこの一本（docs/adr/0009-pnpm-check.md）。型 / 静的 / ユニット / ビルド / スモークをまとめて回す。
+      # 判定の口はこの一本。型 / 静的 / ユニット / ビルド / スモークをまとめて回す。
       - run: pnpm check

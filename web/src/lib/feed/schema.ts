@@ -24,11 +24,8 @@ const trimmedTextSchema = z.string().trim().min(1);
 /**
  * RFC 822 の日時を ISO 8601 へ直す。
  *
- * 全件が `Wed, 19 Aug 2026 21:00:00 GMT` の形で、時間帯を明示して持つ。
- * 時間帯を持たない文字列を渡すと `Date` は実行環境の地方時として読むので、その形はフィードに現れないことを前提にしている。
- *
- * RFC 822 の解釈自体は ECMAScript の規定の外にあり、実装に委ねられている。
- * 走らせる先が Node（V8）だけなのでこれで足りる。
+ * 時間帯を持たない文字列を渡すと `Date` は実行環境の地方時として読むので、フィードの全件が `Wed, 19 Aug 2026 21:00:00 GMT` の形で時間帯を明示して持つことを前提にする。
+ * RFC 822 の解釈は ECMAScript の規定の外で実装に委ねられているので、Node（V8）以外の実行環境から呼ばない。
  */
 const pubDateSchema = z.string().transform((text, ctx) => {
   const parsed = new Date(text);
@@ -96,7 +93,7 @@ const optionalDurationSecSchema = z
  * フィードのエピソード 1 件。
  *
  * `season` は `itunes:season` で、752 件中 176 件（番外編・特別編・告知）が持たない。
- * `episodeNumber` と `durationSec` は episodes.json へ保存しない（docs/adr/0018-season-as-assignment-key.md）。
+ * `episodeNumber` と `durationSec` は読む画面が無いので episodes.json へ保存しない。
  */
 export const feedItemSchema = z.object({
   guid: trimmedTextSchema,

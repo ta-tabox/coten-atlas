@@ -85,9 +85,8 @@ function boundaryAlignClassOf(index: number, lastIndex: number): string {
  * `eras` の区間を等幅のセルに並べ、`position` の周りの現在窓を帯で重ねたスライダー。
  * 現在窓は、年の範囲の文字とセルの上の帯の 2 つで示し、スライダーが指している 1 年は表示しない。
  *
- * 地図に描かれるのは現在窓と重なるシリーズなので、指している 1 年だけを出すと、その年を含まないシリーズが描かれて表示と食い違って見える（docs/adr/0040-era-fade-wiring.md）。
+ * 地図に描かれるのは現在窓と重なるシリーズなので、指している 1 年だけを出すと、その年を含まないシリーズが描かれて表示と食い違って見える。
  * キーボードの操作（矢印キー・Home・End・PageUp・PageDown）は `<input type="range">` のブラウザ既定の挙動が担う。
- * 遷移のアニメーションを持たないので、`prefers-reduced-motion` で止めるものが無い。
  */
 export default function EraSlider({
   eras,

@@ -124,10 +124,7 @@ function labelOf(raw: RawFeedItem, index: number): string {
  * 空欄と、空白しか無い欄は欠落として扱う。
  *
  * 属性を持つ要素の中身はパーサが `#text` へ入れるので、素の文字列と両方を受ける。
- * `<guid isPermaLink="false">` が属性を持つ側で、`<link>` が持たない側である。
- *
- * 前後の空白はここでは落とさない。
- * 落とすのはスキーマの仕事で、ここが均すのは XML の形だけである。
+ * 前後の空白は `feedItemSchema` が trim するので、ここでは取り除かない。
  */
 function textOf(node: unknown): string | undefined {
   const raw = typeof node === "string" ? node : recordOf(node)?.["#text"];

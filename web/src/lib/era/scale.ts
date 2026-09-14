@@ -60,10 +60,10 @@ function yearsOf(era: Era, presentEnd: number): EraYears {
 
 /**
  * `position`（0..1）が `eras` の上で指す西暦の年を、整数で返す。
+ * `position` が 0 未満なら `eras` の最初の年を、1 を超えるなら最後の年を返す。
  *
  * 区間を等幅に並べ、区間の中は線形補間する。
  * 年は `catalog/` のどの欄も整数なので、補間の結果も四捨五入する。
- * `position` が 0 未満なら `eras` の最初の年を、1 を超えるなら最後の年を返す。
  */
 export function positionToYear({
   position,

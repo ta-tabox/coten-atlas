@@ -37,7 +37,6 @@
   `gh api` はコマンド文字列が一通りしか無く、前方一致では読み取りと書き込みを分けられないので、コマンド全文を見て戻せない書き込みだけを ask へ回す。
   素通しするのは読み取り・コメント投稿・レビュースレッドの resolve の三つで、どれも `gh issue comment` が allow なのと同じ「戻せる」層に当たる。
   雛形は `gh api` を丸ごと ask にしており、その形だとレビューの往復で読み取りまで毎回訊かれるので、**ここは全リポジトリ共通の雛形から逸脱している**。
-  層の基準は操作が戻せるかどうかなので、パターンの都合で層をまたいでいた分を切り直した。
 
 ## 開発ハーネス（本文は `docs/HARNESS.md`）
 
@@ -51,16 +50,16 @@
 決定と経緯は `docs/adr/`——1決定1レコード・**追記のみ**・覆すときは supersede
 （規約は同 `README.md`）。状態と作業単位は GitHub Issues。
 
-コーディング規約は `.claude/rules/`（文章は常時、コードと言語別と UI は該当ファイルの Read で読み込まれる）。
+コーディング規約は `.claude/rules/`（文章は常時、コードと言語別と UI と置き場の表は該当ファイルの Read で読み込まれる）。
 **コードを書く前に** skill `coding-standards` / `karpathy-guidelines` を開く（レビューやリファクタに限らない）。
 隣接ファイルを読まずに新規ファイルを書くときは、先に `.claude/rules/coding.md` と該当言語の `languages/<lang>.md` を Read する。
 
-**申し送りの層は持たない**（[ADR-0025](docs/adr/0025-retire-next-md.md)）。
+**申し送りの層は持たない**（理由は [ADR-0025](docs/adr/0025-retire-next-md.md)）。
 続きは開いている issue の一覧から拾い、構造に関わる未決は `docs/ARCHITECTURE.md` §8 が引き取る。
 
 ## 配布物の追随
 
-`.claude/` と `.github/workflows/` の一部、`web/scripts/lint-comments.ts` と `web/tests/`、`.claude/rules/` は共有の雛形からの写しである。
+`.claude/` と `.github/workflows/` の一部、`web/scripts/lint-comments.ts` と `web/tests/`、`scripts/lint-vocabulary.sh` と `.githooks/commit-msg`、`.claude/rules/` は共有の雛形からの写しである。
 
 - **追随は、このリポジトリの開発を再開するときにまとめてやる**。
   都度の追随は打ち切ってあるので、放っておけば雛形との差は開き続ける。

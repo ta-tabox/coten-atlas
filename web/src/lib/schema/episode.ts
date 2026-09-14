@@ -1,13 +1,13 @@
 /**
  * エピソード（＝番組の 1 回）のスキーマ。
- * RSS から同期した自動層の形を持つ（docs/adr/0029-two-layer-data-without-inbox.md）。
+ * RSS から同期した自動層の形を持つ。
  *
  * ここが検査するのは**正規化後**の形で、正規化そのものは同期側の仕事である。
  * フィードの `pubDate` は RFC 822 で来るので、ISO 8601 へ直してから書く。
  * `guid` は初期の 5 件が先頭に空白の付いた URL なので、突き合わせのキーにする前に trim して書く。
  * 未正規化の値をここで直して受けると同期側の破れが見えなくなるので、直さずに落とす。
  *
- * `season` が割当キーで、`seriesId` はそれを引いた結果である（docs/adr/0018-season-as-assignment-key.md）。
+ * `season` が割当キーで、`seriesId` はそれを索引で検索した結果である。
  * どちらも持たない回（番外編・特別編・告知）があるので null を許す。
  *
  * 同期側がスキーマ外の欄を書いても、黙って捨てられると気付く場所が無いので、スキーマに無いキーは落とす。
@@ -25,25 +25,25 @@ export const episodeSchema = z
   .strictObject({
     /**
      * 差分同期が突き合わせに使う RSS の `<guid>`。
-     * 大半は UUID だが、初期の 5 件だけ `<guid> https://anchor.fm/coten/episodes/94COTEN-RADIO-ebu6ld</guid>` のように先頭へ空白の付いた URL が来る（#13 の実測）。
+     * 大半は UUID だが、初期の 5 件だけ `<guid> https://anchor.fm/coten/episodes/94COTEN-RADIO-ebu6ld</guid>` のように先頭へ空白の付いた URL が来る。
      */
     guid: trimmedNonEmptyStringSchema,
 
     /**
      * 各回の題号。
-     * 基本形は `【COTEN RADIO 宗教改革編2】` だが、`編` の欠落・回番号でなく前後編・開き括弧の欠落で崩れる（#13 の実測）。
-     * ここからシリーズ名を抽出せず、割当は `itunes:season` で行う（docs/adr/0018-season-as-assignment-key.md）。
+     * 基本形は `【COTEN RADIO 宗教改革編2】` だが、`編` の欠落・回番号でなく前後編・開き括弧の欠落で崩れる。
+     * ここからシリーズ名を抽出せず、割当は `itunes:season` で行う。
      */
     title: trimmedNonEmptyStringSchema,
 
     /**
      * エピソード一覧の並び順。
-     * これで足りるので `itunes:episode` は持たない（docs/adr/0018-season-as-assignment-key.md）。
+     * これで足りるので `itunes:episode` は持たない。
      */
     pubDate: z.iso.datetime(),
 
     /**
-     * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
+     * 割当キーになる `itunes:season` の値。
      * 番外編・特別編・告知は持たないので、null の回は `seriesId` も必ず null になる。
      */
     season: z.int().positive().nullable(),
@@ -51,7 +51,7 @@ export const episodeSchema = z
     /** `season` をシリーズ側の索引で引いた結果。 */
     seriesId: trimmedNonEmptyStringSchema.nullable(),
 
-    /** RSS の `<link>` が入る（docs/adr/0006-rss-link-as-episode-url.md）。 */
+    /** RSS の `<link>` が入る。 */
     links: linksSchema,
   })
   .superRefine((episode, ctx) => {

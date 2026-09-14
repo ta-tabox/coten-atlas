@@ -31,6 +31,12 @@ require_git_author() {
   exit 1
 }
 
+# コミット本文の禁止語を止める commit-msg フックは `.githooks/` にある。
+# git は既定で `.git/hooks/` しか見ないので、このクローンの設定で向け先を替える。
+enable_git_hooks() {
+  git -C "$REPO_ROOT" config core.hooksPath .githooks
+}
+
 # コンテナから mise.run へは出られない（外向き通信が許可制）ので、
 # 公式のインストーラは使わず npm から入れる（jdx/mise が同名で publish している）。
 # イメージに同梱の node は mise.toml の指定と版が違うが、mise 本体を動かすだけなのでそのまま使う。
@@ -82,6 +88,7 @@ main() {
   fi
 
   require_git_author
+  enable_git_hooks
   install_mise
 
   # クローンし直された設定ファイルは未信頼の扱いなので、mise install の前に通す。

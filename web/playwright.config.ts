@@ -1,7 +1,7 @@
 /**
- * ブラウザを立てる検証の実行設定（[ADR-0016](docs/adr/0016-playwright-runner.md)）。
+ * ブラウザを立てる検証の実行設定。
  *
- * **project ごとに走らせる範囲と viewport を分ける。**
+ * project ごとに走らせる範囲と viewport を分ける。
  * スモークと E2E は深さが違うので、同じ条件で回すと片方の都合がもう片方へ漏れる。
  * スモークが見るのは配信物が自足しているかだけで、実物の `out/` を相手にする。
  *
@@ -22,7 +22,8 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testMatch: "**/*.spec.ts",
 
-  // 落ちたら落ちたままにする。再試行で緑になる層は、緑の意味が薄まる。
+  // 落ちたら落ちたままにする。
+  // 再試行で緑になる層は、緑の意味が薄まる。
   retries: 0,
 
   // 判定の口は pnpm check の一本なので、失敗を握り潰すレポータを挟まない。
@@ -32,7 +33,8 @@ export default defineConfig({
     {
       name: "smoke",
       testDir: "./tests/smoke",
-      // 全画面の地図が入る大きさ。canvas がこの寸法で立つことを判定に使う。
+      // 全画面の地図が入る大きさ。
+      // canvas がこの寸法で立つことを判定に使う。
       use: { viewport: { width: 1280, height: 800 } },
     },
   ],

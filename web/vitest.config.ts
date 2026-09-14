@@ -1,3 +1,8 @@
+/**
+ * vitest の実行設定。
+ * 別名の解決・jsdom・対象ファイルの絞り込みを持ち、各テストの前に走る準備は `vitest-setup.ts` が持つ。
+ */
+
 /// <reference types="vitest" />
 import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";

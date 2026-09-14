@@ -19,7 +19,7 @@ import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
  * 番組全体の Spotify ページ。
  * `links` が空のエピソードは、この URL にフォールバックする。
  *
- * RSS の `<link>` は全エピソードにあるので、通常この URL は表示しない（#13（配信リンクの実測値））。
+ * RSS の `<link>` は全エピソードにあるので、通常この URL は表示しない。
  */
 const SHOW_URL = "https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f";
 

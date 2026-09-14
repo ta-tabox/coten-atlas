@@ -1,15 +1,14 @@
 # HARNESS — 検証と実行環境
 
 何をもって「動いた」と言えるか、どこで動かすか。
-**なぜ**は `VISION.md`（未作成。#41）、**どう**は `ARCHITECTURE.md`、
-**順序**は `ROADMAP.md`、**決定**は `docs/adr/`。
+**なぜ**は `VISION.md`（未作成）、**どう**は `ARCHITECTURE.md`、**順序**は `ROADMAP.md`、**決定**は `docs/adr/`。
 
 ## 1. 検証の層構造
 
 | 層 | 何を見るか | 実体 |
 |---|---|---|
 | **L0 型** | 型が通るか | `tsc --noEmit` |
-| **L1 静的** | 規約・書式・明らかな誤り | `biome ci .` |
+| **L1 静的** | 規約・書式・明らかな誤り・コメントの禁止語 | `biome ci .` と `node scripts/lint-comments.ts` |
 | **L2 ユニット** | 関数とコンポーネントの振る舞いと、`catalog/` の現物がスキーマに合うか | `vitest run`（+ React Testing Library、jsdom） |
 | **L3 ビルド** | static export が実際に吐けるか | `next build` |
 | **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法） | ヘッドレスの Chromium で `out/` を開く（`playwright test`） |
@@ -19,39 +18,29 @@ L0〜L4 は `pnpm check` の一本にまとまっている（下記）。
 番号が指すのはこの連鎖の中の位置で、安い順に並んでいる。
 
 **人間の目視は番号を持たない。** 連鎖に居らず、close も妨げないので、番号を与えると連鎖の続きに見える。
-機械層が増えるたびに末尾がずれて、他の文書からの参照も一緒に腐る。
-issue の完了条件は機械判定（`pnpm check`）と人間の判定に分かれており、後者が待ち行列になると前者まで止まる（`ROADMAP.md`「完了条件は二本に分ける」）。
-
-[ADR-0014](adr/0014-e2e-offline-smoke.md) は人間の目視を L5 と呼んでいる。
-ADR は追記のみで本文を書き換えないので、決定した時点の呼び名がそのまま残る（`docs/adr/README.md` の規約 4）。
+人間の判定が close を妨げない規約は `ROADMAP.md`「完了条件は二本に分ける」が持つ。
 
 `catalog/` の検査が L2 に居るのは、検査器が `web/src/lib/schema/` の zod スキーマそのもので、それを保証するのが同じ層の反例テストだから。
-層を分けると、赤が出たときに「データが壊れている」のか「スキーマが壊れている」のかを人間が切り分けることになる。
-型検査は `catalog/` を見ない（`tsconfig.json` の `include` が `web/` 配下しか見ない）ので、ここで拾わないとどの層にも掛からない。
 `catalog/` の検査は `web/tests/catalog.test.ts` で、ファイル名が `*.test.ts` なので `pnpm test` が拾う。
 足すと同じ検査が二度走るので、連鎖へ別の段としては足さない。
 `pnpm validate:catalog` はその 1 本だけを名指す切り分け用で、「これが緑なら閉じてよい」と言えるのは変わらず `pnpm check` だけである。
 
-L3 を層に持つのは static export の性質による。ビルド時にしか壊れない失敗があり、
-L0〜L2 だけでは PR が緑のまま公開が落ちる。
+L3 を層に持つのは、static export にビルド時にしか壊れない失敗があり、L0〜L2 だけでは PR が緑のまま公開が落ちるためである。
 
-L4 を層に持つのは、L3 までがどれも「配信物へ実際に到達できるか」を見ないため。
-ビルドが通っても worker やアセットが 404 になり、地図だけが描画されない形が実際に起きた
-（PR #60。決定は [ADR-0014](adr/0014-e2e-offline-smoke.md)）。
+L4 を層に持つのは、L3 までがどれも「配信物へ実際に到達できるか」を見ないためである。
 守らせるのは自足の一点で、外部への通信は遮断する。
 
 ## 2. 判定の口
 
 **`pnpm check` の一本**。中身は L0 → L1 → L2 → L3 → L4 の順で、安いものから落とす。
-アプリは `web/` 配下なので（#39）、**打つ場所も `web/` の中**。
+アプリは `web/` 配下なので、**打つ場所も `web/` の中**。
 
 ```
 cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next build → smoke
 ```
 
-L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next build` の出力だから。
-その前には置けない。
-ブラウザを立てるのは L4 だけで、回すのは Playwright である（[ADR-0016](adr/0016-playwright-runner.md)）。
+L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next build` の出力だからである。
+ブラウザを立てるのは L4 だけで、回すのは Playwright である。
 スモークは project `smoke`（`web/tests/smoke/`）で、`pnpm smoke` がそれを名指す。
 操作を伴う E2E を足すときは project をもう一つ並べるので、スモークの範囲は動かない。
 
@@ -67,20 +56,14 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 - **赤のままコミットしない。** 回し方は「`pnpm check` → 緑ならコミット」
 - 口を増やさない。切り分けのために個別スクリプトを単体で叩くのは構わないが、
   「これが緑なら閉じてよい」と言えるのは `pnpm check` だけ
-- 決定と理由は [ADR-0009](adr/0009-pnpm-check.md)（[ADR-0002](adr/0002-mise-run-check.md) を supersede）
+- 機械判定を `pnpm check` の一本にする理由は [ADR-0045](adr/0045-pnpm-check-current-form.md) が持つ
 - CI も同じ一本を回す（`.github/workflows/check.yml`）
 
 ランタイムの版は `mise.toml` の `[tools]` が固定する（node / pnpm）。
 固定を立てずに走らせると、手元と CI と意味が揃わない。
 
-タスクは `package.json` の scripts が持つ（その `package.json` は `web/` にあるので、
-打つ場所も `web/` の中）。`mise.toml` はルートに残って `[tools]` だけを持ち、
-`run = "pnpm check"` の薄いラッパは置かない——口が一本に見えて二本ある状態が、
-そもそも避けようとしたもの。理由と範囲は ADR-0009。
-
-**これは踏襲元の既定からの逸脱ではない。** 決定した 2026-08-25 の時点では既定が
-「タスクランナー = mise tasks」だったので逸脱として記録していたが、2026-08-26 の
-改定で「タスクランナー = その言語のマニフェスト」へ変わり、逸脱の状態は解消した。
+タスクは `web/package.json` の scripts が持つので、打つ場所も `web/` の中である。
+`mise.toml` はルートに残って `[tools]` だけを持ち、`run = "pnpm check"` の薄いラッパは置かない。
 
 ### 到達テスト
 
@@ -101,7 +84,9 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 - **再レビューが要るなら PR コメントで `@claude` を名指しする**（起動するのは `claude.yml` の側）。
   人間が `ready_for_review` か再オープンで掛け直す手もあるが、そちらは人間の操作である
 - **歴史の裏どり（`claude-history-review.yml`）は自動では走らない**。
-  `@historian` を含むコメントだけが起動する（[ADR-0035](adr/0035-history-review-lane.md)）
+  `@historian` を含むコメントだけが起動する
+- **`Lint PR body`（`lint-pr-body.yml`）は PR を開いた回と本文を編集した回に走る**。
+  PR 本文の禁止語を `scripts/lint-vocabulary.sh` で報告する（語の正は `.claude/rules/writing.md`「語彙と読み手」節の表）
 
 ### レビューを掛け直す
 
@@ -124,7 +109,7 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
 ### 歴史の裏どりを呼ぶ
 
 `catalog/series.json` の `timeRange` と `catalog/loci.geojson` の座標は人手で決める値で、生没年が 50 年ずれていても `pnpm check` は緑になる。
-裏どりは三本目のワークフロー（`claude-history-review.yml`）が担い、コードのレビューとは別の起動語で呼ぶ（[ADR-0035](adr/0035-history-review-lane.md)）。
+裏どりは三本目のワークフロー（`claude-history-review.yml`）が担い、コードのレビューとは別の起動語で呼ぶ（分ける理由は [ADR-0035](adr/0035-history-review-lane.md)）。
 
 - `gh pr comment <PR番号> --body "@historian この 6 件の timeRange と代表点を裏どりして"` で呼ぶ。
   issue コメントでも同じように起動するので、`catalog/` へ載せる前に対象表へ対して呼べる
@@ -171,15 +156,13 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 ## 4. コンテナの外向き通信
 
 リモートのコンテナは外向き通信が許可制で、**環境側から塞ぐ手段が無い**。
-このリポジトリが引き受けている手元との差は次の4件で、
-いずれも**リモートでは未検証**（egress の実測は人間が環境を立ててから）。
+このリポジトリが引き受けている手元との差は次の4件で、いずれも**リモートでは未検証**である。
 
 - **`mise.run`** — 出られないので、フックは mise を npm から入れる。
-  mise が要るのは**ランタイム版管理のため**——`mise.toml` が固定した node と pnpm を
-  立てないと、コンテナ同梱の版で `pnpm check` が走ってしまい、手元と CI と意味が揃わない
+  mise が要るのは、`mise.toml` が固定した node と pnpm を立てるためである（§3）
 - **`https://tiles.openfreemap.org`** — ベースマップのタイル。ブラウザプレビューから引く先。
   出られなければ地図の見た目はリモートで確認できない
-- **`https://anchor.fm/...`** — RSS（S6 の同期）。出られなければ同期スクリプトはリモートで動かない
+- **`https://anchor.fm/...`** — RSS（`pnpm sync` の取得先）。出られなければ同期スクリプトはリモートで動かない
 - **Playwright の配信元** — L4 のスモークが立てる Chromium のバイナリ。
   出られなければブラウザを入れられず、リモートでは `pnpm check` がスモークで落ちる
 
@@ -190,6 +173,10 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | `.claude/settings.json` | 権限（`permissions`）・`SessionStart` の配線 |
 | `.claude/hooks/session-start.sh` | リモートの環境準備（mise の導入・ランタイム・依存・shims の PATH の受け渡し） |
 | `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
+| `.githooks/commit-msg` | コミット本文の禁止語を commit の前で止める git フック |
+| `scripts/lint-vocabulary.sh` | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る |
+| `.github/workflows/lint-pr-body.yml` | PR 本文の禁止語を CI で報告する |
+| `.coding-standards-vocab-allow` | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語） |
 | クラウド環境の環境変数欄 | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義） |
 | `.claude/skills/` | 同梱の規約 skill。プラグインを入れていないので本体を置いてある。`karpathy-guidelines` は外部由来（出所 https://github.com/multica-ai/andrej-karpathy-skills の `skills/karpathy-guidelines/SKILL.md`、固定 2c60614、MIT。上流の更新は手で取り込む） |
 | `mise.toml`（ルート） | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む |
@@ -198,16 +185,19 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 リモートで効かせたい設定はリポジトリに置く。
 名義のようにリポジトリへ置けないものだけがクラウド環境の環境変数欄へ行く。
 
+`.githooks/commit-msg` は git の既定の `.git/hooks/` に無いので、クローンごとに `git config core.hooksPath .githooks` で有効にする。
+リモートでは `session-start.sh` がこの設定を入れる。
+
 ## 6. 意図的にやらないこと
 
 - **E2E で地図の絵を検証しない**。ヘッドレスでも描画そのものは出るが、絵を判定するには
   実タイルかそのフィクスチャが要る。L4 が守るのは配信物が自足していることまでで、
-  見た目は人間の目視に残す（[ADR-0014](adr/0014-e2e-offline-smoke.md)）
+  見た目は人間の目視に残す
 - **実 API を自動テストで叩かない**。RSS もタイルサーバも外部の可用性に依存するので、
   テストが外部の都合で赤くなる。取得層はフィクスチャで検証する。
   L4 のスモークも同じで、タイルサーバへの通信は遮断してスタイルだけを合成のもので返す。
   到達テストはこの規則の対象外とする。
   検証の対象が配信された実物そのものなので、配信された実物へ到達できないことは外部の都合ではなく、この検査が検出したい事故そのものに当たる
-- **`claude.yml` の `on:` を絞らない**。起動の絞りは job 側の `if:` の一本
-  （[ADR-0010](adr/0010-gh-review-trigger-narrowing.md)）。run 一覧に `skipped` が
-  並ぶのは正常なので、異常と読んで調べ直さない
+- **`claude.yml` の `on:` を絞らない**。
+  起動の絞りは job 側の `if:` の一本で、`on:` を絞らない理由は [ADR-0010](adr/0010-gh-review-trigger-narrowing.md) が持つ。
+  run 一覧に `skipped` が並ぶのは正常なので、異常と読んで調べ直さない

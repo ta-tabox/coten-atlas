@@ -7,7 +7,7 @@
  * 窓もシリーズの `timeRange` も、両端の年を含む範囲として比べる。
  *
  * 位置と年の対応は `scale.ts` に置き、描画（React・MapLibre）はどちらのモジュールにも置かない。
- * 窓の幅・重なり率の分母・重なり率から濃さへの変換を変えるときは、採らなかった案とその理由を `docs/adr/0038-era-space-window.md` で先に確かめる。
+ * 窓の幅・重なり率の分母・重なり率から濃さへの変換を選んだ理由は `docs/adr/0038-era-space-window.md` が持つ。
  */
 
 import { type EraSpacePosition, positionToYear } from "@/lib/era/scale";
@@ -72,10 +72,10 @@ export function currentWindow({
 
 /**
  * `window` と `timeRange` が重なる年数の割合を、0..1 で返す。
+ * 重なる年が 1 年も無ければ 0 を返す。
  *
  * どちらも両端を含む閉区間なので、年数は `end - start + 1` で数える。
  * 分母は `window` と `timeRange` のうち年数が短い方なので、1 年のシリーズが `window` に収まれば 1 を、`window` を覆い尽くすシリーズも 1 を返す。
- * 重なる年が 1 年も無ければ 0 を返す。
  */
 export function overlapRatio(
   window: CurrentWindow,

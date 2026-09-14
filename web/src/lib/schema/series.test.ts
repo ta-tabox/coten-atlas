@@ -90,7 +90,7 @@ describe("seriesListSchema", () => {
   });
 });
 
-describe("ADR-0044 が決めた語彙の検査", () => {
+describe("手で書く欄の語彙の検査", () => {
   it("一覧に無い region を拒否する", () => {
     const result = seriesListSchema.safeParse([
       seriesWith({ region: "ギリシア" }),

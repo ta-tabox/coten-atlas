@@ -1,15 +1,16 @@
 /**
  * 事物とシリーズを突き合わせて、地図の source へ渡す形を組む。
  *
- * 代表点の `timeRange` は `TIME_RANGE_OF_SERIES` のままなので、`seriesId` でシリーズを取得して年を写す（docs/adr/0027-series-and-loci.md）。
+ * 代表点の `timeRange` は `TIME_RANGE_OF_SERIES` のままなので、`seriesId` でシリーズを取得して年を写す。
  * 写すのは properties だけで、geometry は触らない。
- * `catalog/` の形は動かさない（docs/adr/0024-map-feature-carries-key-only.md）。
+ * `catalog/` の形は動かさない。
+ * 動かさない理由は docs/adr/0024-map-feature-carries-key-only.md が持つ。
  *
  * 年は `timeStart` / `timeEnd` の 2 欄へ潰して持つ。
- * MapLibre は GeoJSON source の properties から string と数値しか返さないので、平らにしておけば地図から読み戻す経路（S4 の opacity 制御）が後から生えても壊れない（同 ADR）。
+ * MapLibre は GeoJSON source の properties から string と数値しか返さないので、年を配列やオブジェクトで持つと地図のイベントから読み戻せない。
  *
  * 位置なしのシリーズはここに現れない。
- * 事物を 1 件も持たないので、走査する側の判定が要らない（docs/adr/0026-two-phase-location.md）。
+ * 事物を 1 件も持たないので、走査する側の判定が要らない。
  */
 
 import type { Locus, LocusCollection } from "@/lib/schema/locus";

@@ -14,6 +14,7 @@ import type { CurrentWindow } from "@/lib/era/window";
 import type { MapLocusCollection } from "@/lib/map/loci";
 import { seriesCircleLayerIn } from "@/lib/map/series-layer";
 
+/** `react-map-gl/maplibre` の `Layer` と差し替えるモック関数で、受け取った props を記録して null を返す。 */
 const layer = vi.hoisted(() => vi.fn<(props: LayerProps) => null>(() => null));
 
 vi.mock("react-map-gl/maplibre", () => ({

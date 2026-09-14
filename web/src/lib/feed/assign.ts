@@ -1,11 +1,11 @@
 /**
  * フィードの 1 件が、どのシリーズの回かを決める。
  *
- * 割当キーは `itunes:season` だけである（docs/adr/0018-season-as-assignment-key.md）。
+ * 割当キーは `itunes:season` だけである。
  * タイトルからシリーズ名を取り出して当てにいかない。
  * `【COTEN RADIO ○○編N】` が基本形だが、`編` が無い回・前後編の回・開き `【` が欠落した回があり、正規表現は必ず取りこぼす。
  *
- * 当たらなかった回は未割当のまま残り、人間が `series.json` を足して引き受ける（docs/adr/0029-two-layer-data-without-inbox.md）。
+ * 当たらなかった回は未割当のまま残り、人間が `series.json` を足して引き受ける。
  * 機械で拾えないものをここで推測しない。
  *
  * 入口は assignSeriesId。
@@ -60,8 +60,6 @@ export function assignSeriesId(
  * season からシリーズの id を引く索引。
  *
  * season がシリーズ間で一意であることは `seriesListSchema` が見ているので、ここで衝突を数え直さない。
- * 索引は呼ばれるたびに組み直す。
- * シリーズは 66 件で、同期は 1 日に 1 度しか走らない。
  */
 function seasonIndexOf(series: SeriesList): Map<number, string> {
   return new Map(series.map(({ season, id }) => [season, id]));

@@ -1,7 +1,7 @@
 /**
  * シリーズを描くレイヤの定義。
  *
- * 第一段階の geometry は Point だけなので、レイヤは circle の 1 本で足りる（docs/adr/0026-two-phase-location.md）。
+ * 第一段階の geometry は Point だけなので、レイヤは circle の 1 本で足りる。
  * `['geometry-type']` で図形を分ける枝は第二段階まで無い。
  *
  * 不透明度は、era スライダーの現在窓から求めた事物ごとの濃さだけで決まり、シリーズの属性で濃さを変えない。
@@ -9,7 +9,7 @@
  * 書き直さない理由は docs/adr/0043-era-fade-window-only.md が持つ。
  *
  * 色は MapLibre のスタイル式が読むので、Tailwind のトークンでなく生の値を置く。
- * 地図の中で閉じる指定であって、overlay の見た目とは別物である（docs/adr/0022-map-dom-boundary.md）。
+ * 地図の中で閉じる指定であって、overlay の見た目とは別物である。
  */
 
 import type { ExpressionSpecification } from "maplibre-gl";
