@@ -3,6 +3,7 @@
  * 検証するのは props の受け渡しであって、地図の描画ではない。
  *
  * モックは children を描画しないので、子コンポーネントの有無は MapLibreMap が受け取った `children` で判定する。
+ * モックは受け取った `ref` に `flyTo` だけを持つ地図を入れるので、カメラの移動は `flyTo` の呼び出しで判定する。
  */
 
 import { act, render } from "@testing-library/react";
@@ -10,14 +11,21 @@ import {
   Children,
   type ComponentProps,
   isValidElement,
+  type JSXElementConstructor,
   type ReactNode,
+  type Ref,
 } from "react";
-import type { MapLayerMouseEvent, MapProps } from "react-map-gl/maplibre";
+import type {
+  MapLayerMouseEvent,
+  MapProps,
+  MapRef,
+} from "react-map-gl/maplibre";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import EraSlider from "@/components/EraSlider";
 import MapCanvas from "@/components/MapCanvas";
 import SeriesDetailCard from "@/components/SeriesDetailCard";
 import SeriesLayers from "@/components/SeriesLayers";
+import SeriesPanel from "@/components/SeriesPanel";
 import { currentWindow } from "@/lib/era/window";
 import {
   BASEMAP_STYLE_URL,
@@ -26,11 +34,34 @@ import {
 } from "@/lib/map/config";
 import type { MapLocusCollection } from "@/lib/map/loci";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
+import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import type { EraList } from "@/lib/schema/era";
-import type { Series, SeriesList } from "@/lib/schema/series";
+import {
+  ANCHOR_UNLOCATED,
+  type Series,
+  type SeriesList,
+  TIME_RANGE_UNTIMED,
+} from "@/lib/schema/series";
 
-/** `react-map-gl/maplibre` の既定の export と差し替えるモック関数で、受け取った props を記録して null を返す。 */
-const map = vi.hoisted(() => vi.fn<(props: MapProps) => null>(() => null));
+/** MapLibreMap のモックが受け取る props。 */
+type MockMapProps = MapProps & { ref?: Ref<MapRef> };
+
+/** MapLibreMap のモックが `ref` に入れる地図の `flyTo`。 */
+const flyTo = vi.hoisted(() => vi.fn());
+
+/**
+ * `react-map-gl/maplibre` の既定の export と差し替えるモック関数。
+ * 受け取った props を記録し、`ref` がオブジェクトなら `flyTo` だけを持つ地図を入れて、null を返す。
+ */
+const map = vi.hoisted(() =>
+  vi.fn<(props: MockMapProps) => null>((props) => {
+    if (typeof props.ref === "object" && props.ref !== null) {
+      props.ref.current = { flyTo } as unknown as MapRef;
+    }
+
+    return null;
+  }),
+);
 
 vi.mock("react-map-gl/maplibre", () => ({ default: map }));
 
@@ -41,11 +72,25 @@ vi.mock("@/lib/episodes", () => ({
   episodesForSeries: () => [],
 }));
 
-/**
- * 地図に渡す `Locus` の全件。
- * MapCanvas は中身を読まずに SeriesLayers へ渡すだけなので、空配列で足りる。
- */
-const LOCI: MapLocusCollection = { type: "FeatureCollection", features: [] };
+/** スパルタの代表点の座標。 */
+const SPARTA_COORDINATES: [number, number] = [22.43, 37.08];
+
+/** スパルタの代表点 1 件だけを持つ、地図に渡す `Locus` の全件。 */
+const LOCI: MapLocusCollection = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      geometry: { type: "Point", coordinates: SPARTA_COORDINATES },
+      properties: {
+        id: "sparta-city",
+        seriesId: "sparta",
+        timeStart: -900,
+        timeEnd: -200,
+      },
+    },
+  ],
+};
 
 const SPARTA: Series = {
   id: "sparta",
@@ -59,7 +104,19 @@ const SPARTA: Series = {
   tags: ["集団"],
 };
 
-const SERIES: SeriesList = [SPARTA];
+/** 位置なしで時期を持たないシリーズ。 */
+const OKANE: Series = {
+  ...SPARTA,
+  id: "okane-no-rekishi",
+  title: "お金の歴史",
+  anchor: ANCHOR_UNLOCATED,
+  timeRange: TIME_RANGE_UNTIMED,
+  region: "地域なし",
+  season: 12,
+  tags: ["経済", "概念史"],
+};
+
+const SERIES: SeriesList = [SPARTA, OKANE];
 
 /**
  * 3 区間の時代区分。
@@ -86,7 +143,7 @@ function renderMapCanvas(eras: EraList = ERAS): void {
 }
 
 /** 直近のレンダリングで MapLibreMap が受け取った props を返す。 */
-function lastProps(): MapProps {
+function lastProps(): MockMapProps {
   const [props] = map.mock.calls[map.mock.calls.length - 1];
 
   return props;
@@ -103,17 +160,32 @@ function childOfType(type: unknown): ReactNode | undefined {
 }
 
 /**
- * 地図の children にある EraSlider の props を返す。
- * EraSlider が無ければ throw する。
+ * 地図の children にある `type` の要素の props を返す。
+ * `type` の要素が無ければ throw する。
  */
-function eraSliderProps(): ComponentProps<typeof EraSlider> {
-  const slider = childOfType(EraSlider);
+function childPropsOf<P extends object>(type: JSXElementConstructor<P>): P {
+  const child = childOfType(type);
 
-  if (!isValidElement<ComponentProps<typeof EraSlider>>(slider)) {
-    throw new Error("地図の children に EraSlider が無い");
+  if (!isValidElement<P>(child)) {
+    throw new Error(`地図の children に ${type.name} が無い`);
   }
 
-  return slider.props;
+  return child.props;
+}
+
+/** 地図の children にある EraSlider の props を返す。 */
+function eraSliderProps(): ComponentProps<typeof EraSlider> {
+  return childPropsOf(EraSlider);
+}
+
+/** 地図の children にある SeriesPanel の props を返す。 */
+function seriesPanelProps(): ComponentProps<typeof SeriesPanel> {
+  return childPropsOf(SeriesPanel);
+}
+
+/** 地図の children にある SeriesLayers の props を返す。 */
+function seriesLayersProps(): ComponentProps<typeof SeriesLayers> {
+  return childPropsOf(SeriesLayers);
 }
 
 /**
@@ -134,6 +206,7 @@ function mouseEventOnBlank(): MapLayerMouseEvent {
 describe("MapCanvas", () => {
   beforeEach(() => {
     map.mockClear();
+    flyTo.mockClear();
   });
 
   it("OpenFreeMap のスタイルと初期表示位置を渡す", () => {
@@ -252,5 +325,103 @@ describe("MapCanvas", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
 
     expect(() => renderMapCanvas(ERAS.slice(2))).toThrow("ancient");
+  });
+
+  it("スライダーの現在窓で分けた区画を、一覧パネルへ渡す", () => {
+    renderMapCanvas();
+
+    act(() => eraSliderProps().onPositionChange(0.9));
+
+    expect(seriesPanelProps().sections).toEqual(
+      seriesPanelSectionsOf({
+        series: SERIES,
+        loci: LOCI,
+        currentWindow: currentWindow({
+          position: 0.9,
+          eras: ERAS,
+          presentEnd: PRESENT_END,
+        }),
+      }),
+    );
+  });
+
+  it("選択が無いうちは、一覧パネルとシリーズのレイヤへ null を渡す", () => {
+    renderMapCanvas();
+
+    expect(seriesPanelProps().selectedSeriesId).toBeNull();
+    expect(seriesLayersProps().selectedSeriesId).toBeNull();
+  });
+
+  it("事物のクリックで選んだシリーズの id を、一覧パネルとシリーズのレイヤへ渡す", () => {
+    renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    expect(seriesPanelProps().selectedSeriesId).toBe("sparta");
+    expect(seriesLayersProps().selectedSeriesId).toBe("sparta");
+  });
+
+  it("一覧パネルで選んだシリーズを、詳細カードへ渡し、シリーズのレイヤと一覧パネルへ同じ id で渡す", () => {
+    renderMapCanvas();
+
+    act(() => seriesPanelProps().onSelect("sparta"));
+
+    expect(childOfType(SeriesDetailCard)).toMatchObject({
+      props: { series: SPARTA },
+    });
+    expect(seriesLayersProps().selectedSeriesId).toBe("sparta");
+    expect(seriesPanelProps().selectedSeriesId).toBe("sparta");
+  });
+
+  it("一覧パネルで選んだ後に事物の無い所をクリックすると、一覧パネルの選択も外れる", () => {
+    renderMapCanvas();
+
+    act(() => seriesPanelProps().onSelect("sparta"));
+    act(() => lastProps().onClick?.(mouseEventOnBlank()));
+
+    expect(seriesPanelProps().selectedSeriesId).toBeNull();
+  });
+
+  it("詳細カードを閉じると、一覧パネルとシリーズのレイヤの選択も外れる", () => {
+    renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+    act(() =>
+      childPropsOf<ComponentProps<typeof SeriesDetailCard>>(
+        SeriesDetailCard,
+      ).onClose(),
+    );
+
+    expect(seriesPanelProps().selectedSeriesId).toBeNull();
+    expect(seriesLayersProps().selectedSeriesId).toBeNull();
+  });
+
+  it("一覧パネルで代表点を持つシリーズを選ぶと、その代表点へ flyTo する", () => {
+    renderMapCanvas();
+
+    act(() => seriesPanelProps().onSelect("sparta"));
+
+    expect(flyTo).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ center: SPARTA_COORDINATES }),
+    );
+  });
+
+  it("一覧パネルで位置なしのシリーズを選んでも flyTo しない", () => {
+    renderMapCanvas();
+
+    act(() => seriesPanelProps().onSelect("okane-no-rekishi"));
+
+    expect(childOfType(SeriesDetailCard)).toMatchObject({
+      props: { series: OKANE },
+    });
+    expect(flyTo).not.toHaveBeenCalled();
+  });
+
+  it("事物のクリックで選んでも flyTo しない", () => {
+    renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    expect(flyTo).not.toHaveBeenCalled();
   });
 });

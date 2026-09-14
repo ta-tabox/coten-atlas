@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * ベースマップを画面いっぱいに描き、その上へシリーズのレイヤ・era スライダー・詳細カードを載せる。
+ * ベースマップを画面いっぱいに描き、その上へシリーズのレイヤ・一覧パネル・era スライダー・詳細カードを載せる。
  *
  * 選択されたシリーズを保持するのは、このコンポーネントの `selectedSeriesId` だけである。
- * S5（一覧パネルとの双方向同期）が同じ state を読むので、子コンポーネントに複製すると同期が state の突き合わせになる。
- * 位置を読む `SeriesLayers` と `EraSlider` はどちらも `MapLibreMap` の子で、`page.tsx` との間に client wrapper を挟んでも位置はこのコンポーネントを props で通り抜けるだけなので、era スライダーの位置 `eraPosition` もこのコンポーネントに置く。
+ * 地図のクリックと `SeriesPanel` のクリックが同じ state を書き、`SeriesLayers`・`SeriesPanel`・`SeriesDetailCard` が同じ state を読むので、子コンポーネントに複製すると同期が state の突き合わせになる。
+ * 位置を読む `SeriesLayers`・`SeriesPanel`・`EraSlider` はどれも `MapLibreMap` の子で、`page.tsx` との間に client wrapper を挟んでも位置はこのコンポーネントを props で通り抜けるだけなので、era スライダーの位置 `eraPosition` もこのコンポーネントに置く。
  *
  * エピソードはマウント直後に `fetchEpisodes` で取得する（docs/ARCHITECTURE.md §3「配り方」）。
  * `SeriesDetailCard` を開いてから取得を始めると、クリックのたびに 750 件を超える JSON の到着を待つ。
@@ -23,12 +23,13 @@
  * 地図の上に置くものは React 側の overlay として書く。
  */
 
-import { useEffect, useState } from "react";
-import type { MapLayerMouseEvent } from "react-map-gl/maplibre";
+import { useEffect, useRef, useState } from "react";
+import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import EraSlider from "@/components/EraSlider";
 import SeriesDetailCard from "@/components/SeriesDetailCard";
 import SeriesLayers from "@/components/SeriesLayers";
+import SeriesPanel from "@/components/SeriesPanel";
 import {
   type EpisodesState,
   episodesForSeries,
@@ -40,8 +41,9 @@ import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
 } from "@/lib/map/config";
-import type { MapLocusCollection } from "@/lib/map/loci";
+import { findAnchorLocus, type MapLocusCollection } from "@/lib/map/loci";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
+import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import type { EraList } from "@/lib/schema/era";
 import type { Series, SeriesList } from "@/lib/schema/series";
 
@@ -50,6 +52,12 @@ import type { Series, SeriesList } from "@/lib/schema/series";
  * 古代を選んだ理由は docs/adr/0043-era-fade-window-only.md が持つ。
  */
 const INITIAL_ERA_ID = "ancient";
+
+/**
+ * 一覧パネルで選んだシリーズの代表点へ、カメラを移すのにかける時間（ミリ秒）。
+ * 地図の縮尺は変えず、中心だけを移す。
+ */
+const FLY_TO_DURATION_MS = 1200;
 
 type MapCanvasProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */
@@ -110,13 +118,14 @@ function initialEraPositionOf(eras: EraList): number {
   return (index + 0.5) / eras.length;
 }
 
-/** ベースマップの上に、`loci` の代表点・`eras` の era スライダー・クリックで選択した `series` の詳細カードを重ねて描く。 */
+/** ベースマップの上に、`loci` の代表点・`series` の一覧パネル・`eras` の era スライダー・選択した `series` の詳細カードを重ねて描く。 */
 export default function MapCanvas({
   loci,
   series,
   eras,
   presentEnd,
 }: MapCanvasProps) {
+  const mapRef = useRef<MapRef>(null);
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
   const [eraPosition, setEraPosition] = useState(() =>
     initialEraPositionOf(eras),
@@ -143,9 +152,33 @@ export default function MapCanvas({
   // find の undefined をそのまま保持すると、同じ状態が null と undefined の 2 通りで表れる。
   const selectedSeries: Series | null =
     series.find((one) => one.id === selectedSeriesId) ?? null;
+  const eraWindow = currentWindow({ position: eraPosition, eras, presentEnd });
+
+  /**
+   * 一覧パネルでクリックされた `seriesId` のシリーズを選択し、代表点を持つならその代表点へカメラを移す。
+   *
+   * 地図のクリックで選んだ事物は既に画面に在るので、`flyTo` を呼ぶのはパネルからの選択だけにする。
+   */
+  function selectFromPanel(seriesId: string): void {
+    setSelectedSeriesId(seriesId);
+
+    const clicked = series.find((one) => one.id === seriesId);
+    const anchor =
+      clicked === undefined ? undefined : findAnchorLocus(loci, clicked);
+
+    if (anchor === undefined) {
+      return;
+    }
+
+    mapRef.current?.flyTo({
+      center: anchor.geometry.coordinates,
+      duration: FLY_TO_DURATION_MS,
+    });
+  }
 
   return (
     <MapLibreMap
+      ref={mapRef}
       mapStyle={BASEMAP_STYLE_URL}
       initialViewState={INITIAL_VIEW_STATE}
       workerUrl={MAP_WORKER_URL}
@@ -160,11 +193,17 @@ export default function MapCanvas({
     >
       <SeriesLayers
         loci={loci}
-        currentWindow={currentWindow({
-          position: eraPosition,
-          eras,
-          presentEnd,
+        currentWindow={eraWindow}
+        selectedSeriesId={selectedSeriesId}
+      />
+      <SeriesPanel
+        sections={seriesPanelSectionsOf({
+          series,
+          loci,
+          currentWindow: eraWindow,
         })}
+        selectedSeriesId={selectedSeriesId}
+        onSelect={selectFromPanel}
       />
       <EraSlider
         eras={eras}
