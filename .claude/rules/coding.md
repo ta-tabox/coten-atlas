@@ -2,7 +2,7 @@
 paths:
   - "**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}"
   - "**/*.{py,sh,bash,zsh,fish}"
-  - "**/*.{sql,go,rs,rb,java,kt,vue,svelte}"
+  - "**/*.{sql,go,rs,rb,java,kt,vue,svelte,prisma}"
 ---
 
 # コーディング規約（核）
@@ -61,7 +61,7 @@ Clean Code / リーダブルコード / 良いコード悪いコードの交差�
 - 物は識別子で名指しする。
   関数・変数・環境変数・テーブル・ファイルはその名をバッククォートで書き、言い換えない。
   主体をぼかす「〜の側」（「規約の側が決める」）も使わない
-- 使わない語の一覧は skill `coding-standards`「語彙」節が持ち、`scripts/lint-comments.ts` が検出する。
+- 使わない語の一覧は `writing.md`「語彙と読み手」節が持ち、`scripts/lint-comments.ts` の `comments/noBannedWord` が検出する。
   語はリポジトリごとに変わるので、核はこの一覧を持たない
 - 主語・目的語・失敗の形を省かない。
   「未設定なら落とす」でなく「`TOIITO_SINGLE_USER_EMAIL` が未設定なら throw する」。
@@ -73,7 +73,7 @@ Clean Code / リーダブルコード / 良いコード悪いコードの交差�
   書き手はどの行にも誤りを一つ作れるので、書く側は上の上限と読者の定義で止める
 - いま成立している制約・前提・単位だけを書く。
   過去（経緯・不採用案）は ADR、未来（移行予定）は issue。
-  経緯が今も効くなら、出来事でなく現在の禁止則へ畳む
+  経緯が今も効くなら、出来事でなく現在の禁止則として書く
 
 ## 余白と密度
 - 論理ブロックごとに空行を入れる（PEP 8 の vertical whitespace 規約に準拠。言語を問わず適用）。
