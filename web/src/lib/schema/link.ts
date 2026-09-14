@@ -28,8 +28,7 @@ export const linkSchema = z.strictObject({
  * 一つのシリーズ、または一つのエピソードが持つ配信リンク全部。
  *
  * 同じ基盤のリンクを 2 本持てない。
- * 読み出す側は `links.find((link) => link.platform === "spotify")` の形で 1 本を取り出す想定で、詳細カードの「Spotify で聴く」がその 1 本を指す。
- * 2 本あると、どちらがボタンに出るかが `find` の走査順という実装の都合で決まってしまう。
+ * 詳細カードの「Spotify で聴く」は `links.find((link) => link.platform === "spotify")` の形で 1 本を取り出すので、2 本あるとボタンに出る 1 本が配列の並び順で決まる。
  */
 export const linksSchema = z.array(linkSchema).superRefine((links, ctx) => {
   const platforms = links.map((link) => link.platform);

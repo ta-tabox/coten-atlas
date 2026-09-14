@@ -162,15 +162,11 @@ function decodePathname(pathname: string): string | null {
 }
 
 /**
- * 配信してよいファイルの絶対パスを出す。
- * 配信してはいけないものは null。
+ * 配信側のパス `url` を、ファイル側のディレクトリ `root`（`out/` の実体）の中の絶対パスへ解決して返す。
+ * `url` をデコードできないか、`BASE_PATH` の下に無いか、`root` の外を指すなら null を返す。
  *
  * **この関数の役目はパストラバーサルを止めること**。
  * `path.join` も `path.resolve` も `..` を正規化するだけで root の外へ出ることは防がないので、素通しにすると `/coten-atlas/../../../etc/hosts` が root の外のファイルを配信する。
- *
- * 引数は別々の空間を指す。
- * `url` は配信側のパスで `BASE_PATH` を接頭辞に持ち、`root` はファイル側のディレクトリ（`out/` の実体）である。
- * ここがその二つを繋ぐ唯一の場所なので、境界の判定も全部ここへ置く。
  */
 export function resolveWithinRoot(root: string, url: string): string | null {
   const decoded = decodePathname(url.split("?")[0]);
@@ -203,14 +199,9 @@ export function resolveWithinRoot(root: string, url: string): string | null {
 }
 
 /**
- * `out/` を BASE_PATH の下へ配信するサーバを立て、待ち受けが始まるまで待つ。
- *
- * 返す Promise が解決するのは listen が始まった時点で、リクエストが来たときではない。
- * サーバは閉じるまで動き続け、ページが要求する HTML・JS・CSS・worker を何度でも返す。
- * 閉じるのは observe の finally。
- *
- * ポートは 0 を渡して OS に選ばせる。
- * 固定すると、その番号が塞がっている環境でスモークが立たない。
+ * `root`（`out/` の実体）を BASE_PATH の下へ配信するサーバを立て、待ち受けが始まった時点でそのサーバを返す。
+ * ポートは OS が選んだ空きポートで、番号は `portOf` で取得する。
+ * サーバは呼び手が閉じるまで動き続け、ページが要求する HTML・JS・CSS・worker を何度でも返す。
  *
  * **待ち受けはループバックだけに閉じる**。
  * host を渡さないと全インターフェースへ bind し、同じネットワークに繋がっている別のホストからこのサーバを叩けてしまう。
