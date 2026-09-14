@@ -4,7 +4,7 @@
  * シリーズを地図の上の見えるものにするレイヤ群。
  *
  * source と layer の対だけを置き、地図そのものは持たない。
- * 置く先は `MapCanvas` の子で、react-map-gl は親の地図を context から引く。
+ * 置く先は `MapCanvas` の子で、react-map-gl は親の地図を context から取得する。
  *
  * 渡す形を組むのは `@/lib/map/loci` である。
  * ここは組み終わった値を source へ載せるだけで、シリーズを引き直さない。
