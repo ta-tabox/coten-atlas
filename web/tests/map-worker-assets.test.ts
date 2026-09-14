@@ -19,6 +19,10 @@ const packagedWorker = fileURLToPath(
   ),
 );
 
+/**
+ * `filePath` のファイルを読み、`from "./…"` の形で書かれた相対 import の指定子を出現順に返す。
+ * 相対 import が無ければ空配列を返す。
+ */
 function relativeImportsOf(filePath: string): string[] {
   const source = readFileSync(filePath, "utf8");
 

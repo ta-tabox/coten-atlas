@@ -16,6 +16,7 @@ import { loadEras, loadLoci, loadSeries } from "@/lib/catalog-dir";
 import { presentEndOf } from "@/lib/era/scale";
 import { toMapLoci } from "@/lib/map/loci";
 
+/** `catalog/` から読んだシリーズ・事物・時代区分とビルドした時点の年を `MapCanvas` へ渡し、地図のトップページを描く。 */
 export default function Page() {
   const series = loadSeries();
 

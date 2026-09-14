@@ -247,6 +247,10 @@ function serveExport(root: string): Promise<http.Server> {
   );
 }
 
+/**
+ * `server` が待ち受けている TCP のポート番号を返す。
+ * 待ち受けが始まっていないか、パイプで待ち受けていてポート番号が無ければ throw する。
+ */
 function portOf(server: http.Server): number {
   const address = server.address();
 

@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   description: "コテンラジオのシリーズを世界地図と時系列にマッピングする",
 };
 
+/** 全ページに共通の `<html lang="ja">` と `<body>` で `children` を包んで返す。 */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ja">

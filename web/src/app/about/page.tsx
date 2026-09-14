@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   title: "このサイトについて | coten-atlas",
 };
 
+/** 出典と引用の範囲・ライセンスの全文を載せた、このサイトについてのページを描く。 */
 export default function AboutPage() {
   return (
     <main className="mx-auto max-w-[38rem] px-6 pt-12 pb-20 font-sans leading-[1.85] text-zinc-900">
