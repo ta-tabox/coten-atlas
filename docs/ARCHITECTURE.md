@@ -249,19 +249,11 @@ catalog/
 シリーズと事物は初期ロードへ載せても軽く、エピソードは載せると地図が出るまでの待ちがそのぶん伸びる。
 
 - **シリーズと事物は Server Component が `node:fs` で読む**。
-  `catalog/` はルート側にあって `web/tsconfig.json` の `include` の外で、`resolveJsonModule` が効くのは `.json` だけなので、`.geojson` を素の `import` では読めない。
-  `fs` なら解決の設定が要らず、`web/tests/catalog.test.ts` と同じ読み口になる。
   static export では `next build` の中でしか走らないので、公開後にファイルを触る口は残らない
 - **エピソードは `public/catalog/episodes.json` を fetch する**。
   `catalog/` は `web/` の外にあって `public/` へ入らないので、ビルドの前に複製する手順が要る。
   worker の複製（`web/package.json` の `sync-map-worker`）と同じ形で `predev` / `prebuild` へ繋ぐ
-- **fetch の URL には `BASE_PATH` を付ける**。
-  GitHub Pages はリポジトリ名を挟んだ場所へ配信するので、`/catalog/episodes.json` は公開後に 404 になる
-- **どちらの読み込み口も `parseSeries` / `parseLoci` / `parseEpisodes` を通す**。
-  `fs` で読んだ値も fetch した値も型を持たないので、検査を外すと `as` で型を名乗ることになる。
-  ビルド時の検査（`web/tests/catalog.test.ts`）が見るのは `catalog/` の現物だけなので、複製し損ねた・404 の HTML を掴んだ、は実行時にしか映らない
-- `vitest.config.ts` に手当ては要らない。
-  どちらの口も `fs` と `fetch` で読み、`.geojson` を import しない
+- 読み込みの経路の禁止則（`catalog/` を `import` で読まない・URL に `BASE_PATH` を付ける・読んだ値をスキーマに通す）の正は `.claude/rules/layers.md`
 - §7 の「実行時 fetch を持たない」が指すのは RSS の取得で、自分で配った静的 JSON を引くことではない（#92 が文言を絞る）
 
 ## 4. UI 構成
@@ -280,7 +272,7 @@ catalog/
 - オブジェクトクリック → 詳細カード（summary・年代・エピソード一覧・Spotify リンク）
 - 状態管理は React の範囲で足りる想定（selection / era window / panel 開閉のみ）。
   外部ライブラリを足す前に本当に要るか問う
-- 地図の上に載る overlay は React + Tailwind で書く。MapLibre 由来の DOM は canvas コンテナと attribution だけで、Popup も built-in control も使わない
+- 地図の DOM の禁止則（MapLibre が出す DOM の範囲と、地図の上に載せる overlay の書き方）の正は `.claude/rules/layers.md`
 
 地図の画面のほかに、出典表記の置き場を二つ持つ。
 載せる文言の全文は `web/src/app/about/page.tsx` が持ち、何を載せるかを決めた理由は [ADR-0008](adr/0008-quote-titles-only.md) が持つ。
@@ -393,8 +385,8 @@ catalog/
 
 `web/scripts/` はこれと別枠になる。`tsconfig.json` の `paths` も vitest の alias も `web/` の中で
 解決するので、`web/` の道具立てに依るスクリプトはルートへ出さず `web/scripts/` に置く。
-RSS 同期（`sync-feed.ts`）は `web/src/` のスキーマとパーサを import し `pnpm` の scripts から走るので、
-ビルド前処理もここに入る。
+RSS 同期（`sync-feed.ts`）は `web/src/` のモジュールを import し `pnpm` の scripts から走るので、ビルド前処理もここに入る。
+`web/scripts/` の各スクリプトが import してよい相手の正は `.claude/rules/layers.md`。
 `catalog/` の検査はスクリプトを持たず、`web/tests/catalog.test.ts` が L2 で回す（`HARNESS.md`）。
 
 ## 7. 意図的にやらないこと
