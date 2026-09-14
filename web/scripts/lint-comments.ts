@@ -10,6 +10,11 @@
  * このファイルは複数のリポジトリで同じ内容を保つ共有物なので、このリポジトリ固有の逸脱を足すときはこのコメントの直下に理由を書く。
  */
 
+/**
+ * このリポジトリの写しが雛形と違う点。
+ * - `comments/useJsDocOnFunction` の `severity` を error にしている（JSDoc の無い関数を 0 件にしたので、付け忘れを `pnpm lint` の失敗として止める）
+ */
+
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
