@@ -2,8 +2,7 @@
  * `catalog/` のファイルを読み、スキーマの検査に通した値だけを返す。
  * エピソードは読まない（`public/` へ複製して実行時に fetch する。docs/ARCHITECTURE.md §3「配り方」）。
  *
- * 呼べるのは Server Component だけである。
- * `"use client"` を付けた層からは `node:fs` へ届かない。
+ * このモジュールを呼んでよい相手の正は `.claude/rules/layers.md`。
  *
  * `fs` が返すのは `unknown` なので、検査を外すと `as` で型を騙ることになる。
  *
