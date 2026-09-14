@@ -1,3 +1,8 @@
+/**
+ * vitest が各テストファイルの前に読む共通の準備。
+ * jest-dom のマッチャと React Testing Library の cleanup の登録だけを持ち、テストの対象や別名の解決は `vitest.config.ts` が持つ。
+ */
+
 import { cleanup } from "@testing-library/react";
 import { afterEach } from "vitest";
 import "@testing-library/jest-dom/vitest";
