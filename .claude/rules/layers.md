@@ -10,6 +10,7 @@ paths:
 上の `paths` に当たるファイルを Read した時点で読み込まれる。
 `docs/ARCHITECTURE.md` は境界の禁止則をここへ委ね、「正は `.claude/rules/layers.md`」の一行で指す。
 パスは `web/` からの相対で書く。
+ただし `catalog/` はリポジトリのルート直下にあって `web/` の外なので、ルートからの名前で書く。
 
 ## 境界を閉じるモジュール
 
