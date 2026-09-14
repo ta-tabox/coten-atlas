@@ -86,7 +86,7 @@ ADR にしない側へ倒す。
 | [0006](0006-rss-link-as-episode-url.md) | 配信リンクは RSS の `<link>` をそのまま使う | 2026-08-23 | 採用 |
 | [0007](0007-github-pages.md) | GitHub Pages で配信し、独自ドメインは当てない | 2026-08-23 | 採用 |
 | [0008](0008-quote-titles-only.md) | 引用は題号に限り、説明文・ロゴ・カバーアートに触れない | 2026-08-23 | 採用 |
-| [0009](0009-pnpm-check.md) | 判定の口を `pnpm check` へ移す（0002 を supersede） | 2026-08-25 | 採用 |
+| [0009](0009-pnpm-check.md) | 判定の口を `pnpm check` へ移す（0002 を supersede） | 2026-08-25 | supersede 済み（→ 0045） |
 | [0010](0010-gh-review-trigger-narrowing.md) | gh-review の起動を絞るのは job 側の `if:` の一本にする | 2026-08-25 | 採用 |
 | [0011](0011-license.md) | コードは MIT、データは CC BY 4.0、番組由来の要素は範囲外と明記する | 2026-08-27 | 採用 |
 | [0012](0012-maplibre-v5.md) | maplibre-gl は v5 系に固定する | 2026-08-27 | supersede 済み（→ 0013） |
@@ -119,6 +119,7 @@ ADR にしない側へ倒す。
 | [0039](0039-untimed-concept-series.md) | 時代を跨いで続く概念史のシリーズは、`timeRange` に年を書かず時期なしの印を置く | 2026-09-10 | 採用 |
 | [0040](0040-era-fade-wiring.md) | 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値を MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く | 2026-09-11 | 採用 |
 | [0041](0041-series-vocabulary-tiebreaks.md) | 手で書く欄の語彙を決め、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を足す（0034 を supersede） | 2026-09-11 | 採用 |
+| [0045](0045-pnpm-check-current-form.md) | 判定の口は `web/` で打つ `pnpm check` の一本で、踏襲しているツールチェーンの規約と同じ形にする（0009 を supersede） | 2026-09-14 | 採用 |
 
 **0014 は人間の目視を L5 と呼んでいる。**
 `docs/HARNESS.md`「検証の層構造」は番号を `pnpm check` の連鎖の位置に限り、人間の目視に番号を与えないので、0014 の L5 は「人間の目視」と読む。
