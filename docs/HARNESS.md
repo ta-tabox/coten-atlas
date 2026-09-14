@@ -56,7 +56,7 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 - **赤のままコミットしない。** 回し方は「`pnpm check` → 緑ならコミット」
 - 口を増やさない。切り分けのために個別スクリプトを単体で叩くのは構わないが、
   「これが緑なら閉じてよい」と言えるのは `pnpm check` だけ
-- 決定と理由は [ADR-0045](adr/0045-pnpm-check-current-form.md)（[ADR-0009](adr/0009-pnpm-check.md) と [ADR-0002](adr/0002-mise-run-check.md) を supersede）
+- 決定と理由は [ADR-0045](adr/0045-pnpm-check-current-form.md)（[ADR-0009](adr/0009-pnpm-check.md) を supersede。0009 は [ADR-0002](adr/0002-mise-run-check.md) を supersede した）
 - CI も同じ一本を回す（`.github/workflows/check.yml`）
 
 ランタイムの版は `mise.toml` の `[tools]` が固定する（node / pnpm）。
