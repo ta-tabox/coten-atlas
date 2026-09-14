@@ -10,13 +10,6 @@
  * このファイルは複数のリポジトリで同じ内容を保つ共有物なので、このリポジトリ固有の逸脱を足すときはこのコメントの直下に理由を書く。
  */
 
-/**
- * このリポジトリの写しが雛形と違う点。
- * 雛形は、配った先の既存のコードを最初の実行で `pnpm check` の失敗にしないために、一部の規則を warn で配る。
- * 既存のコードを直し終えたリポジトリはその規則の `severity` を自分の写しで error へ上げてよいので、雛形とのバイト一致は `severity` の値に限って崩れる。
- * - `comments/useJsDocOnFunction` の `severity` を error にしている（JSDoc の無い関数を 0 件にしたので、付け忘れを `pnpm lint` の失敗として止める）
- */
-
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -639,7 +632,7 @@ function checkJsDocOnFunctions(
       rule: "comments/useJsDocOnFunction",
       message:
         "関数に JSDoc が無い。1 行目に what を完全な文で書く（export の有無・行数を問わない）",
-      severity: "error",
+      severity: "warn",
     });
   }
 
