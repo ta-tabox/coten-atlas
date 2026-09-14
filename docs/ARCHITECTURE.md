@@ -28,7 +28,7 @@
 | 配信リンク | RSS の `<link>`（Spotify のエピソードページ） | [ADR-0006](adr/0006-rss-link-as-episode-url.md) |
 | デプロイ | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`） | [ADR-0007](adr/0007-github-pages.md) |
 | 引用の範囲 | シリーズ名とエピソードタイトルのみ | [ADR-0008](adr/0008-quote-titles-only.md) |
-| 判定の口 | `pnpm check` の一本 | [ADR-0009](adr/0009-pnpm-check.md) |
+| 判定の口 | `pnpm check` の一本 | [ADR-0045](adr/0045-pnpm-check-current-form.md) |
 | ツールチェーン | mise + pnpm + Biome | ADR を持たない。このリポジトリの外で決めた既定をそのまま踏襲する。`mise.toml` は `[tools]` のみでランタイム版管理に徹する |
 | テスト | Vitest（+ React Testing Library）／ ブラウザを立てる層は Playwright | 単体側は ADR を持たない。踏襲元の既定が JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない。ブラウザ側を分ける理由は [ADR-0016](adr/0016-playwright-runner.md) |
 | エピソード取得 | RSS を正とする自動同期（ビルド前スクリプト） | ADR を持たない。手順は §5 が持つ。今後の追加に耐えるため |

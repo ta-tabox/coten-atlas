@@ -25,7 +25,7 @@ L0〜L4 は `pnpm check` の一本にまとまっている（下記）。
 足すと同じ検査が二度走るので、連鎖へ別の段としては足さない。
 `pnpm validate:catalog` はその 1 本だけを名指す切り分け用で、「これが緑なら閉じてよい」と言えるのは変わらず `pnpm check` だけである。
 
-L3 を層に持つのは、static export にビルド時にしか壊れない失敗があり、L0〜L2 だけでは PR が緑のまま公開が落ちるためである（[ADR-0009](adr/0009-pnpm-check.md)）。
+L3 を層に持つのは、static export にビルド時にしか壊れない失敗があり、L0〜L2 だけでは PR が緑のまま公開が落ちるためである（[ADR-0045](adr/0045-pnpm-check-current-form.md)）。
 
 L4 を層に持つのは、L3 までがどれも「配信物へ実際に到達できるか」を見ないためである（[ADR-0014](adr/0014-e2e-offline-smoke.md)）。
 守らせるのは自足の一点で、外部への通信は遮断する。
@@ -56,14 +56,14 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 - **赤のままコミットしない。** 回し方は「`pnpm check` → 緑ならコミット」
 - 口を増やさない。切り分けのために個別スクリプトを単体で叩くのは構わないが、
   「これが緑なら閉じてよい」と言えるのは `pnpm check` だけ
-- 決定と理由は [ADR-0009](adr/0009-pnpm-check.md)（[ADR-0002](adr/0002-mise-run-check.md) を supersede）
+- 決定と理由は [ADR-0045](adr/0045-pnpm-check-current-form.md)（[ADR-0009](adr/0009-pnpm-check.md) を supersede。0009 は [ADR-0002](adr/0002-mise-run-check.md) を supersede した）
 - CI も同じ一本を回す（`.github/workflows/check.yml`）
 
 ランタイムの版は `mise.toml` の `[tools]` が固定する（node / pnpm）。
 固定を立てずに走らせると、手元と CI と意味が揃わない。
 
 タスクは `web/package.json` の scripts が持つので、打つ場所も `web/` の中である。
-`mise.toml` はルートに残って `[tools]` だけを持ち、`run = "pnpm check"` の薄いラッパは置かない（[ADR-0009](adr/0009-pnpm-check.md)）。
+`mise.toml` はルートに残って `[tools]` だけを持ち、`run = "pnpm check"` の薄いラッパは置かない（[ADR-0045](adr/0045-pnpm-check-current-form.md)）。
 
 ### 到達テスト
 
