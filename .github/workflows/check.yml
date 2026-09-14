@@ -49,5 +49,5 @@ jobs:
       # --with-deps の側は毎回要る（システムライブラリはキャッシュに載らない）。
       - run: pnpm exec playwright install --with-deps chromium
 
-      # 判定の口はこの一本（docs/adr/0009-pnpm-check.md）。型 / 静的 / ユニット / ビルド / スモークをまとめて回す。
+      # 判定の口はこの一本（docs/adr/0045-pnpm-check-current-form.md）。型 / 静的 / ユニット / ビルド / スモークをまとめて回す。
       - run: pnpm check
