@@ -84,6 +84,19 @@ function toMapLocus(
   };
 }
 
+/**
+ * `loci` から `series` の代表点を探して返す。
+ * `series` が位置なしなら undefined を返す。
+ *
+ * 事物の `id` に `ANCHOR_UNLOCATED` は使えないので、位置なしのシリーズの `anchor` に一致する事物は無い。
+ */
+export function findAnchorLocus(
+  loci: MapLocusCollection,
+  series: Series,
+): MapLocusFeature | undefined {
+  return loci.features.find((locus) => locus.properties.id === series.anchor);
+}
+
 /** 事物の全件を、地図の source へ渡す形へ直す。 */
 export function toMapLoci(
   loci: LocusCollection,
