@@ -7,7 +7,7 @@
  * 窓もシリーズの `timeRange` も、両端の年を含む範囲として比べる。
  *
  * 位置と年の対応は `scale.ts` に置き、描画（React・MapLibre）はどちらのモジュールにも置かない。
- * 窓の幅・重なり率の分母・重なり率から濃さへの変換を変えるときは、採らなかった案とその理由を `docs/adr/0038-era-space-window.md` で先に確かめる。
+ * 窓の幅・重なり率の分母・重なり率から濃さへの変換を選んだ理由は `docs/adr/0038-era-space-window.md` が持つ。
  */
 
 import { type EraSpacePosition, positionToYear } from "@/lib/era/scale";

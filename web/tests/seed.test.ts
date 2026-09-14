@@ -4,7 +4,7 @@
  * 見るのはスキーマが見ない観点だけである。
  * 現物が `seriesListSchema` を通ること、`id`・`season` の一意性、`timeRange` が era 空間に収まることは隣の `catalog.test.ts` が既に検査するので、ここでは数えない。
  *
- * 描画は `kind` の 2 値で濃さを分け（docs/adr/0023-kind-place-or-concept.md）、位置なしのシリーズは地図に出さず一覧の別区画へ回す（docs/adr/0026-two-phase-location.md）。
+ * 描画は `kind` の 2 値で濃さを分け、位置なしのシリーズは地図に出さず一覧の別区画へ回す。
  * 分岐の枝に対応する現物が無いと、その枝は一度も描かれないまま描画のステップへ渡り、見た目の検証からも漏れる。
  *
  * jsdom では `import.meta.url` が file URL にならないので、環境を node に指定してある。

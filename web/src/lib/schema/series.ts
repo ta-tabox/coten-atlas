@@ -4,7 +4,7 @@
  *
  * 年は西暦の整数で、負値が紀元前を表す（0 年は暦に存在しないが、区別しても得るものが無いので許す）。
  * 地図へ置く図形は持たない。
- * 図形は事物の側にあり、`locus.ts` が持つ（docs/adr/0027-series-and-loci.md）。
+ * 図形は事物の側にあり、`locus.ts` が持つ。
  * zod の既定は未知のキーを黙って捨て、手書きの書き間違いや規約外の欄の混入がどこにも映らないので、スキーマに無いキーは落とす。
  *
  * 描画も RSS 同期もこの形だけを前提にしてよい。
@@ -25,13 +25,15 @@ export const ANCHOR_UNLOCATED = "unlocated";
 
 /**
  * 時期を持たないことを表す `timeRange` の値。
- * 置けるのは種別が `概念史` だけで位置なしのシリーズに限る（docs/adr/0039-untimed-concept-series.md）。
+ * 置けるのは種別が `概念史` だけで位置なしのシリーズに限る。
+ * 限る理由は docs/adr/0039-untimed-concept-series.md が持つ。
  */
 export const TIME_RANGE_UNTIMED = "untimed";
 
 /**
  * 描画スタイルの分岐キー。
- * 場所が一意に決まるかどうかだけを分ける（docs/adr/0023-kind-place-or-concept.md）。
+ * 場所が一意に決まるかどうかだけを分ける。
+ * 分ける差をこの一点に限る理由は docs/adr/0023-kind-place-or-concept.md が持つ。
  */
 export const seriesKindSchema = z.enum(["place", "concept"]);
 
@@ -59,13 +61,13 @@ export const SERIES_REGIONS = [
 
 /**
  * `region` の値。
- * 関連シリーズ行が等値で照合するので、閉じた集合にする（docs/adr/0041-series-vocabulary-tiebreaks.md）。
+ * 関連シリーズ行が等値で照合するので、閉じた集合にする。
  */
 export const seriesRegionSchema = z.enum(SERIES_REGIONS);
 
 /**
  * `tags` へ最低 1 つ入れる種別。
- * そのシリーズの主語が誰かを表す（docs/adr/0041-series-vocabulary-tiebreaks.md）。
+ * そのシリーズの主語が誰かを表す。
  */
 export const SERIES_CATEGORY_TAGS = [
   "人物",
@@ -98,7 +100,7 @@ const MAX_TAGS = 4;
 
 /**
  * `title` に残さない番組内のコーナー名。
- * `title` はシリーズの主題を指す名の列で、コーナー名は主題でない（docs/adr/0041-series-vocabulary-tiebreaks.md）。
+ * `title` はシリーズの主題を指す名の列で、コーナー名は主題でない。
  */
 const TITLE_PREFIXES = ["ショート", "ジンブンガク"];
 
@@ -133,19 +135,19 @@ export const seriesSchema = z
 
     /**
      * シリーズ名。
-     * 番組から引いてよいのは題号までなので、説明文をここへ入れない（docs/adr/0008-quote-titles-only.md）。
+     * 番組から引用してよいのは題号までなので、説明文をここへ入れない。
      */
     title: trimmedNonEmptyStringSchema,
 
     /**
      * 描画スタイルの分岐キー。
-     * `concept` は場所が一意に決まらないもので、控えめに描く（docs/adr/0023-kind-place-or-concept.md）。
+     * `concept` は場所が一意に決まらないもので、控えめに描く。
      */
     kind: seriesKindSchema,
 
     /**
      * 代表点の事物 id か、位置なしを表す `ANCHOR_UNLOCATED`。
-     * そのシリーズの事物のうちどれが代表点かを示す印であって、シリーズと事物の紐づけではない（docs/adr/0027-series-and-loci.md）。
+     * そのシリーズの事物のうちどれが代表点かを示す欄であって、シリーズと事物の紐づけではない。
      * 紐づけは事物側の `seriesId` が担う。
      * 指す先が実在するかは 2 つのファイルを並べないと見えないので、`references.ts` が見る。
      */
@@ -159,7 +161,7 @@ export const seriesSchema = z
 
     /**
      * 自前で書く要約。
-     * 番組の説明文を引かない代わりに置いた欄なので、書かれるまでは空である（docs/adr/0008-quote-titles-only.md）。
+     * 番組の説明文を引用しない代わりに置いた欄なので、書かれるまでは空である。
      */
     summary: z.string(),
 
@@ -171,7 +173,7 @@ export const seriesSchema = z
     region: seriesRegionSchema,
 
     /**
-     * 割当キーになる `itunes:season` の値（docs/adr/0018-season-as-assignment-key.md）。
+     * 割当キーになる `itunes:season` の値。
      * 1 シリーズ = 1 値で、複数を束ねない。
      */
     season: z.int().positive(),

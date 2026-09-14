@@ -96,7 +96,7 @@ const optionalDurationSecSchema = z
  * フィードのエピソード 1 件。
  *
  * `season` は `itunes:season` で、752 件中 176 件（番外編・特別編・告知）が持たない。
- * `episodeNumber` と `durationSec` は episodes.json へ保存しない（docs/adr/0018-season-as-assignment-key.md）。
+ * `episodeNumber` と `durationSec` は読む画面が無いので episodes.json へ保存しない。
  */
 export const feedItemSchema = z.object({
   guid: trimmedTextSchema,

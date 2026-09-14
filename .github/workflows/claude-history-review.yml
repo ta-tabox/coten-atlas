@@ -63,7 +63,7 @@ jobs:
 
       # claude-code-action の native installer は ~/.local/bin が無いと
       # 「missing or broken」と警告しつつ実体を置かないまま success 扱いになり、
-      # 後続のアクション実行が ENOENT で落ちる（claude.yml で実測）。
+      # 後続のアクション実行が ENOENT で落ちる。
       # ubuntu-latest ランナーにこのディレクトリは既定で無いので、先に作っておく。
       - run: mkdir -p "$HOME/.local/bin"
 
@@ -72,7 +72,7 @@ jobs:
       # open PR のときそのあと PR ブランチへ checkout し直す（src/github/operations/branch.ts）。
       # 作業ディレクトリのファイルを直に指すと、PR が歴史側の指示そのものを書き換えられる。
       # checkout が動く前に RUNNER_TEMP へ写しておけば、どのブランチをレビューしても指示は
-      # default branch の版で固定される（YAML へ直書きしていたときと同じ性質）。
+      # default branch の版で固定される。
       - run: cp .github/historian-prompt.md "$RUNNER_TEMP/historian-prompt.md"
 
       - name: Run Claude Code
@@ -90,7 +90,7 @@ jobs:
           # 役割と方法は .github/historian-prompt.md が固定する。
 
           # WebSearch と WebFetch がこのレーンの本体である。
-          # 外部の典拠を参照しない第二の意見は、一次と同じ種類の誤りを二重に確認した外形付きで返す（ADR-0035）。
+          # 外部の典拠を参照しない第二の意見は、一次と同じ種類の誤りを二重に確認した外形付きで返す。
           # 差分を読む gh と git は読み取りだけを名指しする。
           # Read・Grep・Glob を名指しするのは、非対話モードでは allowedTools に無いツールが拒否されるためで、
           # 名指しを落とすと catalog/ の JSON を開けないまま推測で書き始める。
