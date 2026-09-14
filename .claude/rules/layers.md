@@ -46,7 +46,7 @@ paths:
 | 境界の検証 | `src/lib/schema/` | `src/lib/schema/` の中だけ | zod のスキーマと、そこから導く型・`parse*` の関数・ファイルをまたぐ参照の判定 |
 | フィードの二段 | `src/lib/feed/parse.ts`（XML の表記を均す）・`src/lib/feed/schema.ts`（値の規則） | `src/lib/feed/` の中だけ | 均した記録と、検査済みの `FeedItem` |
 | 設定の定数 | `src/lib/base-path.ts`・`src/lib/map/config.ts` | `src/lib/base-path.ts` | 公開先のパスの接頭辞 `BASE_PATH`・ベースマップと worker の URL・地図の初期位置 |
-| 純粋な計算 | `src/lib/era/`・`src/lib/map/loci.ts`・`src/lib/map/series-layer.ts`・`src/lib/feed/assign.ts`・`src/lib/format.ts` | 境界の検証の型と定数・`src/lib/feed/schema.ts` の型・同じ層 | 関数とテスト |
+| 純粋な計算 | `src/lib/era/`・`src/lib/map/loci.ts`・`src/lib/map/series-layer.ts`・`src/lib/map/series-panel.ts`・`src/lib/feed/assign.ts`・`src/lib/format.ts` | 境界の検証の型と定数・`src/lib/feed/schema.ts` の型・同じ層 | 関数とテスト |
 | 境界 | `src/lib/catalog-dir.ts`・`src/lib/episodes.ts`・`scripts/json-file.ts` | 境界の検証・設定の定数 | `node:fs` か `fetch` による読み書きと、境界の検証の呼び出し |
 | 描画 | `src/components/` | 純粋な計算・境界の検証の型と定数・設定の定数・`src/lib/episodes.ts`・同じ層 | React の部品 |
 | 配線 | `src/app/`・`scripts/sync-feed.ts` | `src/app/` は描画・`src/lib/catalog-dir.ts`・純粋な計算、`scripts/sync-feed.ts` はフィードの二段・純粋な計算・境界の検証・`scripts/json-file.ts` | 受け取り・呼び出し・出力 |
