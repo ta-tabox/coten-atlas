@@ -23,6 +23,7 @@ type SeriesLayersProps = {
   currentWindow: CurrentWindow;
 };
 
+/** `loci` を geojson の source へ載せ、`currentWindow` から不透明度を決めた円のレイヤを重ねて描く。 */
 export default function SeriesLayers({
   loci,
   currentWindow,

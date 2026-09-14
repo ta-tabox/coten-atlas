@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
 import { observe } from "@scripts/smoke";
 
+/** このテストファイルと同じディレクトリにある `fixtures` の下の、`name` のフィクスチャの絶対パスを返す。 */
 function fixture(name: string): string {
   return fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url));
 }

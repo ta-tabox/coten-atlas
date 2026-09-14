@@ -29,6 +29,7 @@ import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
 import type { EraList } from "@/lib/schema/era";
 import type { Series, SeriesList } from "@/lib/schema/series";
 
+/** `react-map-gl/maplibre` の既定の export と差し替えるモック関数で、受け取った props を記録して null を返す。 */
 const map = vi.hoisted(() => vi.fn<(props: MapProps) => null>(() => null));
 
 vi.mock("react-map-gl/maplibre", () => ({ default: map }));

@@ -110,6 +110,7 @@ function initialEraPositionOf(eras: EraList): number {
   return (index + 0.5) / eras.length;
 }
 
+/** ベースマップの上に、`loci` の代表点・`eras` の era スライダー・クリックで選択した `series` の詳細カードを重ねて描く。 */
 export default function MapCanvas({
   loci,
   series,
