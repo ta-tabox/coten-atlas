@@ -8,9 +8,14 @@
  * 位置から現在窓への変換は `@/lib/era/window` が担当する。
  * 年の数値を「前800年」「550年」の形の文字列にする処理は `@/lib/format` が担当する。
  *
+ * ポインタ（マウス・指・ペン）の操作はトラックの要素のポインタのイベントで受け、`<input type="range">` はキーボードの操作と読み上げだけを受ける。
+ * ポインタの操作を `<input>` に任せない理由は docs/adr/0047-era-slider-pointer-events.md が持つ。
+ *
  * MapLibre の DOM へ入れない理由は docs/adr/0022-map-dom-boundary.md が正。
  */
 
+import { type PointerEvent as ReactPointerEvent, useRef } from "react";
+import { clientXToPosition } from "@/lib/era/pointer";
 import { currentWindow, currentWindowPositions } from "@/lib/era/window";
 import { formatTimeRange, formatYearWithoutUnit } from "@/lib/format";
 import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
@@ -31,10 +36,11 @@ const SLIDER_ID = "era-slider";
  * era のセルの列に重ねる `<input type="range">` の className。
  * トラックを透明にしてセルの列を見せ、つまみはセルより少し高い細い縦棒にする。
  *
+ * `<input>` はポインタのイベントを受けず、ポインタの操作は `<input>` を包むトラックの要素が受ける。
  * `range-track:` と `range-thumb:` は、`globals.css` の `@custom-variant` が定義する、トラックとつまみの擬似要素へ当てるバリアントである。
  */
 const RANGE_CLASS = [
-  "absolute inset-0 m-0 h-full w-full cursor-ew-resize appearance-none bg-transparent",
+  "pointer-events-none absolute inset-0 m-0 h-full w-full appearance-none bg-transparent",
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-500",
   "range-track:h-full range-track:bg-transparent",
   "range-thumb:h-12 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-zinc-800",
@@ -100,6 +106,64 @@ export default function EraSlider({
   );
   const windowPositions = currentWindowPositions({ position, eras });
   const boundaryYears = boundaryYearsOf(eras, presentEnd);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // トラックを押したまま動かしているポインタの pointerId。
+  // 押していなければ null。
+  const draggingPointerId = useRef<number | null>(null);
+
+  /** `event` のポインタがトラックの上で指す位置を、`onPositionChange` へ渡す。 */
+  function changePositionAt(event: ReactPointerEvent<HTMLDivElement>) {
+    const track = event.currentTarget.getBoundingClientRect();
+
+    onPositionChange(
+      clientXToPosition({
+        clientX: event.clientX,
+        trackLeft: track.left,
+        trackWidth: track.width,
+        stepCount: maxStep,
+      }),
+    );
+  }
+
+  /**
+   * 主ボタン・指・ペンでトラックを押したら、押したポインタを追い始め、押した位置を `onPositionChange` へ渡す。
+   * 続けて矢印キーで動かせるよう、`<input>` へフォーカスを移し、フォーカスの枠はキーボードで移したときだけ出す。
+   *
+   * 既定の動作を止めないと、マウスで押した後にフォーカスが `<body>` へ移る。
+   */
+  function startDragging(event: ReactPointerEvent<HTMLDivElement>) {
+    if (!event.isPrimary || event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    draggingPointerId.current = event.pointerId;
+    inputRef.current?.focus({ focusVisible: false });
+    changePositionAt(event);
+  }
+
+  /**
+   * 押しているポインタが動いたら、動いた先の位置を `onPositionChange` へ渡す。
+   * 押していないポインタの移動は無視する。
+   *
+   * 押したときに `setPointerCapture` するので、トラックの外へ出た後の移動もここへ届く。
+   */
+  function continueDragging(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.pointerId !== draggingPointerId.current) {
+      return;
+    }
+
+    changePositionAt(event);
+  }
+
+  /** 押しているポインタが離れるか、ブラウザがポインタの追跡を打ち切ったら、ポインタを追うのをやめる。 */
+  function stopDragging(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.pointerId === draggingPointerId.current) {
+      draggingPointerId.current = null;
+    }
+  }
 
   return (
     <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-white/50 bg-white/45 px-4 pt-2.5 pb-1.5 font-sans text-zinc-800 shadow-lg shadow-black/5 backdrop-blur-md backdrop-saturate-150">
@@ -116,7 +180,15 @@ export default function EraSlider({
         {windowYears}
       </p>
 
-      <div className="relative mt-1.5">
+      {/* ブラウザがトラックの上のタッチをスクロールや拡大に使うと pointercancel が届いて位置が止まるので、touch-none でタッチの既定の動作を止める。 */}
+      <div
+        data-testid="era-slider-track"
+        className="relative mt-1.5 cursor-ew-resize touch-none"
+        onPointerDown={startDragging}
+        onPointerMove={continueDragging}
+        onPointerUp={stopDragging}
+        onPointerCancel={stopDragging}
+      >
         <ol className="flex h-10 overflow-hidden rounded-md border border-zinc-900/10 bg-white/30">
           {eras.map((era) => (
             <li
@@ -144,6 +216,7 @@ export default function EraSlider({
         </div>
 
         <input
+          ref={inputRef}
           id={SLIDER_ID}
           type="range"
           min={0}
