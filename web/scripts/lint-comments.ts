@@ -632,7 +632,7 @@ function checkJsDocOnFunctions(
       rule: "comments/useJsDocOnFunction",
       message:
         "関数に JSDoc が無い。1 行目に what を完全な文で書く（export の有無・行数を問わない）",
-      severity: "warn",
+      severity: "error",
     });
   }
 
