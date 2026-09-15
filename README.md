@@ -58,7 +58,7 @@ Next.js を static export し、GitHub Pages から静的ファイルだけを�
 ### 時代の近さを、地図の点の濃さで見せる
 
 era スライダーは年でなく時代区分を等幅に並べた数直線の上を動き、選んだ位置の前後に時代区分の半分の幅の現在窓を取る。
-各点の濃さは現在窓との重なりから TypeScript の純関数で求めて MapLibre の `circle-opacity` へ渡し、現在窓と重ならない点は `filter` で地図から除く。
+各点は現在窓との重なりが大きいほど濃く描き、濃さの計算は MapLibre の式でなく TypeScript の側が持ち、現在窓と重ならない点は地図に描かない。
 
 理由は [ADR-0038（現在窓の幅と右端の年）](docs/adr/0038-era-space-window.md) と [ADR-0043（点の濃さの渡し方）](docs/adr/0043-era-fade-window-only.md) が持つ。
 
