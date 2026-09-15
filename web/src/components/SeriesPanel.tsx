@@ -185,10 +185,10 @@ export default function SeriesPanel({
           onSelect={onSelect}
         />
         <SeriesSection
-          heading="地図に置かないシリーズ"
-          note="一つの場所に絞れない主題なので、地図に点を置かず、時代によらずここに並べている。"
+          heading="場所や時代をまたぐシリーズ"
+          note="一つの場所や時代に収まらない主題を扱うシリーズ。スライダーの時代によらず、いつでもここから選べる。"
           series={sections.unlocated}
-          emptyNote="地図に置かないシリーズは無い。"
+          emptyNote="場所や時代をまたぐシリーズは無い。"
           selectedSeriesId={selectedSeriesId}
           onSelect={onSelect}
         />

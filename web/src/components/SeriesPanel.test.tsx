@@ -45,7 +45,7 @@ function onMapSection(): HTMLElement {
 
 /** 位置なしのシリーズの区画を返す。 */
 function unlocatedSection(): HTMLElement {
-  return screen.getByRole("region", { name: /地図に置かないシリーズ/ });
+  return screen.getByRole("region", { name: /場所や時代をまたぐシリーズ/ });
 }
 
 describe("SeriesPanel", () => {
