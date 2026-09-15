@@ -129,6 +129,49 @@ describe("SeriesPanel", () => {
     ).toBeVisible();
   });
 
+  it("区画の見出しを押すとその区画のシリーズだけを隠し、もう一度押すと戻す", () => {
+    render(
+      <SeriesPanel
+        sections={SECTIONS}
+        selectedSeriesId={null}
+        onSelect={vi.fn()}
+      />,
+    );
+    const onMapToggle = screen.getByRole("button", {
+      name: /地図に出ているシリーズ/,
+    });
+
+    fireEvent.click(onMapToggle);
+
+    expect(onMapToggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("button", { name: /スパルタ/ })).toBeNull();
+    expect(screen.getByRole("button", { name: /お金の歴史/ })).toBeVisible();
+
+    fireEvent.click(onMapToggle);
+
+    expect(onMapToggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("button", { name: /スパルタ/ })).toBeVisible();
+  });
+
+  it("パネル全体を閉じて開き直しても、閉じた区画は閉じたまま残る", () => {
+    render(
+      <SeriesPanel
+        sections={SECTIONS}
+        selectedSeriesId={null}
+        onSelect={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /場所や時代をまたぐシリーズ/ }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "一覧を閉じる" }));
+    fireEvent.click(screen.getByRole("button", { name: "シリーズ一覧を開く" }));
+
+    expect(screen.queryByRole("button", { name: /お金の歴史/ })).toBeNull();
+    expect(screen.getByRole("button", { name: /スパルタ/ })).toBeVisible();
+  });
+
   it("閉じるボタンで一覧を隠し、開くボタンで一覧を戻す", () => {
     render(
       <SeriesPanel

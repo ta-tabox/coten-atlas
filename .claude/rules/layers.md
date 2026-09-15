@@ -59,7 +59,7 @@ paths:
 | 選択中のシリーズ（`selectedSeriesId`） | `src/components/MapCanvas.tsx` の state。地図のクリックと `SeriesPanel` の `onSelect` がこの state を書く。子へは props で渡し、子に複製しない |
 | era スライダーの位置（`eraPosition`） | `src/components/MapCanvas.tsx` の state。`EraSlider` と `SeriesLayers` へは props で渡し、`SeriesPanel` へは現在窓で分けた区画を渡す |
 | エピソードの取得の状態（`EpisodesState`） | `src/components/MapCanvas.tsx` の state。マウントした直後に `fetchEpisodes` で取得し、`SeriesDetailCard` へは props で渡す |
-| 一覧パネルの開閉 | `src/components/SeriesPanel.tsx` の state。パネルの外に開閉を読む部品が無いので、`MapCanvas` へ上げない |
+| 一覧パネル全体と、その区画ごとの開閉 | `src/components/SeriesPanel.tsx` の state。パネルの外に開閉を読む部品が無いので、`MapCanvas` へ上げない。区画ごとの開閉も `SeriesSection` でなく `SeriesPanel` に置き、パネル全体を閉じて開き直しても残す |
 
 ## プロジェクト固有（育てる欄）
 - （このプロジェクトで決めた逸脱・追加をここに追記する。理由を一行添える）
