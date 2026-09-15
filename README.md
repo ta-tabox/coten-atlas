@@ -13,8 +13,9 @@
 
 Next.js (App Router) + TypeScript を static export する。
 地図は MapLibre GL JS、ベースマップは OpenFreeMap positron。
+スタイルは Tailwind v4。
 データはエピソード（RSS から自動同期）とシリーズ（人間のキュレーション）の二層に分かれる。
-ツールチェーンは mise + pnpm + Biome、テストは Vitest。
+ツールチェーンは mise + pnpm + Biome、テストは Vitest と Playwright。
 
 確定事項の一覧とそれぞれの根拠は [ARCHITECTURE.md](docs/ARCHITECTURE.md) の「技術スタック（確定事項）」にある。
 
