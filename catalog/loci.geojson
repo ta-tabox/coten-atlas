@@ -468,6 +468,15 @@
         "seriesId": "teisei-roma",
         "timeRange": "series"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [130.411, 33.593] },
+      "properties": {
+        "id": "hakata",
+        "seriesId": "mongol-teikoku-shurai",
+        "timeRange": "series"
+      }
     }
   ]
 }
