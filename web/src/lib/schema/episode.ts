@@ -31,8 +31,8 @@ export const episodeSchema = z
 
     /**
      * 各回の題号。
-     * 基本形は `【COTEN RADIO 宗教改革編2】` だが、`編` の欠落・回番号でなく前後編・開き括弧の欠落で崩れる。
-     * ここからシリーズ名を抽出せず、割当は `itunes:season` で行う。
+     * 末尾の基本形は `【COTEN RADIO 宗教改革編2】` だが、`編` の欠落・回番号でなく前後編・開き括弧の欠落で崩れる。
+     * 末尾からシリーズ名を抽出しない。
      */
     title: trimmedNonEmptyStringSchema,
 
@@ -43,8 +43,8 @@ export const episodeSchema = z
     pubDate: z.iso.datetime(),
 
     /**
-     * 割当キーになる `itunes:season` の値。
-     * 番外編・特別編・告知は持たないので、null の回は `seriesId` も必ず null になる。
+     * 割当に使った season で、決め方は `src/lib/feed/assign.ts` が持つ。
+     * season が決まらない回（番外編・特別編・告知）は null で、null の回は `seriesId` も必ず null になる。
      */
     season: z.int().positive().nullable(),
 
