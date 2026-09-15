@@ -183,6 +183,38 @@ function warnLostAssignments(
 }
 
 /**
+ * 前回付いていた seriesId が、別のシリーズの id へ変わった回を報せる。
+ *
+ * 別のシリーズへ移った回は未割当の数にも `warnLostAssignments` にも現れない。
+ * 割当の規則や `season-corrections.json` を直すと起きるので、黙って直すと回が別のシリーズの一覧へ移ったことに気付けない。
+ */
+function warnReassigned(
+  assignments: Assignment[],
+  previous: Map<string, string | null>,
+): void {
+  const reassigned = assignments.filter(({ item, seriesId }) => {
+    const previousSeriesId = previous.get(item.guid) ?? null;
+
+    return (
+      seriesId !== null &&
+      previousSeriesId !== null &&
+      seriesId !== previousSeriesId
+    );
+  });
+
+  if (reassigned.length > 0) {
+    console.error(
+      `前回と別のシリーズへ割り当たった回が ${reassigned.length} 件ある: ${reassigned
+        .map(
+          ({ item, seriesId }) =>
+            `${item.guid}（${previous.get(item.guid)} → ${seriesId}）`,
+        )
+        .join(", ")}`,
+    );
+  }
+}
+
+/**
  * `catalog/` を指せていることを確かめる。
  *
  * 作業ディレクトリが違うと、書き出しは黙って別の場所へ `catalog/` を作り、755 件をそこへ置く。
@@ -244,6 +276,7 @@ async function main(): Promise<void> {
   });
 
   warnLostAssignments(assignments, previous);
+  warnReassigned(assignments, previous);
 
   const added = assignments.filter(({ item }) => !previous.has(item.guid));
 
