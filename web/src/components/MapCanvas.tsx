@@ -37,11 +37,8 @@ import type { Series, SeriesList } from "@/lib/schema/series";
  */
 const INITIAL_ERA_ID = "ancient";
 
-/**
- * 一覧パネルで選んだシリーズの代表点へ、カメラを移すのにかける時間（ミリ秒）。
- * 地図の縮尺は変えず、中心だけを移す。
- */
-const FLY_TO_DURATION_MS = 1200;
+/** 一覧パネルで選んだシリーズの代表点へ、地図の中心を移すのにかける時間（ミリ秒）。 */
+const PAN_DURATION_MS = 1200;
 
 type MapCanvasProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */
@@ -141,9 +138,9 @@ export default function MapCanvas({
   const eraWindow = currentWindow({ position: eraPosition, eras, presentEnd });
 
   /**
-   * 一覧パネルでクリックされた `seriesId` のシリーズを選択し、代表点を持つならその代表点へカメラを移す。
+   * 一覧パネルでクリックされた `seriesId` のシリーズを選択し、代表点を持つならその代表点へ地図の中心を移す。
    *
-   * 地図のクリックで選んだ事物は既に画面に在るので、`flyTo` を呼ぶのはパネルからの選択だけにする。
+   * 地図のクリックで選んだ事物は既に画面に在るので、`panTo` を呼ぶのはパネルからの選択だけにする。
    */
   function selectFromPanel(seriesId: string): void {
     setSelectedSeriesId(seriesId);
@@ -156,9 +153,8 @@ export default function MapCanvas({
       return;
     }
 
-    mapRef.current?.flyTo({
-      center: anchor.geometry.coordinates,
-      duration: FLY_TO_DURATION_MS,
+    mapRef.current?.panTo(anchor.geometry.coordinates, {
+      duration: PAN_DURATION_MS,
     });
   }
 

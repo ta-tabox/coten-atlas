@@ -3,7 +3,7 @@
  * 検証するのは props の受け渡しであって、地図の描画ではない。
  *
  * モックは children を描画しないので、子コンポーネントの有無は MapLibreMap が受け取った `children` で判定する。
- * モックは受け取った `ref` に `flyTo` だけを持つ地図を入れるので、カメラの移動は `flyTo` の呼び出しで判定する。
+ * モックは受け取った `ref` に `panTo` だけを持つ地図を入れるので、カメラの移動は `panTo` の呼び出しで判定する。
  */
 
 import { act, render } from "@testing-library/react";
@@ -46,17 +46,17 @@ import {
 /** MapLibreMap のモックが受け取る props。 */
 type MockMapProps = MapProps & { ref?: Ref<MapRef> };
 
-/** MapLibreMap のモックが `ref` に入れる地図の `flyTo`。 */
-const flyTo = vi.hoisted(() => vi.fn());
+/** MapLibreMap のモックが `ref` に入れる地図の `panTo`。 */
+const panTo = vi.hoisted(() => vi.fn());
 
 /**
  * `react-map-gl/maplibre` の既定の export と差し替えるモック関数。
- * 受け取った props を記録し、`ref` がオブジェクトなら `flyTo` だけを持つ地図を入れて、null を返す。
+ * 受け取った props を記録し、`ref` がオブジェクトなら `panTo` だけを持つ地図を入れて、null を返す。
  */
 const map = vi.hoisted(() =>
   vi.fn<(props: MockMapProps) => null>((props) => {
     if (typeof props.ref === "object" && props.ref !== null) {
-      props.ref.current = { flyTo } as unknown as MapRef;
+      props.ref.current = { panTo } as unknown as MapRef;
     }
 
     return null;
@@ -206,7 +206,7 @@ function mouseEventOnBlank(): MapLayerMouseEvent {
 describe("MapCanvas", () => {
   beforeEach(() => {
     map.mockClear();
-    flyTo.mockClear();
+    panTo.mockClear();
   });
 
   it("OpenFreeMap のスタイルと初期表示位置を渡す", () => {
@@ -396,17 +396,18 @@ describe("MapCanvas", () => {
     expect(seriesLayersProps().selectedSeriesId).toBeNull();
   });
 
-  it("一覧パネルで代表点を持つシリーズを選ぶと、その代表点へ flyTo する", () => {
+  it("一覧パネルで代表点を持つシリーズを選ぶと、その代表点へ panTo する", () => {
     renderMapCanvas();
 
     act(() => seriesPanelProps().onSelect("sparta"));
 
-    expect(flyTo).toHaveBeenCalledExactlyOnceWith(
-      expect.objectContaining({ center: SPARTA_COORDINATES }),
+    expect(panTo).toHaveBeenCalledExactlyOnceWith(
+      SPARTA_COORDINATES,
+      expect.anything(),
     );
   });
 
-  it("一覧パネルで位置なしのシリーズを選んでも flyTo しない", () => {
+  it("一覧パネルで位置なしのシリーズを選んでも panTo しない", () => {
     renderMapCanvas();
 
     act(() => seriesPanelProps().onSelect("okane-no-rekishi"));
@@ -414,14 +415,14 @@ describe("MapCanvas", () => {
     expect(childOfType(SeriesDetailCard)).toMatchObject({
       props: { series: OKANE },
     });
-    expect(flyTo).not.toHaveBeenCalled();
+    expect(panTo).not.toHaveBeenCalled();
   });
 
-  it("事物のクリックで選んでも flyTo しない", () => {
+  it("事物のクリックで選んでも panTo しない", () => {
     renderMapCanvas();
 
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
 
-    expect(flyTo).not.toHaveBeenCalled();
+    expect(panTo).not.toHaveBeenCalled();
   });
 });
