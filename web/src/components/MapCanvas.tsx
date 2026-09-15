@@ -205,12 +205,15 @@ export default function MapCanvas({
           onPositionChange={setEraPosition}
         />
       </div>
+      {/* 詳細カードは地図の右上に置き、高さを画面の高さから上下の余白を引いた値までに収める。 */}
       {selectedSeries !== null && (
-        <SeriesDetailCard
-          series={selectedSeries}
-          episodes={episodesOf(episodes, selectedSeries.id)}
-          onClose={() => setSelectedSeriesId(null)}
-        />
+        <div className="absolute top-4 right-4 z-10 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col">
+          <SeriesDetailCard
+            series={selectedSeries}
+            episodes={episodesOf(episodes, selectedSeries.id)}
+            onClose={() => setSelectedSeriesId(null)}
+          />
+        </div>
       )}
     </MapLibreMap>
   );
