@@ -58,7 +58,7 @@ export default function SeriesPanelTagFilter({
           className="flex w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-left hover:bg-white/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
         >
           <span className="min-w-0">タグで絞り込む</span>
-          {/* 閉じている間は三角を右へ向け、開いているか閉じているかを形でも示す。 */}
+          {/* 開いているか閉じているかを、色だけでなく形でも示す。 */}
           <span
             aria-hidden="true"
             className={`ml-auto flex-none text-[0.6rem] text-zinc-600 motion-safe:transition-transform ${isExpanded ? "" : "-rotate-90"}`}
@@ -95,7 +95,7 @@ export default function SeriesPanelTagFilter({
 
               return (
                 <li key={tag}>
-                  {/* 選択中のタグは、色に加えて塗りと太字で示す。 */}
+                  {/* 選択中のタグを、色だけでなく色以外の見た目でも示す。 */}
                   <button
                     type="button"
                     onClick={() => onSelectedTagChange(isSelected ? null : tag)}
