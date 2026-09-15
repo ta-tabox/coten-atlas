@@ -1,26 +1,10 @@
 "use client";
 
 /**
- * ベースマップを画面いっぱいに描き、その上へシリーズのレイヤ・一覧パネル・era スライダー・詳細カードを載せる。
+ * 地図の画面を組み立てる。
+ * ベースマップを画面いっぱいに描き、その上に重ねる部品を子に並べる。
  *
- * 選択されたシリーズを保持するのは、このコンポーネントの `selectedSeriesId` だけである。
- * 地図のクリックと `SeriesPanel` のクリックが同じ state を書き、`SeriesLayers`・`SeriesPanel`・`SeriesDetailCard` が同じ state を読むので、子コンポーネントに複製すると同期が state の突き合わせになる。
- * 位置を読む `SeriesLayers`・`SeriesPanel`・`EraSlider` はどれも `MapLibreMap` の子で、`page.tsx` との間に client wrapper を挟んでも位置はこのコンポーネントを props で通り抜けるだけなので、era スライダーの位置 `eraPosition` もこのコンポーネントに置く。
- *
- * エピソードはマウント直後に `fetchEpisodes` で取得する（docs/ARCHITECTURE.md §3「配り方」）。
- * `SeriesDetailCard` を開いてから取得を始めると、クリックのたびに 750 件を超える JSON の到着を待つ。
- *
- * react-map-gl は maplibre 本体を実行時に動的 import するので、プリレンダでは空のコンテナだけが出る。
- * この層を `next/dynamic` の `ssr: false` で包む必要は無い。
- * worker の在り処は `workerUrl` で名指す。
- * 渡さないと maplibre はバンドル後のチャンク URL からの相対で worker を探し、404 の HTML を掴んで地図だけが描画されなくなる。
- * attributionControl は渡さない。
- * OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
- * style で寸法を渡す。
- * スタイルは Tailwind のユーティリティで書く決まりだが、MapLibreMap は container の `style` しか公開せず `className` を持たないので、寸法だけはここに残る。
- * built-in control（Navigation・Scale 等）はここへ足さない。
- * MapLibre が吐く DOM は `maplibre-gl.css` が素のカスケードで押さえており、レイヤに入った Tailwind のユーティリティが負けるので、当てても効かない。
- * 地図の上に置くものは React 側の overlay として書く。
+ * 画面の複数の部品が読む状態はこのコンポーネントが持ち、子へは props で渡す。
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -133,6 +117,8 @@ export default function MapCanvas({
   const [episodes, setEpisodes] = useState<EpisodesState>({ kind: "loading" });
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
 
+  // エピソードは詳細カードを開く前の、マウントした直後に取得する。
+  // 詳細カードを開いてから取得を始めると、クリックのたびに 750 件を超える JSON の到着を待つ。
   useEffect(() => {
     let mounted = true;
 
@@ -176,12 +162,17 @@ export default function MapCanvas({
     });
   }
 
+  // react-map-gl は maplibre 本体を実行時に動的 import するので、プリレンダでは空のコンテナだけが出る。
+  // MapLibreMap を next/dynamic の ssr: false で包まなくてよい。
   return (
     <MapLibreMap
       ref={mapRef}
+      // attributionControl は渡さない。
+      // OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
       mapStyle={BASEMAP_STYLE_URL}
       initialViewState={INITIAL_VIEW_STATE}
       workerUrl={MAP_WORKER_URL}
+      // MapLibreMap は container の `className` を受け取らないので、寸法だけは Tailwind のユーティリティでなく style で渡す。
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={(event) => setSelectedSeriesId(selectedSeriesIdOf(event))}
