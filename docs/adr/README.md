@@ -138,7 +138,6 @@
 | [0043](0043-era-fade-window-only.md) | 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値をそのまま MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く（0040 を supersede） | 2026-09-11 | 採用 |
 | [0044](0044-series-vocabulary-without-kind.md) | 手で書く欄の語彙と、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を、`kind` を除いて決め直す（0041 を supersede） | 2026-09-11 | 採用 |
 | [0045](0045-pnpm-check-current-form.md) | 判定の口は `web/` で打つ `pnpm check` の一本で、踏襲しているツールチェーンの規約と同じ形にする（0009 を supersede） | 2026-09-14 | 採用 |
-| [0046](0046-series-panel-unlocated-section.md) | 一覧パネルは位置なしのシリーズを現在窓で絞らずに全件を別区画へ並べ、年代の欄は年を持つシリーズにだけ出す | 2026-09-14 | 採用 |
 
 **0014 は人間の目視を L5 と呼んでいる。**
 `docs/HARNESS.md`「検証の層構造」は番号を `pnpm check` の連鎖の位置に限り、人間の目視に番号を与えないので、0014 の L5 は「人間の目視」と読む。

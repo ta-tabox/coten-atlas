@@ -2,7 +2,7 @@
  * 一覧パネルに並べるシリーズを、地図に出ている区画と地図に出ない区画へ分ける。
  *
  * 地図に出ているかは `@/lib/map/series-layer` の `seriesIdsOnMapIn` で決め、地図の円を描くレイヤと同じ判定を使う。
- * 位置なしのシリーズを現在窓で絞らない理由は docs/adr/0046-series-panel-unlocated-section.md が持つ。
+ * 位置なしのシリーズの大半は `timeRange` が `TIME_RANGE_UNTIMED` で現在窓と比べられないので、位置なしの区画は現在窓で絞らずに全件を入れる。
  * 描画（React）と選択の状態はここに置かない。
  */
 
