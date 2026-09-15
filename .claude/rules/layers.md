@@ -60,6 +60,7 @@ paths:
 |---|---|---|---|
 | 選択中のシリーズ（`selectedSeriesId`） | `src/components/map/MapCanvas.tsx` | `MapCanvas`・`SeriesPanel`・`SeriesDetailCard` | `SeriesLayers`・`SeriesPanel`・`SeriesDetailCard` |
 | era スライダーの位置（`eraPosition`） | `src/components/map/MapCanvas.tsx` | `EraSlider` | `EraSlider`・`SeriesLayers`・`SeriesPanel` |
+| タグの絞り込みに使うタグ（`selectedTag`） | `src/components/map/MapCanvas.tsx` | `SeriesPanel` | `SeriesLayers`・`SeriesPanel` |
 | エピソードの取得の状態（`EpisodesState`） | `src/components/map/MapCanvas.tsx` | `MapCanvas` | `SeriesDetailCard` |
 
 ## プロジェクト固有（育てる欄）
