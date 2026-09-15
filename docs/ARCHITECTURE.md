@@ -148,7 +148,7 @@ catalog/
 `season` と `title` の対応は**フィードが正**である。
 上の `2` はスパルタ、`7` は世界三大宗教の、フィードでの `itunes:season` の値である。
 
-- **1 シリーズ = `itunes:season` の 1 値**。
+- **1 シリーズ = `season` の 1 値**。
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
 - エピソードとシリーズの割当キーは `season` で、エピソードの `season` は `season-corrections.json`・題名の先頭の `【NN-M】` の `NN`・`itunes:season` の順に最初に決まった値である（理由は [ADR-0046](adr/0046-season-assignment-precedence.md)）。
   シリーズもエピソードも `season` を持ち、シリーズでは必須、エピソードでは決まらない回があるので nullable
