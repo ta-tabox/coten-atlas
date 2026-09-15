@@ -1,6 +1,6 @@
 /**
- * 検証するのは、props の区画と選択から何が表示され、クリックが何を返すかである。
- * 区画の分け方は `@/lib/map/series-panel.test.ts` が、props に何を渡すかを決める配線は `MapCanvas.test.tsx` が検証する。
+ * 検証するのは、props の区画がパネルのどの区画に並ぶかと、パネル全体と区画ごとの開閉である。
+ * 区画 1 つの表示は `SeriesPanelSection.test.tsx`、シリーズ 1 件の表示は `SeriesPanelItem.test.tsx`、props に何を渡すかを決める配線は `MapCanvas.test.tsx` が検証する。
  */
 
 import { fireEvent, render, screen, within } from "@testing-library/react";
@@ -67,20 +67,7 @@ describe("SeriesPanel", () => {
     expect(within(onMapSection()).queryByText("お金の歴史")).toBeNull();
   });
 
-  it("年を持つシリーズには年代を出し、時期を持たないシリーズには年代を出さない", () => {
-    render(
-      <SeriesPanel
-        sections={SECTIONS}
-        selectedSeriesId={null}
-        onSelect={vi.fn()}
-      />,
-    );
-
-    expect(within(onMapSection()).getByText("前900年〜前200年")).toBeVisible();
-    expect(within(unlocatedSection()).queryByText(/\d+年/)).toBeNull();
-  });
-
-  it("シリーズをクリックすると、その id を渡して onSelect を呼ぶ", () => {
+  it("シリーズを押すと、その id を渡して onSelect を呼ぶ", () => {
     const onSelect = vi.fn();
 
     render(
@@ -93,24 +80,6 @@ describe("SeriesPanel", () => {
     fireEvent.click(screen.getByRole("button", { name: /お金の歴史/ }));
 
     expect(onSelect).toHaveBeenCalledExactlyOnceWith("okane-no-rekishi");
-  });
-
-  it("選択中のシリーズのボタンにだけ aria-current を付ける", () => {
-    render(
-      <SeriesPanel
-        sections={SECTIONS}
-        selectedSeriesId="sparta"
-        onSelect={vi.fn()}
-      />,
-    );
-
-    expect(screen.getByRole("button", { name: /スパルタ/ })).toHaveAttribute(
-      "aria-current",
-      "true",
-    );
-    expect(
-      screen.getByRole("button", { name: /お金の歴史/ }),
-    ).not.toHaveAttribute("aria-current");
   });
 
   it("地図に出ているシリーズが無ければ、その区画に無いことを文で言う", () => {
@@ -143,13 +112,11 @@ describe("SeriesPanel", () => {
 
     fireEvent.click(onMapToggle);
 
-    expect(onMapToggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByRole("button", { name: /スパルタ/ })).toBeNull();
     expect(screen.getByRole("button", { name: /お金の歴史/ })).toBeVisible();
 
     fireEvent.click(onMapToggle);
 
-    expect(onMapToggle).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByRole("button", { name: /スパルタ/ })).toBeVisible();
   });
 
