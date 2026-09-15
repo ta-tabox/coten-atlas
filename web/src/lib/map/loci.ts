@@ -50,7 +50,7 @@ export type MapLocusCollection = {
  * 事物の `timeRange` が `TIME_RANGE_OF_SERIES` なら、`seriesId` が指すシリーズの年を写す。
  *
  * 指す先が無いか、指す先のシリーズの `timeRange` が `TIME_RANGE_UNTIMED` で年を解決できなければ throw する。
- * 参照の壊れは `references.ts` が `pnpm test` で落とすので、ビルドまで残っていれば検査そのものが素通りしている。
+ * 参照の壊れは `references.ts` の検査が `pnpm test` を失敗させるので、ビルドまで残っていれば検査そのものが効いていない。
  */
 function toMapLocus(
   locus: Locus,
@@ -82,6 +82,19 @@ function toMapLocus(
       timeEnd: years.end,
     },
   };
+}
+
+/**
+ * `loci` から `series` の代表点を探して返す。
+ * `series` が位置なしなら undefined を返す。
+ *
+ * 事物の `id` に `ANCHOR_UNLOCATED` は使えないので、位置なしのシリーズの `anchor` に一致する事物は無い。
+ */
+export function findAnchorLocus(
+  loci: MapLocusCollection,
+  series: Series,
+): MapLocusFeature | undefined {
+  return loci.features.find((locus) => locus.properties.id === series.anchor);
 }
 
 /** 事物の全件を、地図の source へ渡す形へ直す。 */

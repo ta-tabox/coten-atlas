@@ -11,13 +11,19 @@ import {
 } from "@/lib/era/window";
 import type { MapLocusCollection, MapLocusFeature } from "@/lib/map/loci";
 import {
+  SELECTED_SERIES_RING_LAYER,
   SERIES_CIRCLE_LAYER,
+  selectedSeriesRingLayerIn,
   seriesCircleLayerIn,
+  seriesIdsOnMapIn,
 } from "@/lib/map/series-layer";
 
 const WINDOW: CurrentWindow = { start: 100, end: 200 };
 
-/** `id` の事物を、`timeStart` から `timeEnd` までの年で 1 件作る。 */
+/**
+ * `id` の事物を、`timeStart` から `timeEnd` までの年で 1 件作る。
+ * シリーズの id は事物の id と同じにする。
+ */
 function locusOf(
   id: string,
   timeStart: number,
@@ -28,6 +34,14 @@ function locusOf(
     geometry: { type: "Point", coordinates: [0, 0] },
     properties: { id, seriesId: id, timeStart, timeEnd },
   };
+}
+
+/** `locus` のシリーズの id を `seriesId` に置き換えた事物を返す。 */
+function withSeriesId(
+  locus: MapLocusFeature,
+  seriesId: string,
+): MapLocusFeature {
+  return { ...locus, properties: { ...locus.properties, seriesId } };
 }
 
 /** `features` を地図へ渡す形の全件にする。 */
@@ -104,5 +118,62 @@ describe("seriesCircleLayerIn", () => {
     expect(layer.paint?.["circle-radius"]).toBe(
       SERIES_CIRCLE_LAYER.paint?.["circle-radius"],
     );
+  });
+});
+
+describe("seriesIdsOnMapIn", () => {
+  it("窓と重なる事物を持つシリーズの id だけを返す", () => {
+    const inside = locusOf("inside", 120, 140);
+    const outside = locusOf("outside", 500, 600);
+
+    expect(seriesIdsOnMapIn(WINDOW, lociOf(inside, outside))).toEqual(
+      new Set(["inside"]),
+    );
+  });
+
+  it("窓と重なる事物を 2 件持つシリーズの id を 1 つにまとめる", () => {
+    const first = withSeriesId(locusOf("first", 120, 140), "sparta");
+    const second = withSeriesId(locusOf("second", 150, 160), "sparta");
+
+    expect(seriesIdsOnMapIn(WINDOW, lociOf(first, second))).toEqual(
+      new Set(["sparta"]),
+    );
+  });
+});
+
+describe("selectedSeriesRingLayerIn", () => {
+  it("選択中のシリーズの事物のうち、窓と重なるものだけを filter に残す", () => {
+    const selectedInside = withSeriesId(locusOf("in", 120, 140), "sparta");
+    const selectedOutside = withSeriesId(locusOf("out", 500, 600), "sparta");
+    const other = locusOf("other", 120, 140);
+
+    const layer = selectedSeriesRingLayerIn({
+      currentWindow: WINDOW,
+      loci: lociOf(selectedInside, selectedOutside, other),
+      selectedSeriesId: "sparta",
+    });
+
+    expect(layer.filter).toEqual(["in", ["get", "id"], ["literal", ["in"]]]);
+  });
+
+  it("選択が無ければ、どの事物も filter に残さない", () => {
+    const layer = selectedSeriesRingLayerIn({
+      currentWindow: WINDOW,
+      loci: lociOf(locusOf("inside", 120, 140)),
+      selectedSeriesId: null,
+    });
+
+    expect(layer.filter).toEqual(["in", ["get", "id"], ["literal", []]]);
+  });
+
+  it("id と縁の描き方は SELECTED_SERIES_RING_LAYER から変えない", () => {
+    const layer = selectedSeriesRingLayerIn({
+      currentWindow: WINDOW,
+      loci: lociOf(),
+      selectedSeriesId: null,
+    });
+
+    expect(layer.id).toBe(SELECTED_SERIES_RING_LAYER.id);
+    expect(layer.paint).toEqual(SELECTED_SERIES_RING_LAYER.paint);
   });
 });
