@@ -7,36 +7,19 @@
 恒久運用を前提にした造りにしない。
 
 ## git
-このリポジトリは**ソフトウェアとして公開する**。
-- **author は人間名義**。Claude も `-c` を付けず素の `git commit` を使う
-  （手元は local config に焼いてある。リモートはクラウド環境の `GIT_AUTHOR_*` が渡し、無ければセッション起動フックが止まる。置き場は `docs/HARNESS.md`「設定の置き場」）。
-  責任を負うのは、そのコミットを公開すると決めた人間の側。
-  **リモートの `git config user.name` は Claude 名義のまま**で、これは直さない。
-  コンテナが署名を強制し、その鍵が `noreply@anthropic.com` に紐づいているので、committer を人間名義にすると GitHub が Unverified を出す。
-  author（責任を誰が担ったか）と committer（実際にコミットを作った者）は別の欄なので、片方を実態へ合わせても他方は動かない。
-- **`Co-authored-by: Claude <noreply@anthropic.com>` を付ける**。ソフトウェアの
-  利用者に対しては、AI 支援の事実を履歴に明示する。
-- **メッセージ prefix は変更の型**——`feat:` `fix:` `docs:` `refactor:` `chore:`
-  `test:`、部位を添えるなら `feat(web):`。**プロジェクト名は名乗らない**
-  （このリポジトリが既に答えている）。
-- **push は Claude が叩いてよい**（手元でもリモートでも）。
-  判定は `.claude/settings.json` の `permissions` が持ち、素の `git push` は allow。
-  **戻せない操作——force push・履歴の書き換え・ブランチやタグの削除——は、
-  その都度人間に諾否を訊く**。
-  権限パターンは前方一致で `git push origin --force` のような語順を拾えないので、
-  コマンド全文を見る `.claude/hooks/guard-force-push.sh` が ask へ回す。
-  PR の作成とマージは、人間がそう指示したときだけ。
-- **`gh` の実行権は「戻せるか」で三層に切る**。
-  読み取り・起票・コメント・close までが allow——どれも reopen や編集で戻る。
-  `gh pr merge`・`gh release` は ask。
-  merge を分けたのは、main への push が本番デプロイや migration を起こしうるので、戻る操作の側に入らないため。
-  `gh repo delete`・`gh repo edit`・`gh secret`・`gh auth` は deny。
-  承認を挟めば通る類ではなくエージェントの仕事でもないので、プロンプトごと落としてある。
-  ただし deny が効くのはそのコマンド文字列にだけで、`gh api -X PATCH repos/…` は `gh repo edit` を経由せず同じ操作へ届く。
-  そこを受け止めるのが `.claude/hooks/guard-gh-api.sh` である。
-  `gh api` はコマンド文字列が一通りしか無く、前方一致では読み取りと書き込みを分けられないので、コマンド全文を見て戻せない書き込みだけを ask へ回す。
-  素通しするのは読み取り・コメント投稿・レビュースレッドの resolve の三つで、どれも `gh issue comment` が allow なのと同じ「戻せる」層に当たる。
-  雛形は `gh api` を丸ごと ask にしており、その形だとレビューの往復で読み取りまで毎回訊かれるので、**ここは全リポジトリ共通の雛形から逸脱している**。
+このリポジトリは**ソフトウェアとして公開する**（粒度と文体の正は `.claude/rules/writing.md`）。
+- **author は人間名義**。
+  Claude も `-c` を付けず素の `git commit` を使う。
+  リモートは committer だけ Claude 名義で、直さない（名義の置き場は `docs/HARNESS.md`「設定の置き場」）
+- **`Co-authored-by: Claude <noreply@anthropic.com>` を付ける**（文言は `.claude/settings.json` の `attribution`）
+- **prefix は変更の型**（`feat:` `fix:` `docs:` `refactor:` `chore:` `test:`、部位を添えるなら `feat(web):`）。
+  プロジェクト名は名乗らない
+- **push・issue の起票・コメント・close は Claude が叩いてよい**（どれも追記か、reopen で戻る）。
+  PR の作成とマージは、人間がそう指示したときだけ
+- **戻せない操作（force push・履歴の書き換え・ブランチやタグの削除）・`gh pr merge`・`gh release` は、その都度人間に諾否を訊く**。
+  マージは main への push が本番デプロイや migration を起こしうるので、戻る操作に入れない
+- 機械の判定は `.claude/settings.json` の `permissions`（`gh repo delete`・`gh repo edit`・`gh secret`・`gh auth` は deny）と、コマンド全文を見る `.claude/hooks/guard-force-push.sh`・`guard-gh-api.sh` が持つ。
+  `gh api` の読み取り・コメント投稿・レビュースレッドの resolve だけを訊かずに通す形は雛形からの逸脱で、正はこの節
 
 ## 開発ハーネス（本文は `docs/HARNESS.md`）
 
@@ -50,12 +33,18 @@
 決定と経緯は `docs/adr/`——1決定1レコード・**追記のみ**・覆すときは supersede
 （規約は同 `README.md`）。状態と作業単位は GitHub Issues。
 
-コーディング規約は `.claude/rules/`（文章は常時、コードと言語別と UI と置き場の表は該当ファイルの Read で読み込まれる）。
-**コードを書く前に** skill `coding-standards` / `karpathy-guidelines` を開く（レビューやリファクタに限らない）。
-隣接ファイルを読まずに新規ファイルを書くときは、先に `.claude/rules/coding.md` と該当言語の `languages/<lang>.md` を Read する。
-
 **申し送りの層は持たない**（理由は [ADR-0025](docs/adr/0025-retire-next-md.md)）。
 続きは開いている issue の一覧から拾い、構造に関わる未決は `docs/ARCHITECTURE.md` §8 が引き取る。
+
+## 規約の入口
+- 規約は `.claude/rules/`。
+  `writing.md` は常時、残り（`coding.md`・`layers.md`・`design.md`・`languages/*.md`）は frontmatter の `paths` に当たるファイルを Read した時点で読み込まれる
+- **コードを書く前に** skill `coding-standards`（判断の例）と `karpathy-guidelines`（過剰実装と巻き込み変更の抑制）を開く。
+  実装・テスト追加・バグ修正・レビュー・リファクタのすべてが対象
+- 隣接ファイルを読まずに新規ファイルを書くときは、先に `.claude/rules/coding.md` と該当言語の `languages/<lang>.md`（画面へ触るなら `design.md` も）を Read する
+- 書き終えたら、PR の前に skill `coding-standards`「レビューで繰り返し指摘される型」の表を、変更した各コメント・名前・ファイルへ当てる
+- `karpathy-guidelines` は外部由来（https://github.com/multica-ai/andrej-karpathy-skills の 2c60614、MIT）で、リモートの空のコンテナでも初回から効くよう本体を `.claude/skills/` へ同梱してある。
+  上流の更新は手で取り込む
 
 ## 配布物の追随
 
