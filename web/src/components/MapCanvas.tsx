@@ -195,12 +195,16 @@ export default function MapCanvas({
           onSelect={selectFromPanel}
         />
       </div>
-      <EraSlider
-        eras={eras}
-        presentEnd={presentEnd}
-        position={eraPosition}
-        onPositionChange={setEraPosition}
-      />
+      {/* era スライダーは地図の下部の中央に置く。 */}
+      {/* 包みは左端を left-1/2 で画面の中央に置くので、幅を包みに書かないと、包みの幅は画面の幅の半分を上限に縮む。 */}
+      <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2">
+        <EraSlider
+          eras={eras}
+          presentEnd={presentEnd}
+          position={eraPosition}
+          onPositionChange={setEraPosition}
+        />
+      </div>
       {selectedSeries !== null && (
         <SeriesDetailCard
           series={selectedSeries}

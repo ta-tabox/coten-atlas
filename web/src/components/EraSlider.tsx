@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * era スライダーを、地図の下部に重ねて表示する。
+ * era スライダーを表示する。
  *
  * 位置を保持しない。
  * 表示するのは props で受け取った `position` で、動かされた位置は `onPositionChange` で返す。
@@ -166,7 +166,7 @@ export default function EraSlider({
   }
 
   return (
-    <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-white/50 bg-white/45 px-4 pt-2.5 pb-1.5 font-sans text-zinc-800 shadow-lg shadow-black/5 backdrop-blur-md backdrop-saturate-150">
+    <div className="rounded-xl border border-white/50 bg-white/45 px-4 pt-2.5 pb-1.5 font-sans text-zinc-800 shadow-lg shadow-black/5 backdrop-blur-md backdrop-saturate-150">
       {/* 画面にはスライダーの見出しを出さないが、スクリーンリーダーにはスライダーの名前として読ませる。 */}
       <label htmlFor={SLIDER_ID} className="sr-only">
         時代
