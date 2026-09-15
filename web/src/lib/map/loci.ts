@@ -97,6 +97,21 @@ export function findAnchorLocus(
   return loci.features.find((locus) => locus.properties.id === series.anchor);
 }
 
+/** `loci` のうち、`series` のどれかを `seriesId` に持つ事物だけを、`loci` の並び順で返す。 */
+export function lociForSeries(
+  loci: MapLocusCollection,
+  series: SeriesList,
+): MapLocusCollection {
+  const seriesIds = new Set(series.map((one) => one.id));
+
+  return {
+    type: "FeatureCollection",
+    features: loci.features.filter((locus) =>
+      seriesIds.has(locus.properties.seriesId),
+    ),
+  };
+}
+
 /** 事物の全件を、地図の source へ渡す形へ直す。 */
 export function toMapLoci(
   loci: LocusCollection,

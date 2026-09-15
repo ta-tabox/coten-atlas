@@ -25,9 +25,14 @@ import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
 } from "@/lib/map/config";
-import { findAnchorLocus, type MapLocusCollection } from "@/lib/map/loci";
+import {
+  findAnchorLocus,
+  lociForSeries,
+  type MapLocusCollection,
+} from "@/lib/map/loci";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
+import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
 import type { EraList } from "@/lib/schema/era";
 import type { Series, SeriesList } from "@/lib/schema/series";
 
@@ -108,6 +113,11 @@ export default function MapCanvas({
 }: MapCanvasProps) {
   const mapRef = useRef<MapRef>(null);
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
+
+  // 絞り込みに使うタグは、選択中のシリーズと別の state に持ち、どちらを変えてももう片方は変えない。
+  // 絞り込みで選択中のシリーズが地図と一覧パネルから消えても選択は外さず詳細カードも開いたままなので、選択を移す操作は、移す先のシリーズが `selectedTag` を持つかを確かめなくてよい。
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+
   const [eraPosition, setEraPosition] = useState(() =>
     initialEraPositionOf(eras),
   );
@@ -136,6 +146,12 @@ export default function MapCanvas({
   const selectedSeries: Series | null =
     series.find((one) => one.id === selectedSeriesId) ?? null;
   const eraWindow = currentWindow({ position: eraPosition, eras, presentEnd });
+
+  const panelTags = panelTagsOf(
+    seriesPanelSectionsOf({ series, loci, currentWindow: eraWindow }),
+  );
+  const taggedSeries = taggedSeriesOf(series, selectedTag);
+  const taggedLoci = lociForSeries(loci, taggedSeries);
 
   /**
    * 一覧パネルでクリックされた `seriesId` のシリーズを選択し、代表点を持つならその代表点へ地図の中心を移す。
@@ -179,7 +195,7 @@ export default function MapCanvas({
       onMouseLeave={() => setIsHoveringLocus(false)}
     >
       <SeriesLayers
-        loci={loci}
+        loci={taggedLoci}
         currentWindow={eraWindow}
         selectedSeriesId={selectedSeriesId}
       />
@@ -187,12 +203,15 @@ export default function MapCanvas({
       <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-12rem)] max-w-[calc(100vw-2rem)] flex-col">
         <SeriesPanel
           sections={seriesPanelSectionsOf({
-            series,
-            loci,
+            series: taggedSeries,
+            loci: taggedLoci,
             currentWindow: eraWindow,
           })}
           selectedSeriesId={selectedSeriesId}
           onSelect={selectFromPanel}
+          tags={panelTags}
+          selectedTag={selectedTag}
+          onSelectedTagChange={setSelectedTag}
         />
       </div>
       {/* era スライダーは地図の下部の中央に置く。 */}
