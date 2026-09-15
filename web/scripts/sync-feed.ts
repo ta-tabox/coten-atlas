@@ -167,6 +167,27 @@ function warnDisappeared(
 }
 
 /**
+ * `season-corrections.json` の行のうち、`guid` がフィードのどの回にも無い行を報せる。
+ *
+ * guid を書き間違えた行も、フィードから消えた回の行も、どの回の割当にも効かないまま残る。
+ */
+function warnUnmatchedCorrections(
+  items: FeedItem[],
+  corrections: SeasonCorrectionList,
+): void {
+  const present = new Set(items.map((item) => item.guid));
+  const unmatched = corrections.filter(({ guid }) => !present.has(guid));
+
+  if (unmatched.length > 0) {
+    console.error(
+      `season-corrections.json の ${unmatched.length} 行の guid がフィードに無い: ${unmatched
+        .map(({ guid }) => guid)
+        .join(", ")}`,
+    );
+  }
+}
+
+/**
  * 前回は付いていた seriesId が外れた回を報せる。
  *
  * サマリは未割当の数しか出さないので、割当が外れた回はその数に紛れる。
@@ -315,6 +336,7 @@ async function main(): Promise<void> {
   const previous = readPreviousAssignments(EPISODES_FILE);
 
   warnDisappeared(items, previous);
+  warnUnmatchedCorrections(items, corrections);
 
   const syncedAt = new Date().toISOString();
   const assignments: Assignment[] = items.map((item) => {
