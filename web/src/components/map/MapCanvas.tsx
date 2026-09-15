@@ -10,10 +10,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
-import EraSlider from "@/components/EraSlider";
-import SeriesDetailCard from "@/components/SeriesDetailCard";
-import SeriesLayers from "@/components/SeriesLayers";
-import SeriesPanel from "@/components/SeriesPanel";
+import EraSlider from "@/components/era-slider/EraSlider";
+import SeriesLayers from "@/components/map/SeriesLayers";
+import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
+import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import {
   type EpisodesState,
   episodesForSeries,

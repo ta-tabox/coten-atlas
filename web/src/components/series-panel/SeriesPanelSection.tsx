@@ -8,7 +8,7 @@
  */
 
 import { type ReactNode, useId } from "react";
-import SeriesPanelItem from "@/components/SeriesPanelItem";
+import SeriesPanelItem from "@/components/series-panel/SeriesPanelItem";
 import type { Series } from "@/lib/schema/series";
 
 type SeriesPanelSectionProps = {

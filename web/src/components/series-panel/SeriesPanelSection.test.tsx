@@ -6,7 +6,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vitest";
-import SeriesPanelSection from "@/components/SeriesPanelSection";
+import SeriesPanelSection from "@/components/series-panel/SeriesPanelSection";
 import type { Series } from "@/lib/schema/series";
 
 const SPARTA: Series = {
