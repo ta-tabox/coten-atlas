@@ -724,5 +724,16 @@
     "season": 66,
     "links": [],
     "tags": ["集団", "帝国"]
+  },
+  {
+    "id": "mongol-teikoku-shurai",
+    "title": "モンゴル帝国襲来",
+    "anchor": "hakata",
+    "timeRange": { "start": 1274, "end": 1281 },
+    "summary": "",
+    "region": "日本",
+    "season": 67,
+    "links": [],
+    "tags": ["出来事", "戦争", "帝国", "政治"]
   }
 ]
