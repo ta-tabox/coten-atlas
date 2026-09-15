@@ -130,7 +130,7 @@ function readPreviousAssignments(file: string): Map<string, string | null> {
 }
 
 /**
- * 割当を済ませたフィードの 1 件 `assignment` を、`itunes:season` でなく割当に使った season を持つ `episodes.json` の 1 件へ直す。
+ * 割当を済ませたフィードの 1 件を、`itunes:season` でなく割当に使った season を持つ `episodes.json` の 1 件へ直す。
  *
  * `audioUrl`・`episodeNumber`・`durationSec` はスキーマに欄が無いので落とす。
  * `episodeSchema` は未知のキーを捨てずに落とすので、足すと `parseEpisodes` が赤になる。

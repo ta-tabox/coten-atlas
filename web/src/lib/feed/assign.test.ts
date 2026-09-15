@@ -42,7 +42,7 @@ function item(overrides: Partial<FeedItem>): FeedItem {
 }
 
 /**
- * 配信フィードで `itunes:season` が誤っているか欠けている 4 回。
+ * 配信フィードで `itunes:season` が誤っているか欠けている回。
  * guid・題名・`itunes:season` は配信フィードの値をそのまま写してある。
  */
 const MISLABELED_ITEMS = {
@@ -72,7 +72,7 @@ const MISLABELED_ITEMS = {
   }),
 };
 
-/** 4 回の割当先と、4 回を取り違えたときに割り当たるシリーズ。 */
+/** `MISLABELED_ITEMS` の正しい割当先と、`itunes:season` で割り当てたときに入る誤った割当先のシリーズ。 */
 const SERIES = [
   series("america-kaitakushi", 15),
   series("shogai-no-rekishi", 37),
