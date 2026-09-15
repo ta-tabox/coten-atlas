@@ -4,7 +4,7 @@
 
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import SeriesPanelItem from "@/components/SeriesPanelItem";
+import SeriesPanelItem from "@/components/series-panel/SeriesPanelItem";
 import {
   ANCHOR_UNLOCATED,
   type Series,

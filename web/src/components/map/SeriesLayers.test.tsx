@@ -9,7 +9,7 @@ import { render } from "@testing-library/react";
 import type { ReactNode } from "react";
 import type { LayerProps } from "react-map-gl/maplibre";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import SeriesLayers from "@/components/SeriesLayers";
+import SeriesLayers from "@/components/map/SeriesLayers";
 import type { CurrentWindow } from "@/lib/era/window";
 import type { MapLocusCollection } from "@/lib/map/loci";
 import {

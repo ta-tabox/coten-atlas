@@ -9,7 +9,7 @@
  */
 
 import { useId, useState } from "react";
-import SeriesPanelSection from "@/components/SeriesPanelSection";
+import SeriesPanelSection from "@/components/series-panel/SeriesPanelSection";
 import type { SeriesPanelSections } from "@/lib/map/series-panel";
 
 type SeriesPanelProps = {

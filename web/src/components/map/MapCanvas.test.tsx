@@ -22,11 +22,11 @@ import type {
   MapRef,
 } from "react-map-gl/maplibre";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import EraSlider from "@/components/EraSlider";
-import MapCanvas from "@/components/MapCanvas";
-import SeriesDetailCard from "@/components/SeriesDetailCard";
-import SeriesLayers from "@/components/SeriesLayers";
-import SeriesPanel from "@/components/SeriesPanel";
+import EraSlider from "@/components/era-slider/EraSlider";
+import MapCanvas from "@/components/map/MapCanvas";
+import SeriesLayers from "@/components/map/SeriesLayers";
+import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
+import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import { currentWindow } from "@/lib/era/window";
 import {
   BASEMAP_STYLE_URL,
