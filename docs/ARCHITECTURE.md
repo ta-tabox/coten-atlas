@@ -65,6 +65,7 @@ catalog/
 ├── episodes.json        # 自動層。RSS から同期。手で編集しない
 ├── series.json          # 手動層。シリーズ=キュレーション対象の正。geometry を持たない
 ├── loci.geojson         # 手動層。事物（シリーズが地図の上に持つもの）。地図の source の元
+├── season-corrections.json # 手動層。題名と itunes:season から正しい season が決まらない回を guid で訂正する表
 └── eras.json            # 時代区分（下記「時系列（era）モデル」）
 ```
 
@@ -85,7 +86,7 @@ catalog/
       // フィードの文字列をそのまま持つ。シリーズ名をここから抽出しない（表記が揺れている）
       "title": "【66-10】五賢帝時代はじまる！…【COTEN RADIO 帝政ローマ編10】",
       "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822（フィードは全件 GMT）からの正規化は同期側
-      "season": 66,              // itunes:season。持たない回（番外編・特別編・告知）は null
+      "season": 66,              // 割当に使った season（§5 の手順 2）。決まらない回（番外編・特別編・告知）は null
       "seriesId": "teisei-roma",  // season から割当。未割当なら null
       // RSS の <link>。エピソード単位の Spotify ページで、open.spotify.com/episode/… はフィードに無い
       "links": [{ "platform": "spotify", "url": "https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q" }]
@@ -149,8 +150,9 @@ catalog/
 
 - **1 シリーズ = `itunes:season` の 1 値**。
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
-- エピソードとシリーズの割当キーは `itunes:season`（理由は [ADR-0018](adr/0018-season-as-assignment-key.md)）。
-  シリーズ側もエピソード側も `season` を持ち、シリーズ側は必須、エピソード側は持たない回があるので nullable
+- エピソードとシリーズの割当キーは `season` で、エピソードの `season` は `season-corrections.json`・題名の先頭の `【NN-M】` の `NN`・`itunes:season` の順に最初に決まった値である（理由は [ADR-0046](adr/0046-season-assignment-precedence.md)）。
+  シリーズもエピソードも `season` を持ち、シリーズでは必須、エピソードでは決まらない回があるので nullable
+- `season-corrections.json` は `guid`・`season`（正の整数か、割り当てないことを表す null）・`reason` を持つ行の配列で、題名と `itunes:season` のどちらからも正しい season が決まらない回だけを書く
 - `id` はシリーズ名のローマ字を kebab-case にした手書きの値で、フィードから機械で決まる値ではない。
   同じ値を二つのシリーズが要求したら、どちらかを変える。
   重複はスキーマが落とし、変えた後に残る古い参照（エピソードの `seriesId`・事物の `seriesId`）は `references.ts` が落とすので、黙って壊れることは無い
@@ -324,14 +326,16 @@ catalog/
   - `enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）。
     音声を再生する画面が無いので episodes.json へは保存しない
   - シリーズ番号は `itunes:season`。1〜66 が欠番なく並ぶが、752 件中 176 件（番外編・特別編・告知）はこれを持たない
+  - 番外編を除いて `itunes:season` を持つ回の題名は `【NN-M】`（`NN` はシリーズの番号、`M` はシリーズ内の回の番号）で始まる。
+    `NN` と `itunes:season` が食い違う回と、題名が `【NN-M】` で始まるのに `itunes:season` を持たない回がある
   - シリーズ内の回は `itunes:episode`。消費する画面が無いので episodes.json へは保存しない
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
-  2. series.json 全件の `season` から season → seriesId の索引を組み、フィード全件の `itunes:season` をこの索引と照合して seriesId を割り当てる
+  2. フィード全件の season を season-corrections.json・題名の先頭の `【NN-M】`・`itunes:season` の順に決め、series.json 全件の `season` から組んだ season → seriesId の索引と照合して seriesId を割り当てる
   3. 結果サマリを stdout へ。
-     未割当は「規則で確定」（`itunes:season` を持たない回・番外編）と「シリーズ未作成」に割って数える
+     未割当は「規則で確定」（season が決まらない回・番外編・訂正表で外した回）と「シリーズ未作成」に割って数える
 - 運用: 当面は手動で `pnpm sync` → サマリの「シリーズ未作成」を見て `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット。
-  手を入れる先は手動層の `series.json` と `loci.geojson` だけで、`episodes.json` は毎回フィードから組み直すので編集しない。
+  手を入れる先は手動層の `series.json`・`loci.geojson`・`season-corrections.json` だけで、`episodes.json` は毎回フィードから組み直すので編集しない。
   未割当を溜める置き場も持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ。
   軌道に乗ったら GitHub Actions の cron で sync + PR 自動作成に昇格（S8 以降の任意課題）
 - 静的サイトなので実行時 fetch はしない。同期は常にビルド前のデータ更新として行う

@@ -6,7 +6,7 @@
  * どのファイルをどの順で読み書きするかを決めるのがこの層の仕事で、その順序は main を上から読めば追える。
  *
  * `episodes.json` はフィードから毎回組み直す。
- * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` の現状から引き直す。
+ * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` と `season-corrections.json` の現状から決め直す。
  * 未割当を溜める置き場も持たない。
  * 前回との差分を取るのは、新着を数えるためと、割当が外れた回を報せるためだけである。
  *
@@ -22,10 +22,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
-import { assignableSeasonOf, assignSeriesId } from "@/lib/feed/assign";
+import { type SeasonKey, seasonKeyOf, seriesIdOf } from "@/lib/feed/assign";
 import { parseFeed } from "@/lib/feed/parse";
 import type { FeedItem } from "@/lib/feed/schema";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
+import { parseSeasonCorrections } from "@/lib/schema/season-correction";
 import { parseSeries, type SeriesList } from "@/lib/schema/series";
 
 /**
@@ -52,10 +53,15 @@ const CATALOG_DIR = path.resolve(process.cwd(), "../catalog");
 
 const EPISODES_FILE = path.join(CATALOG_DIR, "episodes.json");
 const SERIES_FILE = path.join(CATALOG_DIR, "series.json");
+const SEASON_CORRECTIONS_FILE = path.join(
+  CATALOG_DIR,
+  "season-corrections.json",
+);
 
-/** フィードの 1 件と、それに決まったシリーズ。 */
+/** フィードの 1 件と、それに決まった season とシリーズ。 */
 type Assignment = {
   item: FeedItem;
+  key: SeasonKey;
   seriesId: string | null;
 };
 
@@ -116,17 +122,17 @@ function readPreviousAssignments(file: string): Map<string, string | null> {
 }
 
 /**
- * フィードの 1 件を `episodes.json` の 1 件へ直す。
+ * 割当を済ませたフィードの 1 件 `assignment` を、`itunes:season` でなく割当に使った season を持つ `episodes.json` の 1 件へ直す。
  *
  * `audioUrl`・`episodeNumber`・`durationSec` はスキーマに欄が無いので落とす。
  * `episodeSchema` は未知のキーを捨てずに落とすので、足すと `parseEpisodes` が赤になる。
  */
-function toEpisode(item: FeedItem, seriesId: string | null): Episode {
+function toEpisode({ item, key, seriesId }: Assignment): Episode {
   return {
     guid: item.guid,
     title: item.title,
     pubDate: item.pubDate,
-    season: item.season,
+    season: key.season,
     seriesId,
     links: [{ platform: "spotify", url: item.link }],
   };
@@ -200,21 +206,15 @@ function assertCatalogDir(): void {
  */
 function reportSummary(assignments: Assignment[], added: Assignment[]): void {
   const unassigned = assignments.filter(({ seriesId }) => seriesId === null);
-  const settledByRule = unassigned.filter(
-    ({ item }) => assignableSeasonOf(item) === null,
-  );
-  const awaitingSeries = unassigned.filter(
-    ({ item }) => assignableSeasonOf(item) !== null,
-  );
-  const awaitingSeasons = new Set(
-    awaitingSeries.map(({ item }) => assignableSeasonOf(item)),
-  );
+  const settledByRule = unassigned.filter(({ key }) => key.season === null);
+  const awaitingSeries = unassigned.filter(({ key }) => key.season !== null);
+  const awaitingSeasons = new Set(awaitingSeries.map(({ key }) => key.season));
 
   console.log(
     `フィード ${assignments.length} 件 / 新規 ${added.length} 件 / 割当 ${assignments.length - unassigned.length} 件 / 未割当 ${unassigned.length} 件`,
   );
   console.log(
-    `  規則で確定      ${settledByRule.length} 件（season を持たない回・番外編）`,
+    `  規則で確定      ${settledByRule.length} 件（season が決まらない回・番外編・訂正表で外した回）`,
   );
   console.log(
     `  シリーズ未作成  ${awaitingSeries.length} 件（season ${awaitingSeasons.size} 件）`,
@@ -229,15 +229,19 @@ async function main(): Promise<void> {
 
   const items = parseFeed(await fetchFeed(FEED_URL));
   const series = readSeries(SERIES_FILE);
+  const corrections = parseSeasonCorrections(
+    readJsonFile(SEASON_CORRECTIONS_FILE),
+  );
   const previous = readPreviousAssignments(EPISODES_FILE);
 
   warnDisappeared(items, previous);
 
   const syncedAt = new Date().toISOString();
-  const assignments: Assignment[] = items.map((item) => ({
-    item,
-    seriesId: assignSeriesId(item, series),
-  }));
+  const assignments: Assignment[] = items.map((item) => {
+    const key = seasonKeyOf(item, corrections);
+
+    return { item, key, seriesId: seriesIdOf(key.season, series) };
+  });
 
   warnLostAssignments(assignments, previous);
 
@@ -247,9 +251,7 @@ async function main(): Promise<void> {
     EPISODES_FILE,
     parseEpisodes({
       syncedAt,
-      episodes: assignments.map(({ item, seriesId }) =>
-        toEpisode(item, seriesId),
-      ),
+      episodes: assignments.map((assignment) => toEpisode(assignment)),
     }),
   );
 
