@@ -116,6 +116,24 @@ describe("SeriesPanel", () => {
     ).toBeVisible();
   });
 
+  it("絞り込み中に地図に出ているシリーズが無ければ、選んだタグを持つシリーズがその区画に無いことを文で言う", () => {
+    render(
+      <SeriesPanel
+        sections={{ onMap: [], unlocated: [OKANE] }}
+        selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
+        selectedTag="経済"
+        onSelect={vi.fn()}
+      />,
+    );
+
+    expect(
+      within(onMapSection()).getByText(
+        "この時代に地図に出ているシリーズに、「経済」を持つものは無い。",
+      ),
+    ).toBeVisible();
+  });
+
   it("タグの絞り込みでタグを押すと、そのタグを渡して onSelectedTagChange を呼ぶ", () => {
     const onSelectedTagChange = vi.fn();
 

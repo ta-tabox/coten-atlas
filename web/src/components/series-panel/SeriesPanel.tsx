@@ -103,7 +103,11 @@ export default function SeriesPanel({
               marker={onMapMarker}
               note="スライダーが指す時代に重なるシリーズを、始まりの年の順に並べている。"
               series={sections.onMap}
-              emptyNote="この時代に地図に出ているシリーズは無い。"
+              emptyNote={
+                selectedTag === null
+                  ? "この時代に地図に出ているシリーズは無い。"
+                  : `この時代に地図に出ているシリーズに、「${selectedTag}」を持つものは無い。`
+              }
               selectedSeriesId={selectedSeriesId}
               onSelect={onSelect}
               isExpanded={isOnMapExpanded}
@@ -114,7 +118,11 @@ export default function SeriesPanel({
               marker={unlocatedMarker}
               note="一つの場所や時代に収まらない主題を扱うシリーズ。スライダーの時代によらず、いつでもここから選べる。"
               series={sections.unlocated}
-              emptyNote="場所や時代をまたぐシリーズは無い。"
+              emptyNote={
+                selectedTag === null
+                  ? "場所や時代をまたぐシリーズは無い。"
+                  : `場所や時代をまたぐシリーズに、「${selectedTag}」を持つものは無い。`
+              }
               selectedSeriesId={selectedSeriesId}
               onSelect={onSelect}
               isExpanded={isUnlocatedExpanded}
