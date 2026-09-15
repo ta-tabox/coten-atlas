@@ -9,7 +9,7 @@
  * 年の数値を「前800年」「550年」の形の文字列にする処理は `@/lib/format` が担当する。
  *
  * ポインタ（マウス・指・ペン）の操作はトラックの要素のポインタのイベントで受け、`<input type="range">` はキーボードの操作と読み上げだけを受ける。
- * ポインタの操作を `<input>` に任せない理由は docs/adr/0047-era-slider-pointer-events.md が持つ。
+ * iOS の Safari では `<input type="range">` のつまみの上から始めたスワイプで値が動かないので、ポインタの操作を `<input>` に任せない。
  *
  * MapLibre の DOM へ入れない理由は docs/adr/0022-map-dom-boundary.md が正。
  */
