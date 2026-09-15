@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { seasonKeyOf, seriesIdOf } from "@/lib/feed/assign";
+import {
+  listUncorrectedSeasonMismatches,
+  seasonKeyOf,
+  seriesIdOf,
+} from "@/lib/feed/assign";
 import type { FeedItem } from "@/lib/feed/schema";
 import type { SeasonCorrectionList } from "@/lib/schema/season-correction";
 import type { Series } from "@/lib/schema/series";
@@ -203,5 +207,53 @@ describe("seriesIdOf", () => {
 
   it("シリーズが 1 件も無ければ null を返す", () => {
     expect(seriesIdOf(66, [])).toBeNull();
+  });
+});
+
+describe("listUncorrectedSeasonMismatches", () => {
+  it("題名の NN と itunes:season が食い違い、訂正表に行が無い回を返す", () => {
+    const mismatches = listUncorrectedSeasonMismatches(
+      [MISLABELED_ITEMS.saladinBirth, item({})],
+      NO_CORRECTIONS,
+    );
+
+    expect(mismatches).toEqual([MISLABELED_ITEMS.saladinBirth]);
+  });
+
+  it("訂正表に行が在る回は、食い違っていても返さない", () => {
+    const corrections: SeasonCorrectionList = [
+      {
+        guid: MISLABELED_ITEMS.saladinBirth.guid,
+        season: 40,
+        reason: "訂正表に書いた回が食い違いから外れることを確かめる",
+      },
+    ];
+
+    expect(
+      listUncorrectedSeasonMismatches(
+        [MISLABELED_ITEMS.saladinBirth],
+        corrections,
+      ),
+    ).toEqual([]);
+  });
+
+  it("itunes:season を持たない回は、題名が【NN-M】で始まっても返さない", () => {
+    expect(
+      listUncorrectedSeasonMismatches(
+        [MISLABELED_ITEMS.lincolnFaith],
+        NO_CORRECTIONS,
+      ),
+    ).toEqual([]);
+  });
+
+  it("番外編は、itunes:season に通し番号を持っていても返さない", () => {
+    const bonus = item({
+      title: "【番外編＃115】中川政七商店とコテンラジオ",
+      season: 115,
+    });
+
+    expect(listUncorrectedSeasonMismatches([bonus], NO_CORRECTIONS)).toEqual(
+      [],
+    );
   });
 });

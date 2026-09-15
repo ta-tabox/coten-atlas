@@ -92,6 +92,30 @@ export function seriesIdOf(
 }
 
 /**
+ * 題名の先頭の `【NN-M】` の `NN` と `itunes:season` が食い違い、訂正表 `corrections` に行が無い回を `items` から返す。
+ * 無ければ空配列。
+ *
+ * 食い違う回は題名の `NN` で割り当たるが、題名とフィードのどちらが誤っているかは人間にしか決められない。
+ */
+export function listUncorrectedSeasonMismatches(
+  items: readonly FeedItem[],
+  corrections: SeasonCorrectionList,
+): FeedItem[] {
+  const correctedGuids = new Set(corrections.map(({ guid }) => guid));
+
+  return items.filter((item) => {
+    const titleSeason = titleSeasonOf(item.title);
+
+    return (
+      titleSeason !== null &&
+      item.season !== null &&
+      titleSeason !== item.season &&
+      !correctedGuids.has(item.guid)
+    );
+  });
+}
+
+/**
  * 題名 `title` の先頭の `【NN-M】` から `NN` を返す。
  * `title` が `【NN-M】` で始まらなければ null。
  */

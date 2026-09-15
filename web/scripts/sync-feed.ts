@@ -22,11 +22,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
-import { type SeasonKey, seasonKeyOf, seriesIdOf } from "@/lib/feed/assign";
+import {
+  listUncorrectedSeasonMismatches,
+  type SeasonKey,
+  seasonKeyOf,
+  seriesIdOf,
+} from "@/lib/feed/assign";
 import { parseFeed } from "@/lib/feed/parse";
 import type { FeedItem } from "@/lib/feed/schema";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
-import { parseSeasonCorrections } from "@/lib/schema/season-correction";
+import {
+  parseSeasonCorrections,
+  type SeasonCorrectionList,
+} from "@/lib/schema/season-correction";
 import { parseSeries, type SeriesList } from "@/lib/schema/series";
 
 /**
@@ -215,6 +223,46 @@ function warnReassigned(
 }
 
 /**
+ * 題名が `【NN-M】` で始まらず、`itunes:season` で割り当てた回を報せる。
+ *
+ * 題名の書式が変わった回は `itunes:season` で割り当たり続けるので、フィードの番号が誤っていても未割当の数には現れない。
+ */
+function warnFeedSeasonAssignments(assignments: Assignment[]): void {
+  const fromFeed = assignments.filter(({ key }) => key.source === "feed");
+
+  if (fromFeed.length > 0) {
+    console.error(
+      `題名が【NN-M】で始まらず、itunes:season で割り当てた回が ${fromFeed.length} 件ある: ${fromFeed
+        .map(({ item }) => `${item.guid}（${item.title}）`)
+        .join(", ")}`,
+    );
+  }
+}
+
+/**
+ * 題名の `NN` と `itunes:season` が食い違うのに、`season-corrections.json` に行が無い回を報せる。
+ *
+ * 食い違う回は題名の `NN` で割り当たるので、題名の方が誤っていると、訂正表へ行を足すまで誤ったシリーズに入ったまま残る。
+ */
+function warnSeasonMismatches(
+  items: FeedItem[],
+  corrections: SeasonCorrectionList,
+): void {
+  const mismatches = listUncorrectedSeasonMismatches(items, corrections);
+
+  if (mismatches.length > 0) {
+    console.error(
+      `題名の NN と itunes:season が食い違い、訂正表に無い回が ${mismatches.length} 件ある: ${mismatches
+        .map(
+          (item) =>
+            `${item.guid}（itunes:season ${item.season}、${item.title}）`,
+        )
+        .join(", ")}`,
+    );
+  }
+}
+
+/**
  * `catalog/` を指せていることを確かめる。
  *
  * 作業ディレクトリが違うと、書き出しは黙って別の場所へ `catalog/` を作り、755 件をそこへ置く。
@@ -277,6 +325,8 @@ async function main(): Promise<void> {
 
   warnLostAssignments(assignments, previous);
   warnReassigned(assignments, previous);
+  warnFeedSeasonAssignments(assignments);
+  warnSeasonMismatches(items, corrections);
 
   const added = assignments.filter(({ item }) => !previous.has(item.guid));
 
