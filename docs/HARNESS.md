@@ -81,6 +81,7 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 - **`Check`（`check.yml`）は PR への push ごとに走る**。`pull_request` にフィルタを置いていないので、md 一枚の変更でも回る
 - **自動レビュー（`claude-code-review.yml`）は `opened` / `ready_for_review` / `reopened` でだけ走る**。
   push は `synchronize` なので拾わず、レビュー指摘へ対応して push しても再レビューは来ない
+  job は二つで、`claude-review` が正しさを、`claude-style-review` が規約（`.claude/rules/` と skill `coding-standards`「レビューで繰り返し指摘される型」）を差分へ当てる
 - **再レビューが要るなら PR コメントで `@claude` を名指しする**（起動するのは `claude.yml` の側）。
   人間が `ready_for_review` か再オープンで掛け直す手もあるが、そちらは人間の操作である
 - **歴史の裏どり（`claude-history-review.yml`）は自動では走らない**。
