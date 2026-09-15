@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * 選択された `Series` 1 件の詳細を、地図に重ねて表示するカード。
+ * 選択された `Series` 1 件の詳細を表示するカード。
  *
  * 取得も絞り込みもしない。
  * 表示するのは props で受け取った `Series` と `EpisodesState` だけで、絞り込みは `@/lib/episodes`、年の整形は `@/lib/format` が担当する。
@@ -102,7 +102,7 @@ function EpisodeList({ state }: { state: EpisodesState }) {
 /**
  * シリーズの詳細カードを表示する。
  * 縦のスクロールはエピソードの一覧だけに限る。
- * カードの高さは 36rem を上限にし、画面の高さから 2rem を引いた値がそれより小さければその値を上限にする。
+ * カードの高さは 36rem を上限にし、親の要素が縦の flex コンテナで高さの上限を持つなら、その上限まで縮む。
  *
  * カード全体をスクロールさせると、エピソードの多いシリーズでシリーズ名と年代が画面の外に出る。
  */
@@ -114,7 +114,7 @@ export default function SeriesDetailCard({
   return (
     <aside
       aria-labelledby={TITLE_ID}
-      className="absolute top-4 right-4 z-10 flex max-h-[min(36rem,calc(100dvh-2rem))] w-[22rem] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg bg-white/95 px-5 py-4 font-sans leading-[1.7] text-zinc-900 shadow-lg"
+      className="flex max-h-[36rem] min-h-0 w-[22rem] max-w-full flex-col overflow-hidden rounded-lg bg-white/95 px-5 py-4 font-sans leading-[1.7] text-zinc-900 shadow-lg"
     >
       <header className="flex items-start gap-3 border-b border-zinc-200 pb-3">
         <div className="grow">

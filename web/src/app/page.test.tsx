@@ -10,7 +10,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import Page from "@/app/page";
 
-vi.mock("@/components/MapCanvas", () => ({
+vi.mock("@/components/map/MapCanvas", () => ({
   default: () => <div data-testid="map-canvas" />,
 }));
 

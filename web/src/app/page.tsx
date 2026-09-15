@@ -10,7 +10,7 @@
  * ブラウザの時計を読まない理由は docs/adr/0043-era-fade-window-only.md が持つ。
  */
 
-import MapCanvas from "@/components/MapCanvas";
+import MapCanvas from "@/components/map/MapCanvas";
 import { loadEras, loadLoci, loadSeries } from "@/lib/catalog-dir";
 import { presentEndOf } from "@/lib/era/scale";
 import { toMapLoci } from "@/lib/map/loci";

@@ -7,7 +7,7 @@
 
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import EraSlider from "@/components/EraSlider";
+import EraSlider from "@/components/era-slider/EraSlider";
 import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
 
 const ERAS: EraList = [

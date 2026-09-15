@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { toMapLoci } from "@/lib/map/loci";
+import { findAnchorLocus, toMapLoci } from "@/lib/map/loci";
 import {
   type Locus,
   type LocusCollection,
@@ -152,5 +152,19 @@ describe("toMapLoci", () => {
     expect(() => toMapLoci(lociOf(MECCA), [untimed])).toThrow(
       "sekai-sandai-shukyo",
     );
+  });
+});
+
+describe("findAnchorLocus", () => {
+  it("シリーズの anchor が指す事物を返す", () => {
+    const loci = toMapLoci(lociOf(MECCA, SPARTA_CITY), SERIES);
+
+    expect(findAnchorLocus(loci, SERIES[0])?.properties.id).toBe("sparta-city");
+  });
+
+  it("位置なしのシリーズには undefined を返す", () => {
+    const loci = toMapLoci(lociOf(MECCA, SPARTA_CITY), SERIES);
+
+    expect(findAnchorLocus(loci, SERIES[2])).toBeUndefined();
   });
 });

@@ -1,7 +1,7 @@
 /**
  * シリーズを描くレイヤの定義。
  *
- * 第一段階の geometry は Point だけなので、レイヤは circle の 1 本で足りる。
+ * 第一段階の geometry は Point だけなので、レイヤは代表点の circle と、選択中のシリーズを囲む circle の 2 本で足りる。
  * `['geometry-type']` で図形を分ける枝は第二段階まで無い。
  *
  * 不透明度は、era スライダーの現在窓から求めた事物ごとの濃さだけで決まり、シリーズの属性で濃さを変えない。
@@ -40,14 +40,37 @@ export const SERIES_CIRCLE_LAYER: Omit<CircleLayerSpecification, "source"> = {
   },
 };
 
-/** 現在窓と重なる事物 1 件の id と、重なりから求めた濃さ（0 を超え 1 以下）。 */
+/**
+ * 選択中のシリーズの事物を囲む輪のレイヤ。
+ * `source` は `SERIES_CIRCLE_LAYER` と同じ理由で持たない。
+ *
+ * 塗りを持たず縁だけを描くので、`SERIES_CIRCLE_LAYER` の円の不透明度を変えずに上へ重ねられる。
+ * 描く事物を絞る `filter` は `selectedSeriesRingLayerIn` が設定する。
+ * 縁の色は、`SeriesPanel` が選択中のシリーズのボタンに付ける左の太線の色（Tailwind の `orange-700`）と同じ値にする。
+ */
+export const SELECTED_SERIES_RING_LAYER: Omit<
+  CircleLayerSpecification,
+  "source"
+> = {
+  id: "series-selected-ring",
+  type: "circle",
+  paint: {
+    "circle-radius": 10,
+    "circle-opacity": 0,
+    "circle-stroke-width": 3,
+    "circle-stroke-color": "#c2410c",
+  },
+};
+
+/** 現在窓と重なる事物 1 件の id・シリーズの id と、重なりから求めた濃さ（0 を超え 1 以下）。 */
 type LocusFade = {
   id: string;
+  seriesId: string;
   fade: number;
 };
 
 /**
- * `loci` のうち `currentWindow` と重なる事物について、id と濃さを返す。
+ * `loci` のうち `currentWindow` と重なる事物について、id・シリーズの id・濃さを返す。
  * 濃さが 0 の事物は含めない。
  */
 function fadesOf(
@@ -57,6 +80,7 @@ function fadesOf(
   return loci.features
     .map((locus) => ({
       id: locus.properties.id,
+      seriesId: locus.properties.seriesId,
       fade: fadeOpacity(
         overlapRatio(currentWindow, {
           start: locus.properties.timeStart,
@@ -112,5 +136,43 @@ export function seriesCircleLayerIn(
       // 既定の 300ms を残すと、スライダーを動かしている間は円の濃さが変わらない。
       "circle-opacity-transition": { duration: 0 },
     },
+  };
+}
+
+/**
+ * `loci` のうち `currentWindow` と重なる事物を持つシリーズの id を返す。
+ *
+ * 一覧パネルが「地図に出ているシリーズ」を数えるときに呼ぶ。
+ * 判定を `seriesCircleLayerIn` の `filter` と同じ `fadesOf` から導くので、パネルの一覧と地図に描かれた円が食い違わない。
+ */
+export function seriesIdsOnMapIn(
+  currentWindow: CurrentWindow,
+  loci: MapLocusCollection,
+): Set<string> {
+  return new Set(fadesOf(currentWindow, loci).map(({ seriesId }) => seriesId));
+}
+
+/**
+ * `SELECTED_SERIES_RING_LAYER` に、`selectedSeriesId` のシリーズの事物のうち `currentWindow` と重なるものだけを描く `filter` を設定したレイヤを返す。
+ * `selectedSeriesId` が null なら、どの事物も描かない `filter` を設定する。
+ *
+ * 窓と重ならない事物に輪を描くと、`seriesCircleLayerIn` が除いた円の在り処だけが地図に残る。
+ */
+export function selectedSeriesRingLayerIn({
+  currentWindow,
+  loci,
+  selectedSeriesId,
+}: {
+  currentWindow: CurrentWindow;
+  loci: MapLocusCollection;
+  selectedSeriesId: string | null;
+}): Omit<CircleLayerSpecification, "source"> {
+  const ringLocusIds = fadesOf(currentWindow, loci)
+    .filter(({ seriesId }) => seriesId === selectedSeriesId)
+    .map(({ id }) => id);
+
+  return {
+    ...SELECTED_SERIES_RING_LAYER,
+    filter: ["in", ["get", "id"], ["literal", ringLocusIds]],
   };
 }
