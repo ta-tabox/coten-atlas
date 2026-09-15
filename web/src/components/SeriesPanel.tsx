@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * シリーズの一覧パネルを地図の左に重ねて表示し、並べたシリーズのクリックを選択として返す。
+ * シリーズの一覧パネルを表示し、並べたシリーズのクリックを選択として返す。
  *
  * 選択を保持しない。
  * 表示するのは props で受け取った区画と `selectedSeriesId` で、クリックしたシリーズの id は `onSelect` で返す。
@@ -186,7 +186,6 @@ function SeriesSection({
  * 閉じている間は、パネルの代わりに開くボタンだけを出す。
  *
  * 区画ごとの開閉は `SeriesSection` でなくこのコンポーネントが持つので、パネル全体を閉じて開き直しても区画の開閉が残る。
- * パネルの高さは、画面の下に重なる era スライダーの上端より下へ伸ばさない。
  */
 export default function SeriesPanel({
   sections,
@@ -203,7 +202,7 @@ export default function SeriesPanel({
         type="button"
         onClick={() => setIsOpen(true)}
         aria-expanded={false}
-        className={`absolute top-4 left-4 z-10 rounded-xl px-4 py-2 font-sans text-[0.9rem] font-bold text-zinc-900 hover:bg-white/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${GLASS_CLASS}`}
+        className={`rounded-xl px-4 py-2 font-sans text-[0.9rem] font-bold text-zinc-900 hover:bg-white/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${GLASS_CLASS}`}
       >
         シリーズ一覧を開く
       </button>
@@ -213,7 +212,7 @@ export default function SeriesPanel({
   return (
     <aside
       aria-labelledby={TITLE_ID}
-      className={`absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-12rem)] w-[18rem] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-xl py-3 font-sans leading-[1.6] text-zinc-900 ${GLASS_CLASS}`}
+      className={`flex min-h-0 w-[18rem] max-w-full flex-col overflow-hidden rounded-xl py-3 font-sans leading-[1.6] text-zinc-900 ${GLASS_CLASS}`}
     >
       <header className="flex items-center gap-3 border-b border-zinc-900/10 px-4 pb-2">
         <h2 id={TITLE_ID} className="grow text-[1rem] font-bold">

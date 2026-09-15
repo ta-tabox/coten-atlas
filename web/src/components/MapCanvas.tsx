@@ -183,15 +183,18 @@ export default function MapCanvas({
         currentWindow={eraWindow}
         selectedSeriesId={selectedSeriesId}
       />
-      <SeriesPanel
-        sections={seriesPanelSectionsOf({
-          series,
-          loci,
-          currentWindow: eraWindow,
-        })}
-        selectedSeriesId={selectedSeriesId}
-        onSelect={selectFromPanel}
-      />
+      {/* 一覧パネルは地図の左上に置き、高さを画面の下に重なる era スライダーの上端までに収める。 */}
+      <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-12rem)] max-w-[calc(100vw-2rem)] flex-col">
+        <SeriesPanel
+          sections={seriesPanelSectionsOf({
+            series,
+            loci,
+            currentWindow: eraWindow,
+          })}
+          selectedSeriesId={selectedSeriesId}
+          onSelect={selectFromPanel}
+        />
+      </div>
       <EraSlider
         eras={eras}
         presentEnd={presentEnd}

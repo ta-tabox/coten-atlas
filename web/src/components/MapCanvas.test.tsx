@@ -2,7 +2,7 @@
  * MapLibre 本体は jsdom で描画できないので、`react-map-gl/maplibre` をモックに差し替える。
  * 検証するのは props の受け渡しであって、地図の描画ではない。
  *
- * モックは children を描画しないので、子コンポーネントの有無は MapLibreMap が受け取った `children` で判定する。
+ * モックは children を描画しないので、子コンポーネントの有無は MapLibreMap が受け取った `children` とその子孫の要素で判定する。
  * モックは受け取った `ref` に `panTo` だけを持つ地図を入れるので、カメラの移動は `panTo` の呼び出しで判定する。
  */
 
@@ -12,6 +12,7 @@ import {
   type ComponentProps,
   isValidElement,
   type JSXElementConstructor,
+  type ReactElement,
   type ReactNode,
   type Ref,
 } from "react";
@@ -150,13 +151,38 @@ function lastProps(): MockMapProps {
 }
 
 /**
- * 地図の children から `type` の要素を 1 つ返す。
+ * `children` とその子孫の要素から、`type` の要素を先に見つかった 1 つだけ返す。
  * 無ければ undefined を返す。
  */
-function childOfType(type: unknown): ReactNode | undefined {
-  return Children.toArray(lastProps().children).find(
-    (child) => isValidElement(child) && child.type === type,
-  );
+function findElementOfType(
+  children: ReactNode,
+  type: unknown,
+): ReactElement | undefined {
+  for (const child of Children.toArray(children)) {
+    if (!isValidElement<{ children?: ReactNode }>(child)) {
+      continue;
+    }
+
+    if (child.type === type) {
+      return child;
+    }
+
+    const nested = findElementOfType(child.props.children, type);
+
+    if (nested !== undefined) {
+      return nested;
+    }
+  }
+
+  return undefined;
+}
+
+/**
+ * 地図の children とその子孫の要素から `type` の要素を 1 つ返す。
+ * 無ければ undefined を返す。
+ */
+function childOfType(type: unknown): ReactElement | undefined {
+  return findElementOfType(lastProps().children, type);
 }
 
 /**
