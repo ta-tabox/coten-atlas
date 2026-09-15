@@ -22,6 +22,13 @@ import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
  */
 const TITLE_ID = "series-panel-title";
 
+/**
+ * パネルと、閉じている間の開くボタンに共通の、背景をぼかした半透明の見た目の className。
+ * `EraSlider` の外枠と同じ値にして、地図に重なる部品の見た目を揃える。
+ */
+const GLASS_CLASS =
+  "border border-white/50 bg-white/45 shadow-lg shadow-black/5 backdrop-blur-md backdrop-saturate-150";
+
 /** 並べたシリーズ 1 件のボタンのうち、選択の有無で変わらない className。 */
 const ITEM_CLASS =
   "w-full rounded-md border-l-4 px-3 py-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700";
@@ -30,10 +37,10 @@ const ITEM_CLASS =
  * 選択中のシリーズのボタンに足す className。
  * 色だけで選択を伝えないよう、左の縁の太線と太字も付ける。
  */
-const SELECTED_ITEM_CLASS = "border-l-orange-700 bg-orange-50 font-bold";
+const SELECTED_ITEM_CLASS = "border-l-orange-700 bg-orange-100/70 font-bold";
 
 /** 選択していないシリーズのボタンに足す className。 */
-const UNSELECTED_ITEM_CLASS = "border-l-transparent hover:bg-zinc-100";
+const UNSELECTED_ITEM_CLASS = "border-l-transparent hover:bg-white/60";
 
 type SeriesPanelProps = {
   /** 地図に出ている区画と、位置なしの区画に並べるシリーズ。 */
@@ -88,15 +95,15 @@ function SeriesSection({
     <section aria-labelledby={headingId} className="mt-3 first:mt-0">
       <h3
         id={headingId}
-        className="px-2 text-[0.8rem] tracking-[0.04em] text-zinc-500"
+        className="px-2 text-[0.8rem] tracking-[0.04em] text-zinc-600"
       >
         {heading}
         <span className="ml-1.5 tabular-nums">{series.length}件</span>
       </h3>
-      <p className="px-2 text-[0.75rem] leading-[1.5] text-zinc-500">{note}</p>
+      <p className="px-2 text-[0.75rem] leading-[1.5] text-zinc-600">{note}</p>
 
       {series.length === 0 ? (
-        <p className="mt-1.5 px-2 text-[0.85rem] text-zinc-500">{emptyNote}</p>
+        <p className="mt-1.5 px-2 text-[0.85rem] text-zinc-600">{emptyNote}</p>
       ) : (
         <ul className="mt-1.5 flex flex-col gap-0.5">
           {series.map((one) => {
@@ -112,7 +119,7 @@ function SeriesSection({
                 >
                   <span className="block text-[0.9rem]">{one.title}</span>
                   {one.timeRange !== TIME_RANGE_UNTIMED && (
-                    <span className="block text-[0.75rem] font-normal text-zinc-500 tabular-nums">
+                    <span className="block text-[0.75rem] font-normal text-zinc-600 tabular-nums">
                       {formatTimeRange(one.timeRange)}
                     </span>
                   )}
@@ -145,7 +152,7 @@ export default function SeriesPanel({
         type="button"
         onClick={() => setIsOpen(true)}
         aria-expanded={false}
-        className="absolute top-4 left-4 z-10 rounded-lg bg-white/95 px-4 py-2 font-sans text-[0.9rem] font-bold text-zinc-900 shadow-lg hover:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+        className={`absolute top-4 left-4 z-10 rounded-xl px-4 py-2 font-sans text-[0.9rem] font-bold text-zinc-900 hover:bg-white/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${GLASS_CLASS}`}
       >
         シリーズ一覧を開く
       </button>
@@ -155,9 +162,9 @@ export default function SeriesPanel({
   return (
     <aside
       aria-labelledby={TITLE_ID}
-      className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-12rem)] w-[18rem] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg bg-white/95 py-3 font-sans leading-[1.6] text-zinc-900 shadow-lg"
+      className={`absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-12rem)] w-[18rem] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-xl py-3 font-sans leading-[1.6] text-zinc-900 ${GLASS_CLASS}`}
     >
-      <header className="flex items-center gap-3 border-b border-zinc-200 px-4 pb-2">
+      <header className="flex items-center gap-3 border-b border-zinc-900/10 px-4 pb-2">
         <h2 id={TITLE_ID} className="grow text-[1rem] font-bold">
           シリーズ一覧
         </h2>
@@ -167,7 +174,7 @@ export default function SeriesPanel({
           onClick={() => setIsOpen(false)}
           aria-expanded={true}
           aria-label="一覧を閉じる"
-          className="-mr-1.5 flex-none rounded px-1.5 text-[1.1rem] text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"
+          className="-mr-1.5 flex-none rounded px-1.5 text-[1.1rem] text-zinc-600 hover:bg-white/60 hover:text-zinc-900"
         >
           ×
         </button>
