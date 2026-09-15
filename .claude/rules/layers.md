@@ -22,20 +22,20 @@ paths:
 
 ## 境界の禁止則
 
-- `fetch` を呼ぶのは `src/lib/episodes.ts` の `fetchEpisodes` と `scripts/sync-feed.ts` の `fetchFeed` だけにする。
+- `fetch` を呼ぶのは `src/lib/episodes.ts` の `fetchEpisodes` と `scripts/sync-feed.ts` の `fetchFeed` だけにする
   ベースマップのタイルは MapLibre が取得し、このリポジトリのコードは `src/lib/map/config.ts` の URL を渡すだけにする
-- `node:fs` を import するのは `src/lib/catalog-dir.ts`・`scripts/`・`tests/` だけにする。
+- `node:fs` を import するのは `src/lib/catalog-dir.ts`・`scripts/`・`tests/` だけにする
   `"use client"` を付けたモジュールからは `node:fs` へ届かないので、`src/lib/catalog-dir.ts` を呼ぶのは Server Component（`src/app/page.tsx`）だけにする
-- `catalog/` のファイルは `import` で読まず、`node:fs` か、`public/` へ複製したものを `fetch` で読む。
+- `catalog/` のファイルは `import` で読まず、`node:fs` か、`public/` へ複製したものを `fetch` で読む
   `catalog/` は `tsconfig.json` の `include` の外にあって `resolveJsonModule` も `.geojson` に効かないので、読み方を二つに限れば `tsconfig.json` にも `vitest.config.ts` にも手当てが要らない
-- ブラウザが取得する自前の URL（`episodes.json`・MapLibre の worker）は、`src/lib/base-path.ts` の `BASE_PATH` を先頭に付けて組む。
+- ブラウザが取得する自前の URL（`episodes.json`・MapLibre の worker）は、`src/lib/base-path.ts` の `BASE_PATH` を先頭に付けて組む
   GitHub Pages はリポジトリ名を挟んだ場所へ配信するので、付けないと公開後に 404 になる
-- `catalog/`・`public/`・RSS から読んだ値は、読んだモジュールの中で `parseSeries`・`parseLoci`・`parseEras`・`parseEpisodes`・`parseFeed` を通してから渡す。
+- `catalog/`・`public/`・RSS から読んだ値は、読んだモジュールの中で `parseSeries`・`parseLoci`・`parseEras`・`parseEpisodes`・`parseFeed` を通してから渡す
   `tests/catalog.test.ts` は `catalog/` の現物しか見ないので、複製し損ねた値や 404 の HTML はこの検査でしか止まらない
-- MapLibre が出す DOM は canvas のコンテナと attribution だけにし、`<Popup>` と built-in control（Navigation・Scale 等）を使わない。
-  地図の上に載せるものは React + Tailwind の overlay で書く。
+- MapLibre が出す DOM は canvas のコンテナと attribution だけにし、`<Popup>` と built-in control（Navigation・Scale 等）を使わない
+  地図の上に載せるものは React + Tailwind の overlay で書く
   理由は `docs/adr/0022-map-dom-boundary.md` が持つ
-- `react-map-gl/maplibre` の部品を描くのは `src/components/MapCanvas.tsx` と `src/components/SeriesLayers.tsx` だけにする。
+- `react-map-gl/maplibre` の部品を描くのは `src/components/MapCanvas.tsx` と `src/components/SeriesLayers.tsx` だけにする
   `src/lib/map/` が `maplibre-gl` と `react-map-gl/maplibre` から import するのは型だけにする
 
 ## 層と、import してよい相手
