@@ -51,8 +51,11 @@ else
 fi
 
 # predev と prebuild が地図の worker と catalog/episodes.json を写すので、依存が入れば dev と build の前置きは要らない。
+#
+# confirmModulesPurge を false にするのは、既に在る node_modules を別の store から張っていたときに pnpm が作り直しの確認を求めるためである。
+# このスクリプトは TTY を持たないプロセスからも走るので、確認を求められた時点で ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY で止まる。
 log "依存を入れる"
-(cd web && pnpm install --frozen-lockfile --reporter=silent)
+(cd web && pnpm install --frozen-lockfile --config.confirmModulesPurge=false --reporter=silent)
 
 # 版は web/pnpm-lock.yaml の @playwright/test が決める。
 # 入っていれば playwright 自身がダウンロードを飛ばす。
