@@ -79,28 +79,28 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 `Check` と自動レビューは起動条件が違うので、push の後に待つものを取り違えない。
 
 - **`Check`（`check.yml`）は PR への push ごとに走る**。`pull_request` にフィルタを置いていないので、md 一枚の変更でも回る
-- **自動レビュー（`claude-code-review.yml`）は `opened` / `ready_for_review` / `reopened` でだけ走る**。
+- **自動レビュー（`claude-code-review.yml`）は `opened` / `ready_for_review` / `reopened` でだけ走る**
   push は `synchronize` なので拾わず、レビュー指摘へ対応して push しても再レビューは来ない
   job は二つで、`claude-review` が正しさを、`claude-style-review` が規約（`.claude/rules/` と skill `coding-standards`「レビューで繰り返し指摘される型」）を差分へ当てる
-- **再レビューが要るなら PR コメントで `@claude` を名指しする**（起動するのは `claude.yml` の側）。
+- **再レビューが要るなら PR コメントで `@claude` を名指しする**（起動するのは `claude.yml` の側）
   人間が `ready_for_review` か再オープンで掛け直す手もあるが、そちらは人間の操作である
-- **歴史の裏どり（`claude-history-review.yml`）は自動では走らない**。
+- **歴史の裏どり（`claude-history-review.yml`）は自動では走らない**
   `@historian` を含むコメントだけが起動する
-- **`Lint PR body`（`lint-pr-body.yml`）は PR を開いた回と本文を編集した回に走る**。
+- **`Lint PR body`（`lint-pr-body.yml`）は PR を開いた回と本文を編集した回に走る**
   PR 本文の禁止語を `scripts/lint-vocabulary.sh` で報告する（語の正は `.claude/rules/writing.md`「語彙と読み手」節の表）
 
 ### レビューを掛け直す
 
 自動レビューが走るのは PR を開いた回だけなので、指摘へ対応した後の再レビューは自分で起こす。
 
-1. 指摘を読み、同意できるものを直す。
+1. 指摘を読み、同意できるものを直す
    指摘は決定ではないので、同意できないものは直さず根拠を添えて返信する
 2. 指摘ごとに関心が違えばコミットを分けて push し、各インラインコメントへ返信する（返信は push の後）
-3. `gh pr comment <PR番号> --body "@claude ..."` で掛け直す。
+3. `gh pr comment <PR番号> --body "@claude ..."` で掛け直す
    何を直したかと、どこを見てほしいかを書く
-4. 完了は `gh run watch <run-id>` を**バックグラウンドで**待つ。
+4. 完了は `gh run watch <run-id>` を**バックグラウンドで**待つ
    終了時に呼び戻されるので、状態を繰り返し叩くループを書かない
-5. 新しい指摘があれば 1 へ戻る。
+5. 新しい指摘があれば 1 へ戻る
    上限は2周で、3周目に入るなら収束していないことを人間へ報告して判断を仰ぐ
 
 `claude.yml` の `permissions` は `contents: read` である。
@@ -112,16 +112,16 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
 `catalog/series.json` の `timeRange` と `catalog/loci.geojson` の座標は人手で決める値で、生没年が 50 年ずれていても `pnpm check` は緑になる。
 裏どりは三本目のワークフロー（`claude-history-review.yml`）が担い、コードのレビューとは別の起動語で呼ぶ（分ける理由は [ADR-0035](adr/0035-history-review-lane.md)）。
 
-- `gh pr comment <PR番号> --body "@historian この 6 件の timeRange と代表点を裏どりして"` で呼ぶ。
+- `gh pr comment <PR番号> --body "@historian この 6 件の timeRange と代表点を裏どりして"` で呼ぶ
   issue コメントでも同じように起動するので、`catalog/` へ載せる前に対象表へ対して呼べる
-- **起動語に `@claude` を含めない**。
+- **起動語に `@claude` を含めない**
   `claude.yml` の `if:` が `contains(github.event.comment.body, '@claude')` なので、含む語は二本を同時に起動する
-- 返るのは典拠の URL を添えた指摘までで、代表点を動かすかどうかの採否は人間が決める。
+- 返るのは典拠の URL を添えた指摘までで、代表点を動かすかどうかの採否は人間が決める
   `permissions` は `claude.yml` と同じ `contents: read` である
-- `timeRange` が `"untimed"` のシリーズについては、年の妥当性でなく、主題が現在まで続いているか・端を史実の年で言えないかを見る。
+- `timeRange` が `"untimed"` のシリーズについては、年の妥当性でなく、主題が現在まで続いているか・端を史実の年で言えないかを見る
   年を書くか `"untimed"` を置くかの線は skill `series-vocabulary` の手順 7 が持つ
-- **返ってきた典拠を `docs/sources/<シリーズ id>.md` へ写す**（ファイルの型と典拠の格は `docs/sources/README.md` が持つ）。
-  ワークフローは `contents: read` なのでファイルを書けず、写すのは人間かセッションである。
+- **返ってきた典拠を `docs/sources/<シリーズ id>.md` へ写す**（ファイルの型と典拠の格は `docs/sources/README.md` が持つ）
+  ワークフローは `contents: read` なのでファイルを書けず、写すのは人間かセッションである
   同じ欄を二度裏どりしたときは、後の回の典拠だけを残す
 
 歴史側への指示は **`.github/historian-prompt.md`** が全文を持つ。
@@ -159,12 +159,12 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 リモートのコンテナは外向き通信が許可制で、**環境側から塞ぐ手段が無い**。
 このリポジトリが引き受けている手元との差は次の4件で、いずれも**リモートでは未検証**である。
 
-- **`mise.run`** — 出られないので、フックは mise を npm から入れる。
+- **`mise.run`** — 出られないので、フックは mise を npm から入れる
   mise が要るのは、`mise.toml` が固定した node と pnpm を立てるためである（§3）
-- **`https://tiles.openfreemap.org`** — ベースマップのタイル。ブラウザプレビューから引く先。
+- **`https://tiles.openfreemap.org`** — ベースマップのタイル。ブラウザプレビューから引く先
   出られなければ地図の見た目はリモートで確認できない
 - **`https://anchor.fm/...`** — RSS（`pnpm sync` の取得先）。出られなければ同期スクリプトはリモートで動かない
-- **Playwright の配信元** — L4 のスモークが立てる Chromium のバイナリ。
+- **Playwright の配信元** — L4 のスモークが立てる Chromium のバイナリ
   出られなければブラウザを入れられず、リモートでは `pnpm check` がスモークで落ちる
 
 ## 5. 設定の置き場
@@ -195,10 +195,10 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
   実タイルかそのフィクスチャが要る。L4 が守るのは配信物が自足していることまでで、
   見た目は人間の目視に残す
 - **実 API を自動テストで叩かない**。RSS もタイルサーバも外部の可用性に依存するので、
-  テストが外部の都合で赤くなる。取得層はフィクスチャで検証する。
-  L4 のスモークも同じで、タイルサーバへの通信は遮断してスタイルだけを合成のもので返す。
-  到達テストはこの規則の対象外とする。
+  テストが外部の都合で赤くなる。取得層はフィクスチャで検証する
+  L4 のスモークも同じで、タイルサーバへの通信は遮断してスタイルだけを合成のもので返す
+  到達テストはこの規則の対象外とする
   検証の対象が配信された実物そのものなので、配信された実物へ到達できないことは外部の都合ではなく、この検査が検出したい事故そのものに当たる
-- **`claude.yml` の `on:` を絞らない**。
-  起動の絞りは job 側の `if:` の一本で、`on:` を絞らない理由は [ADR-0010](adr/0010-gh-review-trigger-narrowing.md) が持つ。
+- **`claude.yml` の `on:` を絞らない**
+  起動の絞りは job 側の `if:` の一本で、`on:` を絞らない理由は [ADR-0010](adr/0010-gh-review-trigger-narrowing.md) が持つ
   run 一覧に `skipped` が並ぶのは正常なので、異常と読んで調べ直さない
