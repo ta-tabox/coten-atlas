@@ -6,21 +6,19 @@
 # コミット本文はマージされた後に直せないので、報告でなく commit の前で止める。
 #
 # 導入は2通り。
-#   リポジトリ全体へ効かせる: このファイルを .githooks/commit-msg へ置き、
-#                             git config core.hooksPath .githooks を設定する
+#   リポジトリ全体へ効かせる: このファイルを .githooks/commit-msg へ置き、git config core.hooksPath .githooks を設定する
 #   自分の手元だけ:           .git/hooks/commit-msg へコピーする(版管理の外)
 #
 # 押し切るのは git commit --no-verify。
 
 # set -e は使わない。
-# 禁止語が見つかると lint が rc 1 を返すので、-e があると sed へ繋いだ行で打ち切られる。
-# 案内の行を出さないまま終わることになる。
+# 禁止語が見つかると lint が rc 1 を返すので、-e があると report への代入で打ち切られ、案内の行を出さないまま終わる。
 set -uo pipefail
 
 MSG_FILE="$1"
 ROOT=$(git rev-parse --show-toplevel)
 
-# 配布先では scripts/ の直下、fermentary では雛形の中に在る。
+# 配布先では scripts/ の直下、雛形そのものを持つリポジトリでは tools/coding-standards/scripts/ に在る。
 LINT=""
 for candidate in "$ROOT/scripts/lint-vocabulary.sh" "$ROOT/tools/coding-standards/scripts/lint-vocabulary.sh"; do
   if [ -f "$candidate" ]; then LINT="$candidate"; break; fi
