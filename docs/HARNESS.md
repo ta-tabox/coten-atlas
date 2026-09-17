@@ -175,7 +175,7 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | `.claude/hooks/session-start.sh` | リモートの環境準備（mise の導入・ランタイム・依存・shims の PATH の受け渡し） |
 | `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
 | `.githooks/commit-msg` | コミット本文の禁止語を commit の前で止める git フック |
-| `.githooks/pre-commit` | ステージした追加行の禁止語を報告する git フック。コミットは止めない |
+| `.githooks/pre-commit` | ステージした追加行の禁止語を、コミットを止めずに報告する git フック |
 | `scripts/lint-vocabulary.sh` | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る |
 | `.github/workflows/lint-pr-body.yml` | PR 本文の禁止語を CI で報告する |
 | `.coding-standards-vocab-allow` | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語） |
