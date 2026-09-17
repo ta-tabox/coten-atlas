@@ -48,7 +48,7 @@
 
 ## 配布物の追随
 
-`.claude/` と `.github/workflows/` の一部、`web/scripts/lint-comments.ts` と `web/tests/lint-comments.test.ts`、`scripts/lint-vocabulary.sh` と `web/tests/lint-vocabulary.test.ts` と `.githooks/` の2本、`.claude/rules/` は共有の雛形からの写しである。
+`.claude/` と `.github/workflows/` の一部、`web/tests/guard-hooks.test.ts`、`web/scripts/lint-comments.ts` と `web/tests/lint-comments.test.ts`、`scripts/lint-vocabulary.sh` と `web/tests/lint-vocabulary.test.ts` と `.githooks/` の2本、`.claude/rules/` は共有の雛形からの写しである。
 
 - **追随は、このリポジトリの開発を再開するときにまとめてやる**
   都度の追随は打ち切ってあるので、放っておけば雛形との差は開き続ける
