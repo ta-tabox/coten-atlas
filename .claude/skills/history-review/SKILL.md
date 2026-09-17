@@ -11,7 +11,7 @@ description: シリーズの値（`catalog/series.json`・`catalog/loci.geojson`
 
 - ラベル `history-review`（補助: 採用済みの歴史データを人間が一件ずつ見直す）と `human` を付ける
 - 手順 A-1 の表で優先度を下げる論点には、ラベル `low-priority`（補助: 急がない。優先度の付いていない issue の後に見る）も付ける
-- 一覧は `gh issue list --state open --label history-review` か、GitHub の `label:history-review` で引く。
+- 一覧は `gh issue list --state open --label history-review` か、GitHub の `label:history-review` で引く
   優先度を下げた分を外すなら、GitHub の検索に `-label:low-priority` を足す
 - 手本は #174（紫式部の代表点。代表点の選択と未確認の座標の二論点）・#178（鎌倉武士の `timeRange` の終わり）・#180（ムガール帝国の代表点と `region`）と、PR #167（中世の 11 シリーズを series.json へ載せる）の本文の「人間に見てほしい」節である
 
@@ -142,11 +142,11 @@ grep -nE '人間の判定(は|を).*待' docs/sources/<シリーズ id>.md
 | 仮決定の値のまま | 典拠のファイルの「仮決定と論点」の「見直しは #N で行う」を「#N で人間が仮決定のまま決着させた」に直す | `docs(sources):` |
 | 値を変える | skill `series-vocabulary` の手順で新しい値（代表点・事物の `id`・`region`・`timeRange`）を決め、`catalog/` と典拠のファイルを直す。新しい地点の事実と座標は、skill `series-survey` の手順 6 で `@historian` に確かめさせる | `fix(catalog):` と `docs(sources):` |
 
-1. `main` からブランチを切る。
+1. `main` からブランチを切る
    値を変えない決定を複数まとめるなら `docs/history-review-<日付>`、値を変えるなら `fix/history-review-<シリーズ id>` にする
 2. 代表点や事物の `id` を動かしたら、skill `series-survey` の手順 2 の集計で、他のシリーズと同じ事物の `id` や同じ地名を要求していないかを確かめる
-3. 典拠のファイルの「代表点」節や鍵の表も、新しい値へ直す。
+3. 典拠のファイルの「代表点」節や鍵の表も、新しい値へ直す
    変える前の値は、候補の表に「見直し前の値」として残す
-4. `web/` で `pnpm check` を緑にして push し、PR を開く。
+4. `web/` で `pnpm check` を緑にして push し、PR を開く
    本文に、反映した issue ごとに `closes #N` を書く
 5. マージは人間が指示したときだけ行う
