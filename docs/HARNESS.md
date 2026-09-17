@@ -187,7 +187,7 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 リモートで効かせたい設定はリポジトリに置く。
 名義のようにリポジトリへ置けないものだけがクラウド環境の環境変数欄へ行く。
 
-`.githooks/` の2本は git の既定の `.git/hooks/` に無いので、クローンごとに `git config core.hooksPath .githooks` で有効にする。
+`.githooks/` のフックは git の既定の `.git/hooks/` に無いので、クローンごとに `git config core.hooksPath .githooks` で有効にする。
 リモートでは `session-start.sh` がこの設定を入れる。
 
 ## 6. 意図的にやらないこと
