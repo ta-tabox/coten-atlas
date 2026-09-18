@@ -3,7 +3,7 @@
  * 訂正した season を割当にどう使うかは持たず、`src/lib/feed/assign.ts` が持つ。
  *
  * 訂正表は人間が書く手動層で、`catalog/season-corrections.json` の形を持つ。
- * 題名の `【NN-M】` と `itunes:season` のどちらからも正しい season が決まらない回を、guid で名指して直す。
+ * 題名の `【NN-M】` と `itunes:season` から正しい season が決まらない回と、両者の食い違いを人間が確かめた回を、guid で名指して書く。
  * zod の既定は未知のキーを黙って捨て、手書きの書き間違いがどこにも映らないので、スキーマに無いキーを拒否する。
  *
  * 入口は parseSeasonCorrections。

@@ -65,7 +65,7 @@ catalog/
 ├── episodes.json        # 自動層。RSS から同期。手で編集しない
 ├── series.json          # 手動層。シリーズ=キュレーション対象の正。geometry を持たない
 ├── loci.geojson         # 手動層。事物（シリーズが地図の上に持つもの）。地図の source の元
-├── season-corrections.json # 手動層。題名と itunes:season から正しい season が決まらない回を guid で訂正する表
+├── season-corrections.json # 手動層。割当に使う season を回ごとに guid で訂正する表
 └── eras.json            # 時代区分（下記「時系列（era）モデル」）
 ```
 
@@ -152,7 +152,7 @@ catalog/
   {
     "guid": "de11d2d5-62dc-4c83-923b-419b71c94193",  // 訂正する回の RSS の guid。前後に空白を付けない
     "season": 40,  // 割当に使う season。正の整数か、どのシリーズにも割り当てないことを表す null
-    "reason": "題名の【NN-M】と itunes:season のどちらも、内容と別のシリーズの番号を持っている"  // なぜ訂正するかの 1 文
+    "reason": "題名の【40-6】どおりサラディンと十字軍の回で、フィードの itunes:season 37（障害の歴史）が誤っている"  // なぜ訂正するかの 1 文
   }
   // 以下、訂正する 1 回 = 1 要素が並ぶ。同じ guid の行を二つ書かない
 ]
@@ -165,7 +165,7 @@ catalog/
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
 - エピソードとシリーズの割当キーは `season` で、エピソードの `season` は `season-corrections.json`・題名の先頭の `【NN-M】` の `NN`・`itunes:season` の順に最初に決まった値である（理由は [ADR-0046](adr/0046-season-assignment-precedence.md)）
   シリーズもエピソードも `season` を持ち、シリーズでは必須、エピソードでは決まらない回があるので nullable
-- `season-corrections.json` には、題名と `itunes:season` のどちらからも正しい season が決まらない回だけを書く
+- `season-corrections.json` には、題名と `itunes:season` から正しい season が決まらない回と、題名の `NN` と `itunes:season` の食い違いを確かめた回を書く
   行を書いた回は、題名と `itunes:season` より行の `season` で割り当たり、同期の食い違いの警告からも外れる
 - `id` はシリーズ名のローマ字を kebab-case にした手書きの値で、フィードから機械で決まる値ではない
   同じ値を二つのシリーズが要求したら、どちらかを変える
