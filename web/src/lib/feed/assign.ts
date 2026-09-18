@@ -11,7 +11,10 @@
  */
 
 import type { FeedItem } from "@/lib/feed/schema";
-import type { SeasonCorrectionList } from "@/lib/schema/season-correction";
+import type {
+  SeasonCorrection,
+  SeasonCorrectionList,
+} from "@/lib/schema/season-correction";
 import type { SeriesList } from "@/lib/schema/series";
 
 /**
@@ -53,11 +56,11 @@ export function seasonKeyOf(
   item: FeedItem,
   corrections: SeasonCorrectionList,
 ): SeasonKey {
-  if (item.title.startsWith(BONUS_TITLE_PREFIX)) {
+  if (isBonusEpisode(item)) {
     return { source: "none", season: null };
   }
 
-  const correction = corrections.find(({ guid }) => guid === item.guid);
+  const correction = findCorrection(corrections, item.guid);
 
   if (correction !== undefined) {
     return { source: "correction", season: correction.season };
@@ -101,8 +104,6 @@ export function listUncorrectedSeasonMismatches(
   items: readonly FeedItem[],
   corrections: SeasonCorrectionList,
 ): FeedItem[] {
-  const correctedGuids = new Set(corrections.map(({ guid }) => guid));
-
   return items.filter((item) => {
     const titleSeason = titleSeasonOf(item.title);
 
@@ -110,9 +111,29 @@ export function listUncorrectedSeasonMismatches(
       titleSeason !== null &&
       item.season !== null &&
       titleSeason !== item.season &&
-      !correctedGuids.has(item.guid)
+      findCorrection(corrections, item.guid) === undefined
     );
   });
+}
+
+/**
+ * フィードの 1 件 `item` が番外編の回なら true を返す。
+ */
+function isBonusEpisode(item: FeedItem): boolean {
+  return item.title.startsWith(BONUS_TITLE_PREFIX);
+}
+
+/**
+ * 訂正表 `corrections` から、`guid` の回を訂正する行を探して返す。
+ * 行が無ければ undefined。
+ *
+ * 行の `season` は null を取りうるので、行が無いことを null でなく undefined で返し、割り当てないと訂正した回と見分ける。
+ */
+function findCorrection(
+  corrections: SeasonCorrectionList,
+  guid: string,
+): SeasonCorrection | undefined {
+  return corrections.find((correction) => correction.guid === guid);
 }
 
 /**
