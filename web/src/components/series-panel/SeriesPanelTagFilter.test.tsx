@@ -27,7 +27,7 @@ describe("SeriesPanelTagFilter", () => {
     const war = screen.getByRole("button", { name: /戦争/ });
 
     expect(war).toBeVisible();
-    expect(within(war).getByText("2件")).toBeVisible();
+    expect(within(war).getByText("2")).toBeVisible();
     expect(screen.getByRole("button", { name: /人物/ })).toBeVisible();
   });
 

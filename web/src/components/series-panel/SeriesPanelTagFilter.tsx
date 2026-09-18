@@ -109,7 +109,7 @@ export default function SeriesPanelTagFilter({
                     <span
                       className={`ml-1 text-[0.7rem] font-normal tabular-nums ${isSelected ? "text-zinc-200" : "text-zinc-600"}`}
                     >
-                      {seriesCount}件
+                      {seriesCount}
                     </span>
                   </button>
                 </li>
