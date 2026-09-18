@@ -2,8 +2,8 @@
  * タグで一覧パネルと地図を絞り込む純関数を置く。
  * 選んだタグの状態とタグを並べる描画は持たず、`MapCanvas` と `SeriesPanelTagFilter` が持つ。
  *
- * 絞り込みはシリーズの集合に対して行い、一覧パネルの区画と地図の事物はどちらも絞った後のシリーズから組む。
- * 事物を絞った後のシリーズで選ぶのは `@/lib/map/loci` の `lociForSeries` である。
+ * 例えば「戦争」を選ぶと、`taggedSeriesOf` が「戦争」を持つシリーズだけを残し、一覧パネルはそのシリーズだけを並べ、地図は `@/lib/map/loci` の `lociForSeries` がそのシリーズの点だけを残して描く。
+ * 一覧パネルと地図を同じ絞ったシリーズから作るので、パネルに並ぶシリーズと地図の点が食い違わない。
  */
 
 import type { SeriesPanelSections } from "@/lib/map/series-panel";
@@ -44,8 +44,10 @@ export function panelTagsOf(
 }
 
 /**
- * `series` のうち、`selectedTags` のタグをすべて `tags` に持つシリーズを、`series` の並び順で返す。
- * `selectedTags` が空なら `series` をそのまま返す。
+ * `series` のうち、選択中のタグ（`selectedTags`）をすべて持つシリーズを返す。
+ * 選択中のタグが無ければ `series` をそのまま返す。
+ *
+ * 残したシリーズの順序は `series` のまま変えないので、一覧パネルの位置なしの区画は絞る前と同じ順に並ぶ。
  */
 export function taggedSeriesOf(
   series: SeriesList,
