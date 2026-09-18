@@ -118,10 +118,13 @@ const LOCI = lociOf(SPARTA, ROUSHI, ALEXANDER, TEISEI_ROMA);
 
 describe("panelTagsOf", () => {
   it("タグを持つシリーズの数の降順に並べ、数が同じタグは先に現れた方を前に置く", () => {
-    const tags = panelTagsOf({
-      onMap: [SPARTA, ROUSHI, ALEXANDER],
-      unlocated: [],
-    });
+    const tags = panelTagsOf(
+      {
+        onMap: [SPARTA, ROUSHI, ALEXANDER],
+        unlocated: [],
+      },
+      [],
+    );
 
     expect(tags).toEqual([
       { tag: "戦争", seriesCount: 2 },
@@ -132,7 +135,7 @@ describe("panelTagsOf", () => {
   });
 
   it("位置なしの区画のシリーズのタグも、地図の区画のシリーズのタグの後に並べる", () => {
-    const tags = panelTagsOf({ onMap: [SPARTA], unlocated: [OKANE] });
+    const tags = panelTagsOf({ onMap: [SPARTA], unlocated: [OKANE] }, []);
 
     expect(tags.map(({ tag }) => tag)).toEqual([
       "集団",
@@ -145,13 +148,21 @@ describe("panelTagsOf", () => {
   it("同じタグを 2 回持つシリーズを、そのタグを持つシリーズ 1 件と数える", () => {
     const doubled = { ...SPARTA, tags: ["戦争", "戦争"] };
 
-    expect(panelTagsOf({ onMap: [doubled], unlocated: [] })).toEqual([
+    expect(panelTagsOf({ onMap: [doubled], unlocated: [] }, [])).toEqual([
       { tag: "戦争", seriesCount: 1 },
     ]);
   });
 
   it("区画がどちらも空なら空配列を返す", () => {
-    expect(panelTagsOf({ onMap: [], unlocated: [] })).toEqual([]);
+    expect(panelTagsOf({ onMap: [], unlocated: [] }, [])).toEqual([]);
+  });
+
+  it("選んだタグをどのシリーズも持たなければ、そのタグを数 0 で末尾に並べる", () => {
+    expect(panelTagsOf({ onMap: [SPARTA], unlocated: [] }, ["経済"])).toEqual([
+      { tag: "集団", seriesCount: 1 },
+      { tag: "戦争", seriesCount: 1 },
+      { tag: "経済", seriesCount: 0 },
+    ]);
   });
 });
 
@@ -210,6 +221,21 @@ describe("タグで絞ったシリーズから組んだ一覧パネルの区画�
     });
 
     expect(unlocated).toEqual([]);
+  });
+
+  it("タグを選ぶと、絞った区画から数えたタグは、選んだタグと一緒に持たれているタグだけになる", () => {
+    const tagged = taggedSeriesOf(SERIES, ["人物"]);
+    const sections = seriesPanelSectionsOf({
+      series: tagged,
+      loci: lociForSeries(LOCI, tagged),
+      currentWindow: WINDOW,
+    });
+
+    expect(panelTagsOf(sections, ["人物"])).toEqual([
+      { tag: "人物", seriesCount: 2 },
+      { tag: "思想", seriesCount: 1 },
+      { tag: "戦争", seriesCount: 1 },
+    ]);
   });
 
   it("タグを解除すると、一覧パネルの区画と地図の事物が絞る前に戻る", () => {

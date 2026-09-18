@@ -453,7 +453,7 @@ describe("MapCanvas", () => {
     expect(panTo).not.toHaveBeenCalled();
   });
 
-  it("絞り込む前の区画から数えたタグを、一覧パネルへ渡す", () => {
+  it("絞り込んでいなければ、区画のシリーズから数えたタグを一覧パネルへ渡す", () => {
     renderMapCanvas();
 
     expect(seriesPanelProps().tags).toEqual(
@@ -467,6 +467,7 @@ describe("MapCanvas", () => {
             presentEnd: PRESENT_END,
           }),
         }),
+        [],
       ),
     );
   });
@@ -493,13 +494,15 @@ describe("MapCanvas", () => {
     expect(seriesPanelProps().sections).toEqual({ onMap: [], unlocated: [] });
   });
 
-  it("タグを選んでも、一覧パネルへ渡すタグは絞り込む前のまま変わらない", () => {
+  it("タグを選ぶと、一覧パネルへ渡すタグが、選んだタグと一緒に持たれているタグだけになる", () => {
     renderMapCanvas();
-    const before = seriesPanelProps().tags;
 
     act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
 
-    expect(seriesPanelProps().tags).toEqual(before);
+    expect(seriesPanelProps().tags.map(({ tag }) => tag)).toEqual([
+      "経済",
+      "概念史",
+    ]);
   });
 
   it("絞り込みを解除すると、シリーズのレイヤへ渡す事物と一覧パネルの区画が絞る前に戻る", () => {

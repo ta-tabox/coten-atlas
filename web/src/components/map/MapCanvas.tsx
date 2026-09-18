@@ -147,11 +147,13 @@ export default function MapCanvas({
     series.find((one) => one.id === selectedSeriesId) ?? null;
   const eraWindow = currentWindow({ position: eraPosition, eras, presentEnd });
 
-  const panelTags = panelTagsOf(
-    seriesPanelSectionsOf({ series, loci, currentWindow: eraWindow }),
-  );
   const taggedSeries = taggedSeriesOf(series, selectedTags);
   const taggedLoci = lociForSeries(loci, taggedSeries);
+  const taggedSections = seriesPanelSectionsOf({
+    series: taggedSeries,
+    loci: taggedLoci,
+    currentWindow: eraWindow,
+  });
 
   /**
    * 一覧パネルでクリックされた `seriesId` のシリーズを選択し、代表点を持つならその代表点へ地図の中心を移す。
@@ -202,14 +204,10 @@ export default function MapCanvas({
       {/* 一覧パネルは地図の左上に置き、高さを画面の下に重なる era スライダーの上端までに収める。 */}
       <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-12rem)] max-w-[calc(100vw-2rem)] flex-col">
         <SeriesPanel
-          sections={seriesPanelSectionsOf({
-            series: taggedSeries,
-            loci: taggedLoci,
-            currentWindow: eraWindow,
-          })}
+          sections={taggedSections}
           selectedSeriesId={selectedSeriesId}
           onSelect={selectFromPanel}
-          tags={panelTags}
+          tags={panelTagsOf(taggedSections, selectedTags)}
           selectedTags={selectedTags}
           onSelectedTagsChange={setSelectedTags}
         />

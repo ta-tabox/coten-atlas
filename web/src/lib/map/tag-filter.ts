@@ -18,20 +18,29 @@ export type PanelTag = {
 /**
  * `sections` の両方の区画に並ぶシリーズの `tags` を、そのタグを持つシリーズの数の降順で返す。
  * 数が同じタグは、地図の区画・位置なしの区画の順にシリーズを走査して先に現れた方を前に置く。
+ * `selectedTags` のうち `sections` のどのシリーズも持たないタグは、数を 0 として末尾へ足す。
  *
- * `sections` には絞り込む前の区画を渡す。
- * 絞り込んだ後の区画を渡すと、選んだタグを持つシリーズに付くタグしか並ばず、ほかのタグを選べない。
+ * `sections` には `selectedTags` で絞り込んだ後の区画を渡すので、並ぶタグは選んだタグと一緒に選べるものだけになり、数はそのタグを足したときに残るシリーズの数になる。
+ * 絞り込んだ区画が空になっても選んだタグを押して外せるように、選んだタグは必ず並べる。
  */
-export function panelTagsOf(sections: SeriesPanelSections): PanelTag[] {
+export function panelTagsOf(
+  sections: SeriesPanelSections,
+  selectedTags: readonly string[],
+): PanelTag[] {
   const panelSeries = [...sections.onMap, ...sections.unlocated];
   const tags = [...new Set(panelSeries.flatMap((one) => one.tags))];
 
-  return tags
+  const counted = tags
     .map((tag) => ({
       tag,
       seriesCount: panelSeries.filter((one) => one.tags.includes(tag)).length,
     }))
     .toSorted((a, b) => b.seriesCount - a.seriesCount);
+  const missingSelected = selectedTags
+    .filter((tag) => !tags.includes(tag))
+    .map((tag) => ({ tag, seriesCount: 0 }));
+
+  return [...counted, ...missingSelected];
 }
 
 /**
