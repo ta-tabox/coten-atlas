@@ -9,7 +9,6 @@
  */
 
 import { useId } from "react";
-import { formatTagCondition } from "@/lib/format";
 import { type PanelTag, toggledTagsOf } from "@/lib/map/tag-filter";
 
 type SeriesPanelTagFilterProps = {
@@ -30,10 +29,9 @@ type SeriesPanelTagFilterProps = {
 
 /**
  * 見出しの下に、`isExpanded` が true のときだけ `tags` を押せるボタンの列で表示する。
- * `selectedTags` が空でなければ、開閉によらず絞り込み中のタグと解除のボタンを出す。
+ * `selectedTags` が空でなければ、開閉によらず解除のボタンを出す。
  *
- * 解除のボタンは、`selectedTags` のタグが `tags` に無いときも出す。
- * 現在窓が動くと並ぶタグが入れ替わるので、タグの列からしか解除できないと、列から消えたタグで絞ったまま戻れなくなる。
+ * タグの列を閉じたままでも絞り込みを外せるように、解除のボタンはタグの列の外に置く。
  */
 export default function SeriesPanelTagFilter({
   tags,
@@ -70,10 +68,7 @@ export default function SeriesPanelTagFilter({
       </h3>
 
       {selectedTags.length > 0 && (
-        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 px-2 py-1 text-[0.8rem]">
-          <span className="min-w-0 grow">
-            {formatTagCondition(selectedTags)}シリーズだけを表示している。
-          </span>
+        <div className="px-2 py-1">
           <button
             type="button"
             onClick={() => onSelectedTagsChange([])}
@@ -81,7 +76,7 @@ export default function SeriesPanelTagFilter({
           >
             絞り込みを解除
           </button>
-        </p>
+        </div>
       )}
 
       <div id={bodyId} hidden={!isExpanded} className="pb-1">

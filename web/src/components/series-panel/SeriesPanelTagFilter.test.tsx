@@ -98,27 +98,6 @@ describe("SeriesPanelTagFilter", () => {
     expect(onSelectedTagsChange).toHaveBeenCalledExactlyOnceWith([]);
   });
 
-  it("タグを 2 つ選んでいれば、両方を持つシリーズだけを表示していると言う", () => {
-    render(<SeriesPanelTagFilter {...PROPS} selectedTags={["戦争", "人物"]} />);
-
-    expect(
-      screen.getByText(
-        "「戦争」「人物」をすべて持つシリーズだけを表示している。",
-      ),
-    ).toBeVisible();
-  });
-
-  it("selectedTags のタグが tags に無くても、絞り込み中のタグと解除のボタンを出す", () => {
-    render(<SeriesPanelTagFilter {...PROPS} selectedTags={["経済"]} />);
-
-    expect(
-      screen.getByText("「経済」を持つシリーズだけを表示している。"),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("button", { name: "絞り込みを解除" }),
-    ).toBeVisible();
-  });
-
   it("閉じている間はタグのボタンを隠し、解除のボタンは残す", () => {
     render(
       <SeriesPanelTagFilter
