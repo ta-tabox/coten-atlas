@@ -97,7 +97,11 @@ export function findAnchorLocus(
   return loci.features.find((locus) => locus.properties.id === series.anchor);
 }
 
-/** `loci` のうち、`series` のどれかを `seriesId` に持つ事物だけを、`loci` の並び順で返す。 */
+/**
+ * `loci` から、`series` に含まれるシリーズの事物だけを残して返す。
+ *
+ * タグで絞り込んだシリーズの点だけを地図に描くために、絞った後のシリーズを `series` に渡して呼ぶ。
+ */
 export function lociForSeries(
   loci: MapLocusCollection,
   series: SeriesList,
