@@ -145,6 +145,19 @@ catalog/
 }
 ```
 
+**season-corrections.json**（割当に使う season を回ごとに訂正する表。人間が書き、訂正する回が無ければ空の配列 `[]`）:
+
+```jsonc
+[
+  {
+    "guid": "de11d2d5-62dc-4c83-923b-419b71c94193",  // 訂正する回の RSS の guid。前後に空白を付けない
+    "season": 40,  // 割当に使う season。正の整数か、どのシリーズにも割り当てないことを表す null
+    "reason": "題名の【NN-M】と itunes:season のどちらも、内容と別のシリーズの番号を持っている"  // なぜ訂正するかの 1 文
+  }
+  // 以下、訂正する 1 回 = 1 要素が並ぶ。同じ guid の行を二つ書かない
+]
+```
+
 `season` と `title` の対応は**フィードが正**である。
 上の `2` はスパルタ、`7` は世界三大宗教の、フィードでの `itunes:season` の値である。
 
@@ -152,7 +165,8 @@ catalog/
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
 - エピソードとシリーズの割当キーは `season` で、エピソードの `season` は `season-corrections.json`・題名の先頭の `【NN-M】` の `NN`・`itunes:season` の順に最初に決まった値である（理由は [ADR-0046](adr/0046-season-assignment-precedence.md)）
   シリーズもエピソードも `season` を持ち、シリーズでは必須、エピソードでは決まらない回があるので nullable
-- `season-corrections.json` は `guid`・`season`（正の整数か、割り当てないことを表す null）・`reason` を持つ行の配列で、題名と `itunes:season` のどちらからも正しい season が決まらない回だけを書く
+- `season-corrections.json` には、題名と `itunes:season` のどちらからも正しい season が決まらない回だけを書く
+  行を書いた回は、題名と `itunes:season` より行の `season` で割り当たり、同期の食い違いの警告からも外れる
 - `id` はシリーズ名のローマ字を kebab-case にした手書きの値で、フィードから機械で決まる値ではない
   同じ値を二つのシリーズが要求したら、どちらかを変える
   重複はスキーマが落とし、変えた後に残る古い参照（エピソードの `seriesId`・事物の `seriesId`）は `references.ts` が落とすので、黙って壊れることは無い
