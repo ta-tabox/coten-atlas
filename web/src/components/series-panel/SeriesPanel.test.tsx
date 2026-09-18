@@ -146,6 +146,7 @@ describe("SeriesPanel", () => {
         onSelect={vi.fn()}
       />,
     );
+    fireEvent.click(screen.getByRole("button", { name: "タグで絞り込む" }));
     fireEvent.click(screen.getByRole("button", { name: /経済/ }));
 
     expect(onSelectedTagsChange).toHaveBeenCalledExactlyOnceWith(["経済"]);
@@ -194,7 +195,23 @@ describe("SeriesPanel", () => {
     expect(screen.getByRole("button", { name: /スパルタ/ })).toBeVisible();
   });
 
-  it("パネル全体を閉じて開き直しても、閉じたタグの絞り込みは閉じたまま残る", () => {
+  it("タグの絞り込みは、タグの列を閉じた状態で始まる", () => {
+    render(
+      <SeriesPanel
+        sections={SECTIONS}
+        selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
+        onSelect={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "タグで絞り込む" }),
+    ).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("button", { name: /経済/ })).toBeNull();
+  });
+
+  it("パネル全体を閉じて開き直しても、開いたタグの絞り込みは開いたまま残る", () => {
     render(
       <SeriesPanel
         sections={SECTIONS}
@@ -208,8 +225,7 @@ describe("SeriesPanel", () => {
     fireEvent.click(screen.getByRole("button", { name: "一覧を閉じる" }));
     fireEvent.click(screen.getByRole("button", { name: "シリーズ一覧を開く" }));
 
-    expect(screen.queryByRole("button", { name: /経済/ })).toBeNull();
-    expect(screen.getByRole("button", { name: /スパルタ/ })).toBeVisible();
+    expect(screen.getByRole("button", { name: /経済/ })).toBeVisible();
   });
 
   it("閉じるボタンで一覧を隠し、開くボタンで一覧を戻す", () => {

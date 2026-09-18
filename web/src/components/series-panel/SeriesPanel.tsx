@@ -52,7 +52,8 @@ export default function SeriesPanel({
   const [isOpen, setIsOpen] = useState(true);
 
   // パネル全体を閉じて開き直しても区画の開閉を残すので、区画ごとの開閉も SeriesPanelSection と SeriesPanelTagFilter でなくここに置く。
-  const [isTagFilterExpanded, setIsTagFilterExpanded] = useState(true);
+  // タグの列は、開くと二つの区画を押し下げるので、閉じた状態で始める。
+  const [isTagFilterExpanded, setIsTagFilterExpanded] = useState(false);
   const [isOnMapExpanded, setIsOnMapExpanded] = useState(true);
   const [isUnlocatedExpanded, setIsUnlocatedExpanded] = useState(true);
 
