@@ -38,8 +38,8 @@ description: 配信フィードに回が在るのに `catalog/series.json` に�
 
 ## 1. 束を決めて着手する
 
-1. `git fetch origin` の後、比べる相手のブランチを並べる。
-   main に加えて、`catalog/series.json` を触る開いた PR のブランチも入れる。
+1. `git fetch origin` の後、比べる相手のブランチを並べる
+   main に加えて、`catalog/series.json` を触る開いた PR のブランチも入れる
    他の PR が足した season・主題の語・事物の `id` は、main へ入るまで main の現物に現れないためである
 
 ```bash
@@ -51,8 +51,8 @@ for b in $(gh pr list --state open --json headRefName,files \
 done
 ```
 
-2. シリーズ未作成の season を数える。
-   `catalog/episodes.json` の `seriesId` は次に `pnpm sync` を回すまで古いので、`seriesId` が空の回を数えず、回の season の集合と `series.json` の season の集合の差を取る。
+2. シリーズ未作成の season を数える
+   `catalog/episodes.json` の `seriesId` は次に `pnpm sync` を回すまで古いので、`seriesId` が空の回を数えず、回の season の集合と `series.json` の season の集合の差を取る
    題が `【番外編＃` で始まる回は、season を持っていても割当から落ちる（`web/src/lib/feed/assign.ts`）ので除く
 
 ```bash
@@ -74,7 +74,7 @@ gh issue list --state open --search 'シーズン調査: in:title' --json number
   --jq '.[] | "#\(.number) \(.title)\n\(.body)"'
 ```
 
-3. 各 season のシリーズ名を、その season の回の題から取る。
+3. 各 season のシリーズ名を、その season の回の題から取る
    題は `【<season>-<回>】…【COTEN RADIO <シリーズ名>編<回>】` の形で、ショートの回は `COTEN RADIOショート` と書かれる
 
 ```bash
@@ -82,9 +82,9 @@ git show origin/main:catalog/episodes.json \
   | jq -r '[.episodes[] | select(.season == <season>)] | sort_by(.pubDate) | .[0].title'
 ```
 
-4. 1 本の PR で扱う season の束を決める。
+4. 1 本の PR で扱う season の束を決める
    並行するセッションで進めるなら、時代で束ねると、`timeRange` の重なりと、同じ地名の取り合いが束の間で減る
-5. 並行するセッションで進めるなら、値を書く前に、題を `シーズン調査: <束の名前>` にした issue を起こし、本文に season とシリーズ名の対象表を置く。
+5. 並行するセッションで進めるなら、値を書く前に、題を `シーズン調査: <束の名前>` にした issue を起こし、本文に season とシリーズ名の対象表を置く
    PR を開くまでの間は束の season がどのブランチの `series.json` にも現れないので、issue で先に宣言しないと、他のセッションが同じ season を束に入れる
 6. `origin/main` からブランチ `feat/series-<束の名前>` を切る
 
@@ -109,11 +109,11 @@ zsh では `$r:catalog` の `:c` が変数の修飾子として読まれるの�
 各シリーズが扱う年代・地域・拠点を、配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`）の各回の説明で確かめる。
 
 - フィードはファイルに保存せず、`curl` の出力をパイプで絞って読む
-- 説明文は値を決める材料で、PR 本文や典拠のファイルに引用しない（ADR-0008）。
+- 説明文は値を決める材料で、PR 本文や典拠のファイルに引用しない（ADR-0008）
   書くときは「第 N〜M 回が〜を扱う」と要約する
-- 各回の説明の「今回のお話」の節だけを取り出す。
+- 各回の説明の「今回のお話」の節だけを取り出す
   古い回は同じシリーズ紹介を毎回繰り返すので、`【ポイント】` があればそこから後だけを残す
-- `itunes:season` だけで絞らない。
+- `itunes:season` だけで絞らない
   シリーズの回に別の season が付いていることがある（サラディンと十字軍の 40-6 と 40-10 は season 37）ので、題でも拾う
 
 ```bash
@@ -137,7 +137,7 @@ for it in ET.parse(sys.stdin).getroot().iter("item"):
 ## 4. 値を決めて書く
 
 1. skill `series-vocabulary` の手順 1〜8 を、シリーズごとに上から当てる
-2. 束を時代で割っているなら、`timeRange` が束の時代に収まらないシリーズは、別の束へ移してよい。
+2. 束を時代で割っているなら、`timeRange` が束の時代に収まらないシリーズは、別の束へ移してよい
    移す先が並行するセッションの束なら、移す前にその PR か issue へコメントし、両方の対象表を直す
 3. `catalog/series.json` と `catalog/loci.geojson` へ、`season` の順に要素を足す
 4. `web/` で `pnpm check` を緑にし、`feat(catalog): <束の名前>の N シリーズを載せる` でコミットする
@@ -151,20 +151,20 @@ for it in ET.parse(sys.stdin).getroot().iter("item"):
 値を書いたら、裏どりを待たずに PR を開いて push する。
 並行するセッションが手順 1 と手順 2 で、このブランチの season・主題の語・事物の `id` を読むためである。
 
-- 本文は `.github/pull_request_template.md` の節に沿う。
+- 本文は `.github/pull_request_template.md` の節に沿う
   束を issue にしたなら `closes #<issue>` を書く
 - 「判断したこと」には、代表点（選んだ理由と他の候補）・`region`（当てた表の行）・`timeRange`・`id` の表記・足した主題の語を表で並べる
 - 手本は PR #167（中世の 11 シリーズを series.json へ載せる）と PR #169（近世の 8 シリーズを series.json へ載せる）である
-- 典拠のファイルはまだ作らない。
+- 典拠のファイルはまだ作らない
   ファイルが在ることが裏どり済みの印になる
 
 ## 6. 裏どりを呼ぶ
 
-1. PR へ `@historian` のコメントを付ける。
-   本文には、対象のシリーズの `timeRange`・`region`・`anchor`・座標（経度, 緯度）・選び方を表で並べ、特に見てほしい点を名指す。
+1. PR へ `@historian` のコメントを付ける
+   本文には、対象のシリーズの `timeRange`・`region`・`anchor`・座標（経度, 緯度）・選び方を表で並べ、特に見てほしい点を名指す
    起動語に `@claude` を含めない
-2. コメントが起こした run を拾う。
-   `claude-history-review.yml` はコメントの投稿のたびに run を起こし、PR に付く bot のコメント（自動レビューの進捗や結果）が起こした run は `skipped` で終わる。
+2. コメントが起こした run を拾う
+   `claude-history-review.yml` はコメントの投稿のたびに run を起こし、PR に付く bot のコメント（自動レビューの進捗や結果）が起こした run は `skipped` で終わる
    そのため直近の 1 件を取ると、依頼の run でなく bot のコメントの run を拾うことがある
 
 ```bash
@@ -179,7 +179,7 @@ done
 echo "run=$id"
 ```
 
-3. `gh run watch <run-id> --exit-status` をバックグラウンドで待つ。
+3. `gh run watch <run-id> --exit-status` をバックグラウンドで待つ
    完了の通知が来るので、状態を繰り返し叩くループを書かない
 4. 結果は claude[bot] のコメントに在る
 
@@ -193,12 +193,12 @@ gh api repos/ta-tabox/coten-atlas/issues/<PR番号>/comments --paginate \
 
 ## 7. 典拠を写す
 
-1. 返った指摘を見て、`catalog/` の値を 1 つに決める。
+1. 返った指摘を見て、`catalog/` の値を 1 つに決める
    座標を直すなら `fix(catalog):` の 1 コミットにする
-2. 対象の全シリーズについて `docs/sources/<シリーズ id>.md` を書き、`docs(sources):` の 1 コミットにする。
+2. 対象の全シリーズについて `docs/sources/<シリーズ id>.md` を書き、`docs(sources):` の 1 コミットにする
    節の並びは `docs/sources/README.md` に従う
 3. 「仮決定と論点」節は、Claude の仮決定として、並立する説と覆りうる根拠を表に残す
-4. 「裏どりの出所」表には、`@historian` の結果のコメントの URL を置く。
+4. 「裏どりの出所」表には、`@historian` の結果のコメントの URL を置く
    同じ欄を二度裏どりしたら、どちらの回の典拠が正かを書く
 5. 裏どりで確かめられなかった座標や事実は、確かめられなかったと書く
 
@@ -207,7 +207,7 @@ gh api repos/ta-tabox/coten-atlas/issues/<PR番号>/comments --paginate \
 ## 8. 数え直して PR 本文を直す
 
 1. 手順 1 の `refs` を並べ直し、手順 2 の集計をもう一度回す
-2. 並行する PR と同じ事物の `id` か同じ地名を要求していたら、skill `series-vocabulary` の手順 5 の「同じ地名を二つのシリーズが要求するとき」の表で、どちらが移るかを決める。
+2. 並行する PR と同じ事物の `id` か同じ地名を要求していたら、skill `series-vocabulary` の手順 5 の「同じ地名を二つのシリーズが要求するとき」の表で、どちらが移るかを決める
    相手の PR が移る側なら、相手の PR へコメントで知らせ、相手のブランチへは push しない
 3. 並行する PR と同じ意味の主題の語を足していたら、PR 本文に名指し、どちらを直すかを人間に訊く
 4. PR 本文の「検証（機械）」に裏どりの結果のリンクを、「残したもの」に数え直した重なりを書き、「人間に見てほしい」に判断が割れる点を並べる
@@ -217,7 +217,7 @@ gh api repos/ta-tabox/coten-atlas/issues/<PR番号>/comments --paginate \
 skill `series-vocabulary` の規則が、事実を当てても候補を一つに絞らない論点に当たったら、その場で規則を決めない。
 
 1. `gh issue list --state open --label design` で、並行するセッションが同じ論点を起こしていないかを確かめる
-2. 無ければ、ラベル `design` の issue を起こす。
+2. 無ければ、ラベル `design` の issue を起こす
    本文は「事実（規則と当たった現物）」「決めること（案・決め方・起きること）」「作るもの（決まった後）」「人間の判定」の節にする
 3. PR は現行の規則のまま仮決定で進め、PR 本文と典拠のファイルの「仮決定と論点」にその issue を名指す
 
@@ -228,11 +228,11 @@ skill `series-vocabulary` の規則が、事実を当てても候補を一つに
 他の PR が main に入ったら、まだ入っていないこのセッションの PR のブランチへ取り込む。
 
 1. `gh pr view <番号> --json state` で `MERGED` を確かめる
-2. `git merge origin/main` で取り込む。
+2. `git merge origin/main` で取り込む
    rebase して force push しない
 3. `catalog/series.json` と `catalog/loci.geojson` が衝突したら、両方の要素を残して `season` の順に並べ直す
 4. `pnpm check` を緑にし、手順 8 をやり直す
-5. main の skill `series-vocabulary` が変わっていたら、変わった規則で値と典拠のファイルを当て直す。
+5. main の skill `series-vocabulary` が変わっていたら、変わった規則で値と典拠のファイルを当て直す
    代表点や事物の `id` を動かしたシリーズだけ、手順 6 で裏どりを呼び直す
 
 ## 11. 仮決定を採用して見直しを切り出す
@@ -245,7 +245,7 @@ PR ごとに、ゆっくり見直す論点だけを 1 シリーズ 1 件の issu
 マージは人間が指示したときだけ行う。
 
 1. `gh pr view <番号> --json mergeable,mergeStateStatus,statusCheckRollup` で、衝突が無く `check` が成功していることを確かめる
-2. `gh pr merge <番号> --merge` でマージコミットとして入れる。
+2. `gh pr merge <番号> --merge` でマージコミットとして入れる
    ブランチの削除は戻せない操作なので、指示が無ければ行わない
 3. `catalog/series.json` を触る PR がまだ開いていれば、そのブランチで手順 10 を行う
 
