@@ -282,7 +282,7 @@ catalog/
   代表点は `series.anchor` の参照で見分けるので、二つの集合は同じ `loci.geojson` から割れる
   実装は #111
 - オブジェクトクリック → 詳細カード（summary・年代・エピソード一覧・Spotify リンク）
-- 状態管理は React の範囲で足りる想定（selection / era window / panel 開閉のみ）
+- 状態管理は React の範囲で足りる想定（selection / era window / tag 絞り込み / panel 開閉のみ）
   外部ライブラリを足す前に本当に要るか問う
 - 地図の DOM の禁止則（MapLibre が出す DOM の範囲と、地図の上に載せる overlay の書き方）の正は `.claude/rules/layers.md`
 
@@ -318,8 +318,8 @@ catalog/
 - **同時代ハイライト**: 選択中のシリーズと `timeRange` が重なるシリーズを地図上で強調する
   S4 の opacity 制御の上に載る差分で、選択が無いときは何も起きない
   `timeRange` が `"untimed"` のシリーズを選んだときも、重なりを求める年が無いので何も起きない
-- **tag 絞り込み**: パネルに現在窓の tags を並べ、選んだタグを持つシリーズだけを地図とパネルに残す
-  selection とは別に filter state が一つ増える
+- **tag 絞り込み**: パネルに並ぶシリーズ（現在窓で地図に出ているシリーズと位置なしのシリーズ）の tags を並べ、選んだタグ（複数可）をすべて持つシリーズだけを地図とパネルに残す
+  filter state は selection と別の state で、絞り込みで選択中のシリーズが地図とパネルから消えても選択は外れない
 
 近接のためにスキーマは増やさない。
 判定は既存の properties（`tags` / `region` / `timeRange`）だけで行う。
