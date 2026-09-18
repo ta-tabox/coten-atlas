@@ -115,8 +115,8 @@ export default function MapCanvas({
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
 
   // 絞り込みに使うタグは、選択中のシリーズと別の state に持ち、どちらを変えてももう片方は変えない。
-  // 絞り込みで選択中のシリーズが地図と一覧パネルから消えても選択は外さず詳細カードも開いたままなので、選択を移す操作は、移す先のシリーズが `selectedTag` を持つかを確かめなくてよい。
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  // 絞り込みで選択中のシリーズが地図と一覧パネルから消えても選択は外さず詳細カードも開いたままなので、選択を移す操作は、移す先のシリーズが `selectedTags` のタグを持つかを確かめなくてよい。
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const [eraPosition, setEraPosition] = useState(() =>
     initialEraPositionOf(eras),
@@ -150,7 +150,7 @@ export default function MapCanvas({
   const panelTags = panelTagsOf(
     seriesPanelSectionsOf({ series, loci, currentWindow: eraWindow }),
   );
-  const taggedSeries = taggedSeriesOf(series, selectedTag);
+  const taggedSeries = taggedSeriesOf(series, selectedTags);
   const taggedLoci = lociForSeries(loci, taggedSeries);
 
   /**
@@ -210,8 +210,8 @@ export default function MapCanvas({
           selectedSeriesId={selectedSeriesId}
           onSelect={selectFromPanel}
           tags={panelTags}
-          selectedTag={selectedTag}
-          onSelectedTagChange={setSelectedTag}
+          selectedTags={selectedTags}
+          onSelectedTagsChange={setSelectedTags}
         />
       </div>
       {/* era スライダーは地図の下部の中央に置く。 */}

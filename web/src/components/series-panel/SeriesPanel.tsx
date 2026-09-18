@@ -4,13 +4,14 @@
  * シリーズの一覧パネルを、タグの絞り込みと、地図に出ているシリーズの区画と位置なしのシリーズの区画で表示し、シリーズの押下を選択として、タグの押下を絞り込みとして返す。
  *
  * 選択も絞り込みも保持しない。
- * 選択中のシリーズと絞り込みに使うタグは props で受け取り、押されたシリーズの id は `onSelect`、選ばれたタグは `onSelectedTagChange` で返す。
+ * 選択中のシリーズと絞り込みに使うタグは props で受け取り、押されたシリーズの id は `onSelect`、選び直したタグは `onSelectedTagsChange` で返す。
  * どのシリーズをどちらの区画に入れるかは `@/lib/map/series-panel` が決める。
  */
 
 import { useId, useState } from "react";
 import SeriesPanelSection from "@/components/series-panel/SeriesPanelSection";
 import SeriesPanelTagFilter from "@/components/series-panel/SeriesPanelTagFilter";
+import { formatTagCondition } from "@/lib/format";
 import type { SeriesPanelSections } from "@/lib/map/series-panel";
 import type { PanelTag } from "@/lib/map/tag-filter";
 
@@ -28,11 +29,11 @@ type SeriesPanelProps = {
   tags: PanelTag[];
   /**
    * 絞り込みに使っているタグ。
-   * 絞り込んでいなければ null。
+   * 絞り込んでいなければ空配列。
    */
-  selectedTag: string | null;
-  /** タグが選ばれたときにそのタグを、絞り込みが解除されたときに null を渡して呼ぶ。 */
-  onSelectedTagChange: (tag: string | null) => void;
+  selectedTags: string[];
+  /** タグが押されたときに押したタグを足し引きした配列を、絞り込みが解除されたときに空配列を渡して呼ぶ。 */
+  onSelectedTagsChange: (tags: string[]) => void;
 };
 
 /**
@@ -44,8 +45,8 @@ export default function SeriesPanel({
   selectedSeriesId,
   onSelect,
   tags,
-  selectedTag,
-  onSelectedTagChange,
+  selectedTags,
+  onSelectedTagsChange,
 }: SeriesPanelProps) {
   const titleId = useId();
   const [isOpen, setIsOpen] = useState(true);
@@ -93,8 +94,8 @@ export default function SeriesPanel({
           <div className="flex min-h-0 flex-col gap-3 overflow-x-hidden overflow-y-auto px-2 pt-3 pb-1">
             <SeriesPanelTagFilter
               tags={tags}
-              selectedTag={selectedTag}
-              onSelectedTagChange={onSelectedTagChange}
+              selectedTags={selectedTags}
+              onSelectedTagsChange={onSelectedTagsChange}
               isExpanded={isTagFilterExpanded}
               onToggle={() => setIsTagFilterExpanded(!isTagFilterExpanded)}
             />
@@ -104,9 +105,9 @@ export default function SeriesPanel({
               note="スライダーが指す時代に重なるシリーズを、始まりの年の順に並べている。"
               series={sections.onMap}
               emptyNote={
-                selectedTag === null
+                selectedTags.length === 0
                   ? "この時代に地図に出ているシリーズは無い。"
-                  : `この時代に地図に出ているシリーズに、「${selectedTag}」を持つものは無い。`
+                  : `この時代に地図に出ているシリーズに、${formatTagCondition(selectedTags)}ものは無い。`
               }
               selectedSeriesId={selectedSeriesId}
               onSelect={onSelect}
@@ -119,9 +120,9 @@ export default function SeriesPanel({
               note="一つの場所や時代に収まらない主題を扱うシリーズ。スライダーの時代によらず、いつでもここから選べる。"
               series={sections.unlocated}
               emptyNote={
-                selectedTag === null
+                selectedTags.length === 0
                   ? "場所や時代をまたぐシリーズは無い。"
-                  : `場所や時代をまたぐシリーズに、「${selectedTag}」を持つものは無い。`
+                  : `場所や時代をまたぐシリーズに、${formatTagCondition(selectedTags)}ものは無い。`
               }
               selectedSeriesId={selectedSeriesId}
               onSelect={onSelect}

@@ -42,15 +42,15 @@ const SECTIONS: SeriesPanelSections = { onMap: [SPARTA], unlocated: [OKANE] };
 /** 絞り込まずに、`SPARTA` と `OKANE` のタグを並べるときのタグの絞り込みの props。 */
 const TAG_FILTER_PROPS: Pick<
   ComponentProps<typeof SeriesPanel>,
-  "tags" | "selectedTag" | "onSelectedTagChange"
+  "tags" | "selectedTags" | "onSelectedTagsChange"
 > = {
   tags: [
     { tag: "集団", seriesCount: 1 },
     { tag: "経済", seriesCount: 1 },
     { tag: "概念史", seriesCount: 1 },
   ],
-  selectedTag: null,
-  onSelectedTagChange: () => {},
+  selectedTags: [],
+  onSelectedTagsChange: () => {},
 };
 
 /** 地図に出ているシリーズの区画を返す。 */
@@ -122,7 +122,7 @@ describe("SeriesPanel", () => {
         sections={{ onMap: [], unlocated: [OKANE] }}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
-        selectedTag="経済"
+        selectedTags={["経済"]}
         onSelect={vi.fn()}
       />,
     );
@@ -134,21 +134,21 @@ describe("SeriesPanel", () => {
     ).toBeVisible();
   });
 
-  it("タグの絞り込みでタグを押すと、そのタグを渡して onSelectedTagChange を呼ぶ", () => {
-    const onSelectedTagChange = vi.fn();
+  it("タグの絞り込みでタグを押すと、そのタグを足した配列を渡して onSelectedTagsChange を呼ぶ", () => {
+    const onSelectedTagsChange = vi.fn();
 
     render(
       <SeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
-        onSelectedTagChange={onSelectedTagChange}
+        onSelectedTagsChange={onSelectedTagsChange}
         onSelect={vi.fn()}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: /経済/ }));
 
-    expect(onSelectedTagChange).toHaveBeenCalledExactlyOnceWith("経済");
+    expect(onSelectedTagsChange).toHaveBeenCalledExactlyOnceWith(["経済"]);
   });
 
   it("区画の見出しを押すとその区画のシリーズだけを隠し、もう一度押すと戻す", () => {

@@ -14,7 +14,11 @@ import {
 } from "@/lib/map/loci";
 import { seriesIdsOnMapIn } from "@/lib/map/series-layer";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
-import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
+import {
+  panelTagsOf,
+  taggedSeriesOf,
+  toggledTagsOf,
+} from "@/lib/map/tag-filter";
 import {
   ANCHOR_UNLOCATED,
   type Series,
@@ -152,22 +156,36 @@ describe("panelTagsOf", () => {
 });
 
 describe("taggedSeriesOf", () => {
-  it("tag を tags に持つシリーズだけを、series の並び順で返す", () => {
-    expect(taggedSeriesOf(SERIES, "戦争")).toEqual([
+  it("選んだタグを tags に持つシリーズだけを、series の並び順で返す", () => {
+    expect(taggedSeriesOf(SERIES, ["戦争"])).toEqual([
       SPARTA,
       ALEXANDER,
       TEISEI_ROMA,
     ]);
   });
 
-  it("tag が null なら series をそのまま返す", () => {
-    expect(taggedSeriesOf(SERIES, null)).toBe(SERIES);
+  it("タグを 2 つ選ぶと、両方を tags に持つシリーズだけを返す", () => {
+    expect(taggedSeriesOf(SERIES, ["人物", "戦争"])).toEqual([ALEXANDER]);
+  });
+
+  it("選んだタグが空なら series をそのまま返す", () => {
+    expect(taggedSeriesOf(SERIES, [])).toBe(SERIES);
+  });
+});
+
+describe("toggledTagsOf", () => {
+  it("選んでいないタグを、選んだタグの末尾へ足す", () => {
+    expect(toggledTagsOf(["人物"], "戦争")).toEqual(["人物", "戦争"]);
+  });
+
+  it("選んでいるタグを、選んだタグから外す", () => {
+    expect(toggledTagsOf(["人物", "戦争"], "人物")).toEqual(["戦争"]);
   });
 });
 
 describe("タグで絞ったシリーズから組んだ一覧パネルの区画と地図の事物", () => {
   it("タグを選ぶと、一覧パネルの地図の区画と地図に出る事物のシリーズが、そのタグを持つ同じ集合に絞られる", () => {
-    const tagged = taggedSeriesOf(SERIES, "戦争");
+    const tagged = taggedSeriesOf(SERIES, ["戦争"]);
     const taggedLoci = lociForSeries(LOCI, tagged);
 
     const { onMap } = seriesPanelSectionsOf({
@@ -183,7 +201,7 @@ describe("タグで絞ったシリーズから組んだ一覧パネルの区画�
   });
 
   it("タグを選ぶと、位置なしの区画もそのタグを持つシリーズに絞られる", () => {
-    const tagged = taggedSeriesOf(SERIES, "戦争");
+    const tagged = taggedSeriesOf(SERIES, ["戦争"]);
 
     const { unlocated } = seriesPanelSectionsOf({
       series: tagged,
@@ -195,7 +213,7 @@ describe("タグで絞ったシリーズから組んだ一覧パネルの区画�
   });
 
   it("タグを解除すると、一覧パネルの区画と地図の事物が絞る前に戻る", () => {
-    const released = taggedSeriesOf(SERIES, null);
+    const released = taggedSeriesOf(SERIES, []);
     const releasedLoci = lociForSeries(LOCI, released);
 
     expect(releasedLoci).toEqual(LOCI);

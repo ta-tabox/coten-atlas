@@ -14,8 +14,8 @@ const PROPS: ComponentProps<typeof SeriesPanelTagFilter> = {
     { tag: "戦争", seriesCount: 2 },
     { tag: "人物", seriesCount: 1 },
   ],
-  selectedTag: null,
-  onSelectedTagChange: () => {},
+  selectedTags: [],
+  onSelectedTagsChange: () => {},
   isExpanded: true,
   onToggle: () => {},
 };
@@ -31,22 +31,26 @@ describe("SeriesPanelTagFilter", () => {
     expect(screen.getByRole("button", { name: /人物/ })).toBeVisible();
   });
 
-  it("選んでいないタグを押すと、そのタグを渡して onSelectedTagChange を呼ぶ", () => {
-    const onSelectedTagChange = vi.fn();
+  it("選んでいないタグを押すと、選んだタグの末尾へ足した配列を渡して onSelectedTagsChange を呼ぶ", () => {
+    const onSelectedTagsChange = vi.fn();
 
     render(
       <SeriesPanelTagFilter
         {...PROPS}
-        onSelectedTagChange={onSelectedTagChange}
+        selectedTags={["人物"]}
+        onSelectedTagsChange={onSelectedTagsChange}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: /戦争/ }));
 
-    expect(onSelectedTagChange).toHaveBeenCalledExactlyOnceWith("戦争");
+    expect(onSelectedTagsChange).toHaveBeenCalledExactlyOnceWith([
+      "人物",
+      "戦争",
+    ]);
   });
 
-  it("selectedTag のタグだけに aria-pressed=true を付ける", () => {
-    render(<SeriesPanelTagFilter {...PROPS} selectedTag="戦争" />);
+  it("selectedTags のタグだけに aria-pressed=true を付ける", () => {
+    render(<SeriesPanelTagFilter {...PROPS} selectedTags={["戦争"]} />);
 
     expect(screen.getByRole("button", { name: /戦争/ })).toHaveAttribute(
       "aria-pressed",
@@ -58,19 +62,19 @@ describe("SeriesPanelTagFilter", () => {
     );
   });
 
-  it("選択中のタグをもう一度押すと、null を渡して onSelectedTagChange を呼ぶ", () => {
-    const onSelectedTagChange = vi.fn();
+  it("選択中のタグを押すと、そのタグを外した配列を渡して onSelectedTagsChange を呼ぶ", () => {
+    const onSelectedTagsChange = vi.fn();
 
     render(
       <SeriesPanelTagFilter
         {...PROPS}
-        selectedTag="戦争"
-        onSelectedTagChange={onSelectedTagChange}
+        selectedTags={["戦争", "人物"]}
+        onSelectedTagsChange={onSelectedTagsChange}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: /戦争/ }));
 
-    expect(onSelectedTagChange).toHaveBeenCalledExactlyOnceWith(null);
+    expect(onSelectedTagsChange).toHaveBeenCalledExactlyOnceWith(["人物"]);
   });
 
   it("絞り込んでいなければ、解除のボタンを出さない", () => {
@@ -79,23 +83,33 @@ describe("SeriesPanelTagFilter", () => {
     expect(screen.queryByRole("button", { name: "絞り込みを解除" })).toBeNull();
   });
 
-  it("解除のボタンを押すと、null を渡して onSelectedTagChange を呼ぶ", () => {
-    const onSelectedTagChange = vi.fn();
+  it("解除のボタンを押すと、空配列を渡して onSelectedTagsChange を呼ぶ", () => {
+    const onSelectedTagsChange = vi.fn();
 
     render(
       <SeriesPanelTagFilter
         {...PROPS}
-        selectedTag="戦争"
-        onSelectedTagChange={onSelectedTagChange}
+        selectedTags={["戦争", "人物"]}
+        onSelectedTagsChange={onSelectedTagsChange}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "絞り込みを解除" }));
 
-    expect(onSelectedTagChange).toHaveBeenCalledExactlyOnceWith(null);
+    expect(onSelectedTagsChange).toHaveBeenCalledExactlyOnceWith([]);
   });
 
-  it("selectedTag が tags に無くても、絞り込み中のタグと解除のボタンを出す", () => {
-    render(<SeriesPanelTagFilter {...PROPS} selectedTag="経済" />);
+  it("タグを 2 つ選んでいれば、両方を持つシリーズだけを表示していると言う", () => {
+    render(<SeriesPanelTagFilter {...PROPS} selectedTags={["戦争", "人物"]} />);
+
+    expect(
+      screen.getByText(
+        "「戦争」「人物」をすべて持つシリーズだけを表示している。",
+      ),
+    ).toBeVisible();
+  });
+
+  it("selectedTags のタグが tags に無くても、絞り込み中のタグと解除のボタンを出す", () => {
+    render(<SeriesPanelTagFilter {...PROPS} selectedTags={["経済"]} />);
 
     expect(
       screen.getByText("「経済」を持つシリーズだけを表示している。"),
@@ -107,7 +121,11 @@ describe("SeriesPanelTagFilter", () => {
 
   it("閉じている間はタグのボタンを隠し、解除のボタンは残す", () => {
     render(
-      <SeriesPanelTagFilter {...PROPS} selectedTag="戦争" isExpanded={false} />,
+      <SeriesPanelTagFilter
+        {...PROPS}
+        selectedTags={["戦争"]}
+        isExpanded={false}
+      />,
     );
 
     expect(

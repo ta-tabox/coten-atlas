@@ -20,7 +20,7 @@ export type PanelTag = {
  * 数が同じタグは、地図の区画・位置なしの区画の順にシリーズを走査して先に現れた方を前に置く。
  *
  * `sections` には絞り込む前の区画を渡す。
- * 絞り込んだ後の区画を渡すと、選んだタグを持つシリーズに付くタグしか並ばず、ほかのタグへ選び直せない。
+ * 絞り込んだ後の区画を渡すと、選んだタグを持つシリーズに付くタグしか並ばず、ほかのタグを選べない。
  */
 export function panelTagsOf(sections: SeriesPanelSections): PanelTag[] {
   const panelSeries = [...sections.onMap, ...sections.unlocated];
@@ -35,16 +35,33 @@ export function panelTagsOf(sections: SeriesPanelSections): PanelTag[] {
 }
 
 /**
- * `series` のうち `tag` を `tags` に持つシリーズを、`series` の並び順で返す。
- * `tag` が null なら `series` をそのまま返す。
+ * `series` のうち、`selectedTags` のタグをすべて `tags` に持つシリーズを、`series` の並び順で返す。
+ * `selectedTags` が空なら `series` をそのまま返す。
  */
 export function taggedSeriesOf(
   series: SeriesList,
-  tag: string | null,
+  selectedTags: readonly string[],
 ): SeriesList {
-  if (tag === null) {
+  if (selectedTags.length === 0) {
     return series;
   }
 
-  return series.filter((one) => one.tags.includes(tag));
+  return series.filter((one) =>
+    selectedTags.every((tag) => one.tags.includes(tag)),
+  );
+}
+
+/**
+ * `selectedTags` に `tag` があれば外し、無ければ末尾へ足した配列を返す。
+ * `selectedTags` は書き換えない。
+ */
+export function toggledTagsOf(
+  selectedTags: readonly string[],
+  tag: string,
+): string[] {
+  if (selectedTags.includes(tag)) {
+    return selectedTags.filter((one) => one !== tag);
+  }
+
+  return [...selectedTags, tag];
 }
