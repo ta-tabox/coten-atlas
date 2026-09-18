@@ -15,7 +15,7 @@ paths:
 
 | 境界 | 閉じるモジュール | 他のモジュールが受け取るもの |
 |---|---|---|
-| `catalog/` のファイル | アプリのビルドは `src/lib/catalog-dir.ts`（`loadSeries`・`loadLoci`・`loadEras`）、同期は `scripts/sync-feed.ts`（JSON の構文の検査は `scripts/json-file.ts`） | スキーマを通した `SeriesList`・`LocusCollection`・`EraList`・`EpisodeCollection` |
+| `catalog/` のファイル | アプリのビルドは `src/lib/catalog-dir.ts`（`loadSeries`・`loadLoci`・`loadEras`）、同期は `scripts/sync-feed.ts`（JSON の構文の検査は `scripts/json-file.ts`） | スキーマを通した `SeriesList`・`LocusCollection`・`EraList`・`EpisodeCollection`・`SeasonCorrectionList` |
 | RSS（ネットワーク） | `scripts/sync-feed.ts` の `fetchFeed` | XML の文字列。`src/lib/feed/parse.ts` の `parseFeed` が検査済みの `FeedItem` の配列にする |
 | 配信した `episodes.json`（ブラウザの fetch） | `src/lib/episodes.ts` の `fetchEpisodes` | `EpisodesResult`（`parseEpisodes` を通した `Episode` の配列か、取得の失敗） |
 | MapLibre の DOM とイベント | `src/components/map/MapCanvas.tsx`（source と layer は子の `src/components/map/SeriesLayers.tsx`） | クリックした事物の `seriesId` |
