@@ -178,6 +178,7 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | `.githooks/pre-commit` | ステージした追加行の禁止語を、コミットを止めずに報告する git フック |
 | `scripts/lint-vocabulary.sh` | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る |
 | `.github/workflows/lint-pr-body.yml` | PR 本文の禁止語を CI で報告する |
+| `scripts/diff-coding-standards.sh` | 規約の写しと共有の雛形の差を報告する。雛形は CI から読めないので、手で走らせる |
 | `.vocabulary/banned.tsv` | 禁止語の一覧。`.claude/rules/writing.md` の表の写しで、2 本の検査が読む |
 | `.vocabulary/allow` | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語） |
 | クラウド環境の環境変数欄 | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義） |
