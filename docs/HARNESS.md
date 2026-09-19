@@ -51,7 +51,7 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 ブラウザのバイナリは `pnpm check` が取りに行かない。
 `pnpm check` は繰り返し打つ口なので、そのたびに 356MB のダウンロードの要否を確かめに行かせない。
 入っていないと L4 だけが落ちる。
-`pnpm exec playwright install chromium` を一度だけ打つ。
+入れるのは §3 の準備（`pnpm exec playwright install chromium`）である。
 
 - **赤のままコミットしない。** 回し方は「`pnpm check` → 緑ならコミット」
 - 口を増やさない。切り分けのために個別スクリプトを単体で叩くのは構わないが、
@@ -141,10 +141,10 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | GitHub への到達 | 到達する | セッションによっては到達しない。issue の登録・状態更新は手元で回す |
 | 外向き通信 | 制限なし | **許可制**（§4） |
 | commit の committer | 人間名義 | コンテナの名義のまま（署名が強制される）。author だけ人間名義へ焼く |
-| 環境の準備 | 不要 | `.claude/hooks/session-start.sh` が mise とランタイムと依存を入れ、shims の PATH をセッションへ渡す（依存は `web/` で） |
+| 環境の準備 | `.claude/hooks/session-start.sh` が `scripts/setup.sh` を呼ぶ | `.claude/hooks/session-start.sh` が mise とランタイムと依存を入れ、shims の PATH をセッションへ渡す（依存は `web/` で） |
 | ランタイムの活性化 | シェルが mise を活性化している | フックが渡した PATH で効く（下記） |
 
-`session-start.sh` は `CLAUDE_CODE_REMOTE` で囲ってあるので手元では即 exit する。
+`session-start.sh` は `CLAUDE_CODE_REMOTE` で手元とリモートを分け、手元では `scripts/setup.sh` を呼んで、それが途中で止まってもセッションを立てる。
 `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL` はクラウド環境の環境変数欄が持ち、
 未設定ならフックがセッションを立てずに止める。
 
@@ -153,6 +153,25 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 渡し口はこの追記専用ファイルの一つだけで、フックが自分の PATH を書き換えても子プロセスの外へは出ない。
 **効くのは次のセッションから**なので、フックを直した回では確かめられない。
 確かめるのは `node -v` と `pnpm -v` が `mise.toml` の固定と一致するか。
+
+### 揃えるもの
+
+手元（リポジトリ本体と worktree）・リモート・CI は、次の同じものを揃えてから `pnpm check` を回す。
+手元の準備は何度走らせても同じ状態に落ち着き、人間はリポジトリのルートで `bash scripts/setup.sh` を叩けば同じものが揃う。
+
+| 揃えるもの | 正 | 手元 | リモート | CI |
+|---|---|---|---|---|
+| git のフックの向き先（相対の `.githooks`） | `.githooks/` | `scripts/setup.sh` | `session-start.sh` | 揃えない |
+| ランタイム | `mise.toml` | `scripts/setup.sh` | `session-start.sh` | `mise-action` |
+| 依存 | `web/pnpm-lock.yaml` | `scripts/setup.sh` | `session-start.sh` | `check.yml` |
+| pnpm の store の置き場 | `web/pnpm-workspace.yaml` の `storeDir` | pnpm が読む | pnpm が読む | pnpm が読む |
+| smoke テストのブラウザ | `web/pnpm-lock.yaml` の `@playwright/test` の版 | `scripts/setup.sh` | 揃えない（§4） | `check.yml` |
+
+`core.hooksPath` を絶対パスにすると、worktree の `.githooks` を直しても本体の版が走る。
+worktree ごとの設定（`extensions.worktreeConfig`）に残った値は共有の設定より優先されるので、`scripts/setup.sh` は先にそれを消す。
+
+pnpm の既定の store は OS と版で変わるので、本体と worktree が違う store から依存を張ると、`pnpm install` と `pnpm exec` の前の依存の検査が `ERR_PNPM_UNEXPECTED_STORE` で止まる。
+`.npmrc` の `store-dir` は pnpm 11 では効かず、`web/pnpm-workspace.yaml` の `storeDir` が効く。
 
 ## 4. コンテナの外向き通信
 
@@ -172,7 +191,9 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | 置き場 | 持つもの |
 |---|---|
 | `.claude/settings.json` | 権限（`permissions`）・`SessionStart` の配線 |
-| `.claude/hooks/session-start.sh` | リモートの環境準備（mise の導入・ランタイム・依存・shims の PATH の受け渡し） |
+| `.claude/hooks/session-start.sh` | リモートの環境準備（mise の導入・ランタイム・依存・shims の PATH の受け渡し）と、手元での `scripts/setup.sh` の呼び出し |
+| `scripts/setup.sh` | 手元（本体と worktree）の環境準備（§3「揃えるもの」） |
+| `web/pnpm-workspace.yaml` | pnpm の store の置き場（`storeDir`） |
 | `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
 | `.githooks/commit-msg` | コミット本文の禁止語を commit の前で止める git フック |
 | `.githooks/pre-commit` | ステージした追加行の禁止語を、コミットを止めずに報告する git フック |
@@ -188,7 +209,7 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 名義のようにリポジトリへ置けないものだけがクラウド環境の環境変数欄へ行く。
 
 `.githooks/` のフックは git の既定の `.git/hooks/` に無いので、クローンごとに `git config core.hooksPath .githooks` で有効にする。
-リモートでは `session-start.sh` がこの設定を入れる。
+手元では `scripts/setup.sh`、リモートでは `session-start.sh` がこの設定を入れる。
 
 ## 6. 意図的にやらないこと
 
