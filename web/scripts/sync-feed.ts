@@ -6,9 +6,9 @@
  * どのファイルをどの順で読み書きするかを決めるのがこの層の仕事で、その順序は main を上から読めば追える。
  *
  * `episodes.json` はフィードから毎回組み直す。
- * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` の現状から引き直す。
+ * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` と `season-corrections.json` の現状から決め直す。
  * 未割当を溜める置き場も持たない。
- * 前回との差分を取るのは、新着を数えるためと、割当が外れた回を報せるためだけである。
+ * 前回との差分を取るのは、新着を数えるためと、割当が外れた回と別のシリーズへ移った回を報せるためだけである。
  *
  * 失敗は黙って飲まずに落とす。
  * 空の結果を正常な差分として書くと、フィードが壊れた日に `episodes.json` が消える。
@@ -22,10 +22,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
-import { assignableSeasonOf, assignSeriesId } from "@/lib/feed/assign";
+import {
+  listUncorrectedSeasonMismatches,
+  type SeasonKey,
+  seasonKeyOf,
+  seriesIdOf,
+} from "@/lib/feed/assign";
 import { parseFeed } from "@/lib/feed/parse";
 import type { FeedItem } from "@/lib/feed/schema";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
+import {
+  parseSeasonCorrections,
+  type SeasonCorrectionList,
+} from "@/lib/schema/season-correction";
 import { parseSeries, type SeriesList } from "@/lib/schema/series";
 
 /**
@@ -52,10 +61,15 @@ const CATALOG_DIR = path.resolve(process.cwd(), "../catalog");
 
 const EPISODES_FILE = path.join(CATALOG_DIR, "episodes.json");
 const SERIES_FILE = path.join(CATALOG_DIR, "series.json");
+const SEASON_CORRECTIONS_FILE = path.join(
+  CATALOG_DIR,
+  "season-corrections.json",
+);
 
-/** フィードの 1 件と、それに決まったシリーズ。 */
+/** フィードの 1 件と、それに決まった season とシリーズ。 */
 type Assignment = {
   item: FeedItem;
+  key: SeasonKey;
   seriesId: string | null;
 };
 
@@ -100,7 +114,7 @@ function readSeries(file: string): SeriesList {
  * 前回の同期が書き出したエピソード一覧を読み、guid から seriesId を引ける対応表にして返す。
  * ファイルがまだ無い初回は空の対応表になり、フィードの全件が新着として扱われる。
  *
- * 鍵（guid）の有無が「その回が新着か」を決め、値（seriesId）が「前回付いていた割当が外れていないか」を決める。
+ * 鍵（guid）の有無が「その回が新着か」を決め、値（seriesId）が「前回付いていた割当が外れたり別のシリーズへ移ったりしていないか」を決める。
  * 鍵だけでは、割当が null へ後退した回と元から未割当だった回を見分けられない。
  */
 function readPreviousAssignments(file: string): Map<string, string | null> {
@@ -116,17 +130,17 @@ function readPreviousAssignments(file: string): Map<string, string | null> {
 }
 
 /**
- * フィードの 1 件を `episodes.json` の 1 件へ直す。
+ * 割当を済ませたフィードの 1 件を、`itunes:season` でなく割当に使った season を持つ `episodes.json` の 1 件へ直す。
  *
  * `audioUrl`・`episodeNumber`・`durationSec` はスキーマに欄が無いので落とす。
  * `episodeSchema` は未知のキーを捨てずに落とすので、足すと `parseEpisodes` が赤になる。
  */
-function toEpisode(item: FeedItem, seriesId: string | null): Episode {
+function toEpisode({ item, key, seriesId }: Assignment): Episode {
   return {
     guid: item.guid,
     title: item.title,
     pubDate: item.pubDate,
-    season: item.season,
+    season: key.season,
     seriesId,
     links: [{ platform: "spotify", url: item.link }],
   };
@@ -148,6 +162,27 @@ function warnDisappeared(
   if (disappeared.length > 0) {
     console.error(
       `前回あった ${disappeared.length} 件がフィードに無い: ${disappeared.join(", ")}`,
+    );
+  }
+}
+
+/**
+ * `season-corrections.json` の行のうち、`guid` がフィードのどの回にも無い行を報せる。
+ *
+ * guid を書き間違えた行も、フィードから消えた回の行も、どの回の割当にも効かないまま残る。
+ */
+function warnUnmatchedCorrections(
+  items: FeedItem[],
+  corrections: SeasonCorrectionList,
+): void {
+  const present = new Set(items.map((item) => item.guid));
+  const unmatched = corrections.filter(({ guid }) => !present.has(guid));
+
+  if (unmatched.length > 0) {
+    console.error(
+      `season-corrections.json の ${unmatched.length} 行の guid がフィードに無い: ${unmatched
+        .map(({ guid }) => guid)
+        .join(", ")}`,
     );
   }
 }
@@ -177,6 +212,78 @@ function warnLostAssignments(
 }
 
 /**
+ * 前回付いていた seriesId が、別のシリーズの id へ変わった回を報せる。
+ *
+ * 別のシリーズへ移った回は未割当の数にも `warnLostAssignments` にも現れない。
+ * 割当の規則や `season-corrections.json` を直すと起きるので、黙って直すと回が別のシリーズの一覧へ移ったことに気付けない。
+ */
+function warnReassigned(
+  assignments: Assignment[],
+  previous: Map<string, string | null>,
+): void {
+  const reassigned = assignments.filter(({ item, seriesId }) => {
+    const previousSeriesId = previous.get(item.guid) ?? null;
+
+    return (
+      seriesId !== null &&
+      previousSeriesId !== null &&
+      seriesId !== previousSeriesId
+    );
+  });
+
+  if (reassigned.length > 0) {
+    console.error(
+      `前回と別のシリーズへ割り当たった回が ${reassigned.length} 件ある: ${reassigned
+        .map(
+          ({ item, seriesId }) =>
+            `${item.guid}（${previous.get(item.guid)} → ${seriesId}）`,
+        )
+        .join(", ")}`,
+    );
+  }
+}
+
+/**
+ * 題名が `【NN-M】` で始まらず、`itunes:season` で割り当てた回を報せる。
+ *
+ * 題名の書式が変わった回は `itunes:season` で割り当たり続けるので、フィードの番号が誤っていても未割当の数には現れない。
+ */
+function warnFeedSeasonAssignments(assignments: Assignment[]): void {
+  const fromFeed = assignments.filter(({ key }) => key.source === "feed");
+
+  if (fromFeed.length > 0) {
+    console.error(
+      `題名が【NN-M】で始まらず、itunes:season で割り当てた回が ${fromFeed.length} 件ある: ${fromFeed
+        .map(({ item }) => `${item.guid}（${item.title}）`)
+        .join(", ")}`,
+    );
+  }
+}
+
+/**
+ * 題名の `NN` と `itunes:season` が食い違うのに、`season-corrections.json` に行が無い回を報せる。
+ *
+ * 食い違う回は題名の `NN` で割り当たるので、題名の方が誤っていると、訂正表へ行を足すまで誤ったシリーズに入ったまま残る。
+ */
+function warnSeasonMismatches(
+  items: FeedItem[],
+  corrections: SeasonCorrectionList,
+): void {
+  const mismatches = listUncorrectedSeasonMismatches(items, corrections);
+
+  if (mismatches.length > 0) {
+    console.error(
+      `題名の NN と itunes:season が食い違い、訂正表に無い回が ${mismatches.length} 件ある: ${mismatches
+        .map(
+          (item) =>
+            `${item.guid}（itunes:season ${item.season}、${item.title}）`,
+        )
+        .join(", ")}`,
+    );
+  }
+}
+
+/**
  * `catalog/` を指せていることを確かめる。
  *
  * 作業ディレクトリが違うと、書き出しは黙って別の場所へ `catalog/` を作り、755 件をそこへ置く。
@@ -200,21 +307,15 @@ function assertCatalogDir(): void {
  */
 function reportSummary(assignments: Assignment[], added: Assignment[]): void {
   const unassigned = assignments.filter(({ seriesId }) => seriesId === null);
-  const settledByRule = unassigned.filter(
-    ({ item }) => assignableSeasonOf(item) === null,
-  );
-  const awaitingSeries = unassigned.filter(
-    ({ item }) => assignableSeasonOf(item) !== null,
-  );
-  const awaitingSeasons = new Set(
-    awaitingSeries.map(({ item }) => assignableSeasonOf(item)),
-  );
+  const settledByRule = unassigned.filter(({ key }) => key.season === null);
+  const awaitingSeries = unassigned.filter(({ key }) => key.season !== null);
+  const awaitingSeasons = new Set(awaitingSeries.map(({ key }) => key.season));
 
   console.log(
     `フィード ${assignments.length} 件 / 新規 ${added.length} 件 / 割当 ${assignments.length - unassigned.length} 件 / 未割当 ${unassigned.length} 件`,
   );
   console.log(
-    `  規則で確定      ${settledByRule.length} 件（season を持たない回・番外編）`,
+    `  規則で確定      ${settledByRule.length} 件（season が決まらない回・番外編・訂正表で外した回）`,
   );
   console.log(
     `  シリーズ未作成  ${awaitingSeries.length} 件（season ${awaitingSeasons.size} 件）`,
@@ -229,17 +330,25 @@ async function main(): Promise<void> {
 
   const items = parseFeed(await fetchFeed(FEED_URL));
   const series = readSeries(SERIES_FILE);
+  const corrections = parseSeasonCorrections(
+    readJsonFile(SEASON_CORRECTIONS_FILE),
+  );
   const previous = readPreviousAssignments(EPISODES_FILE);
 
   warnDisappeared(items, previous);
+  warnUnmatchedCorrections(items, corrections);
 
   const syncedAt = new Date().toISOString();
-  const assignments: Assignment[] = items.map((item) => ({
-    item,
-    seriesId: assignSeriesId(item, series),
-  }));
+  const assignments: Assignment[] = items.map((item) => {
+    const key = seasonKeyOf(item, corrections);
+
+    return { item, key, seriesId: seriesIdOf(key.season, series) };
+  });
 
   warnLostAssignments(assignments, previous);
+  warnReassigned(assignments, previous);
+  warnFeedSeasonAssignments(assignments);
+  warnSeasonMismatches(items, corrections);
 
   const added = assignments.filter(({ item }) => !previous.has(item.guid));
 
@@ -247,9 +356,7 @@ async function main(): Promise<void> {
     EPISODES_FILE,
     parseEpisodes({
       syncedAt,
-      episodes: assignments.map(({ item, seriesId }) =>
-        toEpisode(item, seriesId),
-      ),
+      episodes: assignments.map((assignment) => toEpisode(assignment)),
     }),
   );
 
