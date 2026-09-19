@@ -196,6 +196,7 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 | `web/pnpm-workspace.yaml` | pnpm の store の置き場（`storeDir`） |
 | `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
 | `.githooks/commit-msg` | コミット本文の禁止語を commit の前で止める git フック |
+| `.githooks/pre-commit` | ステージした追加行の禁止語を、コミットを止めずに報告する git フック |
 | `scripts/lint-vocabulary.sh` | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る |
 | `.github/workflows/lint-pr-body.yml` | PR 本文の禁止語を CI で報告する |
 | `.coding-standards-vocab-allow` | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語） |
@@ -207,7 +208,7 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 リモートで効かせたい設定はリポジトリに置く。
 名義のようにリポジトリへ置けないものだけがクラウド環境の環境変数欄へ行く。
 
-`.githooks/commit-msg` は git の既定の `.git/hooks/` に無いので、クローンごとに `git config core.hooksPath .githooks` で有効にする。
+`.githooks/` のフックは git の既定の `.git/hooks/` に無いので、クローンごとに `git config core.hooksPath .githooks` で有効にする。
 手元では `scripts/setup.sh`、リモートでは `session-start.sh` がこの設定を入れる。
 
 ## 6. 意図的にやらないこと

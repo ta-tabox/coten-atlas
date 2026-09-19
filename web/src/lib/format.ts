@@ -32,3 +32,13 @@ export function formatTimeRange(range: SeriesTimeRange): string {
 
   return `${formatYear(range.start)}〜${formatYear(range.end)}`;
 }
+
+/**
+ * `tags` を「「戦争」を持つ」「「戦争」「人物」をすべて持つ」の形式の、シリーズを修飾する句へ整形する。
+ * `tags` が 1 つなら「すべて」を付けない。
+ */
+export function formatTagCondition(tags: readonly string[]): string {
+  const quoted = tags.map((tag) => `「${tag}」`).join("");
+
+  return tags.length === 1 ? `${quoted}を持つ` : `${quoted}をすべて持つ`;
+}
