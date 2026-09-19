@@ -178,7 +178,9 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | `.githooks/pre-commit` | ステージした追加行の禁止語を、コミットを止めずに報告する git フック |
 | `scripts/lint-vocabulary.sh` | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る |
 | `.github/workflows/lint-pr-body.yml` | PR 本文の禁止語を CI で報告する |
-| `.coding-standards-vocab-allow` | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語） |
+| `scripts/diff-coding-standards.sh` | 規約の写しと共有の雛形の差を、手で走らせて報告する |
+| `.vocabulary/banned.tsv` | 禁止語の検査が読む、`.claude/rules/writing.md` の表の写し |
+| `.vocabulary/allow` | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語） |
 | クラウド環境の環境変数欄 | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義） |
 | `.claude/skills/` | 同梱の規約 skill。プラグインを入れていないので本体を置いてある。`karpathy-guidelines` は外部由来（出所 https://github.com/multica-ai/andrej-karpathy-skills の `skills/karpathy-guidelines/SKILL.md`、固定 2c60614、MIT。上流の更新は手で取り込む） |
 | `mise.toml`（ルート） | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む |
