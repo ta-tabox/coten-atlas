@@ -36,6 +36,7 @@ import {
 import type { MapLocusCollection } from "@/lib/map/loci";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
+import { panelTagsOf } from "@/lib/map/tag-filter";
 import type { EraList } from "@/lib/schema/era";
 import {
   ANCHOR_UNLOCATED,
@@ -450,5 +451,100 @@ describe("MapCanvas", () => {
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
 
     expect(panTo).not.toHaveBeenCalled();
+  });
+
+  it("絞り込んでいなければ、区画のシリーズから数えたタグを一覧パネルへ渡す", () => {
+    renderMapCanvas();
+
+    expect(seriesPanelProps().tags).toEqual(
+      panelTagsOf(
+        seriesPanelSectionsOf({
+          series: SERIES,
+          loci: LOCI,
+          currentWindow: currentWindow({
+            position: 0.5,
+            eras: ERAS,
+            presentEnd: PRESENT_END,
+          }),
+        }),
+        [],
+      ),
+    );
+  });
+
+  it("一覧パネルでタグを選ぶと、シリーズのレイヤへ渡す事物と一覧パネルの区画が、そのタグを持つシリーズに絞られる", () => {
+    renderMapCanvas();
+
+    act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
+
+    expect(seriesPanelProps().selectedTags).toEqual(["経済"]);
+    expect(seriesLayersProps().loci.features).toEqual([]);
+    expect(seriesPanelProps().sections).toEqual({
+      onMap: [],
+      unlocated: [OKANE],
+    });
+  });
+
+  it("一覧パネルでタグを 2 つ選ぶと、両方を持つシリーズだけに絞られる", () => {
+    renderMapCanvas();
+
+    act(() => seriesPanelProps().onSelectedTagsChange(["経済", "集団"]));
+
+    expect(seriesLayersProps().loci.features).toEqual([]);
+    expect(seriesPanelProps().sections).toEqual({ onMap: [], unlocated: [] });
+  });
+
+  it("タグを選ぶと、一覧パネルへ渡すタグが、選んだタグと一緒に持たれているタグだけになる", () => {
+    renderMapCanvas();
+
+    act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
+
+    expect(seriesPanelProps().tags.map(({ tag }) => tag)).toEqual([
+      "経済",
+      "概念史",
+    ]);
+  });
+
+  it("絞り込みを解除すると、シリーズのレイヤへ渡す事物と一覧パネルの区画が絞る前に戻る", () => {
+    renderMapCanvas();
+
+    act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
+    act(() => seriesPanelProps().onSelectedTagsChange([]));
+
+    expect(seriesPanelProps().selectedTags).toEqual([]);
+    expect(seriesLayersProps().loci).toEqual(LOCI);
+    expect(seriesPanelProps().sections).toEqual(
+      seriesPanelSectionsOf({
+        series: SERIES,
+        loci: LOCI,
+        currentWindow: currentWindow({
+          position: 0.5,
+          eras: ERAS,
+          presentEnd: PRESENT_END,
+        }),
+      }),
+    );
+  });
+
+  it("選択中のシリーズが絞り込みで一覧パネルと地図から消えても、選択は外れず詳細カードを開いたままにする", () => {
+    renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+    act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
+
+    expect(seriesPanelProps().selectedSeriesId).toBe("sparta");
+    expect(seriesLayersProps().selectedSeriesId).toBe("sparta");
+    expect(childOfType(SeriesDetailCard)).toMatchObject({
+      props: { series: SPARTA },
+    });
+  });
+
+  it("絞り込み中に選択を移しても、絞り込みは外れない", () => {
+    renderMapCanvas();
+
+    act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
+    act(() => seriesPanelProps().onSelect("okane-no-rekishi"));
+
+    expect(seriesPanelProps().selectedTags).toEqual(["経済"]);
   });
 });

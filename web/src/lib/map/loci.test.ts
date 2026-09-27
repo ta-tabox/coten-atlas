@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { findAnchorLocus, toMapLoci } from "@/lib/map/loci";
+import { findAnchorLocus, lociForSeries, toMapLoci } from "@/lib/map/loci";
 import {
   type Locus,
   type LocusCollection,
@@ -166,5 +166,21 @@ describe("findAnchorLocus", () => {
     const loci = toMapLoci(lociOf(MECCA, SPARTA_CITY), SERIES);
 
     expect(findAnchorLocus(loci, SERIES[2])).toBeUndefined();
+  });
+});
+
+describe("lociForSeries", () => {
+  it("series のどれかを seriesId に持つ事物だけを残す", () => {
+    const loci = toMapLoci(lociOf(SPARTA_CITY, MECCA), SERIES);
+
+    const { features } = lociForSeries(loci, [SERIES[1]]);
+
+    expect(features.map(({ properties }) => properties.id)).toEqual(["mecca"]);
+  });
+
+  it("series が空なら、事物を 1 件も残さない", () => {
+    const loci = toMapLoci(lociOf(SPARTA_CITY, MECCA), SERIES);
+
+    expect(lociForSeries(loci, []).features).toEqual([]);
   });
 });

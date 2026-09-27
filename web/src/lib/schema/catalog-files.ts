@@ -11,6 +11,7 @@
 import { parseEpisodes } from "@/lib/schema/episode";
 import { parseEras } from "@/lib/schema/era";
 import { parseLoci } from "@/lib/schema/locus";
+import { parseSeasonCorrections } from "@/lib/schema/season-correction";
 import { parseSeries } from "@/lib/schema/series";
 
 /**
@@ -22,6 +23,7 @@ export const CATALOG_VALIDATORS = new Map<string, (input: unknown) => unknown>([
   ["series.json", parseSeries],
   ["loci.geojson", parseLoci],
   ["episodes.json", parseEpisodes],
+  ["season-corrections.json", parseSeasonCorrections],
 ]);
 
 /**

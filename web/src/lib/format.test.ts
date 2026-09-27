@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { formatTimeRange, formatYearWithoutUnit } from "@/lib/format";
+import {
+  formatTagCondition,
+  formatTimeRange,
+  formatYearWithoutUnit,
+} from "@/lib/format";
 
 describe("formatYearWithoutUnit", () => {
   it("紀元前には「前」を付け、紀元は数字だけにして、単位を付けない", () => {
@@ -21,5 +25,17 @@ describe("formatTimeRange", () => {
 
   it("1 年の出来事はその年だけを書く", () => {
     expect(formatTimeRange({ start: -660, end: -660 })).toBe("前660年");
+  });
+});
+
+describe("formatTagCondition", () => {
+  it("タグが 1 つなら、そのタグを持つ句にする", () => {
+    expect(formatTagCondition(["戦争"])).toBe("「戦争」を持つ");
+  });
+
+  it("タグが 2 つ以上なら、すべてを持つ句にする", () => {
+    expect(formatTagCondition(["戦争", "人物"])).toBe(
+      "「戦争」「人物」をすべて持つ",
+    );
   });
 });

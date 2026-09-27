@@ -64,6 +64,40 @@ export type KnownNames = {
 };
 
 /**
+ * コメントに書かない語 1 件と、代わりに書く語。
+ *
+ * `allow` は、その語を含むが禁止の対象ではない複合語で、判定の前に本文から取り除く。
+ */
+export type BannedWord = {
+  word: string;
+  instead: string;
+  allow: readonly string[];
+};
+
+/**
+ * 語のファイルから読む禁止語と除外語。
+ * `banned` と `deny` は禁止語として報告し、`allow` はどの禁止語の判定の前にもコメントの本文から取り除く。
+ *
+ * 語のファイルを読まないと、`VOCAB_ALLOW_FILE` に足した語（`検査器`・`口調`）がコメントでは単漢字の禁止語として報告され、`lint-vocabulary.sh` と判定が食い違う。
+ */
+export type RepositoryVocabulary = {
+  banned: readonly BannedWord[];
+  deny: readonly string[];
+  allow: readonly string[];
+};
+
+/**
+ * `lintSource` が検査する 1 ファイルの外から受け取る値。
+ *
+ * `known` を省くと、名指した識別子の実在はそのファイル 1 件の中だけで確かめる。
+ * `vocabulary` を省くと、禁止語を検査しない。
+ */
+export type LintContext = {
+  known?: KnownNames;
+  vocabulary?: RepositoryVocabulary;
+};
+
+/**
  * リポジトリごとに変える唯一の箇所。
  * ソースの置き場所はリポジトリの構成で変わるが、規則そのものは変わらない。
  *
@@ -74,15 +108,28 @@ const DEFAULT_TARGETS = ["src", "scripts", "tests", "e2e"];
 /**
  * 関数の JSDoc で、空行の下に置く理由の文の上限。
  * 3 文目は ADR へ移し、コメントにはリンク一行を残す。
+ *
+ * 「コメントは why 専用」「関数には例外なく JSDoc」「理由は結論の前」を同時に守ると、全関数に理由の段落が付く。
+ * 書き手はどの行にも「知らないと間違える」理由を一つ作れるので、行ごとに要るかを問うだけでは止まらず、数で止める。
  */
 const MAX_REASON_SENTENCES = 2;
+
+/**
+ * 関数の JSDoc の理由を `MAX_REASON_SENTENCES` の上限から外す宣言。
+ * JSDoc と宣言の間に置き、コロンの後ろにその関数の呼び手が実際に踏んだ誤りを書く。
+ * 誤りを書かない宣言では外さない。
+ *
+ * `comments/maxReasonSentences` を error へ上げたリポジトリでは、例外を宣言できないと、呼び手が実際に踏んだ誤りを残すべき関数まで文を詰め込んで上限へ収めることになる。
+ */
+const REASON_LIMIT_EXCEPTION =
+  /^\/\/\s*lint-comments-allow\s+comments\/maxReasonSentences:\s*\S/;
 
 /**
  * 宣言の直前に置かれても説明ではない行コメント。
  * リンタとコンパイラへの指示で、JSDoc の代用として書かれたものではない。
  */
 const DIRECTIVE_LINE_COMMENT =
-  /^\/\/\s*(?:biome-ignore|eslint-|@ts-|prettier-ignore)/;
+  /^\/\/\s*(?:biome-ignore|eslint-|@ts-|prettier-ignore|lint-comments-allow)/;
 
 /**
  * 識別子として実在を確かめる字面。
@@ -99,45 +146,6 @@ const EXAMPLE_NAME = /^(?:foo|bar|baz|sample|example)\b/;
 
 /** 言い切った文の末尾へ補足を継ぎ足す記号。 */
 const EM_DASH = "——";
-
-/**
- * コメントに書かない語と、代わりに書く語。
- * 語はリポジトリごとに変わるが、規則そのものは変わらない。
- *
- * 比喩と個人語彙は書き手には一意でも、このリポジトリの md を読んでいない読者には辞書が無い。
- * 語の正は `.claude/rules/writing.md`「語彙と読み手」節の表で、`BANNED_WORDS` はその一覧を機械が読める形へ写したもの。
- * `.claude/rules/coding.md`「コメント」節は一覧を持たず、判定手順（英語への直訳）だけを持つ。
- *
- * `allow` は、その語を含むが禁止の対象ではない複合語。
- * 判定の前に本文から取り除くので、`入口` の `口` は報告しない。
- */
-const BANNED_WORDS: ReadonlyArray<{
-  word: string;
-  instead: string;
-  allow?: readonly string[];
-}> = [
-  { word: "引く", instead: "取得する / 検索する" },
-  { word: "落とす", instead: "throw する / 削除する / 拒否する" },
-  { word: "倒す", instead: "既定値にする / フォールバックする" },
-  { word: "畳む", instead: "まとめる / 変換する / 閉じる" },
-  { word: "流す", instead: "適用する / デプロイする / 実行する" },
-  { word: "弾く", instead: "拒否する / 除外する" },
-  { word: "握る", instead: "保持する / 無視する" },
-  { word: "掛ける", instead: "設定する / 適用する" },
-  { word: "口", instead: "エントリポイント", allow: ["入口", "出口", "窓口"] },
-  { word: "関門", instead: "検証" },
-  {
-    word: "印",
-    instead: "フラグ",
-    allow: ["矢印", "目印", "印字", "印刷", "印象"],
-  },
-  { word: "登録簿", instead: "レジストリ" },
-  { word: "受け皿", instead: "置き場 / 行き先 / 既定の行" },
-  { word: "素通し", instead: "検証なしで通す" },
-  { word: "領分", instead: "担当" },
-  { word: "器", instead: "リポジトリ / アプリ" },
-  { word: "綴り", instead: "名前" },
-];
 
 /**
  * 検査の対象にする拡張子。
@@ -215,17 +223,42 @@ const BRACKET_CLOSE = "）)」】";
 const TRAILING_DECORATION = /^[*_`）)」】\s]*$/;
 
 /**
+ * 禁止語を 1 行 1 語で持つファイルのパス。
+ * 語・言い換え先・除外する複合語の 3 列をタブで区切り、3 列目は空白で区切った語の並びにする。
+ *
+ * 語の正は `.claude/rules/writing.md`「語彙と読み手」節の表で、このファイルはそれを機械が読める形へ写したもの。
+ * リポジトリのルートに無ければ `VOCAB_TEMPLATE_DIRECTORY` の下から読み、`lint-vocabulary.sh` も同じ順で探す。
+ */
+const VOCAB_BANNED_FILE = ".vocabulary/banned.tsv";
+
+/** 雛形そのものを持つリポジトリで、配布物を置くディレクトリ。 */
+const VOCAB_TEMPLATE_DIRECTORY = "tools/coding-standards";
+
+/**
+ * リポジトリだけの禁止語を 1 行 1 語で持つファイルのパス。
+ * リポジトリのルートからの相対で、`scripts/lint-vocabulary.sh` も同じファイルを読む。
+ */
+const VOCAB_DENY_FILE = ".vocabulary/deny";
+
+/**
+ * そのリポジトリの領域で比喩でない語を 1 行 1 語で持つファイルのパス。
+ * 置き場と、同じファイルを読む検査は `VOCAB_DENY_FILE` と同じ。
+ */
+const VOCAB_ALLOW_FILE = ".vocabulary/allow";
+
+/**
  * リンタのエントリポイント。
  * ソース 1 ファイル分を受け取り、規則ごとの検査を束ねて違反の一覧を返す。
  *
- * `known` を省くと、名指した識別子の実在はそのファイル 1 件の中だけで確かめる。
- * CLI は全ファイルから `collectKnownNames` で集めた集合を渡す。
+ * CLI は全ファイルから `collectKnownNames` で集めた集合と、`loadRepositoryVocabulary` が読んだ語を渡す。
  */
 export function lintSource(
   fileName: string,
   text: string,
-  known: KnownNames = collectKnownNames([{ fileName, text }]),
+  context: LintContext = {},
 ): Violation[] {
+  const known = context.known ?? collectKnownNames([{ fileName, text }]);
+  const vocabulary = context.vocabulary ?? { banned: [], deny: [], allow: [] };
   const source = ts.createSourceFile(
     fileName,
     text,
@@ -239,7 +272,7 @@ export function lintSource(
     ...checkJsDocTypeAnnotations(source, comments),
     ...checkSentenceEndLineBreaks(source, comments),
     ...checkOneSentencePerLine(source, comments),
-    ...checkBannedWords(source, comments),
+    ...checkBannedWords(source, comments, vocabulary),
     ...checkJsDocOnFunctions(source, text),
     ...checkLineCommentBeforeDeclaration(source, text, comments),
     ...checkReasonSentences(source, text),
@@ -293,7 +326,9 @@ export function collectKnownNames(sources: readonly SourceText[]): KnownNames {
 }
 
 /**
- * 冒頭コメントを、飾っている本体の直前まで遡って探す。
+ * モジュールの冒頭コメントが有るか、`/**` で始まるか、直後に空行があるかを見る。
+ * 冒頭コメントは、飾っている本体の直前まで遡って探す。
+ * 中身（何に責任を持ち、何に持たないか）は `coding.md`「コメント」節が持ち、この検査は形だけを見る。
  *
  * "use server" のようなディレクティブは本体に数えない。
  * ディレクティブの前後どちらに冒頭コメントを置いても構文上は正しく、位置まで縛る理由が無い。
@@ -482,22 +517,32 @@ function stripAllowed(text: string, allow: readonly string[]): string {
  * 規約が禁じた語をコメントが使っていないかを見る。
  *
  * 判定は語の部分一致で、活用は見ない。
- * 語を含むが対象ではない複合語は `allow` へ列挙し、`stripAllowed` が判定の前に取り除く。
+ * 語を含むが対象ではない複合語は、語ごとの `allow` とリポジトリの `vocabulary.allow` に並べ、`stripAllowed` が判定の前に取り除く。
  */
 function checkBannedWords(
   source: ts.SourceFile,
   comments: CommentRange[],
+  vocabulary: RepositoryVocabulary,
 ): Violation[] {
   const violations: Violation[] = [];
+  const bannedWords: readonly BannedWord[] = [
+    ...vocabulary.banned,
+    ...vocabulary.deny.map((word) => ({
+      word,
+      instead: `直叙な語（${VOCAB_DENY_FILE} が足した語）`,
+      allow: [],
+    })),
+  ];
 
   for (const block of toCommentBlocks(source, comments)) {
     for (const line of block) {
-      const prose = line.text.replace(INLINE_CODE, "");
+      const prose = stripAllowed(
+        line.text.replace(INLINE_CODE, ""),
+        vocabulary.allow,
+      );
 
-      for (const banned of BANNED_WORDS) {
-        const scanned = banned.allow
-          ? stripAllowed(prose, banned.allow)
-          : prose;
+      for (const banned of bannedWords) {
+        const scanned = stripAllowed(prose, banned.allow);
 
         if (!scanned.includes(banned.word)) {
           continue;
@@ -615,8 +660,9 @@ function jsDocOf(text: string, node: ts.Node): ts.CommentRange | undefined {
 
 /**
  * 関数に JSDoc が付いているかを見る。
- *
  * `//` で書いた説明は `noLineCommentBeforeDeclaration` が別に報告する。
+ *
+ * 自明に見える関数ほど、書こうとして初めて「何を保証するか」が言えないことに気付くので、export の有無と行数を問わない。
  */
 function checkJsDocOnFunctions(
   source: ts.SourceFile,
@@ -643,8 +689,9 @@ function checkJsDocOnFunctions(
 
 /**
  * 宣言の直前に `//` の説明を置いていないかを見る。
- *
  * 対象はトップレベルの関数・変数・クラス・型・enum の宣言と、クラスのメンバである。
+ *
+ * 関数・クラス・型・定数の直上の `//` はエディタのホバーにも型定義の参照にも出ないので、書いた説明が呼び出し側へ届かなくなる。
  * 空行を挟んだ `//` は宣言に付いた説明ではなく、ファイルの最初のコメントは `useJsDocModuleHeader` が見る冒頭コメントの候補なので、どちらも見ない。
  */
 function checkLineCommentBeforeDeclaration(
@@ -716,6 +763,7 @@ function isDeclarationStatement(statement: ts.Statement): boolean {
 
 /**
  * 関数の JSDoc で、空行の下に置いた理由の文が `MAX_REASON_SENTENCES` を超えていないかを見る。
+ * `REASON_LIMIT_EXCEPTION` の宣言が付いた関数は見ない。
  *
  * 数えるのは最初の空行より下の散文の行で、箇条の行とコードフェンスの内側は数えない。
  * 1 行 1 文が別の規則で効いているので、行の数が文の数になる。
@@ -759,19 +807,31 @@ function checkReasonSentences(
       .slice(blankIndex + 1)
       .filter((entry) => entry.text !== "" && !LIST_MARKER.test(entry.text));
 
-    if (reasons.length <= MAX_REASON_SENTENCES) {
+    if (
+      reasons.length <= MAX_REASON_SENTENCES ||
+      hasReasonLimitException(text, node)
+    ) {
       continue;
     }
 
     violations.push({
       line: reasons[MAX_REASON_SENTENCES].line,
       rule: "comments/maxReasonSentences",
-      message: `理由が ${reasons.length} 文ある。理由は 1 関数 ${MAX_REASON_SENTENCES} 文までにし、3 文目からは ADR へ移してリンク一行を残す`,
+      message: `理由が ${reasons.length} 文あり、上限の ${MAX_REASON_SENTENCES} 文を超えている（上限から外す宣言は REASON_LIMIT_EXCEPTION の JSDoc が書く）。3 文目からは ADR へ移してリンク一行を残す`,
       severity: "warn",
     });
   }
 
   return violations;
+}
+
+/** `node` の直前のコメントに `REASON_LIMIT_EXCEPTION` の宣言があるかを返す。 */
+function hasReasonLimitException(text: string, node: ts.Node): boolean {
+  const ranges = ts.getLeadingCommentRanges(text, node.getFullStart()) ?? [];
+
+  return ranges.some((range) =>
+    REASON_LIMIT_EXCEPTION.test(text.slice(range.pos, range.end)),
+  );
 }
 
 /**
@@ -1194,6 +1254,85 @@ function resolveTargets(argv: string[]): string[] {
 }
 
 /**
+ * リポジトリのルートにある `VOCAB_BANNED_FILE`・`VOCAB_DENY_FILE`・`VOCAB_ALLOW_FILE` を読み、語の配列にして返す。
+ * ファイルが無い側は空の配列にする。
+ * `VOCAB_BANNED_FILE` はルートに無ければ `VOCAB_TEMPLATE_DIRECTORY` の下から読む。
+ *
+ * ルートは `git rev-parse --show-toplevel` で求め、git を実行できない環境ではカレントディレクトリをルートと見なす。
+ * `pnpm lint` はルートでなくパッケージのディレクトリ（toiito では `web/`）で走ることがあるので、カレントディレクトリから語のファイルを探すと見つからない。
+ */
+export function loadRepositoryVocabulary(): RepositoryVocabulary {
+  const topLevel = spawnSync("git", ["rev-parse", "--show-toplevel"], {
+    encoding: "utf8",
+  });
+  const root = topLevel.status === 0 ? topLevel.stdout.trim() : ".";
+
+  const bannedFile = [
+    path.join(root, VOCAB_BANNED_FILE),
+    path.join(root, VOCAB_TEMPLATE_DIRECTORY, VOCAB_BANNED_FILE),
+  ].find((file) => fs.existsSync(file));
+
+  return {
+    banned:
+      bannedFile === undefined
+        ? []
+        : toBannedWordList(fs.readFileSync(bannedFile, "utf8")),
+    deny: loadWordFile(path.join(root, VOCAB_DENY_FILE)),
+    allow: loadWordFile(path.join(root, VOCAB_ALLOW_FILE)),
+  };
+}
+
+/**
+ * 1 行 1 語のファイル `file` を読み、語の配列にして返す。
+ * `file` が無ければ空の配列を返す。
+ */
+function loadWordFile(file: string): string[] {
+  if (!fs.existsSync(file)) {
+    return [];
+  }
+
+  return toWordList(fs.readFileSync(file, "utf8"));
+}
+
+/**
+ * 1 行 1 語のテキスト `text` を語の配列にする。
+ * 空行と `#` で始まる行は語に数えず、改行で終わらない最後の行は語に数える。
+ *
+ * `scripts/lint-vocabulary.sh` と同じ行を語として読み、2 本の検査の判定を揃える。
+ */
+export function toWordList(text: string): string[] {
+  return text
+    .split("\n")
+    .filter((line) => line !== "" && !line.startsWith("#"));
+}
+
+/**
+ * `VOCAB_BANNED_FILE` の書式のテキスト `text` を禁止語の配列にする。
+ * 空行と `#` で始まる行の扱いは `toWordList` と同じで、タブで区切った列が 3 つでない行があれば throw する。
+ *
+ * タブは目で見えないので、列の数え違いを語の取り違えとして黙って通さない。
+ */
+export function toBannedWordList(text: string): BannedWord[] {
+  return toWordList(text).map((line) => {
+    const columns = line.split("\t");
+
+    if (columns.length !== 3) {
+      throw new Error(
+        `${VOCAB_BANNED_FILE} の行は、タブで区切った 3 列にする: ${line}`,
+      );
+    }
+
+    const [word, instead, allow] = columns;
+
+    return {
+      word,
+      instead,
+      allow: allow.split(" ").filter((compound) => compound !== ""),
+    };
+  });
+}
+
+/**
  * CLI の本体。
  * 違反を 1 件ずつ標準エラーへ書き、error の件数を終了コードにする。
  *
@@ -1206,12 +1345,15 @@ function main(argv: string[]): number {
     fileName: file,
     text: fs.readFileSync(file, "utf8"),
   }));
-  const known = collectKnownNames(sources);
+  const context = {
+    known: collectKnownNames(sources),
+    vocabulary: loadRepositoryVocabulary(),
+  };
   let errors = 0;
   let warnings = 0;
 
   for (const { fileName, text } of sources) {
-    for (const violation of lintSource(fileName, text, known)) {
+    for (const violation of lintSource(fileName, text, context)) {
       console.error(
         `${fileName}:${violation.line} ${violation.rule}\n  ${violation.message}`,
       );

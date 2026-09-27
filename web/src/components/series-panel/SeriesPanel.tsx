@@ -1,16 +1,19 @@
 "use client";
 
 /**
- * シリーズの一覧パネルを、地図に出ているシリーズの区画と位置なしのシリーズの区画に分けて表示し、シリーズの押下を選択として返す。
+ * シリーズの一覧パネルを、タグの絞り込みと、地図に出ているシリーズの区画と位置なしのシリーズの区画で表示し、シリーズの押下を選択として、タグの押下を絞り込みとして返す。
  *
- * 選択を保持しない。
- * 選択は props で受け取り、押されたシリーズの id は `onSelect` で返す。
+ * 選択も絞り込みも保持しない。
+ * 選択中のシリーズと絞り込みに使うタグは props で受け取り、押されたシリーズの id は `onSelect`、選び直したタグは `onSelectedTagsChange` で返す。
  * どのシリーズをどちらの区画に入れるかは `@/lib/map/series-panel` が決める。
  */
 
 import { useId, useState } from "react";
 import SeriesPanelSection from "@/components/series-panel/SeriesPanelSection";
+import SeriesPanelTagFilter from "@/components/series-panel/SeriesPanelTagFilter";
+import { formatTagCondition } from "@/lib/format";
 import type { SeriesPanelSections } from "@/lib/map/series-panel";
+import type { PanelTag } from "@/lib/map/tag-filter";
 
 type SeriesPanelProps = {
   /** 地図に出ている区画と、位置なしの区画に並べるシリーズ。 */
@@ -22,21 +25,35 @@ type SeriesPanelProps = {
   selectedSeriesId: string | null;
   /** シリーズが押されたときに、その id を渡して呼ぶ。 */
   onSelect: (seriesId: string) => void;
+  /** タグの絞り込みに並べるタグと、そのタグを持つシリーズの数。 */
+  tags: PanelTag[];
+  /**
+   * 絞り込みに使っているタグ。
+   * 絞り込んでいなければ空配列。
+   */
+  selectedTags: string[];
+  /** タグが押されたときに押したタグを足し引きした配列を、絞り込みが解除されたときに空配列を渡して呼ぶ。 */
+  onSelectedTagsChange: (tags: string[]) => void;
 };
 
 /**
- * 二つの区画を並べた一覧パネルを表示する。
+ * タグの絞り込みと二つの区画を並べた一覧パネルを表示する。
  * 閉じている間は、一覧の代わりに開くボタンだけを出す。
  */
 export default function SeriesPanel({
   sections,
   selectedSeriesId,
   onSelect,
+  tags,
+  selectedTags,
+  onSelectedTagsChange,
 }: SeriesPanelProps) {
   const titleId = useId();
   const [isOpen, setIsOpen] = useState(true);
 
-  // パネル全体を閉じて開き直しても区画の開閉を残すので、区画ごとの開閉も SeriesPanelSection でなくここに置く。
+  // パネル全体を閉じて開き直しても区画の開閉を残すので、区画ごとの開閉も SeriesPanelSection と SeriesPanelTagFilter でなくここに置く。
+  // タグの列は、開くと二つの区画を押し下げるので、閉じた状態で始める。
+  const [isTagFilterExpanded, setIsTagFilterExpanded] = useState(false);
   const [isOnMapExpanded, setIsOnMapExpanded] = useState(true);
   const [isUnlocatedExpanded, setIsUnlocatedExpanded] = useState(true);
 
@@ -76,12 +93,23 @@ export default function SeriesPanel({
           {/* overflow-x-hidden を明示する。 */}
           {/* overflow-y-auto だけを指定すると、CSS が横の overflow も auto に変えて横スクロールバーが出る。 */}
           <div className="flex min-h-0 flex-col gap-3 overflow-x-hidden overflow-y-auto px-2 pt-3 pb-1">
+            <SeriesPanelTagFilter
+              tags={tags}
+              selectedTags={selectedTags}
+              onSelectedTagsChange={onSelectedTagsChange}
+              isExpanded={isTagFilterExpanded}
+              onToggle={() => setIsTagFilterExpanded(!isTagFilterExpanded)}
+            />
             <SeriesPanelSection
               heading="地図に出ているシリーズ"
               marker={onMapMarker}
               note="スライダーが指す時代に重なるシリーズを、始まりの年の順に並べている。"
               series={sections.onMap}
-              emptyNote="この時代に地図に出ているシリーズは無い。"
+              emptyNote={
+                selectedTags.length === 0
+                  ? "この時代に地図に出ているシリーズは無い。"
+                  : `この時代に地図に出ているシリーズに、${formatTagCondition(selectedTags)}ものは無い。`
+              }
               selectedSeriesId={selectedSeriesId}
               onSelect={onSelect}
               isExpanded={isOnMapExpanded}
@@ -92,7 +120,11 @@ export default function SeriesPanel({
               marker={unlocatedMarker}
               note="一つの場所や時代に収まらない主題を扱うシリーズ。スライダーの時代によらず、いつでもここから選べる。"
               series={sections.unlocated}
-              emptyNote="場所や時代をまたぐシリーズは無い。"
+              emptyNote={
+                selectedTags.length === 0
+                  ? "場所や時代をまたぐシリーズは無い。"
+                  : `場所や時代をまたぐシリーズに、${formatTagCondition(selectedTags)}ものは無い。`
+              }
               selectedSeriesId={selectedSeriesId}
               onSelect={onSelect}
               isExpanded={isUnlocatedExpanded}

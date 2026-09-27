@@ -1,9 +1,10 @@
 /**
- * 検証するのは、props の区画がパネルのどの区画に並ぶかと、パネル全体と区画ごとの開閉である。
- * 区画 1 つの表示は `SeriesPanelSection.test.tsx`、シリーズ 1 件の表示は `SeriesPanelItem.test.tsx`、props に何を渡すかを決める配線は `MapCanvas.test.tsx` が検証する。
+ * 検証するのは、props の区画とタグがパネルのどこに並ぶかと、パネル全体と区画ごとの開閉である。
+ * 区画 1 つの表示は `SeriesPanelSection.test.tsx`、タグの絞り込みの表示は `SeriesPanelTagFilter.test.tsx`、シリーズ 1 件の表示は `SeriesPanelItem.test.tsx`、props に何を渡すかを決める配線は `MapCanvas.test.tsx` が検証する。
  */
 
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vitest";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import type { SeriesPanelSections } from "@/lib/map/series-panel";
@@ -38,6 +39,20 @@ const OKANE: Series = {
 
 const SECTIONS: SeriesPanelSections = { onMap: [SPARTA], unlocated: [OKANE] };
 
+/** 絞り込まずに、`SPARTA` と `OKANE` のタグを並べるときのタグの絞り込みの props。 */
+const TAG_FILTER_PROPS: Pick<
+  ComponentProps<typeof SeriesPanel>,
+  "tags" | "selectedTags" | "onSelectedTagsChange"
+> = {
+  tags: [
+    { tag: "集団", seriesCount: 1 },
+    { tag: "経済", seriesCount: 1 },
+    { tag: "概念史", seriesCount: 1 },
+  ],
+  selectedTags: [],
+  onSelectedTagsChange: () => {},
+};
+
 /** 地図に出ているシリーズの区画を返す。 */
 function onMapSection(): HTMLElement {
   return screen.getByRole("region", { name: /地図に出ているシリーズ/ });
@@ -54,6 +69,7 @@ describe("SeriesPanel", () => {
       <SeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
         onSelect={vi.fn()}
       />,
     );
@@ -74,6 +90,7 @@ describe("SeriesPanel", () => {
       <SeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
         onSelect={onSelect}
       />,
     );
@@ -87,6 +104,7 @@ describe("SeriesPanel", () => {
       <SeriesPanel
         sections={{ onMap: [], unlocated: [OKANE] }}
         selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
         onSelect={vi.fn()}
       />,
     );
@@ -98,11 +116,48 @@ describe("SeriesPanel", () => {
     ).toBeVisible();
   });
 
+  it("絞り込み中に地図に出ているシリーズが無ければ、選んだタグを持つシリーズがその区画に無いことを文で言う", () => {
+    render(
+      <SeriesPanel
+        sections={{ onMap: [], unlocated: [OKANE] }}
+        selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
+        selectedTags={["経済"]}
+        onSelect={vi.fn()}
+      />,
+    );
+
+    expect(
+      within(onMapSection()).getByText(
+        "この時代に地図に出ているシリーズに、「経済」を持つものは無い。",
+      ),
+    ).toBeVisible();
+  });
+
+  it("タグの絞り込みでタグを押すと、そのタグを足した配列を渡して onSelectedTagsChange を呼ぶ", () => {
+    const onSelectedTagsChange = vi.fn();
+
+    render(
+      <SeriesPanel
+        sections={SECTIONS}
+        selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
+        onSelectedTagsChange={onSelectedTagsChange}
+        onSelect={vi.fn()}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "タグで絞り込む" }));
+    fireEvent.click(screen.getByRole("button", { name: /経済/ }));
+
+    expect(onSelectedTagsChange).toHaveBeenCalledExactlyOnceWith(["経済"]);
+  });
+
   it("区画の見出しを押すとその区画のシリーズだけを隠し、もう一度押すと戻す", () => {
     render(
       <SeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
         onSelect={vi.fn()}
       />,
     );
@@ -125,6 +180,7 @@ describe("SeriesPanel", () => {
       <SeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
         onSelect={vi.fn()}
       />,
     );
@@ -139,11 +195,45 @@ describe("SeriesPanel", () => {
     expect(screen.getByRole("button", { name: /スパルタ/ })).toBeVisible();
   });
 
+  it("タグの絞り込みは、タグの列を閉じた状態で始まる", () => {
+    render(
+      <SeriesPanel
+        sections={SECTIONS}
+        selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
+        onSelect={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "タグで絞り込む" }),
+    ).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("button", { name: /経済/ })).toBeNull();
+  });
+
+  it("パネル全体を閉じて開き直しても、開いたタグの絞り込みは開いたまま残る", () => {
+    render(
+      <SeriesPanel
+        sections={SECTIONS}
+        selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
+        onSelect={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "タグで絞り込む" }));
+    fireEvent.click(screen.getByRole("button", { name: "一覧を閉じる" }));
+    fireEvent.click(screen.getByRole("button", { name: "シリーズ一覧を開く" }));
+
+    expect(screen.getByRole("button", { name: /経済/ })).toBeVisible();
+  });
+
   it("閉じるボタンで一覧を隠し、開くボタンで一覧を戻す", () => {
     render(
       <SeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
         onSelect={vi.fn()}
       />,
     );

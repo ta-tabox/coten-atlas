@@ -18,6 +18,8 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   basePath: BASE_PATH,
   assetPrefix: BASE_PATH,
+  // `CLAUDE.md` は追跡しているファイルなので、`next dev` がエージェントを検出したときに規約のブロックを書き足さないようにする。
+  agentRules: false,
 };
 
 export default nextConfig;
