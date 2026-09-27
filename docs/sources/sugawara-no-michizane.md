@@ -30,12 +30,12 @@
 
 最初に書いた座標は `[135.75, 35.01]` で、`@historian` が道真の仕えた朝廷そのものの大内裏の座標から約 800m 離れていると指摘したので、大内裏の座標へ直した。
 
-種別は `人物` だけなので、[ADR-0041](../adr/0041-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 官僚として仕えた朝廷の都の平安京にした。
 `@historian` によれば、道真は 845 年の生年から 901 年の左遷まで約 56 年間を都で過ごし、大宰府での期間は約 2 年にとどまる（[太宰府市: 文化財](https://www.city.dazaifu.lg.jp/site/bunkazai/34082.html)、参考程度）。
 
 紫式部（`murasaki-shikibu`）の活動の拠点も平安京である。
-ADR-0041 の決定（#166）により、同じ地名を二つのシリーズが要求したときは、同じ地名の表を上の順から当てて、どちらが具体的な地点名へ移るかを決める。
+ADR-20260911-series-vocabulary-tiebreaks の決定（#166）により、同じ地名を二つのシリーズが要求したときは、同じ地名の表を上の順から当てて、どちらが具体的な地点名へ移るかを決める。
 二件とも種別が `人物` なので順 1 に当たらず、事績の中心を都市の中の一か所に絞れるかで決める順 2 に当たる。
 道真の事績の中心は朝廷の官職で一か所に絞れず、紫式部の事績の中心は仕えた里内裏に絞れるので、紫式部が具体的な地点へ移り、道真が `heian-kyo` を使う。
 紫式部も一か所に絞れないと見た場合も、順 3 で season の小さい道真（45）が `heian-kyo` を使う。
@@ -47,10 +47,10 @@ ADR-0041 の決定（#166）により、同じ地名を二つのシリーズが�
 
 ## `region`・`title`
 
-`region: 日本` は、扱う地理が日本に収まるので、ADR-0041 の `region` の選び方の表の 1 行目で決めた。
+`region: 日本` は、扱う地理が日本に収まるので、ADR-20260911-series-vocabulary-tiebreaks の `region` の選び方の表の 1 行目で決めた。
 `@historian` は妥当だと確認した。
 `title: 菅原道真` はシリーズ名「ショート 菅原道真」からコーナー名を除いた値で、指摘は出なかった。
-`id` の `sugawara-no-michizane` は、ADR-0041 の `id` の表が読みに在る助詞の例に挙げている値である。
+`id` の `sugawara-no-michizane` は、ADR-20260911-series-vocabulary-tiebreaks の `id` の表が読みに在る助詞の例に挙げている値である。
 事物の `id` の `heian-kyo` は、Heian-kyō の長音を表さずに書いた。
 
 ## 仮決定と論点
@@ -69,7 +69,7 @@ ADR-0041 の決定（#166）により、同じ地名を二つのシリーズが�
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange`・`region`・代表点の選び方の裏どり、座標のずれの指摘と典拠 |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-0034 の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補、平安京を紫式部と取り合った判断 |
 | [#166 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/166) | 同じ地名を二つのシリーズが要求したときに、どちらが具体的な地点名へ移るかの規則 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う年代と舞台 |

@@ -6,7 +6,7 @@
  * シリーズと事物は 1 対多で、多の側にある `seriesId` が一の側を指す。
  * どの事物が代表点かはシリーズ側の `anchor` が示すので、役割の欄は持たない。
  * 通す geometry は Point だけである。
- * Point だけに限る理由は docs/adr/0026-two-phase-location.md が持つ。
+ * Point だけに限る理由は docs/adr/20260902-two-phase-location.md が持つ。
  *
  * 地図の source へ渡す形はここが組まない。
  * シリーズと一致する `timeRange` を年へ写すのはビルド時の仕事で、`catalog/` の形は動かさない。

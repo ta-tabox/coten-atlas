@@ -31,8 +31,8 @@
 | 典拠 | [Pleiades 520998](https://pleiades.stoa.org/places/520998) |
 | 典拠の格 | 三次 |
 
-種別は `集団` だけなので、[ADR-0041](../adr/0041-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、本拠の都市に代表点を置いた。
-帝国の都は時期によって移ったので、ADR-0041 の決定（#171）により、番組が扱う主な事績が起きた地を本拠の都市とした。
+種別は `集団` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、本拠の都市に代表点を置いた。
+帝国の都は時期によって移ったので、ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、番組が扱う主な事績が起きた地を本拠の都市とした。
 各回の第 6〜9 回がコンスタンティノープルの攻略と攻略後の都市の再建を扱い、1453 年から帝国の終わりまでの都でもあるので、ここにした。
 `@historian` は、この選び方を妥当と返した。
 
@@ -44,8 +44,8 @@
 
 ## `region`・`title`
 
-`region: 西アジア` は、版図がバルカンと北アフリカに跨るので、ADR-0041 の `region` の選び方の表の 2 行目で本拠の区画にした。
-種別 `集団` の本拠は発祥の地で、発祥の地のソユトはアナトリアに在り、ADR-0041 の継ぎ目の表でアナトリアは `西アジア` である。
+`region: 西アジア` は、版図がバルカンと北アフリカに跨るので、ADR-20260911-series-vocabulary-tiebreaks の `region` の選び方の表の 2 行目で本拠の区画にした。
+種別 `集団` の本拠は発祥の地で、発祥の地のソユトはアナトリアに在り、ADR-20260911-series-vocabulary-tiebreaks の継ぎ目の表でアナトリアは `西アジア` である。
 `@historian` は、アナトリアを西アジアに分類しイスタンブールの欧州側も含めてトルコを割らない規則を前提にすれば妥当だと確認した。
 `title: オスマン帝国` はシリーズ名のままで、指摘は出なかった。
 `id` の `osman-teikoku` は、カタカナの外来固有名を Osman、漢字を読みにして、部分ごとに規則を当てた（現物の `teisei-roma`）。
@@ -68,7 +68,7 @@
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange`・座標・`region` の裏どり |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-0034 の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171) | 拠点や舞台が複数あるときに、番組が扱う主な事績が起きた地を中心の場所とする規則 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う年代と舞台 |

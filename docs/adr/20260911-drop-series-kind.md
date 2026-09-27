@@ -1,0 +1,71 @@
+# `series.json` の `kind` を廃止し、代表点を持つシリーズを同じ濃さで地図に描く（20260831-kind-place-or-concept を supersede）
+
+- **状態**: 採用
+- **決定日**: 2026-09-11（#161）
+- **関係する ADR**: 20260831-kind-place-or-concept（これを supersede する）、20260902-two-phase-location（位置情報の段階分け）、20260902-series-and-loci（シリーズと事物の分離）、20260911-era-fade-wiring（era スライダーの現在窓で地図の点をフェードさせる配線）、20260911-series-vocabulary-tiebreaks（手で書く欄の語彙）、20260911-era-fade-window-only（20260911-era-fade-wiring を supersede する）、20260911-series-vocabulary-without-kind（20260911-series-vocabulary-tiebreaks を supersede する）
+
+## 文脈
+
+[20260831-kind-place-or-concept](20260831-kind-place-or-concept.md) は `kind` を `place`（場所が一意に決まる）と `concept`（決まらない）の 2 値にし、`concept` を薄く描くと決めた。
+その後 [20260902-two-phase-location](20260902-two-phase-location.md) で概念史のシリーズは位置なしになり、[20260911-series-vocabulary-tiebreaks](20260911-series-vocabulary-tiebreaks.md) は `kind` を代表点の選び方の表の行で決めるようにした。
+表の 3 行目（中心の場所が伝わっている）が `place` で、それ以外の行が `concept` である。
+
+[20260911-era-fade-wiring](20260911-era-fade-wiring.md) は、円の不透明度を「`kind` の濃さ（`place` 0.85・`concept` 0.35）と、現在窓との重なりから求めた濃さの積」にした。
+
+2026-09-12 の `catalog/series.json` の現物は次のとおりである。
+
+| `kind` | 件数 | 内訳 |
+|---|---|---|
+| `place` | 51 | すべて代表点を持つ |
+| `concept` | 15 | 14 件は位置なしで地図に出ない。代表点を持つのは `roshi-soshi`（老子・荘子。表の 4 行目で生地の苦県に置いた）の 1 件だけ |
+
+位置なしのシリーズの `kind` は、`place` と `"unlocated"` を組まない検査があるので常に `concept` で、`anchor` から決まる。
+`kind` を読むコードは、地図の円の不透明度だけである。
+
+## 決定
+
+**`series.json` から `kind` を廃止し、代表点を持つシリーズはすべて同じ濃さで地図に描く。**
+
+| 論点 | 決定 |
+|---|---|
+| `kind` の欄 | 持たない。シリーズのスキーマは未知のキーを拒否するので、`kind` を書いたシリーズは検査で赤になる |
+| 地図に出すか一覧にだけ出すか | `anchor` だけで決まる。事物の `id` なら地図に出て、`"unlocated"` なら一覧パネルの別区画に出る |
+| 円の不透明度 | 現在窓との重なりから求めた濃さだけで決まる（[20260911-era-fade-window-only](20260911-era-fade-window-only.md)） |
+| 代表点が活動の拠点や舞台でなく、代わりに置いた点であること | 地図の上で描き分けない。`docs/sources/<シリーズ id>.md` の「代表点」節が記録として持つ |
+| 代表点の選び方 | 表の行の並びと `anchor` の値を変えず、`kind` の列だけを除く（[20260911-series-vocabulary-without-kind](20260911-series-vocabulary-without-kind.md)） |
+| 図形による描き分け | `kind` で持たず、MapLibre の `['geometry-type']` が読む（20260831-kind-place-or-concept の決定を引き継ぐ） |
+| `roshi-soshi` | `anchor: ku`（苦県）のまま、他のシリーズと同じ濃さで描く |
+
+## 理由
+
+- **濃さを現在窓との重なりだけに使う** — `kind` の濃さと現在窓の濃さの積では、窓に全部入った `concept` の円（0.35）と、窓の濃さが 0.4 の `place` の円（0.85 × 0.4 = 0.34）がほぼ同じ濃さになる。見る人は、薄さが代わりの点を表すのか時代のずれを表すのかを区別できない
+- **欄ごと廃止する** — 位置なしのシリーズは地図に出ないので、`kind` の区別が画面に効くのは、代表点を持つシリーズのうち `roshi-soshi` の 1 件だけである
+- **地図に出るかを `anchor` に任せる** — 地図に出るか一覧にだけ出るかは `anchor` から導けるので、欄を足さずに表せる
+- **代わりの点を典拠のファイルに残す** — 代表点に選んだ地・他の候補・選んだ理由は、既に `docs/sources/<シリーズ id>.md` の「代表点」節に書く決まりである
+- **薄く描く区別を地図に残さない** — 地図に薄く出す区別が UI として効くかに、人間が懐疑的だった
+
+### 採らなかった案
+
+| 案 | 採らなかった理由 |
+|---|---|
+| 値 `concept` を、分ける中身が読める名前（`center` / `proxy`・`exact` / `approximate` など）へ変える | 名前を変えても、`kind` の濃さと現在窓の濃さの積で薄さの意味が読めない状態は残る |
+| `kind` に、地図に出るか一覧にだけ出るかを分けさせる（`map` / `list`） | `anchor` から導ける値を二重に持つ。`roshi-soshi` が地図の側に入って薄く描く区別も消えるので、欄を残す理由が無くなる |
+| 位置なしのシリーズには `kind` を持たせない | 読まれない 14 件の値は消えるが、濃さの積の問題は `roshi-soshi` に残る |
+| `kind` を事物（代表点）の属性へ移す | 位置なしのシリーズに欄が現れなくなるが、濃さの積の問題は残る |
+
+## 帰結
+
+- `catalog/series.json` の 66 件から `kind` を削る
+- `kind: place` と `"unlocated"` を組まない検査は、欄が無くなるので消える
+- 地図へ渡す事物の properties は `id`・`seriesId`・`timeStart`・`timeEnd` の 4 欄になる
+- `roshi-soshi` の代表点が活動の拠点でなく生地であることは地図から読めなくなり、`docs/sources/roshi-soshi.md` だけが持つ
+- `kind` を論点に含む見直しの issue（#214（天皇の種別）・#219（老子・荘子の代表点））は、`kind` の値を決める論点を持たなくなる
+- 20260911-era-fade-wiring と 20260911-series-vocabulary-tiebreaks は決定の表に `kind` を持つので、`kind` を除いた版を 20260911-era-fade-window-only と 20260911-series-vocabulary-without-kind に書き、両者を supersede する
+- 20260823-quote-titles-only・20260831-tailwind-v4・20260902-two-phase-location・20260902-series-and-loci・20260909-history-review-lane・20260907-era-space-window・20260910-untimed-concept-series は、`kind` を名指したまま採用として残る。
+  どれも決定の対象が `kind` そのものでないので、名指す箇所は `kind` が在った時点の設計の記述として読む。
+  20260831-kind-place-or-concept が `kind` を 4 値から 2 値にしたときも、4 値を名指す 20260830-series-rename は supersede していない
+
+## 覆る条件
+
+代表点を活動の拠点や舞台でなく代わりの点に置いたシリーズが増え、地図の上で区別する必要を人間が認めたとき。
+区別を濃さに載せると現在窓の濃さと重なるので、そのときは濃さと別の描き分けを選ぶ。

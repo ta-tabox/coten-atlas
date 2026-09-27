@@ -32,7 +32,7 @@
 
 ## `region`・`title`
 
-`region: 西アジア` はウルクがイラクにある事実と合い、[ADR-0034](../adr/0034-series-vocabulary.md) の継ぎ目表のどの行にも当たらない。
+`region: 西アジア` はウルクがイラクにある事実と合い、[ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の継ぎ目表のどの行にも当たらない。
 `title: ギルガメシュ` に指摘は出なかった。
 
 ## 仮決定と論点

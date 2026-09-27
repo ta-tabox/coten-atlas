@@ -5,7 +5,7 @@
  * 割当に使う season は、訂正表・題名の先頭の `【NN-M】` の `NN`・`itunes:season` の順に、最初に決まったものを使う。
  * 題名の末尾の `【COTEN RADIO ○○編N】` は、`編` が無い回・前後編の回・開き `【` が欠落した回があるので、シリーズ名を取り出して当てにいかない。
  * どの順でも season が決まらない回は未割当のまま残り、機械で拾えないものをここで推測しない。
- * 順序の理由は `docs/adr/0046-season-assignment-precedence.md` が持つ。
+ * 順序の理由は `docs/adr/20260915-season-assignment-precedence.md` が持つ。
  *
  * 入口は seasonKeyOf と seriesIdOf。
  */

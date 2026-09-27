@@ -27,7 +27,7 @@
 | 典拠の格 | 二次 |
 
 フォルム・ロマヌムがカエサル期ローマの政治的中心なので、代表点に選んだ。
-`rome` は `teisei-roma`（帝政ローマ）が既に名乗っているので、より具体的な地点名を使った（[ADR-0034](../adr/0034-series-vocabulary.md)「`id` の表記」）。
+`rome` は `teisei-roma`（帝政ローマ）が既に名乗っているので、より具体的な地点名を使った（[ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md)「`id` の表記」）。
 
 ## `region`・`title`
 

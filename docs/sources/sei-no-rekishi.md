@@ -12,7 +12,7 @@
 ## `timeRange`
 
 `"untimed"`（時期なし）である。
-主題の性のあり方は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-0039](../adr/0039-untimed-concept-series.md)）の表の 3 行目に当たる。
+主題の性のあり方は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series](../adr/20260910-untimed-concept-series.md)）の表の 3 行目に当たる。
 番組は era 空間の始端（-10000）より古い先史社会も扱うので、始まりも取り決めの値でしか書けない。
 
 配信フィードの各回の説明によれば、第 1〜3 回が先史社会と古代オリエント、第 4〜5 回がギリシアとローマ、第 6〜9 回が中世から 19 世紀のヨーロッパ、第 10 回が中国、第 11〜12 回が日本、第 13 回が 20 世紀以降を扱う。
@@ -23,19 +23,19 @@
 ## 代表点
 
 位置なしである。
-`tags` の種別が `概念史` だけなので、[ADR-0034](../adr/0034-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
+`tags` の種別が `概念史` だけなので、[ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
 他の候補は挙がっていない。
 
 ## `region`・`title`
 
-`region: 地域なし` は、ADR-0034 の `region` の選び方の表の 3 行目で決めた。
+`region: 地域なし` は、ADR-20260907-series-vocabulary の `region` の選び方の表の 3 行目で決めた。
 各回が先史・ヨーロッパ・中国・日本の性のあり方を、それぞれの地で生まれたものとして並べて扱うためである。
 `@historian` は `anchor` が無いことを理由に `region` を座標と突き合わせておらず、`region` の選択への指摘も出なかった。
 `title: 性の歴史` に指摘は出なかった。
 
 ## 仮決定と論点
 
-2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-0039 に従って `timeRange` を `"untimed"` にした。
+2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-20260910-untimed-concept-series に従って `timeRange` を `"untimed"` にした。
 2026-09-12 に人間が仮決定を採用して決着させた。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
@@ -47,7 +47,7 @@
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 最初の版の `start` と `eras.json` の突き合わせ・`kind` の裏どり |
-| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-0034 の規則の突き合わせ |
+| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
 | [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容と、`region` の判断 |
-| [#160（ADR-0039）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
+| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |

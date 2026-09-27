@@ -31,7 +31,7 @@
 | 典拠 | [Wikidata Q917195](https://www.wikidata.org/wiki/Q917195)（延暦寺）・[Wikidata Q748040](https://www.wikidata.org/wiki/Q748040)（比叡山。135.838333, 35.066667） |
 | 典拠の格 | 参考程度 |
 
-種別は `人物` だけなので、[ADR-0041](../adr/0041-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 `title` の中心になる語は `A と B` の A の最澄で、最澄の拠点は比叡山なので、比叡山にした。
 `@historian` は、この選び方を妥当と返した。
 
@@ -47,11 +47,11 @@
 
 ## `region`・`title`
 
-`region: 日本` は、二人とも唐へ渡って複数の区画に跨るので、ADR-0041 の `region` の選び方の表の 2 行目で本拠の区画にした。
+`region: 日本` は、二人とも唐へ渡って複数の区画に跨るので、ADR-20260911-series-vocabulary-tiebreaks の `region` の選び方の表の 2 行目で本拠の区画にした。
 中心になる語は最澄で、人物の本拠は生地の近江である。
 `@historian` は、二人とも入唐したが拠点はいずれも日本国内なので妥当だと確認した。
 `title: 最澄と空海` はシリーズ名のままで、指摘は出なかった。
-`id` の `saicho-to-kukai` は、ADR-0041 の `id` の表が助詞の例に挙げている値である。
+`id` の `saicho-to-kukai` は、ADR-20260911-series-vocabulary-tiebreaks の `id` の表が助詞の例に挙げている値である。
 事物の `id` の `mount-hiei` は、英語の文献の Mount Hiei から作った。
 
 ## 仮決定と論点
@@ -69,6 +69,6 @@
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange` の並立説・`region` の裏どり、座標が指す物の指摘 |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-0034 の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う年代と舞台 |

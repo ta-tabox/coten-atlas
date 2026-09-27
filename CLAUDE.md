@@ -33,7 +33,7 @@
 決定と経緯は `docs/adr/`——1決定1レコード・**追記のみ**・覆すときは supersede
 （規約は同 `README.md`）。状態と作業単位は GitHub Issues。
 
-**申し送りの層は持たない**（理由は [ADR-0025](docs/adr/0025-retire-next-md.md)）。
+**申し送りの層は持たない**（理由は [ADR-20260901-retire-next-md](docs/adr/20260901-retire-next-md.md)）。
 続きは開いている issue の一覧から拾い、構造に関わる未決は `docs/ARCHITECTURE.md` §8 が引き取る。
 
 ## 規約の入口

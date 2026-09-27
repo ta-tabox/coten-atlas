@@ -34,7 +34,7 @@ paths:
   `tests/catalog.test.ts` は `catalog/` の現物しか見ないので、複製し損ねた値や 404 の HTML はこの検査でしか止まらない
 - MapLibre が出す DOM は canvas のコンテナと attribution だけにし、`<Popup>` と built-in control（Navigation・Scale 等）を使わない
   地図の上に載せるものは React + Tailwind の overlay で書く
-  理由は `docs/adr/0022-map-dom-boundary.md` が持つ
+  理由は `docs/adr/20260831-map-dom-boundary.md` が持つ
 - `react-map-gl/maplibre` の部品を描くのは `src/components/map/MapCanvas.tsx` と `src/components/map/SeriesLayers.tsx` だけにする
   `src/lib/map/` が `maplibre-gl` と `react-map-gl/maplibre` から import するのは型だけにする
 

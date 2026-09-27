@@ -30,8 +30,8 @@
 | 典拠 | 無し。Pleiades に長安の項目が無く、GeoNames の西安市の座標は現在の行政区の重心で、唐の長安城の位置と大きく離れる |
 | 典拠の格 | 無し |
 
-種別は `人物` だけなので、[ADR-0041](../adr/0041-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
-拠点が複数あるので、ADR-0041 の決定（#171）により、番組が扱う主な事績が起きた地を中心の場所とした。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+拠点が複数あるので、ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、番組が扱う主な事績が起きた地を中心の場所とした。
 各回が扱う主な事績はインドへの旅と帰国後の翻訳事業で、旅は一つの地点に収まらない。
 翻訳事業の大半は、帰国した 645 年から 659 年までの 14 年間に長安で行われたので、長安にした。
 
@@ -48,7 +48,7 @@ PR 本文の最初の版は、選んだ理由を「亡くなるまで経典を�
 
 ## `region`・`title`
 
-`region: 中国` は、旅が中央ユーラシアと南アジアに跨るので、ADR-0041 の `region` の選び方の表の 2 行目で本拠の区画にした。
+`region: 中国` は、旅が中央ユーラシアと南アジアに跨るので、ADR-20260911-series-vocabulary-tiebreaks の `region` の選び方の表の 2 行目で本拠の区画にした。
 種別 `人物` の本拠は生地で、玄奘の生地の洛州緱氏県は中国に在る。
 `@historian` は、生地と拠点の長安がどちらも中国に在るので妥当だと確認した。
 `title: 三蔵法師玄奘` はシリーズ名のままで、指摘は出なかった。
@@ -72,7 +72,7 @@ PR 本文の最初の版は、選んだ理由を「亡くなるまで経典を�
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange` の並立説・代表点を選んだ理由の誤りの指摘・`region` の裏どり |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-0034 の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171) | 拠点や舞台が複数あるときに、番組が扱う主な事績が起きた地を中心の場所とする規則 |
 | [#177（見直し）](https://github.com/ta-tabox/coten-atlas/issues/177) | 採用した仮決定を人間が見直す論点と案 |

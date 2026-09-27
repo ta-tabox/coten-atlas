@@ -12,7 +12,7 @@
 ## `timeRange`
 
 `"untimed"`（時期なし）である。
-主題の天皇は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-0039](../adr/0039-untimed-concept-series.md)）の表の 3 行目に当たる。
+主題の天皇は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series](../adr/20260910-untimed-concept-series.md)）の表の 3 行目に当たる。
 
 配信フィードの各回の説明によれば、第 1 回が天皇を戴く理由と同年の退位と即位、第 2 回が天皇の成り立ちと祭祀王としての性格、第 3 回が将軍との権力と権威の分担、第 4 回が敗戦後の象徴を扱う。
 
@@ -27,25 +27,25 @@
 ## 代表点
 
 位置なしである。
-`tags` の種別を `概念史` だけにしたので、[ADR-0034](../adr/0034-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
+`tags` の種別を `概念史` だけにしたので、[ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
 
 種別を `概念史` だけにしたのは、各回が皇室という人の集まりの動きでなく、天皇という位の意味の移り変わりを追っているためである。
-ADR-0034 の `集団` の定義は「国家・帝国・社会層など、続く人の集まり」で、位を主語にするシリーズには当てなかった。
+ADR-20260907-series-vocabulary の `集団` の定義は「国家・帝国・社会層など、続く人の集まり」で、位を主語にするシリーズには当てなかった。
 
 | 候補 | 置くと何が起きるか |
 |---|---|
 | 位置なし（現在値） | 地図に出ず、一覧パネルの位置なしの区画に出る |
-| 皇室を `集団` と見て、本拠の都市に代表点を置く | 表の 1 行目に当たらなくなる。都は飛鳥・奈良・京都・東京と移ったので、どの都に置くかを別に決めることになる。`timeRange` も ADR-0039 の線の外になり、年を書く |
+| 皇室を `集団` と見て、本拠の都市に代表点を置く | 表の 1 行目に当たらなくなる。都は飛鳥・奈良・京都・東京と移ったので、どの都に置くかを別に決めることになる。`timeRange` も ADR-20260910-untimed-concept-series の線の外になり、年を書く |
 
 ## `region`・`title`
 
-`region: 日本` は、扱う地理が日本に収まるので ADR-0034 の `region` の選び方の表の 1 行目で決めた。
+`region: 日本` は、扱う地理が日本に収まるので ADR-20260907-series-vocabulary の `region` の選び方の表の 1 行目で決めた。
 `@historian` は `anchor` が無いことを理由に `region` を座標と突き合わせておらず、`region` の選択への指摘も出なかった。
 `title: 天皇` に指摘は出なかった。
 
 ## 仮決定と論点
 
-2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-0039 に従って `timeRange` を `"untimed"` にした。
+2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-20260910-untimed-concept-series に従って `timeRange` を `"untimed"` にした。
 2026-09-12 に人間が仮決定を採用して決着させ、見直しを [#214](https://github.com/ta-tabox/coten-atlas/issues/214)（天皇（tenno）の種別を概念史だけと集団のどちらにするか）へ切り出した。
 
 | 論点 | 仮決定 | 覆りうる根拠 |
@@ -58,8 +58,8 @@ ADR-0034 の `集団` の定義は「国家・帝国・社会層など、続く�
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりの年・天皇号の成立時期の並立説・`kind` の裏どり |
-| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-0034 の規則の突き合わせ |
+| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
 | [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 種別を `概念史` だけにした判断と候補 |
-| [#160（ADR-0039）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
+| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
 | [#214（見直し）](https://github.com/ta-tabox/coten-atlas/issues/214) | 採用した仮決定を人間が見直す論点と案 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |

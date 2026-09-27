@@ -32,49 +32,49 @@
 Next.js を static export し、GitHub Pages から静的ファイルだけを配信する。
 シリーズと地図の点はビルド時に `catalog/` から読み、エピソード一覧だけをブラウザが同じサイトの JSON から取得する。
 
-理由は [ADR-0001（static export）](docs/adr/0001-nextjs-static-export.md) と [ADR-0007（GitHub Pages での配信）](docs/adr/0007-github-pages.md) が持つ。
+理由は [ADR-20260714-nextjs-static-export（static export）](docs/adr/20260714-nextjs-static-export.md) と [ADR-20260823-github-pages（GitHub Pages での配信）](docs/adr/20260823-github-pages.md) が持つ。
 
 ### RSS から同期する層と、人間がキュレーションする層を分ける
 
 エピソード（`catalog/episodes.json`）は `pnpm sync` が公式 RSS から毎回組み直し、手で編集しない。
 シリーズの属性と地図の点（`catalog/series.json`・`catalog/loci.geojson`）は人間が書き、エピソードとは `seriesId` で結ぶ。
 
-理由は [ADR-0029（データの二層分離）](docs/adr/0029-two-layer-data-without-inbox.md) が持つ。
+理由は [ADR-20260904-two-layer-data-without-inbox（データの二層分離）](docs/adr/20260904-two-layer-data-without-inbox.md) が持つ。
 
 ### データの編集を公開サイトに載せない
 
 `catalog/` の手動層はリポジトリのファイルで、変更はコミットで確定し、PR の diff で読む。
 公開サイトは編集の手段・認証・DB を持たない。
 
-理由は [ADR-0028（手元でだけ動く管理画面）](docs/adr/0028-local-only-admin.md) が持つ。
+理由は [ADR-20260902-local-only-admin（手元でだけ動く管理画面）](docs/adr/20260902-local-only-admin.md) が持つ。
 
 ### シリーズと地図の点を分け、位置を段階に分けて持つ
 
 `series.json` は geometry を持たず、地図の点は `loci.geojson` が持ち、点の側が `seriesId` でシリーズを指す。
 いまの段階では、各シリーズが代表点を 1 つ持つか `anchor` に `"unlocated"` を置いて位置なしを宣言し、版図や経路の図形は持たない。
 
-理由は [ADR-0026（位置情報の二段階）](docs/adr/0026-two-phase-location.md) と [ADR-0027（シリーズと事物の分離）](docs/adr/0027-series-and-loci.md) が持つ。
+理由は [ADR-20260902-two-phase-location（位置情報の二段階）](docs/adr/20260902-two-phase-location.md) と [ADR-20260902-series-and-loci（シリーズと事物の分離）](docs/adr/20260902-series-and-loci.md) が持つ。
 
 ### 時代の近さを、地図の点の濃さで見せる
 
 era スライダーは年でなく時代区分を等幅に並べた数直線の上を動き、選んだ位置の前後に時代区分の半分の幅の現在窓を取る。
 各点は現在窓との重なりが大きいほど濃く描き、濃さの計算は MapLibre の式でなく TypeScript の側が持ち、現在窓と重ならない点は地図に描かない。
 
-理由は [ADR-0038（現在窓の幅と右端の年）](docs/adr/0038-era-space-window.md) と [ADR-0043（点の濃さの渡し方）](docs/adr/0043-era-fade-window-only.md) が持つ。
+理由は [ADR-20260907-era-space-window（現在窓の幅と右端の年）](docs/adr/20260907-era-space-window.md) と [ADR-20260911-era-fade-window-only（点の濃さの渡し方）](docs/adr/20260911-era-fade-window-only.md) が持つ。
 
 ### 地図の上の UI を React で書く
 
 一覧パネル・詳細カード・era スライダーは React と Tailwind で書き、地図の上に重ねる。
 MapLibre が出す DOM は canvas と attribution だけで、Popup と built-in control を使わない。
 
-理由は [ADR-0022（地図の DOM の境界）](docs/adr/0022-map-dom-boundary.md) が持つ。
+理由は [ADR-20260831-map-dom-boundary（地図の DOM の境界）](docs/adr/20260831-map-dom-boundary.md) が持つ。
 
 ### 歴史の裏どりをコードのレビューと分け、典拠をファイルに残す
 
 `catalog/` の年代と座標は、PR か issue に `@historian` とコメントすると、Web 検索を許した GitHub Actions のワークフローが典拠の URL を添えて裏どりする。
 採った値の典拠は、シリーズごとに `docs/sources/<シリーズ id>.md` へ置く。
 
-理由は [ADR-0035（歴史の裏どりのワークフロー）](docs/adr/0035-history-review-lane.md) と [ADR-0037（典拠の置き場）](docs/adr/0037-sources-layer.md) が持つ。
+理由は [ADR-20260909-history-review-lane（歴史の裏どりのワークフロー）](docs/adr/20260909-history-review-lane.md) と [ADR-20260910-sources-layer（典拠の置き場）](docs/adr/20260910-sources-layer.md) が持つ。
 
 ## 検証と開発の進め方
 
@@ -125,7 +125,7 @@ Next.js (App Router) + TypeScript を static export する。
 番組そのものの権利は制作元の COTEN に帰属する。
 地図と時代区分の上への整理はこのプロジェクトが独自に行ったものであって、番組の見解ではない。
 
-載せるのはシリーズ名とエピソードタイトルだけで、番組の説明文・ロゴ・カバーアート・出演者画像は使わない（理由は [ADR-0008](docs/adr/0008-quote-titles-only.md)）。
+載せるのはシリーズ名とエピソードタイトルだけで、番組の説明文・ロゴ・カバーアート・出演者画像は使わない（理由は [ADR-20260823-quote-titles-only](docs/adr/20260823-quote-titles-only.md)）。
 
 番組公式: <https://coten.co.jp/services/cotenradio/>
 
@@ -138,4 +138,4 @@ Next.js (App Router) + TypeScript を static export する。
 
 シリーズ名・エピソードタイトル・配信リンクも同じく範囲外で、権利は上の「出典と引用の範囲」のとおり制作元に帰属する。
 
-ライセンスをこの範囲に分ける理由は [ADR-0011](docs/adr/0011-license.md) が持つ。
+ライセンスをこの範囲に分ける理由は [ADR-20260827-license](docs/adr/20260827-license.md) が持つ。

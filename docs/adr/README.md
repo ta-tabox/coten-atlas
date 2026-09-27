@@ -97,75 +97,75 @@ ADR の外（コード・現況の文書・issue・PR）から指すときは、
 
 ## 一覧
 
-| ADR | 決定 | 決定日 | 状態 |
-|---|---|---|---|
-| [0001](0001-nextjs-static-export.md) | スタックを Next.js App Router + TypeScript の static export にする | 2026-07-14 | 採用 |
-| [0002](0002-mise-run-check.md) | 機械判定の口を `mise run check` 一本にする | 2026-08-02 | supersede 済み（→ 0009） |
-| [0003](0003-maplibre.md) | 地図ライブラリに MapLibre GL JS を採る | 2026-07-14 | 採用 |
-| [0004](0004-openfreemap-positron.md) | ベースマップに OpenFreeMap positron を採る（代替は Carto Positron） | 2026-08-23 | 採用 |
-| [0005](0005-two-layer-data.md) | データを「エピソード = RSS 自動 / テーマ = 人間キュレーション」の二層に分ける | 2026-07-14 | supersede 済み（→ 0029） |
-| [0006](0006-rss-link-as-episode-url.md) | 配信リンクは RSS の `<link>` をそのまま使う | 2026-08-23 | 採用 |
-| [0007](0007-github-pages.md) | GitHub Pages で配信し、独自ドメインは当てない | 2026-08-23 | 採用 |
-| [0008](0008-quote-titles-only.md) | 引用は題号に限り、説明文・ロゴ・カバーアートに触れない | 2026-08-23 | 採用 |
-| [0009](0009-pnpm-check.md) | 判定の口を `pnpm check` へ移す（0002 を supersede） | 2026-08-25 | supersede 済み（→ 0045） |
-| [0010](0010-gh-review-trigger-narrowing.md) | gh-review の起動を絞るのは job 側の `if:` の一本にする | 2026-08-25 | 採用 |
-| [0011](0011-license.md) | コードは MIT、データは CC BY 4.0、番組由来の要素は範囲外と明記する | 2026-08-27 | 採用 |
-| [0012](0012-maplibre-v5.md) | maplibre-gl は v5 系に固定する | 2026-08-27 | supersede 済み（→ 0013） |
-| [0013](0013-maplibre-worker-self-hosted.md) | MapLibre の worker はこのリポジトリが配る（0012 を supersede） | 2026-08-27 | 採用 |
-| [0014](0014-e2e-offline-smoke.md) | E2E を入れる（外部を遮断したスモーク1枚に限る） | 2026-08-28 | 採用 |
-| [0015](0015-css-modules.md) | スタイルは CSS Modules で書き、CSS フレームワークを入れない | 2026-08-28 | supersede 済み（→ 0021） |
-| [0016](0016-playwright-runner.md) | ブラウザを立てる検証は Playwright が回し、Vitest は純関数だけを見る | 2026-08-29 | 採用 |
-| [0017](0017-local-only-instructions.md) | 手元の環境にだけ意味を持つ指示と申し送りは追跡しない | 2026-08-29 | 採用 |
-| [0018](0018-season-as-assignment-key.md) | エピソードとテーマの割当キーを `itunes:season` にする | 2026-08-29 | supersede 済み（→ 0046） |
-| [0019](0019-era-open-end.md) | 終わっていない era の `end` は年を書かず、印を置く | 2026-08-29 | 採用 |
-| [0020](0020-series-rename.md) | 地図の 1 エントリの呼び名を `series` にする | 2026-08-30 | 採用 |
-| [0021](0021-tailwind-v4.md) | スタイルを Tailwind v4 で書く（0015 を supersede） | 2026-08-31 | 採用 |
-| [0022](0022-map-dom-boundary.md) | 地図の上に載せるものは React 側で書き、MapLibre の DOM は canvas と attribution に限る | 2026-08-31 | 採用 |
-| [0023](0023-kind-place-or-concept.md) | `kind` は geometry から導けない差だけを持つ | 2026-08-31 | supersede 済み（→ 0042） |
-| [0024](0024-map-feature-carries-key-only.md) | 地図から返る feature は鍵の運搬に限り、シリーズの属性は `data/` を読んだ値から引く | 2026-09-01 | 採用 |
-| [0025](0025-retire-next-md.md) | 申し送りの層（`NEXT.md`）を畳み、状態・順序・決定・現況の四つの外に層を作らない | 2026-09-01 | 採用 |
-| [0026](0026-two-phase-location.md) | 位置情報を二段階に分け、第一段階は代表点か位置なしに限る | 2026-09-02 | 採用 |
-| [0027](0027-series-and-loci.md) | シリーズと事物を分け、シリーズは代表点の参照か位置なしの印を持つ | 2026-09-02 | 採用 |
-| [0028](0028-local-only-admin.md) | データを編集する管理画面は手元でだけ動かし、保存先は git のまま | 2026-09-02 | 採用 |
-| [0029](0029-two-layer-data-without-inbox.md) | データを「エピソード = RSS 自動 / シリーズ = 人間キュレーション」の二層に分け、未割当は `episodes.json` の `seriesId` を正にする（0005 を supersede） | 2026-09-04 | 採用 |
-| [0030](0030-catalog-rename.md) | データの置き場の名前を `catalog/` にする | 2026-09-06 | 採用 |
-| [0031](0031-lib-layout-by-concern.md) | `web/src/lib/` は関心ごとのディレクトリで割り、ファイル名の接頭辞で代用しない | 2026-09-06 | 採用 |
-| [0032](0032-docs-under-docs.md) | リポジトリ自身の文書は `docs/` に置き、ルートには道具がその位置を要求するものだけを残す | 2026-09-06 | 採用 |
-| [0033](0033-rules-under-claude.md) | 従わせる規則は `.claude/rules/` に置き、`docs/` には記述だけを残す | 2026-09-06 | 採用 |
-| [0034](0034-series-vocabulary.md) | 手で書く欄の語彙を決め、`region` は地図の区画・`tags` は種別と主題だけを持つ | 2026-09-07 | supersede 済み（→ 0041） |
-| [0035](0035-history-review-lane.md) | 歴史の裏どりを `@historian` の別レーンに分け、Web 検索を許す | 2026-09-09 | 採用 |
-| [0036](0036-post-deploy-reachability.md) | 配信の直後に到達テストを走らせる（ブラウザを立てず、`src`・`href` のパスへの到達だけを検証する） | 2026-09-07 | 採用 |
-| [0037](0037-sources-layer.md) | `catalog/` の値の典拠を `docs/sources/<シリーズ id>.md` に置く | 2026-09-10 | 採用 |
-| [0038](0038-era-space-window.md) | 現在窓の幅は era 空間の位置で決め、`"present"` の右端は呼び出し元が渡す現在年にする | 2026-09-07 | 採用 |
-| [0039](0039-untimed-concept-series.md) | 時代を跨いで続く概念史のシリーズは、`timeRange` に年を書かず時期なしの印を置く | 2026-09-10 | 採用 |
-| [0040](0040-era-fade-wiring.md) | 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値を MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く | 2026-09-11 | supersede 済み（→ 0043） |
-| [0041](0041-series-vocabulary-tiebreaks.md) | 手で書く欄の語彙を決め、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を足す（0034 を supersede） | 2026-09-11 | supersede 済み（→ 0044） |
-| [0042](0042-drop-series-kind.md) | `series.json` の `kind` を廃止し、代表点を持つシリーズを同じ濃さで地図に描く（0023 を supersede） | 2026-09-11 | 採用 |
-| [0043](0043-era-fade-window-only.md) | 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値をそのまま MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く（0040 を supersede） | 2026-09-11 | 採用 |
-| [0044](0044-series-vocabulary-without-kind.md) | 手で書く欄の語彙と、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を、`kind` を除いて決め直す（0041 を supersede） | 2026-09-11 | 採用 |
-| [0045](0045-pnpm-check-current-form.md) | 判定の口は `web/` で打つ `pnpm check` の一本で、踏襲しているツールチェーンの規約と同じ形にする（0009 を supersede） | 2026-09-14 | 採用 |
-| [0046](0046-season-assignment-precedence.md) | エピソードの割当に使う season を、訂正表・題名の先頭の `【NN-M】`・`itunes:season` の順に決める（0018 を supersede） | 2026-09-15 | 採用 |
-| [20260927-adr-date-slug-identifier](20260927-adr-date-slug-identifier.md) | ADR の識別子を決定日と slug にする | 2026-09-27 | 採用 |
+| ADR | 決定 | 決定日 | 状態 | 旧番号 |
+|---|---|---|---|---|
+| [20260714-maplibre](20260714-maplibre.md) | 地図ライブラリに MapLibre GL JS を採る | 2026-07-14 | 採用 | 0003 |
+| [20260714-nextjs-static-export](20260714-nextjs-static-export.md) | スタックを Next.js App Router + TypeScript の static export にする | 2026-07-14 | 採用 | 0001 |
+| [20260714-two-layer-data](20260714-two-layer-data.md) | データを「エピソード = RSS 自動 / テーマ = 人間キュレーション」の二層に分ける | 2026-07-14 | supersede 済み（→ 20260904-two-layer-data-without-inbox） | 0005 |
+| [20260802-mise-run-check](20260802-mise-run-check.md) | 機械判定の口を `mise run check` 一本にする | 2026-08-02 | supersede 済み（→ 20260825-pnpm-check） | 0002 |
+| [20260823-github-pages](20260823-github-pages.md) | GitHub Pages で配信し、独自ドメインは当てない | 2026-08-23 | 採用 | 0007 |
+| [20260823-openfreemap-positron](20260823-openfreemap-positron.md) | ベースマップに OpenFreeMap positron を採る（代替は Carto Positron） | 2026-08-23 | 採用 | 0004 |
+| [20260823-quote-titles-only](20260823-quote-titles-only.md) | 引用は題号に限り、説明文・ロゴ・カバーアートに触れない | 2026-08-23 | 採用 | 0008 |
+| [20260823-rss-link-as-episode-url](20260823-rss-link-as-episode-url.md) | 配信リンクは RSS の `<link>` をそのまま使う | 2026-08-23 | 採用 | 0006 |
+| [20260825-gh-review-trigger-narrowing](20260825-gh-review-trigger-narrowing.md) | gh-review の起動を絞るのは job 側の `if:` の一本にする | 2026-08-25 | 採用 | 0010 |
+| [20260825-pnpm-check](20260825-pnpm-check.md) | 判定の口を `pnpm check` へ移す（20260802-mise-run-check を supersede） | 2026-08-25 | supersede 済み（→ 20260914-pnpm-check-current-form） | 0009 |
+| [20260827-license](20260827-license.md) | コードは MIT、データは CC BY 4.0、番組由来の要素は範囲外と明記する | 2026-08-27 | 採用 | 0011 |
+| [20260827-maplibre-v5](20260827-maplibre-v5.md) | maplibre-gl は v5 系に固定する | 2026-08-27 | supersede 済み（→ 20260827-maplibre-worker-self-hosted） | 0012 |
+| [20260827-maplibre-worker-self-hosted](20260827-maplibre-worker-self-hosted.md) | MapLibre の worker はこのリポジトリが配る（20260827-maplibre-v5 を supersede） | 2026-08-27 | 採用 | 0013 |
+| [20260828-css-modules](20260828-css-modules.md) | スタイルは CSS Modules で書き、CSS フレームワークを入れない | 2026-08-28 | supersede 済み（→ 20260831-tailwind-v4） | 0015 |
+| [20260828-e2e-offline-smoke](20260828-e2e-offline-smoke.md) | E2E を入れる（外部を遮断したスモーク1枚に限る） | 2026-08-28 | 採用 | 0014 |
+| [20260829-era-open-end](20260829-era-open-end.md) | 終わっていない era の `end` は年を書かず、印を置く | 2026-08-29 | 採用 | 0019 |
+| [20260829-local-only-instructions](20260829-local-only-instructions.md) | 手元の環境にだけ意味を持つ指示と申し送りは追跡しない | 2026-08-29 | 採用 | 0017 |
+| [20260829-playwright-runner](20260829-playwright-runner.md) | ブラウザを立てる検証は Playwright が回し、Vitest は純関数だけを見る | 2026-08-29 | 採用 | 0016 |
+| [20260829-season-as-assignment-key](20260829-season-as-assignment-key.md) | エピソードとテーマの割当キーを `itunes:season` にする | 2026-08-29 | supersede 済み（→ 20260915-season-assignment-precedence） | 0018 |
+| [20260830-series-rename](20260830-series-rename.md) | 地図の 1 エントリの呼び名を `series` にする | 2026-08-30 | 採用 | 0020 |
+| [20260831-kind-place-or-concept](20260831-kind-place-or-concept.md) | `kind` は geometry から導けない差だけを持つ | 2026-08-31 | supersede 済み（→ 20260911-drop-series-kind） | 0023 |
+| [20260831-map-dom-boundary](20260831-map-dom-boundary.md) | 地図の上に載せるものは React 側で書き、MapLibre の DOM は canvas と attribution に限る | 2026-08-31 | 採用 | 0022 |
+| [20260831-tailwind-v4](20260831-tailwind-v4.md) | スタイルを Tailwind v4 で書く（20260828-css-modules を supersede） | 2026-08-31 | 採用 | 0021 |
+| [20260901-map-feature-carries-key-only](20260901-map-feature-carries-key-only.md) | 地図から返る feature は鍵の運搬に限り、シリーズの属性は `data/` を読んだ値から引く | 2026-09-01 | 採用 | 0024 |
+| [20260901-retire-next-md](20260901-retire-next-md.md) | 申し送りの層（`NEXT.md`）を畳み、状態・順序・決定・現況の四つの外に層を作らない | 2026-09-01 | 採用 | 0025 |
+| [20260902-local-only-admin](20260902-local-only-admin.md) | データを編集する管理画面は手元でだけ動かし、保存先は git のまま | 2026-09-02 | 採用 | 0028 |
+| [20260902-series-and-loci](20260902-series-and-loci.md) | シリーズと事物を分け、シリーズは代表点の参照か位置なしの印を持つ | 2026-09-02 | 採用 | 0027 |
+| [20260902-two-phase-location](20260902-two-phase-location.md) | 位置情報を二段階に分け、第一段階は代表点か位置なしに限る | 2026-09-02 | 採用 | 0026 |
+| [20260904-two-layer-data-without-inbox](20260904-two-layer-data-without-inbox.md) | データを「エピソード = RSS 自動 / シリーズ = 人間キュレーション」の二層に分け、未割当は `episodes.json` の `seriesId` を正にする（20260714-two-layer-data を supersede） | 2026-09-04 | 採用 | 0029 |
+| [20260906-catalog-rename](20260906-catalog-rename.md) | データの置き場の名前を `catalog/` にする | 2026-09-06 | 採用 | 0030 |
+| [20260906-docs-under-docs](20260906-docs-under-docs.md) | リポジトリ自身の文書は `docs/` に置き、ルートには道具がその位置を要求するものだけを残す | 2026-09-06 | 採用 | 0032 |
+| [20260906-lib-layout-by-concern](20260906-lib-layout-by-concern.md) | `web/src/lib/` は関心ごとのディレクトリで割り、ファイル名の接頭辞で代用しない | 2026-09-06 | 採用 | 0031 |
+| [20260906-rules-under-claude](20260906-rules-under-claude.md) | 従わせる規則は `.claude/rules/` に置き、`docs/` には記述だけを残す | 2026-09-06 | 採用 | 0033 |
+| [20260907-era-space-window](20260907-era-space-window.md) | 現在窓の幅は era 空間の位置で決め、`"present"` の右端は呼び出し元が渡す現在年にする | 2026-09-07 | 採用 | 0038 |
+| [20260907-post-deploy-reachability](20260907-post-deploy-reachability.md) | 配信の直後に到達テストを走らせる（ブラウザを立てず、`src`・`href` のパスへの到達だけを検証する） | 2026-09-07 | 採用 | 0036 |
+| [20260907-series-vocabulary](20260907-series-vocabulary.md) | 手で書く欄の語彙を決め、`region` は地図の区画・`tags` は種別と主題だけを持つ | 2026-09-07 | supersede 済み（→ 20260911-series-vocabulary-tiebreaks） | 0034 |
+| [20260909-history-review-lane](20260909-history-review-lane.md) | 歴史の裏どりを `@historian` の別レーンに分け、Web 検索を許す | 2026-09-09 | 採用 | 0035 |
+| [20260910-sources-layer](20260910-sources-layer.md) | `catalog/` の値の典拠を `docs/sources/<シリーズ id>.md` に置く | 2026-09-10 | 採用 | 0037 |
+| [20260910-untimed-concept-series](20260910-untimed-concept-series.md) | 時代を跨いで続く概念史のシリーズは、`timeRange` に年を書かず時期なしの印を置く | 2026-09-10 | 採用 | 0039 |
+| [20260911-drop-series-kind](20260911-drop-series-kind.md) | `series.json` の `kind` を廃止し、代表点を持つシリーズを同じ濃さで地図に描く（20260831-kind-place-or-concept を supersede） | 2026-09-11 | 採用 | 0042 |
+| [20260911-era-fade-window-only](20260911-era-fade-window-only.md) | 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値をそのまま MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く（20260911-era-fade-wiring を supersede） | 2026-09-11 | 採用 | 0043 |
+| [20260911-era-fade-wiring](20260911-era-fade-wiring.md) | 地図の点の濃さは、現在窓との重なりから事物ごとに TypeScript で求めた数値を MapLibre の `circle-opacity` へ渡し、窓と重ならない事物は `filter` で除く | 2026-09-11 | supersede 済み（→ 20260911-era-fade-window-only） | 0040 |
+| [20260911-series-vocabulary-tiebreaks](20260911-series-vocabulary-tiebreaks.md) | 手で書く欄の語彙を決め、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を足す（20260907-series-vocabulary を supersede） | 2026-09-11 | supersede 済み（→ 20260911-series-vocabulary-without-kind） | 0041 |
+| [20260911-series-vocabulary-without-kind](20260911-series-vocabulary-without-kind.md) | 手で書く欄の語彙と、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を、`kind` を除いて決め直す（20260911-series-vocabulary-tiebreaks を supersede） | 2026-09-11 | 採用 | 0044 |
+| [20260914-pnpm-check-current-form](20260914-pnpm-check-current-form.md) | 判定の口は `web/` で打つ `pnpm check` の一本で、踏襲しているツールチェーンの規約と同じ形にする（20260825-pnpm-check を supersede） | 2026-09-14 | 採用 | 0045 |
+| [20260915-season-assignment-precedence](20260915-season-assignment-precedence.md) | エピソードの割当に使う season を、訂正表・題名の先頭の `【NN-M】`・`itunes:season` の順に決める（20260829-season-as-assignment-key を supersede） | 2026-09-15 | 採用 | 0046 |
+| [20260927-adr-date-slug-identifier](20260927-adr-date-slug-identifier.md) | ADR の識別子を決定日と slug にする | 2026-09-27 | 採用 | — |
 
-**0014 は人間の目視を L5 と呼んでいる。**
-`docs/HARNESS.md`「検証の層構造」は番号を `pnpm check` の連鎖の位置に限り、人間の目視に番号を与えないので、0014 の L5 は「人間の目視」と読む。
+**20260828-e2e-offline-smoke は人間の目視を L5 と呼んでいる。**
+`docs/HARNESS.md`「検証の層構造」は番号を `pnpm check` の連鎖の位置に限り、人間の目視に番号を与えないので、20260828-e2e-offline-smoke の L5 は「人間の目視」と読む。
 
-**0041 までのレコードは、シリーズが `kind` の欄を持つものとして書かれている。**
-`kind` は [0042](0042-drop-series-kind.md) で廃止したので、supersede されていないレコード（0008・0021・0026・0027・0035・0038・0039）にある `kind` の記述は、欄が在った時点の設計として読む。
+**`kind` を廃止する前に書かれたレコードは、シリーズが `kind` の欄を持つものとして書かれている。**
+`kind` は [20260911-drop-series-kind](20260911-drop-series-kind.md) で廃止したので、supersede されていないレコード（20260823-quote-titles-only・20260831-tailwind-v4・20260902-two-phase-location・20260902-series-and-loci・20260909-history-review-lane・20260907-era-space-window・20260910-untimed-concept-series）にある `kind` の記述は、欄が在った時点の設計として読む。
 
-**0019 までのレコードは `テーマ` の語で書かれている。**
-地図の 1 エントリの呼び名を [0020](0020-series-rename.md) で `series`（シリーズ）へ揃えたので、それより前のレコードにある「テーマ」は「シリーズ」と読む。
+**呼び名を `series` へ揃える前に書かれたレコードは `テーマ` の語で書かれている。**
+地図の 1 エントリの呼び名を [20260830-series-rename](20260830-series-rename.md) で `series`（シリーズ）へ揃えたので、決定日が 20260830-series-rename より前のレコードにある「テーマ」は「シリーズ」と読む。
 
-**0031 までのレコードは `ARCHITECTURE.md`・`CODING.md`・`HARNESS.md`・`ROADMAP.md` をルート直下のものとして指している。**
-この 4 本を [0032](0032-docs-under-docs.md) で `docs/` へ移したので、それより前のレコードにある名指しは `docs/` の下と読む。
-`CODING.md` だけは [0033](0033-rules-under-claude.md) で `.claude/rules/` へ分かれたので、`coding.md`（コード）か `writing.md`（文章・コミット）と読む。
+**文書を `docs/` へ移す前に書かれたレコードは `ARCHITECTURE.md`・`CODING.md`・`HARNESS.md`・`ROADMAP.md` をルート直下のものとして指している。**
+この 4 本を [20260906-docs-under-docs](20260906-docs-under-docs.md) で `docs/` へ移したので、決定日が 20260906-docs-under-docs より前のレコードにある名指しは `docs/` の下と読む。
+`CODING.md` だけは [20260906-rules-under-claude](20260906-rules-under-claude.md) で `.claude/rules/` へ分かれたので、`coding.md`（コード）か `writing.md`（文章・コミット）と読む。
 ルートに残るのは `README.md`・`LICENSE`・`CLAUDE.md` だけである。
 
-**0029 までのレコードは `data/` の名でデータの置き場を指している。**
-置き場を [0030](0030-catalog-rename.md) で `catalog/` へ改名したので、それより前のレコードにある `data/` は `catalog/` と読む。
-上の一覧の 0024 の行も同じで、一覧は各レコードの語彙をそのまま写す。
+**置き場を `catalog/` へ改名する前に書かれたレコードは `data/` の名でデータの置き場を指している。**
+置き場を [20260906-catalog-rename](20260906-catalog-rename.md) で `catalog/` へ改名したので、決定日が 20260906-catalog-rename より前のレコードにある `data/` は `catalog/` と読む。
+上の一覧の 20260901-map-feature-carries-key-only の行も同じで、一覧は各レコードの語彙をそのまま写す。
 
-**0045 までのレコードは、ファイル名・関数名・値の一覧を決定の本体に置いていることがある。**
+**規約7 を足す前に書かれたレコードは、ファイル名・関数名・値の一覧を決定の本体に置いていることがある。**
 規約7（決定はアーキテクチャの水準で書き、個別の実装に関与しない）より前に書かれたので、それらは決定時点の例と読み、現況はコードと現況の文書で確かめる。
-名前・置き場・値域そのものを決めたレコード（0020 の呼び名、0030・0032・0033 の置き場、0044 の語彙の値域など）では、その名前・置き場・値が決定の本体である。
+名前・置き場・値域そのものを決めたレコード（20260830-series-rename の呼び名、20260906-catalog-rename・20260906-docs-under-docs・20260906-rules-under-claude の置き場、20260911-series-vocabulary-without-kind の語彙の値域など）では、その名前・置き場・値が決定の本体である。
 字面が現況と違っても決定が動いていなければ、規約4 に従って改訂版は書かない。
