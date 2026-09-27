@@ -1,10 +1,9 @@
 #!/bin/bash
 #
-# リモート環境（Claude Code on the web）のセッション起動フック。
-# 責務は一点——mise の入っていないコンテナで、mise.toml が固定した版の node と pnpm を用意する。
-# タスクは web/package.json が持つので（判定の口は `web/` で打つ `pnpm check`）、
-# フックが組むのはその pnpm が立つところまで。
-# 手元は mise が入っている前提なので、このフックはリモートでしか走らない。
+# セッション起動フック。
+# 責務は、どの環境でも `web/` で打つ `pnpm check` が立つところまで組むことである。
+# 手元（リポジトリ本体と worktree）の準備は scripts/setup.sh が持ち、このファイルが持つのはリモート（Claude Code on the web）の分だけである。
+# リモートは mise の入っていないコンテナなので、mise.toml が固定した版の node と pnpm をここで用意する。
 #
 # リポジトリから復元できるものだけがここに来る（名義はクラウド環境の環境変数が持つ）。
 
@@ -84,6 +83,9 @@ main() {
   # 手元とリモートを分ける材料はこれだけ。
   # 門を先に置けば、同じフックを両方の環境へ配れる。
   if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
+    # 手元では止めない。
+    # 準備が途中で止まってもセッションは立ち、足りない分は pnpm check が同じ相手で落ちて言う。
+    bash "$REPO_ROOT/scripts/setup.sh" || echo "[coten-atlas] 手元の準備が途中で止まった。bash scripts/setup.sh を叩き直す" >&2
     exit 0
   fi
 
