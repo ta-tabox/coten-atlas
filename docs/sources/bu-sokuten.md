@@ -33,7 +33,7 @@
 最初に書いた座標は `[112.44, 34.67]` で、`@historian` が隋唐洛陽城遺跡と現在の洛陽市（Wikidata Q187136、112.42447, 34.65867）のどちらからも 1.5〜1.7km 離れた粗い値だと指摘したので、遺跡の座標へ直した。
 Pleiades と GeoNames では確かめられていない。
 
-種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 ADR-20260911-series-vocabulary-tiebreaks は人物の活動の拠点に「治めた国の都」を含めるので、武則天が皇帝として治めた周（690〜705）の都の洛陽にした。
 `@historian` は、周の時代に洛陽が事実上の国都だったことを複数の典拠（コトバンク: 則天武后・[Britannica: Wuhou](https://www.britannica.com/biography/Wuhou)、どちらも三次）が支持し、皇帝の在位期に限れば洛陽が明確に妥当だと返した。
 拠点が複数あるので、ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、番組が扱う主な事績が起きた地を中心の場所とし、治めた国の都と本人が暮らして執務した地が別なら暮らして執務した地を先に見た。
@@ -82,7 +82,7 @@ PR #173 の `@historian` は、現在の英語の文献が武則天の周の都�
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange` の並立説・座標のずれの指摘と典拠・洛陽の改名の典拠 |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
 | [#170 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/170) | 地点が複数の名を持つときに、現在の英語の文献の名を使う規則 |
 | [PR #173 の `@historian`（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/173#issuecomment-5630160476) | 現在の英語の文献が周の都を指す名 |

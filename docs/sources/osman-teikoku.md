@@ -31,7 +31,7 @@
 | 典拠 | [Pleiades 520998](https://pleiades.stoa.org/places/520998) |
 | 典拠の格 | 三次 |
 
-種別は `集団` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、本拠の都市に代表点を置いた。
+種別は `集団` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、本拠の都市に代表点を置いた。
 帝国の都は時期によって移ったので、ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、番組が扱う主な事績が起きた地を本拠の都市とした。
 各回の第 6〜9 回がコンスタンティノープルの攻略と攻略後の都市の再建を扱い、1453 年から帝国の終わりまでの都でもあるので、ここにした。
 `@historian` は、この選び方を妥当と返した。
@@ -68,7 +68,7 @@
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange`・座標・`region` の裏どり |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171) | 拠点や舞台が複数あるときに、番組が扱う主な事績が起きた地を中心の場所とする規則 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う年代と舞台 |

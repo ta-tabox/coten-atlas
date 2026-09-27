@@ -12,7 +12,7 @@
 ## `timeRange`
 
 `"untimed"`（時期なし）である。
-主題の天皇は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series](../adr/20260910-untimed-concept-series.md)）の表の 3 行目に当たる。
+主題の天皇は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series（時期なしの概念史のシリーズ）](../adr/20260910-untimed-concept-series.md)）の表の 3 行目に当たる。
 
 配信フィードの各回の説明によれば、第 1 回が天皇を戴く理由と同年の退位と即位、第 2 回が天皇の成り立ちと祭祀王としての性格、第 3 回が将軍との権力と権威の分担、第 4 回が敗戦後の象徴を扱う。
 
@@ -27,7 +27,7 @@
 ## 代表点
 
 位置なしである。
-`tags` の種別を `概念史` だけにしたので、[ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
+`tags` の種別を `概念史` だけにしたので、[ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
 
 種別を `概念史` だけにしたのは、各回が皇室という人の集まりの動きでなく、天皇という位の意味の移り変わりを追っているためである。
 ADR-20260907-series-vocabulary の `集団` の定義は「国家・帝国・社会層など、続く人の集まり」で、位を主語にするシリーズには当てなかった。

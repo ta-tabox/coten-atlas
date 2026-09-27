@@ -16,21 +16,21 @@
 
 | 項目 | 確定 | 理由 |
 |---|---|---|
-| スタック | Next.js (App Router) + TypeScript、static export（`output: 'export'`） | [ADR-20260714-nextjs-static-export](adr/20260714-nextjs-static-export.md) |
-| スタイル | Tailwind v4（`globals.css` が `@import "tailwindcss"`、`@theme` のトークン、擬似要素へユーティリティを当てる `@custom-variant` を持つ）。`*.module.css` は持たない | [ADR-20260831-tailwind-v4](adr/20260831-tailwind-v4.md) |
-| 地図の DOM 境界 | overlay は React + Tailwind。MapLibre 由来の DOM は canvas コンテナと attribution だけ | [ADR-20260831-map-dom-boundary](adr/20260831-map-dom-boundary.md) |
-| 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-20260714-maplibre](adr/20260714-maplibre.md) |
-| ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-20260823-openfreemap-positron](adr/20260823-openfreemap-positron.md) |
-| データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-20260904-two-layer-data-without-inbox](adr/20260904-two-layer-data-without-inbox.md) |
-| 位置情報 | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で精緻な図形を足す。代表点は第二段階でも独立に持ち、どちらを描くかは利用者が切り替える | [ADR-20260902-two-phase-location](adr/20260902-two-phase-location.md) |
-| シリーズと事物 | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ | [ADR-20260902-series-and-loci](adr/20260902-series-and-loci.md) |
-| 管理画面 | 手元でだけ動き、`catalog/` のファイルへ書く。公開サイトの成果物に含まれない | [ADR-20260902-local-only-admin](adr/20260902-local-only-admin.md) |
-| 配信リンク | RSS の `<link>`（Spotify のエピソードページ） | [ADR-20260823-rss-link-as-episode-url](adr/20260823-rss-link-as-episode-url.md) |
-| デプロイ | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`） | [ADR-20260823-github-pages](adr/20260823-github-pages.md) |
-| 引用の範囲 | シリーズ名とエピソードタイトルのみ | [ADR-20260823-quote-titles-only](adr/20260823-quote-titles-only.md) |
-| 判定の口 | `pnpm check` の一本 | [ADR-20260914-pnpm-check-current-form](adr/20260914-pnpm-check-current-form.md) |
+| スタック | Next.js (App Router) + TypeScript、static export（`output: 'export'`） | [ADR-20260714-nextjs-static-export（static export）](adr/20260714-nextjs-static-export.md) |
+| スタイル | Tailwind v4（`globals.css` が `@import "tailwindcss"`、`@theme` のトークン、擬似要素へユーティリティを当てる `@custom-variant` を持つ）。`*.module.css` は持たない | [ADR-20260831-tailwind-v4（Tailwind v4）](adr/20260831-tailwind-v4.md) |
+| 地図の DOM 境界 | overlay は React + Tailwind。MapLibre 由来の DOM は canvas コンテナと attribution だけ | [ADR-20260831-map-dom-boundary（地図の DOM の境界）](adr/20260831-map-dom-boundary.md) |
+| 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-20260714-maplibre（地図ライブラリの選択）](adr/20260714-maplibre.md) |
+| ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-20260823-openfreemap-positron（ベースマップの選択）](adr/20260823-openfreemap-positron.md) |
+| データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-20260904-two-layer-data-without-inbox（データの二層分離）](adr/20260904-two-layer-data-without-inbox.md) |
+| 位置情報 | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で精緻な図形を足す。代表点は第二段階でも独立に持ち、どちらを描くかは利用者が切り替える | [ADR-20260902-two-phase-location（位置情報の二段階）](adr/20260902-two-phase-location.md) |
+| シリーズと事物 | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ | [ADR-20260902-series-and-loci（シリーズと事物の分離）](adr/20260902-series-and-loci.md) |
+| 管理画面 | 手元でだけ動き、`catalog/` のファイルへ書く。公開サイトの成果物に含まれない | [ADR-20260902-local-only-admin（手元でだけ動く管理画面）](adr/20260902-local-only-admin.md) |
+| 配信リンク | RSS の `<link>`（Spotify のエピソードページ） | [ADR-20260823-rss-link-as-episode-url（配信リンク）](adr/20260823-rss-link-as-episode-url.md) |
+| デプロイ | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`） | [ADR-20260823-github-pages（GitHub Pages での配信）](adr/20260823-github-pages.md) |
+| 引用の範囲 | シリーズ名とエピソードタイトルのみ | [ADR-20260823-quote-titles-only（引用は題号に限る）](adr/20260823-quote-titles-only.md) |
+| 判定の口 | `pnpm check` の一本 | [ADR-20260914-pnpm-check-current-form（判定を `pnpm check` の一本にする）](adr/20260914-pnpm-check-current-form.md) |
 | ツールチェーン | mise + pnpm + Biome | ADR を持たない。このリポジトリの外で決めた既定をそのまま踏襲する。`mise.toml` は `[tools]` のみでランタイム版管理に徹する |
-| テスト | Vitest（+ React Testing Library）／ ブラウザを立てる層は Playwright | 単体側は ADR を持たない。踏襲元の既定が JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない。ブラウザ側を分ける理由は [ADR-20260829-playwright-runner](adr/20260829-playwright-runner.md) |
+| テスト | Vitest（+ React Testing Library）／ ブラウザを立てる層は Playwright | 単体側は ADR を持たない。踏襲元の既定が JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない。ブラウザ側を分ける理由は [ADR-20260829-playwright-runner（ブラウザを立てる検証の担当）](adr/20260829-playwright-runner.md) |
 | エピソード取得 | RSS を正とする自動同期（ビルド前スクリプト） | ADR を持たない。手順は §5 が持つ。今後の追加に耐えるため |
 
 ## 2. システム全体像
@@ -163,7 +163,7 @@ catalog/
 
 - **1 シリーズ = `season` の 1 値**
   `ROADMAP.md` の完了判定がシリーズ数を数えるので、複数の season を 1 件へ束ねない
-- エピソードとシリーズの割当キーは `season` で、エピソードの `season` は `season-corrections.json`・題名の先頭の `【NN-M】` の `NN`・`itunes:season` の順に最初に決まった値である（理由は [ADR-20260915-season-assignment-precedence](adr/20260915-season-assignment-precedence.md)）
+- エピソードとシリーズの割当キーは `season` で、エピソードの `season` は `season-corrections.json`・題名の先頭の `【NN-M】` の `NN`・`itunes:season` の順に最初に決まった値である（理由は [ADR-20260915-season-assignment-precedence（season の決め方の順序）](adr/20260915-season-assignment-precedence.md)）
   シリーズもエピソードも `season` を持ち、シリーズでは必須、エピソードでは決まらない回があるので nullable
 - `season-corrections.json` には、題名と `itunes:season` から正しい season が決まらない回と、題名の `NN` と `itunes:season` の食い違いを確かめた回を書く
   行を書いた回は、題名と `itunes:season` より行の `season` で割り当たり、同期の食い違いの警告からも外れる
@@ -186,7 +186,7 @@ catalog/
   代表点はシリーズ全体を代表するので、年を写して二重に持たない
   年を書いた事物はそのシリーズの `timeRange` に収まっていなければならない（`references.ts`）
   era スライダーが読むのは事物の `timeRange` で、`"series"` は地図へ渡す形を組むときにシリーズの値へ置き換える
-- シリーズの `timeRange` は年の閉区間か、時期を持たないことを表す `"untimed"` のどちらか（理由は [ADR-20260910-untimed-concept-series](adr/20260910-untimed-concept-series.md)）
+- シリーズの `timeRange` は年の閉区間か、時期を持たないことを表す `"untimed"` のどちらか（理由は [ADR-20260910-untimed-concept-series（時期なしの概念史のシリーズ）](adr/20260910-untimed-concept-series.md)）
   `"untimed"` を置けるのは、種別が `概念史` だけで位置なしのシリーズに限る
   そのうち主題が終わっていて両端を史実の年で言えるシリーズ（ショート 切腹など）は、`"untimed"` でなく年を書く
   位置なしのシリーズは事物を持たないので、事物の `"series"` が `"untimed"` へ解決されることは無い
@@ -199,10 +199,10 @@ catalog/
   配信側にシリーズ単位のページが無いので、**シリーズ側が何を指すかは未決定**である
 - 地図に出すか一覧にだけ出すかは `anchor` だけで決まり、シリーズは描き分けの欄を持たない
   代表点が主題の中心の場所でなく代わりに置いた点（生地など）でも、地図は他のシリーズと同じ規則で描く
-  代わりの点であることと選んだ理由は、`docs/sources/<シリーズ id>.md` の「代表点」節が持つ（描き分けない理由は [ADR-20260911-drop-series-kind](adr/20260911-drop-series-kind.md)）
+  代わりの点であることと選んだ理由は、`docs/sources/<シリーズ id>.md` の「代表点」節が持つ（描き分けない理由は [ADR-20260911-drop-series-kind（`kind` の廃止）](adr/20260911-drop-series-kind.md)）
 - `region` と `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）である
   近接のためにスキーマを増やさないので、この二つが判定の材料になる
-- `region` は陸地を重ならないように割った 12 区画と `地域なし` の 13 値で、区画を一つ選ぶと嘘になるシリーズが `地域なし` を書く（閉じた集合にする理由は [ADR-20260911-series-vocabulary-without-kind](adr/20260911-series-vocabulary-without-kind.md)）
+- `region` は陸地を重ならないように割った 12 区画と `地域なし` の 13 値で、区画を一つ選ぶと嘘になるシリーズが `地域なし` を書く（閉じた集合にする理由は [ADR-20260911-series-vocabulary-without-kind（`kind` を除いた語彙）](adr/20260911-series-vocabulary-without-kind.md)）
   区画の境目の決め方は skill `series-vocabulary` の手順 6 が持つ
   値を足すときは、`web/src/lib/schema/series.ts` の `SERIES_REGIONS` と同じ skill の一覧を両方書き換え、足す理由を新しい ADR に書く
   `tags` は種別（`人物` / `集団` / `出来事` / `概念史` の閉じた集合から最低 1 つ）と主題を合わせて 4 個以内で、`eras.json` の区分と同じ粒度の時代名と地域名を入れない
@@ -243,8 +243,8 @@ catalog/
 - 隣り合う区間は接していなければならない（前の `end` = 次の `start`）
   隙間があるとそこを指した位置に対応する年が無く、重なりがあると同じ年が二箇所から指される
   検査は `eraListSchema` が持つ
-- **終わっていない era の `end` には年を書かず `"present"` を置く**（理由は [ADR-20260829-era-open-end](adr/20260829-era-open-end.md)）
-  置けるのは末尾だけで、この区間を補間するときの右端はビルドした時点の年である（ブラウザの時計を読まない理由は [ADR-20260911-era-fade-window-only](adr/20260911-era-fade-window-only.md)）
+- **終わっていない era の `end` には年を書かず `"present"` を置く**（理由は [ADR-20260829-era-open-end（終わっていない era の `end`）](adr/20260829-era-open-end.md)）
+  置けるのは末尾だけで、この区間を補間するときの右端はビルドした時点の年である（ブラウザの時計を読まない理由は [ADR-20260911-era-fade-window-only（点の濃さの渡し方）](adr/20260911-era-fade-window-only.md)）
 - era の刻みはデータが揃ってから密度に合わせて調整する（S7 の後に見直し）
 
 **年からシリーズの opacity へ**——スライダーが指すのは 1 点だが、シリーズは `timeRange` という幅を持つので、点と幅は直接比べられない。
@@ -252,7 +252,7 @@ catalog/
 窓の端で滑らかにフェードイン / アウトする。
 
 - 現在窓の幅は era 空間の 1 区間の半分（`WINDOW_WIDTH_IN_ERAS`）で、窓の両端を年へ変換してから `timeRange` と比べる
-  重なり率は重なる年数を窓と `timeRange` のうち短い方の年数で割り、smoothstep に通して濃さにする（理由は [ADR-20260907-era-space-window](adr/20260907-era-space-window.md)）
+  重なり率は重なる年数を窓と `timeRange` のうち短い方の年数で割り、smoothstep に通して濃さにする（理由は [ADR-20260907-era-space-window（現在窓の幅と右端の年）](adr/20260907-era-space-window.md)）
 
 ### 配り方
 
@@ -389,7 +389,7 @@ catalog/
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
 書き足すのを、先に場所を埋めて防ぐ。本文はルートの `CLAUDE.md` とこの文書。
 
-ルートに残るのは、道具がその位置を要求するものだけである（理由は [ADR-20260906-docs-under-docs](adr/20260906-docs-under-docs.md)）。
+ルートに残るのは、道具がその位置を要求するものだけである（理由は [ADR-20260906-docs-under-docs（文書を `docs/` に置く）](adr/20260906-docs-under-docs.md)）。
 
 まだ存在しないもの: `docs/VISION.md`（#41）。
 `docs/sources/` はシリーズごとに 1 ファイルを持つ。

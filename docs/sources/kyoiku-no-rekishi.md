@@ -12,7 +12,7 @@
 ## `timeRange`
 
 `"untimed"`（時期なし）である。
-主題の教育は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series](../adr/20260910-untimed-concept-series.md)）の表の 3 行目に当たる。
+主題の教育は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series（時期なしの概念史のシリーズ）](../adr/20260910-untimed-concept-series.md)）の表の 3 行目に当たる。
 最終回が語る最も遅い制度の年（1852）は、番組の範囲の終わりであって、主題の終わりではない。
 
 配信フィードの各回の説明によれば、第 1 回が古代文明の学校、第 2 回がギリシアとローマ、第 3〜5 回が中世ヨーロッパと大学の誕生、第 6〜7 回が中国、第 8 回が日本、第 9 回がイスラーム世界、第 10〜12 回が人文主義からペスタロッチまで、第 13 回が近代の公教育を扱う。
@@ -27,7 +27,7 @@
 ## 代表点
 
 位置なしである。
-`tags` の種別が `概念史` だけなので、[ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
+`tags` の種別が `概念史` だけなので、[ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
 他の候補は挙がっていない。
 
 ## `region`・`title`

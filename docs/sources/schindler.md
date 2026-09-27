@@ -31,7 +31,7 @@
 事物の `id` が市の名 `krakow` なので、典拠の旧市街の中心の値を小数 3 桁に丸めた現在の値へ直した。
 `@historian` は GeoNames に到達できず Wikipedia の Infobox の値で代えたので、格を参考程度にとどめた。
 
-拠点が複数あるときは、番組が扱う主な事績が起きた地を中心の場所とする（#171、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md)）。
+拠点が複数あるときは、番組が扱う主な事績が起きた地を中心の場所とする（#171、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md)）。
 代表点をクラクフに置いたのは、第 5・6 回が扱う主な事績のホーロー工場の経営とユダヤ人の労働者の雇用が、クラクフで起きたためである。
 工場跡（ul. Lipowa 4、現在のシンドラーの工場博物館）は 19.9616, 50.0474 に在る（[Museum of Krakow: Oskar Schindler's Enamel Factory](https://muzeumkrakowa.pl/en/branches/oskar-schindlers-enamel-factory)、三次）。
 クラクフを要求するシリーズはほかに無いので、同じ地名の決め方（#166）は当たらない。
@@ -49,7 +49,7 @@
 
 ## `region`・`title`
 
-`region: ヨーロッパ` は、第 9 回が米国でのミルグラムの実験を扱って区画が跨るので [ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の `region` の選び方の表の 2 行目に当て、人物の本拠の生地（ツヴィッタウ。当時のオーストリア＝ハンガリー、現在のチェコ）で決めた。
+`region: ヨーロッパ` は、第 9 回が米国でのミルグラムの実験を扱って区画が跨るので [ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の `region` の選び方の表の 2 行目に当て、人物の本拠の生地（ツヴィッタウ。当時のオーストリア＝ハンガリー、現在のチェコ）で決めた。
 #168 の PR 本文の最初の版は 1 行目（一区画に収まる）と書いていたが、第 9 回の舞台を数えれば 2 行目に当たる。
 どちらの行でも値は `ヨーロッパ` である。
 `@historian` は、生地がツヴィッタウであることを確認した。

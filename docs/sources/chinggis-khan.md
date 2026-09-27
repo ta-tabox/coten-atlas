@@ -31,7 +31,7 @@
 | 典拠 | [Wikidata Q4827751](https://www.wikidata.org/wiki/Q4827751)（GeoNames 2032786 の Avarga と一致） |
 | 典拠の格 | 三次 |
 
-種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 1206 年の即位の後に大オルドを置いた地で、現在のアヴラガ遺跡に当たるので、ここにした。
 `@historian` は、遺跡の占有期間の考古学的な年代測定と整合するので、この選び方は妥当だと返した。
 
@@ -81,7 +81,7 @@ Avraga と Avarga の二つの綴りのうち、発掘責任者の出版物の�
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange` の並立説・座標・`region` の裏どり、`aurag` が当時の名かの指摘 |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
 | [#170 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/170) | 地点が複数の名を持つときに、現在の英語の文献の名を使う規則 |
 | [PR #173 の `@historian`（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/173#issuecomment-5630160476) | 現在の英語の文献が大オルドの遺跡を指す名 |

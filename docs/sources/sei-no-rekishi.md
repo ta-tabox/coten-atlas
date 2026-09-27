@@ -12,7 +12,7 @@
 ## `timeRange`
 
 `"untimed"`（時期なし）である。
-主題の性のあり方は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series](../adr/20260910-untimed-concept-series.md)）の表の 3 行目に当たる。
+主題の性のあり方は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series（時期なしの概念史のシリーズ）](../adr/20260910-untimed-concept-series.md)）の表の 3 行目に当たる。
 番組は era 空間の始端（-10000）より古い先史社会も扱うので、始まりも取り決めの値でしか書けない。
 
 配信フィードの各回の説明によれば、第 1〜3 回が先史社会と古代オリエント、第 4〜5 回がギリシアとローマ、第 6〜9 回が中世から 19 世紀のヨーロッパ、第 10 回が中国、第 11〜12 回が日本、第 13 回が 20 世紀以降を扱う。
@@ -23,7 +23,7 @@
 ## 代表点
 
 位置なしである。
-`tags` の種別が `概念史` だけなので、[ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
+`tags` の種別が `概念史` だけなので、[ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
 他の候補は挙がっていない。
 
 ## `region`・`title`

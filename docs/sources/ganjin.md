@@ -29,7 +29,7 @@
 | 典拠 | [Wikidata Q460367](https://www.wikidata.org/wiki/Q460367) |
 | 典拠の格 | 三次 |
 
-種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 
 鑑真の拠点は、生地で渡日まで約 30 年の拠点だった揚州と、来日後の奈良に分かれる。
 ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、拠点が複数あるときは、番組が扱う主な事績が起きた地を中心の場所とする。
@@ -78,7 +78,7 @@ main へ入った #171 の決定で、拠点の期間でなく事績の中心で
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange`・`region`・揚州を拠点にした期間の裏どり |
 | [`@historian` 2 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5634810498) | 東大寺の座標・授戒と唐招提寺の創建の年・英語の文献の名 |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171) | 拠点や舞台が複数あるときに、番組が扱う主な事績が起きた地を中心の場所とする規則 |
 | [#170 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/170) | 地点が複数の名を持つときに、現在の英語の文献の名を使う規則 |

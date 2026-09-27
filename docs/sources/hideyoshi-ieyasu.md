@@ -29,7 +29,7 @@
 | 典拠 | `@historian` が Wikidata と Wikipedia の座標で照合した（照合した項目の URL は報告に無い） |
 | 典拠の格 | 三次 |
 
-種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 `title` の中心になる語は `A・B` の A の秀吉である。
 秀吉の拠点は大坂・聚楽第・伏見と移ったので、ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、番組が扱う主な事績が起きた地を中心の場所とした。
 各回の第 5〜6 回が扱う天下統一を、秀吉は大坂城を本拠に進めたので、大坂にした。

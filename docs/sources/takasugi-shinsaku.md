@@ -30,7 +30,7 @@ Wikidata の座標の参照元は日本語版ウィキペディアで、GeoNames
 
 配信フィードの各回の説明によれば、第 1〜5 回が長州藩と吉田松陰の門下での成長、第 6 回が上海への渡航、第 7〜10 回が攘夷運動・奇兵隊の結成・長州征討・最期を扱う。
 
-拠点が複数あるときは、番組が扱う主な事績が起きた地を中心の場所とする（#171、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md)）。
+拠点が複数あるときは、番組が扱う主な事績が起きた地を中心の場所とする（#171、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md)）。
 代表点を下関に置いたのは、第 7〜10 回が扱う主な事績の奇兵隊の結成（1863）・功山寺での挙兵（1864）・下関戦争の講和の交渉が下関で起き、下関が没地（1867）でもあるためである。
 `@historian` は、萩と山口より下関が活動の拠点として妥当と判断した。
 
@@ -48,7 +48,7 @@ Wikidata の座標の参照元は日本語版ウィキペディアで、GeoNames
 
 ## `region`・`title`
 
-`region: 日本` は、第 6 回が上海への渡航を扱って区画が跨るので [ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の `region` の選び方の表の 2 行目に当て、人物の本拠の生地（萩）で決めた。
+`region: 日本` は、第 6 回が上海への渡航を扱って区画が跨るので [ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の `region` の選び方の表の 2 行目に当て、人物の本拠の生地（萩）で決めた。
 `@historian` は、この判断が ADR-20260907-series-vocabulary の本拠の基準に沿うと確認した。
 `title: 高杉晋作` に指摘は出なかった。
 

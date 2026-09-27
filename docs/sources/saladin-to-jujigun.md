@@ -36,7 +36,7 @@
 二つの城壁はほぼ同じ範囲を囲むとみられるが、12 世紀の城壁そのものの座標では確かめていない。
 Pleiades のエルサレムのページには `@historian` がアクセスできなかった。
 
-[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で決めた。
+[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で決めた。
 種別が `人物` と `出来事` の二つなので、`title` の中心になる語（`A と B` なら A）のサラディンが当たる `人物` に絞り、活動の拠点に代表点を置いた。
 
 サラディンの拠点は、エジプトの宰相としてのカイロと、1174 年以降の本拠のダマスクスに分かれる。
@@ -83,7 +83,7 @@ main へ入った #171 の決定で、拠点の期間でなく事績の中心で
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange`・`region`・ダマスクスを本拠にした経緯の裏どり |
 | [`@historian` 2 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5634810498) | エルサレムの座標と 1187 年の奪還の経緯 |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171) | 拠点や舞台が複数あるときに、番組が扱う主な事績が起きた地を中心の場所とする規則 |
 | [#176（見直し）](https://github.com/ta-tabox/coten-atlas/issues/176) | 採用した仮決定を人間が見直す論点と案 |

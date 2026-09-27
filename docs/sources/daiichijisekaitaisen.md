@@ -33,7 +33,7 @@
 `catalog/loci.geojson` の最初の値 `[5.388, 49.16]` は典拠から東へ約 370m ずれていたので、典拠の値を小数 3 桁に丸めた現在の値へ直した。
 `@historian` は格を「一次相当」と報告したが、[典拠の格の定義](README.md)で一次は対象と同時代の史料を指すので、Pleiades を二次、GeoNames を三次に当てた。
 
-出来事の舞台が一つの区画の中で複数あるときは、番組が扱う主な事の運びが起きた舞台を中心の場所とする（#171、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md)）。
+出来事の舞台が一つの区画の中で複数あるときは、番組が扱う主な事の運びが起きた舞台を中心の場所とする（#171、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md)）。
 戦争そのものを扱う第 9〜12 回は、塹壕戦（第 9 回）・東部戦線（第 10 回）・米国の参戦とロシア革命（第 11 回）・ドイツ帝国の末路（第 12 回）を扱う。
 代表点をヴェルダンに置いたのは、第 9 回が扱う塹壕戦の主な舞台が西部戦線で、その中で最も長く続いた戦闘の地だからである。
 `@historian` は、西部戦線がこの戦争の決定的な戦場だったこと（[IWM: Western Front](https://www.iwm.org.uk/history/first-world-war/western-front)、三次）と、ヴェルダンの戦い（1916 年 2 月 21 日〜12 月 18 日の 302 日間）がソンムの戦い（約 140 日間）より長いこと（[World History Encyclopedia: Battle of Verdun](https://www.worldhistory.org/article/2878/battle-of-verdun/)、三次）を確認した。
@@ -47,7 +47,7 @@
 
 ## `region`・`title`
 
-`region: ヨーロッパ` は、舞台がヨーロッパ・西アジア・アフリカ・東アジアに跨るので [ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の `region` の選び方の表の 2 行目に当て、出来事の本拠の主な舞台（西部戦線と東部戦線）で決めた。
+`region: ヨーロッパ` は、舞台がヨーロッパ・西アジア・アフリカ・東アジアに跨るので [ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の `region` の選び方の表の 2 行目に当て、出来事の本拠の主な舞台（西部戦線と東部戦線）で決めた。
 `@historian` は、西部戦線と東部戦線の主な舞台がヨーロッパに在ることを確認したが、ほかの区画の戦線との規模の比較は三次以上の典拠で定量的に確かめられなかった。
 
 `id` の `daiichijisekaitaisen` は、デジタル大辞泉と精選版日本国語大辞典に一語の見出し（だいいちじ‐せかいたいせん）があるので割らなかった。

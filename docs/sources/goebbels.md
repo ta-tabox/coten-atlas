@@ -32,7 +32,7 @@
 代表点をヴィルヘルム広場に置いたのは、ゲッベルスが率いた国民啓蒙宣伝省が、1933 年からヴィルヘルム広場 8-9 番地のプリンツ・カール宮殿を使っていたためである（[ベルリン州文化財データベース](https://denkmaldatenbank.berlin.de/daobj.php?obj_dok_nr=09080285)、二次）。
 
 活動の拠点の都市はベルリンだが、`berlin` を `hitler` も要求している。
-同じ地名を二つのシリーズが要求したときの決め方（#166、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md)）を上の順から当てると、次のとおりになる。
+同じ地名を二つのシリーズが要求したときの決め方（#166、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md)）を上の順から当てると、次のとおりになる。
 
 | 順 | 当てた結果 |
 |---|---|
@@ -55,7 +55,7 @@
 
 ## `region`・`title`
 
-`region: ヨーロッパ` は、扱う地理がドイツに収まるので [ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の `region` の選び方の表の 1 行目で決めた。
+`region: ヨーロッパ` は、扱う地理がドイツに収まるので [ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の `region` の選び方の表の 1 行目で決めた。
 `title: ゲッベルス` は、シリーズ名の「ショート ゲッベルス」からコーナー名を除いたものである。
 `title` に指摘は出なかった。
 

@@ -17,7 +17,7 @@
 | `end` | 1868 | 堺事件で土佐藩士が切腹した年（慶応 4 年 2 月 23 日） | [堺市: 土佐十一烈士墓](https://www.city.sakai.lg.jp/kanko/rekishi/bunkazai/bunkazai/shokai/bunya/shiseki/tosaresshihaka.html)（三次） | 無し |
 
 種別が `概念史` だけの位置なしのシリーズだが、年を書く。
-主題の切腹の慣行は終わっていて、両端を史実の年で言えるので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series](../adr/20260910-untimed-concept-series.md)）の表の 2 行目に当たる。
+主題の切腹の慣行は終わっていて、両端を史実の年で言えるので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series（時期なしの概念史のシリーズ）](../adr/20260910-untimed-concept-series.md)）の表の 2 行目に当たる。
 skill の手順 7 の表は、2 行目の例に「ショート 切腹」を挙げている。
 
 配信フィードの各回の説明によれば、第 1 回が日本最古の切腹とされる貴族の事例と時代による切腹の違い、第 2 回が作法と身体観、第 3 回が刑罰としての切腹と殉死、第 4 回が源義経の切腹からフランス人の前で行われた集団切腹までの事例を扱う。
@@ -29,7 +29,7 @@ skill の手順 7 の表は、2 行目の例に「ショート 切腹」を挙�
 ## 代表点
 
 位置なしである。
-`tags` の種別が `概念史` だけなので、[ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
+`tags` の種別が `概念史` だけなので、[ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
 ADR-20260907-series-vocabulary はこの表の 1 行目の例に「ショート 切腹」を挙げている。
 他の候補は挙がっていない。
 

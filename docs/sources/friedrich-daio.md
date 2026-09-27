@@ -26,7 +26,7 @@
 | 典拠 | `@historian` が Wikidata と Wikipedia の座標で照合した（照合した項目の URL は報告に無い） |
 | 典拠の格 | 三次 |
 
-種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 サンスーシ宮殿を建てて治世の大半を過ごした地なので、ポツダムにした。
 `@historian` によれば、Britannica はポツダムを没地とも記す。
 

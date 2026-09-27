@@ -29,7 +29,7 @@
 最初に書いた座標は `[124.83, 41.66]` で、`@historian` が典拠の値から約 5km 南西へずれていると指摘したので、典拠の値へ直した。
 GeoNames にはヘトゥアラの独立した収録が確認できず、Wikipedia と Wikidata の座標の一致を典拠にした。
 
-種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 都が時期によって移ったので、ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、番組が扱う主な事績が起きた地を中心の場所とした。
 各回の第 2〜3 回が扱う女真族の統一と後金の建国は、ヌルハチが 1603 年に城を築いて本拠を置き、1616 年に後金を建てたヘトゥアラで起きたので、ここにした。
 `@historian` は、この選び方自体は妥当だと返した。

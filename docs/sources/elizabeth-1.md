@@ -26,7 +26,7 @@
 | 典拠 | `@historian` が Wikidata と Wikipedia の座標で照合した（照合した項目の URL は報告に無い） |
 | 典拠の格 | 三次 |
 
-種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 エリザベス1世の活動の拠点はロンドンで、宮廷はテューダー朝の主な王宮のホワイトホール宮殿に置かれた。
 
 並行して進んでいる #104（19 世紀）の PR #165 が、`marx-engels`（マルクス・エンゲルス）の代表点に事物の `id` `london` を使っている。

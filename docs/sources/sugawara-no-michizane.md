@@ -30,7 +30,7 @@
 
 最初に書いた座標は `[135.75, 35.01]` で、`@historian` が道真の仕えた朝廷そのものの大内裏の座標から約 800m 離れていると指摘したので、大内裏の座標へ直した。
 
-種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 官僚として仕えた朝廷の都の平安京にした。
 `@historian` によれば、道真は 845 年の生年から 901 年の左遷まで約 56 年間を都で過ごし、大宰府での期間は約 2 年にとどまる（[太宰府市: 文化財](https://www.city.dazaifu.lg.jp/site/bunkazai/34082.html)、参考程度）。
 
@@ -69,7 +69,7 @@ ADR-20260911-series-vocabulary-tiebreaks の決定（#166）により、同じ�
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange`・`region`・代表点の選び方の裏どり、座標のずれの指摘と典拠 |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補、平安京を紫式部と取り合った判断 |
 | [#166 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/166) | 同じ地名を二つのシリーズが要求したときに、どちらが具体的な地点名へ移るかの規則 |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う年代と舞台 |

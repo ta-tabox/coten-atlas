@@ -30,7 +30,7 @@
 `@historian` は格を参考程度と報告したが、[典拠の格の定義](README.md)で地名辞典の値を持つデータベースは三次に当たるので、三次にした。
 現在の値は典拠の値から約 1.5km 以内に在る。
 
-出来事の舞台が一つの区画の中で複数あるときは、番組が扱う主な事の運びが起きた舞台を中心の場所とする（#171、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md)）。
+出来事の舞台が一つの区画の中で複数あるときは、番組が扱う主な事の運びが起きた舞台を中心の場所とする（#171、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md)）。
 戦争そのものを扱う第 9〜15 回の舞台は、旅順（第 10・12・13 回）・奉天（第 14 回）・日本海（第 15 回）である。
 代表点を旅順に置いたのは、主な事の運びのうち最も多くの回が割かれた旅順の攻防の舞台だからである。
 `@historian` は、規模で見れば奉天会戦（1905 年 2〜3 月。日本側 25 万・ロシア側 32 万、死傷者は合わせて 10 万を超える）が日露戦争で最大の陸戦で、旅順の攻囲戦を上回ると報告した（[コトバンク: 奉天会戦](https://kotobank.jp/word/%E5%A5%89%E5%A4%A9%E4%BC%9A%E6%88%A6-132341)、[JACAR](https://www.jacar.go.jp/nichiro2/sensoushi/rikujou09_detail.html)、どちらも三次）。
@@ -43,7 +43,7 @@
 | 対馬沖（第 15 回の日本海海戦） | 海の上に点が立ち、陸の主な舞台から離れる |
 
 事物の `id` は `port-arthur` である。
-最初の版は、[ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の事物の `id` の表の「中国の地名は声調記号を付けないピンインで書く」を当てて `lushun` にしていた。
+最初の版は、[ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の事物の `id` の表の「中国の地名は声調記号を付けないピンインで書く」を当てて `lushun` にしていた。
 `@historian` は、日露戦争を扱う英語の文献が当時も現在も一貫して Port Arthur と書くと報告した。
 Rotem Kowner の *Historical Dictionary of the Russo-Japanese War*（2006）は見出し語を Port Arthur とし、Lüshun を括弧内の転写形として併記するだけで、Britannica の項目名も [Battle of Port Arthur](https://www.britannica.com/event/Battle-of-Port-Arthur) である。
 代表点に選んだ時代の地点が複数の名を持つときは、現在の英語の文献がその時代のその地点を指すときに通用する名を使い、中国の地名にもこの慣用を先に当てると、#170 で決まった（ADR-20260911-series-vocabulary-tiebreaks）。

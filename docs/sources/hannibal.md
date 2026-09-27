@@ -35,7 +35,7 @@
 
 ## `region`・`title`
 
-`region: アフリカ` はカルタゴ（チュニジア）が [ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の継ぎ目表「北アフリカ（エジプトを含む）→ アフリカ」に明記された区画そのものに当たる。
+`region: アフリカ` はカルタゴ（チュニジア）が [ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の継ぎ目表「北アフリカ（エジプトを含む）→ アフリカ」に明記された区画そのものに当たる。
 `title: ハンニバル` に指摘は出なかった。
 
 ## 仮決定と論点

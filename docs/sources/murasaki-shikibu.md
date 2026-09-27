@@ -35,7 +35,7 @@
 
 現在の座標は、跡地の所在の住所から Claude が置いた概算で、`@historian` は住所の範囲に収まるかを権威のあるデータベースで確かめられなかった。
 
-種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 紫式部の活動の拠点は平安京で、平安京の中では中宮彰子に仕えた居所が土御門殿と一条院に分かれる。
 
 ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、拠点が複数あるときは、番組が扱う主な事績が起きた地を中心の場所とする。
@@ -95,7 +95,7 @@ ADR-20260911-series-vocabulary-tiebreaks の決定（#166）の同じ地名の�
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | 生没年の諸説・`region` の裏どり、土御門殿と一条院の時系列 |
 | [`@historian` 2 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5634810498) | 一条院跡の所在・英語の文献の名。座標は確かめられなかった |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補、平安京を道真と取り合った判断 |
 | [#166 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/166) | 同じ地名を二つのシリーズが要求したときに、どちらが具体的な地点名へ移るかの規則 |
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171) | 拠点や舞台が複数あるときに、番組が扱う主な事績が起きた地を中心の場所とする規則 |

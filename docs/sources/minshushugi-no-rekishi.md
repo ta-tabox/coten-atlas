@@ -12,7 +12,7 @@
 ## `timeRange`
 
 `"untimed"`（時期なし）である。
-主題の民主主義は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series](../adr/20260910-untimed-concept-series.md)）の表の 3 行目に当たる。
+主題の民主主義は現在まで続いていて終わりを史実の年で言えないので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series（時期なしの概念史のシリーズ）](../adr/20260910-untimed-concept-series.md)）の表の 3 行目に当たる。
 
 配信フィードの各回の説明によれば、第 1 回がギリシア以前の民主主義の起源とダレイオスの逸話、第 2 回がアテナイの民主制、第 3 回がローマとイタリアの共和制、第 4 回がイギリスの議会制、第 5〜7 回がホッブズ・ロック・ルソーの社会契約説、第 8 回が革命後のフランス、第 9 回がワイマール共和国、第 10 回がアメリカ、第 11 回がイギリスと日本、第 12 回が現代の課題を扱う。
 
@@ -27,7 +27,7 @@
 ## 代表点
 
 位置なしである。
-`tags` の種別が `概念史` だけなので、[ADR-20260907-series-vocabulary](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
+`tags` の種別が `概念史` だけなので、[ADR-20260907-series-vocabulary（手で書く欄の語彙）](../adr/20260907-series-vocabulary.md) の「代表点と `kind` の選び方」の表の 1 行目に当たる。
 他の候補は挙がっていない。
 
 ## `region`・`title`
@@ -39,7 +39,7 @@
 `title: 民主主義の歴史` に指摘は出なかった。
 
 `id` の `minshushugi` は「民主主義」を割らずに書いた。
-[コトバンク](https://kotobank.jp/word/民主主義)でデジタル大辞泉と精選版日本国語大辞典の両方に一語の見出し（みんしゅ‐しゅぎ）があり、[ADR-20260911-series-vocabulary-tiebreaks](../adr/20260911-series-vocabulary-tiebreaks.md) の `id` の表が、二つの辞書のどちらかに一語で載る語を割らないと決めているためである。
+[コトバンク](https://kotobank.jp/word/民主主義)でデジタル大辞泉と精選版日本国語大辞典の両方に一語の見出し（みんしゅ‐しゅぎ）があり、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の `id` の表が、二つの辞書のどちらかに一語で載る語を割らないと決めているためである。
 
 ## 仮決定と論点
 
