@@ -42,13 +42,28 @@
 - **コードを書く前に** skill `coding-standards`（判断の例）と `karpathy-guidelines`（過剰実装と巻き込み変更の抑制）を開く
   実装・テスト追加・バグ修正・レビュー・リファクタのすべてが対象
 - 隣接ファイルを読まずに新規ファイルを書くときは、先に `.claude/rules/coding.md` と該当言語の `languages/<lang>.md`（画面へ触るなら `design.md` も）を Read する
-- 書き終えたら、PR の前に skill `coding-standards`「レビューで繰り返し指摘される型」の表を、変更した各コメント・名前・ファイルへ当てる
+- 書き終えたら、PR の前に skill `review-checklist` の表を、変更した各コメント・名前・ファイルへ当てる
 - `karpathy-guidelines` は外部由来（https://github.com/multica-ai/andrej-karpathy-skills の 2c60614、MIT）で、リモートの空のコンテナでも初回から効くよう本体を `.claude/skills/` へ同梱してある
   上流の更新は手で取り込む
 
 ## 配布物の追随
 
-`.claude/` と `.github/workflows/` の一部、`web/tests/guard-hooks.test.ts`、`web/scripts/lint-comments.ts` と `web/tests/lint-comments.test.ts`、`scripts/lint-vocabulary.sh` と `web/tests/lint-vocabulary.test.ts` と `.githooks/` のフック、`.claude/rules/` は共有の雛形からの写しである。
+次のファイルは共有の雛形からの写しである。
+
+| 写し | 雛形との関係 |
+|---|---|
+| `.claude/rules/writing.md`・`coding.md`・`languages/*.md` | バイト一致 |
+| `.claude/skills/coding-standards/`・`review-checklist/` | バイト一致 |
+| `web/scripts/lint-comments.ts`・`web/tests/lint-comments.test.ts` | バイト一致 |
+| `scripts/lint-vocabulary.sh`・`web/tests/lint-vocabulary.test.ts`・`.vocabulary/banned.tsv` | バイト一致 |
+| `.githooks/` のフック | バイト一致 |
+| `.claude/hooks/guard-*.sh`・`web/tests/guard-hooks.test.ts` | バイト一致 |
+| `.claude/rules/design.md`・`layers.md` | 骨格をこのリポジトリが埋める |
+| `.claude/settings.json`・`.github/workflows/` の一部 | 雛形の埋める箇所と実行環境の差を除いて一致 |
+
+`.claude/rules/*.project.md` と `.vocabulary/allow` は写しでなく、このリポジトリの固有分である。
+写しからの逸脱と追加はそこへ書き、写しの本文は書き換えない。
+規約と skill の写しの差は、雛形の置き場を渡した `scripts/diff-coding-standards.sh` が報告する。
 
 - **追随は、このリポジトリの開発を再開するときにまとめてやる**
   都度の追随は打ち切ってあるので、放っておけば雛形との差は開き続ける
