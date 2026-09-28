@@ -29,10 +29,10 @@
 | 典拠 | [Wikidata Q460367](https://www.wikidata.org/wiki/Q460367) |
 | 典拠の格 | 三次 |
 
-種別は `人物` だけなので、[ADR-0041](../adr/0041-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 
 鑑真の拠点は、生地で渡日まで約 30 年の拠点だった揚州と、来日後の奈良に分かれる。
-ADR-0041 の決定（#171）により、拠点が複数あるときは、番組が扱う主な事績が起きた地を中心の場所とする。
+ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、拠点が複数あるときは、番組が扱う主な事績が起きた地を中心の場所とする。
 各回は鑑真が何のために日本へ来たかを問いに立て、第 7〜8 回が来日後の授戒と日本の仏教に遺したものを扱う。
 そのため、戒律を日本に伝えた奈良を事績の中心とし、座標は授戒を行った東大寺に置いた。
 
@@ -51,14 +51,14 @@ main へ入った #171 の決定で、拠点の期間でなく事績の中心で
 
 ## `region`・`title`
 
-`region: 中国` は、渡日して日本に跨るので、ADR-0041 の `region` の選び方の表の 2 行目で本拠の区画にした。
+`region: 中国` は、渡日して日本に跨るので、ADR-20260911-series-vocabulary-tiebreaks の `region` の選び方の表の 2 行目で本拠の区画にした。
 種別 `人物` の本拠は生地で、生地の揚州は中国に在る。
 `region` は代表点と独立に決まるので、代表点を奈良へ移しても `中国` のまま変わらない。
 `@historian` は妥当だと確認した。
 `title: 鑑真` はシリーズ名「ショート 鑑真」からコーナー名を除いた値で、指摘は出なかった。
 `id` の `ganjin` は、「鑑真」の読みをヘボン式で書いた。
 
-事物の `id` の `nara` は、ADR-0041 の決定（#170）により、現在の英語の文献が鑑真の来日後の拠点を指すときの名で書いた。
+事物の `id` の `nara` は、ADR-20260911-series-vocabulary-tiebreaks の決定（#170）により、現在の英語の文献が鑑真の来日後の拠点を指すときの名で書いた。
 `@historian` によれば、Britannica などの英語の文献は Nara と書き、Heijō-kyō を使っていない。
 
 ## 仮決定と論点
@@ -78,7 +78,7 @@ main へ入った #171 の決定で、拠点の期間でなく事績の中心で
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange`・`region`・揚州を拠点にした期間の裏どり |
 | [`@historian` 2 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5634810498) | 東大寺の座標・授戒と唐招提寺の創建の年・英語の文献の名 |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-0034 の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
 | [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171) | 拠点や舞台が複数あるときに、番組が扱う主な事績が起きた地を中心の場所とする規則 |
 | [#170 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/170) | 地点が複数の名を持つときに、現在の英語の文献の名を使う規則 |

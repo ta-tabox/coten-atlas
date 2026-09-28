@@ -56,7 +56,7 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 - **赤のままコミットしない。** 回し方は「`pnpm check` → 緑ならコミット」
 - 口を増やさない。切り分けのために個別スクリプトを単体で叩くのは構わないが、
   「これが緑なら閉じてよい」と言えるのは `pnpm check` だけ
-- 機械判定を `pnpm check` の一本にする理由は [ADR-0045](adr/0045-pnpm-check-current-form.md) が持つ
+- 機械判定を `pnpm check` の一本にする理由は [ADR-20260914-pnpm-check-current-form（判定を `pnpm check` の一本にする）](adr/20260914-pnpm-check-current-form.md) が持つ
 - CI も同じ一本を回す（`.github/workflows/check.yml`）
 
 ランタイムの版は `mise.toml` の `[tools]` が固定する（node / pnpm）。
@@ -69,7 +69,7 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 
 **到達テストは、`deploy.yml` の deploy ジョブが配信の直後にページを一度取得し、HTML の `src`・`href` 属性に書かれたパスへ到達できるかを検証する。**
 ブラウザは立てない。
-検証の範囲と L4 との分担を決めた理由は [ADR-0036](adr/0036-post-deploy-reachability.md) が持つ。
+検証の範囲と L4 との分担を決めた理由は [ADR-20260907-post-deploy-reachability（配信の直後の到達テスト）](adr/20260907-post-deploy-reachability.md) が持つ。
 
 **到達テストは、close してよいかの判定に使わない。**
 走るのが main へ入った後なので、失敗しても close の判定には間に合わない。
@@ -110,7 +110,7 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
 ### 歴史の裏どりを呼ぶ
 
 `catalog/series.json` の `timeRange` と `catalog/loci.geojson` の座標は人手で決める値で、生没年が 50 年ずれていても `pnpm check` は緑になる。
-裏どりは三本目のワークフロー（`claude-history-review.yml`）が担い、コードのレビューとは別の起動語で呼ぶ（分ける理由は [ADR-0035](adr/0035-history-review-lane.md)）。
+裏どりは三本目のワークフロー（`claude-history-review.yml`）が担い、コードのレビューとは別の起動語で呼ぶ（分ける理由は [ADR-20260909-history-review-lane（歴史の裏どりのワークフロー）](adr/20260909-history-review-lane.md)）。
 
 - `gh pr comment <PR番号> --body "@historian この 6 件の timeRange と代表点を裏どりして"` で呼ぶ
   issue コメントでも同じように起動するので、`catalog/` へ載せる前に対象表へ対して呼べる
@@ -224,5 +224,5 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
   到達テストはこの規則の対象外とする
   検証の対象が配信された実物そのものなので、配信された実物へ到達できないことは外部の都合ではなく、この検査が検出したい事故そのものに当たる
 - **`claude.yml` の `on:` を絞らない**
-  起動の絞りは job 側の `if:` の一本で、`on:` を絞らない理由は [ADR-0010](adr/0010-gh-review-trigger-narrowing.md) が持つ
+  起動の絞りは job 側の `if:` の一本で、`on:` を絞らない理由は [ADR-20260825-gh-review-trigger-narrowing（gh-review の起動の絞り方）](adr/20260825-gh-review-trigger-narrowing.md) が持つ
   run 一覧に `skipped` が並ぶのは正常なので、異常と読んで調べ直さない

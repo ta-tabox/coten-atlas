@@ -26,11 +26,11 @@
 | 典拠 | `@historian` が Wikidata と Wikipedia の座標で照合した（照合した項目の URL は報告に無い） |
 | 典拠の格 | 三次 |
 
-種別は `人物` だけなので、[ADR-0041](../adr/0041-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
 エリザベス1世の活動の拠点はロンドンで、宮廷はテューダー朝の主な王宮のホワイトホール宮殿に置かれた。
 
 並行して進んでいる #104（19 世紀）の PR #165 が、`marx-engels`（マルクス・エンゲルス）の代表点に事物の `id` `london` を使っている。
-ADR-0041 の決定（#166）の同じ地名の表では、二件とも種別が `人物` なので順 1 に当たらず、事績の中心を都市の中の一か所に絞れるかで決める順 2 に当たる。
+ADR-20260911-series-vocabulary-tiebreaks の決定（#166）の同じ地名の表では、二件とも種別が `人物` なので順 1 に当たらず、事績の中心を都市の中の一か所に絞れるかで決める順 2 に当たる。
 エリザベス1世の事績の中心は宮廷を置いたホワイトホール宮殿に絞れる。
 マルクスのロンドンの住まいは 1850 年から没年までに 3 か所以上移り、一か所に絞れない（PR #173 の `@historian` による。[English Heritage: Karl Marx](https://www.english-heritage.org.uk/visit/inspire-me/blog/blog-posts/karl-marx-london-connections/)、三次）。
 そのため、このシリーズが具体的な地点名のホワイトホール宮殿へ移り、`marx-engels` が `london` を使う。
@@ -44,10 +44,10 @@ PR の最初の版は、PR #165 が先に `london` を使っていたことを�
 
 ## `region`・`title`
 
-`region: ヨーロッパ` は、イングランドが戦ったスペインと、関わったネーデルラント・スコットランドがヨーロッパに収まるので、ADR-0041 の `region` の選び方の表の 1 行目で決めた。
+`region: ヨーロッパ` は、イングランドが戦ったスペインと、関わったネーデルラント・スコットランドがヨーロッパに収まるので、ADR-20260911-series-vocabulary-tiebreaks の `region` の選び方の表の 1 行目で決めた。
 `@historian` は、生没年が一致し、ホワイトホール宮殿がテューダー朝の主な王宮であることを確認した。
 `title: エリザベス1世` はシリーズ名のままで、指摘は出なかった。
-`id` の `elizabeth-1` は、ADR-0041 の `id` の表が序数の例に挙げている値である。
+`id` の `elizabeth-1` は、ADR-20260911-series-vocabulary-tiebreaks の `id` の表が序数の例に挙げている値である。
 
 ## 仮決定と論点
 

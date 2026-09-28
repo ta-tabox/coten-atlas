@@ -11,7 +11,7 @@
  * ポインタ（マウス・指・ペン）の操作はトラックの要素のポインタのイベントで受け、`<input type="range">` はキーボードの操作と読み上げだけを受ける。
  * iOS の Safari では `<input type="range">` のつまみの上から始めたスワイプで値が動かないので、ポインタの操作を `<input>` に任せない。
  *
- * MapLibre の DOM へ入れない理由は docs/adr/0022-map-dom-boundary.md が正。
+ * MapLibre の DOM へ入れない理由は docs/adr/20260831-map-dom-boundary.md が正。
  */
 
 import { type PointerEvent as ReactPointerEvent, useRef } from "react";

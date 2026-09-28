@@ -6,7 +6,7 @@
  * 取得も絞り込みもしない。
  * 表示するのは props で受け取った `Series` と `EpisodesState` だけで、絞り込みは `@/lib/episodes`、年の整形は `@/lib/format` が担当する。
  *
- * MapLibre の Popup を使わない理由は docs/adr/0022-map-dom-boundary.md が正。
+ * MapLibre の Popup を使わない理由は docs/adr/20260831-map-dom-boundary.md が正。
  */
 
 import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";

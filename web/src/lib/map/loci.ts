@@ -4,7 +4,7 @@
  * 代表点の `timeRange` は `TIME_RANGE_OF_SERIES` のままなので、`seriesId` でシリーズを取得して年を写す。
  * 写すのは properties だけで、geometry は触らない。
  * `catalog/` の形は動かさない。
- * 動かさない理由は docs/adr/0024-map-feature-carries-key-only.md が持つ。
+ * 動かさない理由は docs/adr/20260901-map-feature-carries-key-only.md が持つ。
  *
  * 年は `timeStart` / `timeEnd` の 2 欄へ潰して持つ。
  * MapLibre は GeoJSON source の properties から string と数値しか返さないので、年を配列やオブジェクトで持つと地図のイベントから読み戻せない。

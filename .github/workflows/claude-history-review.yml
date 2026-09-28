@@ -3,7 +3,7 @@ name: Claude History Review
 # 歴史上の事実の裏どりを担う三本目。
 # 共有の雛形（fermentary の tools/gh-review/）はワークフローを二本しか配らないので、このファイルはこのリポジトリ固有である。
 # 雛形からの逸脱ではなく、雛形が扱っていない領域の追加に当たる。
-# 別レーンに分けた理由・Web 検索を許した理由・ランタイムを入れない理由は docs/adr/0035-history-review-lane.md が持つ。
+# 別レーンに分けた理由・Web 検索を許した理由・ランタイムを入れない理由は docs/adr/20260909-history-review-lane.md が持つ。
 
 # issues トリガを持たないのは claude.yml と同じ理由。
 # issue 本文は仕様書で、そこに手順として起動語を書くと言及と起動を文字列で区別できない。

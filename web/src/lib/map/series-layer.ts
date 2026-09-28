@@ -6,7 +6,7 @@
  *
  * 不透明度は、era スライダーの現在窓から求めた事物ごとの濃さだけで決まり、シリーズの属性で濃さを変えない。
  * 事物ごとの濃さは `@/lib/era/window` の関数で求めて式へ数値で埋め込み、同じ計算を MapLibre の式で書き直さない。
- * 書き直さない理由は docs/adr/0043-era-fade-window-only.md が持つ。
+ * 書き直さない理由は docs/adr/20260911-era-fade-window-only.md が持つ。
  *
  * 色は MapLibre のスタイル式が読むので、Tailwind のトークンでなく生の値を置く。
  * 地図の中で閉じる指定であって、overlay の見た目とは別物である。

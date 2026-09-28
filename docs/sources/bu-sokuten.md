@@ -33,10 +33,10 @@
 最初に書いた座標は `[112.44, 34.67]` で、`@historian` が隋唐洛陽城遺跡と現在の洛陽市（Wikidata Q187136、112.42447, 34.65867）のどちらからも 1.5〜1.7km 離れた粗い値だと指摘したので、遺跡の座標へ直した。
 Pleiades と GeoNames では確かめられていない。
 
-種別は `人物` だけなので、[ADR-0041](../adr/0041-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
-ADR-0041 は人物の活動の拠点に「治めた国の都」を含めるので、武則天が皇帝として治めた周（690〜705）の都の洛陽にした。
+種別は `人物` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、活動の拠点に代表点を置いた。
+ADR-20260911-series-vocabulary-tiebreaks は人物の活動の拠点に「治めた国の都」を含めるので、武則天が皇帝として治めた周（690〜705）の都の洛陽にした。
 `@historian` は、周の時代に洛陽が事実上の国都だったことを複数の典拠（コトバンク: 則天武后・[Britannica: Wuhou](https://www.britannica.com/biography/Wuhou)、どちらも三次）が支持し、皇帝の在位期に限れば洛陽が明確に妥当だと返した。
-拠点が複数あるので、ADR-0041 の決定（#171）により、番組が扱う主な事績が起きた地を中心の場所とし、治めた国の都と本人が暮らして執務した地が別なら暮らして執務した地を先に見た。
+拠点が複数あるので、ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、番組が扱う主な事績が起きた地を中心の場所とし、治めた国の都と本人が暮らして執務した地が別なら暮らして執務した地を先に見た。
 皇帝として治めた周の都と、皇帝として暮らして執務した地はどちらも洛陽で、各回の第 8〜10 回が垂簾政治・周の建国・晩年を扱うので、洛陽を事績の中心とした。
 
 | 候補 | 置くと何が起きるか |
@@ -51,13 +51,13 @@ PR 本文の最初の版は、「神都」を都としての呼び名とみな�
 そのため「神都は称号で、都市の名は変わっていない」という理由は当時の公称の水準では正確でない。
 `@historian` は、同じ都市を指す通称として `luoyang` を使うことは許容の範囲だとしたうえで、`luoyang` と `shendu` のどちらにするかは規則の当て方の判断だと返した。
 
-その後、ADR-0041 の決定（#170）により、代表点に選んだ時代の地点が複数の名を持つときは、現在の英語の文献がその時代のその地点を指すときに通用する名を使うことになった。
+その後、ADR-20260911-series-vocabulary-tiebreaks の決定（#170）により、代表点に選んだ時代の地点が複数の名を持つときは、現在の英語の文献がその時代のその地点を指すときに通用する名を使うことになった。
 PR #173 の `@historian` は、現在の英語の文献が武則天の周の都を Luoyang と書き、Shendu は当時の正式な改称として言及するだけだと返した（[Wikipedia: Wu Zetian](https://en.wikipedia.org/wiki/Wu_Zetian)・[Encyclopedia.com: Wu Zetian](https://www.encyclopedia.com/women/encyclopedias-almanacs-transcripts-and-maps/wu-zetian-624-705)、参考程度から三次）。
 そのため `luoyang` のまま決着させた。
 
 ## `region`・`title`
 
-`region: 中国` は、扱う地理が中国に収まるので、ADR-0041 の `region` の選び方の表の 1 行目で決めた。
+`region: 中国` は、扱う地理が中国に収まるので、ADR-20260911-series-vocabulary-tiebreaks の `region` の選び方の表の 1 行目で決めた。
 `@historian` は、異論は見つからず妥当だと確認した。
 `title: 武則天` はシリーズ名のままで、指摘は出なかった。
 `id` の `bu-sokuten` は、姓の「武」と「則天」の間で割った（現物の人名 `yoshida-shoin`・`shokatsu-komei` が姓と名を割っている）。
@@ -82,7 +82,7 @@ PR #173 の `@historian` は、現在の英語の文献が武則天の周の都�
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange` の並立説・座標のずれの指摘と典拠・洛陽の改名の典拠 |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-0034 の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
 | [#170 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/170) | 地点が複数の名を持つときに、現在の英語の文献の名を使う規則 |
 | [PR #173 の `@historian`（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/173#issuecomment-5630160476) | 現在の英語の文献が周の都を指す名 |

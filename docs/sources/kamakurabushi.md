@@ -33,7 +33,7 @@
 | 典拠 | [Wikidata Q701403](https://www.wikidata.org/wiki/Q701403) |
 | 典拠の格 | 参考程度 |
 
-種別は `集団` だけなので、[ADR-0041](../adr/0041-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、本拠の都市に代表点を置いた。
+種別は `集団` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、本拠の都市に代表点を置いた。
 鎌倉幕府の所在地の鎌倉にした。
 
 `@historian` は、座標が鎌倉市の中心（139.547222, 35.319167）でも政庁の大蔵御所跡でもなく、源氏の氏神を祀る鶴岡八幡宮を指していると指摘した。
@@ -48,14 +48,14 @@
 
 ## `region`・`title`
 
-`region: 日本` は、扱う地理が日本に収まるので、ADR-0041 の `region` の選び方の表の 1 行目で決めた。
+`region: 日本` は、扱う地理が日本に収まるので、ADR-20260911-series-vocabulary-tiebreaks の `region` の選び方の表の 1 行目で決めた。
 `@historian` は妥当だと確認した。
 `title: 鎌倉武士` はシリーズ名のままで、指摘は出なかった。
 
 `id` の `kamakurabushi` は、精選版日本国語大辞典に「鎌倉武士」の一語の見出し（かまくら‐ぶし）があるので割らなかった。
 デジタル大辞泉には見出しが無い。
-ADR-0041 の決定（#172）により、二つの辞書のどちらか一方に一語の見出しがあれば割らない。
-自動レビューは、ADR-0034 が辞書に一語で載る語を割らない例外を認めており、PR 本文が見出しの割れを開示しているので、指摘として挙げないと返した。
+ADR-20260911-series-vocabulary-tiebreaks の決定（#172）により、二つの辞書のどちらか一方に一語の見出しがあれば割らない。
+自動レビューは、ADR-20260907-series-vocabulary（手で書く欄の語彙）が辞書に一語で載る語を割らない例外を認めており、PR 本文が見出しの割れを開示しているので、指摘として挙げないと返した。
 
 ## 仮決定と論点
 
@@ -73,7 +73,7 @@ ADR-0041 の決定（#172）により、二つの辞書のどちらか一方に�
 | 出所 | 何を持つか |
 |---|---|
 | [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange` の両端・幕府の成立年の諸説・`region` の裏どり、座標が指す物の指摘 |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id` の区切りと ADR-0034 の規則の突き合わせ |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id` の区切りと ADR-20260907-series-vocabulary の規則の突き合わせ |
 | [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補、`id` の辞書の見出し |
 | [#172 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/172) | 二つの辞書のどちらか一方に一語の見出しがあれば割らない規則 |
 | [#178（見直し）](https://github.com/ta-tabox/coten-atlas/issues/178) | 採用した仮決定を人間が見直す論点と案 |

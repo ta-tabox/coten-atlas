@@ -15,10 +15,10 @@ Creative Commons 表示 4.0 国際（CC BY 4.0）で提供する。
     著作物ではない。主張できるのは選択と配列の体系だけなので、
     まとめて CC BY と言い切ると過剰主張になる
   - シリーズ名・エピソードタイトル・配信リンク — 権利は制作元に帰属する
-    （docs/adr/0008-quote-titles-only.md）
+    （docs/adr/20260823-quote-titles-only.md）
 
 リポジトリのルートにある LICENSE（MIT）はコードにしか及ばない。
-決定と理由は docs/adr/0011-license.md が持つ。
+決定と理由は docs/adr/20260827-license.md が持つ。
 
 帰属表示の例:
 

@@ -1,0 +1,47 @@
+# 判定の口を `pnpm check` へ移す
+
+- **状態**: supersede 済み（→ 20260914-pnpm-check-current-form）
+- **決定日**: 2026-08-25
+- **関係する ADR**: 20260802-mise-run-check（これを supersede する）、20260714-nextjs-static-export（`next build` を含める理由）
+
+## 文脈
+
+20260802-mise-run-check は判定の口を `mise run check` 一本と定めた。
+一方、踏襲しているツールチェーンの規約は同じ表で
+「JS/TS 系の設定の置き場 = `package.json`」とも定めており、
+タスクだけを別ファイルへ出すと置き場が二つに割れる。
+
+また 20260802-mise-run-check の口は `next build` を含んでおらず、static export の失敗を拾えない。
+
+## 決定
+
+**`pnpm check`** = `tsc --noEmit` → `biome ci .` → `vitest run` → `next build`。並びは安いものから落とす（L0 型 → L1 静的 → L2 ユニット → L3 ビルド）。
+
+`mise.toml` は `[tools]` のみを持ちランタイム版管理に徹し、`run = "pnpm check"` の薄いラッパも置かない。
+
+## 理由
+
+issue の完了条件を一つのコマンドへ集約する。判定の口が複数あると、どれが緑なら閉じてよいかが毎回議論になる（決定日 2026-08-02）。**口を mise tasks から package.json の scripts へ移した（決定日 2026-08-25）**——踏襲しているツールチェーンの規約が JS/TS 系の設定の置き場を `package.json` と定めており、タスクだけ別ファイルへ出すと置き場が二つに割れる。`mise.toml` は `[tools]` のみを持ちランタイム版管理に徹し、`run = "pnpm check"` の薄いラッパも置かない（口が一本に見えて二本ある状態が、そもそも避けようとしたもの）。逸脱の記録は `CLAUDE.md`。**`next build` を含める**のは、static export がビルド時にしか壊れない失敗を持つため——判定の口が拾えないと PR は緑のまま公開が落ちる。
+
+## 帰結
+
+- 20260802-mise-run-check は supersede 済みになる（本文は残す）
+- 踏襲元の「タスクランナー = mise tasks」からの逸脱を明記する。記録の置き場は
+  当初 `CLAUDE.md`、2026-08-25 の五層化で `HARNESS.md`「判定の口」へ移した。
+  踏襲元の改定は別途諮ってある
+- `mise.toml` はランタイム版管理（node / pnpm の固定）だけを持つ
+- 波及先は package.json / mise.toml / CI 二本 / `.claude/settings.json` / `session-start.sh` / `CLAUDE.md` / PR・issue テンプレ
+
+## 覆る条件
+
+踏襲元が「タスクランナー = mise tasks」と「JS/TS の設定の置き場 = `package.json`」の
+衝突を別の向きで解いたとき（諮ってある改定の結論次第）。
+
+## 後日の事実（追記。上の本文は書き換えない）
+
+- **2026-08-26**: 諮ってあった踏襲元の改定が入り、「タスクランナー = その言語のマニフェスト」
+  が既定になった。**このリポジトリの選択は逸脱ではなくなった**——決定そのものは覆っていない（口は
+  `pnpm check` の一本のまま）ので、新しい ADR は起こさない。「帰結」が求めていた逸脱の記録は
+  役目を終え、`HARNESS.md`「判定の口」は逸脱ではない旨へ書き換えてある
+- **2026-08-25（#39 / PR #45）**: アプリ本体が `web/` へ移ったので、`pnpm check` を**打つ場所は
+  `web/` の中**になった。`mise.toml` はルートに残る

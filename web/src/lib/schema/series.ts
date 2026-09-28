@@ -26,7 +26,7 @@ export const ANCHOR_UNLOCATED = "unlocated";
 /**
  * 時期を持たないことを表す `timeRange` の値。
  * 置けるのは種別が `概念史` だけで位置なしのシリーズに限る。
- * 限る理由は docs/adr/0039-untimed-concept-series.md が持つ。
+ * 限る理由は docs/adr/20260910-untimed-concept-series.md が持つ。
  */
 export const TIME_RANGE_UNTIMED = "untimed";
 
