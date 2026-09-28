@@ -24,7 +24,7 @@ paths:
 
 - `fetch` を呼ぶのは `src/lib/episodes.ts` の `fetchEpisodes` と `scripts/sync-feed.ts` の `fetchFeed` だけにする
   ベースマップのタイルは MapLibre が取得し、このリポジトリのコードは `src/lib/map/config.ts` の URL を渡すだけにする
-- `node:fs` を import するのは `src/lib/catalog-dir.ts`・`scripts/`・`tests/` だけにする
+- `node:fs` を import してよいモジュールは biome が見る（`.claude/rules/languages/typescript.project.md`「機械が見ている分」）
   `"use client"` を付けたモジュールからは `node:fs` へ届かないので、`src/lib/catalog-dir.ts` を呼ぶのは Server Component（`src/app/page.tsx`）だけにする
 - `catalog/` のファイルは `import` で読まず、`node:fs` か、`public/` へ複製したものを `fetch` で読む
   `catalog/` は `tsconfig.json` の `include` の外にあって `resolveJsonModule` も `.geojson` に効かないので、読み方を二つに限れば `tsconfig.json` にも `vitest.config.ts` にも手当てが要らない
@@ -35,8 +35,8 @@ paths:
 - MapLibre が出す DOM は canvas のコンテナと attribution だけにし、`<Popup>` と built-in control（Navigation・Scale 等）を使わない
   地図の上に載せるものは React + Tailwind の overlay で書く
   理由は `docs/adr/20260831-map-dom-boundary.md` が持つ
-- `react-map-gl/maplibre` の部品を描くのは `src/components/map/MapCanvas.tsx` と `src/components/map/SeriesLayers.tsx` だけにする
-  `src/lib/map/` が `maplibre-gl` と `react-map-gl/maplibre` から import するのは型だけにする
+- `maplibre-gl`・`react-map-gl/maplibre` を import してよいモジュールは biome が見る（`.claude/rules/languages/typescript.project.md`「機械が見ている分」）
+  そのうち `src/lib/map/series-layer.ts` が import するのは型だけにする（値と型の区別は biome では見分けられない）
 
 ## 層と、import してよい相手
 
