@@ -377,7 +377,7 @@ catalog/
 ├── .claude/               # settings・hooks・同梱 skill・rules/（規範。共有の雛形からの写し）
 └── web/                   # アプリ本体。判定の口 `pnpm check` はこの中で打つ
     ├── CLAUDE.md          # 空殻（本文はルート）
-    ├── src/               # Next.js が束ねる範囲。`app/` の構造は App Router の規約
+    ├── src/               # Next.js が束ねる範囲。置き場は `.claude/rules/layers.md` が正（`app/` の構造は App Router の規約）
     ├── public/            # そのまま配信される静的ファイル。中身は生成物なので追跡しない
     ├── scripts/           # `web/` から走らせる補助スクリプト
     ├── tests/             # `src/` に併置しないテスト
