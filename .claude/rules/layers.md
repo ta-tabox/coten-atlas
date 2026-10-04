@@ -24,7 +24,7 @@ paths:
 
 - `fetch` を呼ぶのは `src/lib/episodes.ts` の `fetchEpisodes` と `scripts/sync-feed.ts` の `fetchFeed` だけにする
   ベースマップのタイルは MapLibre が取得し、このリポジトリのコードは `src/lib/map/config.ts` の URL を渡すだけにする
-- `node:fs` を import するのは `src/lib/catalog-dir.ts`・`scripts/`・`tests/` だけにする
+- `node:fs` を import してよいモジュールは biome が見る（`.claude/rules/languages/typescript.project.md`「機械が見ている分」）
   `"use client"` を付けたモジュールからは `node:fs` へ届かないので、`src/lib/catalog-dir.ts` を呼ぶのは Server Component（`src/app/page.tsx`）だけにする
 - `catalog/` のファイルは `import` で読まず、`node:fs` か、`public/` へ複製したものを `fetch` で読む
   `catalog/` は `tsconfig.json` の `include` の外にあって `resolveJsonModule` も `.geojson` に効かないので、読み方を二つに限れば `tsconfig.json` にも `vitest.config.ts` にも手当てが要らない
@@ -35,20 +35,24 @@ paths:
 - MapLibre が出す DOM は canvas のコンテナと attribution だけにし、`<Popup>` と built-in control（Navigation・Scale 等）を使わない
   地図の上に載せるものは React + Tailwind の overlay で書く
   理由は `docs/adr/20260831-map-dom-boundary.md` が持つ
-- `react-map-gl/maplibre` の部品を描くのは `src/components/map/MapCanvas.tsx` と `src/components/map/SeriesLayers.tsx` だけにする
-  `src/lib/map/` が `maplibre-gl` と `react-map-gl/maplibre` から import するのは型だけにする
+- `maplibre-gl`・`react-map-gl/maplibre` を import してよいモジュールは biome が見る（`.claude/rules/languages/typescript.project.md`「機械が見ている分」）
+  そのうち `src/lib/map/series-layer.ts` が import するのは型だけにする（値と型の区別は biome では見分けられない）
 
 ## 層と、import してよい相手
 
+置き場は `web/` からの相対の glob で書き、glob と違う層に入るファイルだけを名指す。
+一つのファイルが複数の行に当たるときは、名指した行を glob の行より優先する。
+`web/src` の追跡しているファイルがどれかの行の置き場に当たることは、`web/tests/layers.test.ts` が見る。
+
 | 層 | 置き場 | import してよい相手 | 持つもの |
 |---|---|---|---|
-| 境界の検証 | `src/lib/schema/` | `src/lib/schema/` の中だけ | zod のスキーマと、そこから導く型・`parse*` の関数・ファイルをまたぐ参照の判定 |
-| フィードの二段 | `src/lib/feed/parse.ts`（XML の表記を均す）・`src/lib/feed/schema.ts`（値の規則） | `src/lib/feed/` の中だけ | 均した記録と、検査済みの `FeedItem` |
-| 設定の定数 | `src/lib/base-path.ts`・`src/lib/map/config.ts` | `src/lib/base-path.ts` | 公開先のパスの接頭辞 `BASE_PATH`・ベースマップと worker の URL・地図の初期位置 |
-| 純粋な計算 | `src/lib/era/`・`src/lib/map/loci.ts`・`src/lib/map/series-layer.ts`・`src/lib/map/series-panel.ts`・`src/lib/map/tag-filter.ts`・`src/lib/feed/assign.ts`・`src/lib/format.ts` | 境界の検証の型と定数・`src/lib/feed/schema.ts` の型・同じ層 | 関数とテスト |
-| 境界 | `src/lib/catalog-dir.ts`・`src/lib/episodes.ts`・`scripts/json-file.ts` | 境界の検証・設定の定数 | `node:fs` か `fetch` による読み書きと、境界の検証の呼び出し |
-| 描画 | `src/components/<関心>/`（直下にはディレクトリだけを置く） | 純粋な計算・境界の検証の型と定数・設定の定数・`src/lib/episodes.ts`・同じ層 | React の部品 |
-| 配線 | `src/app/`・`scripts/sync-feed.ts` | `src/app/` は描画・`src/lib/catalog-dir.ts`・純粋な計算、`scripts/sync-feed.ts` はフィードの二段・純粋な計算・境界の検証・`scripts/json-file.ts` | 受け取り・呼び出し・出力 |
+| 境界の検証 | `src/lib/schema/**` | `src/lib/schema/**` の中だけ | zod のスキーマと、そこから導く型・`parse*` の関数・ファイルをまたぐ参照の判定 |
+| フィードの二段 | `src/lib/feed/parse.*`（XML の表記を均す）・`src/lib/feed/schema.*`（値の規則）・`src/lib/feed/__fixtures__/**` | `src/lib/feed/` の中だけ | 均した記録と、検査済みの `FeedItem` |
+| 設定の定数 | `src/lib/base-path.*`・`src/lib/map/config.ts` | `src/lib/base-path.*` | 公開先のパスの接頭辞 `BASE_PATH`・ベースマップと worker の URL・地図の初期位置 |
+| 純粋な計算 | `src/lib/era/**`・`src/lib/map/**`・`src/lib/feed/assign.*`・`src/lib/format.*` | 境界の検証の型と定数・`src/lib/feed/schema.ts` の型・同じ層 | 関数とテスト |
+| 境界 | `src/lib/catalog-dir.*`・`src/lib/episodes.*`・`scripts/json-file.ts` | 境界の検証・設定の定数 | `node:fs` か `fetch` による読み書きと、境界の検証の呼び出し |
+| 描画 | `src/components/**`（直下にはディレクトリだけを置く） | 純粋な計算・境界の検証の型と定数・設定の定数・`src/lib/episodes.*`・同じ層 | React の部品 |
+| 配線 | `src/app/**`・`scripts/sync-feed.ts` | `src/app/**` は描画・`src/lib/catalog-dir.*`・純粋な計算、`scripts/sync-feed.ts` はフィードの二段・純粋な計算・境界の検証・`scripts/json-file.ts` | 受け取り・呼び出し・出力 |
 | 検査の機構 | `scripts/smoke.ts`・`scripts/lint-comments.ts` | `scripts/smoke.ts` は設定の定数、`scripts/lint-comments.ts` はこのリポジトリのモジュールを import しない | 配信物を開いて観測を集める `observe` と、観測から違反を出す `violationsOf`・コメントの禁止語の検査 |
 
 ## 一つしか無い状態の正
