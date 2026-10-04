@@ -49,11 +49,11 @@
               },
               {
                 "group": ["node:fs", "node:fs/promises"],
-                "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/layers.md）"
+                "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
               },
               {
                 "group": ["maplibre-gl", "react-map-gl/maplibre"],
-                "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts だけ（.claude/rules/layers.md）"
+                "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
               }
             ]
           }
@@ -115,15 +115,15 @@
                   },
                   {
                     "group": ["node:fs", "node:fs/promises"],
-                    "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/layers.md）"
+                    "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["maplibre-gl", "react-map-gl/maplibre"],
-                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts だけ（.claude/rules/layers.md）"
+                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["@/app", "@/app/**"],
-                    "message": "依存は src/app から src/lib への一方向なので、src/lib から src/app を import しない（.claude/rules/layers.md）"
+                    "message": "依存は src/app から src/lib への一方向なので、src/lib から src/app を import しない（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   }
                 ]
               }
@@ -147,11 +147,11 @@
                   },
                   {
                     "group": ["maplibre-gl", "react-map-gl/maplibre"],
-                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts だけ（.claude/rules/layers.md）"
+                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["@/app", "@/app/**"],
-                    "message": "依存は src/app から src/lib への一方向なので、src/lib から src/app を import しない（.claude/rules/layers.md）"
+                    "message": "依存は src/app から src/lib への一方向なので、src/lib から src/app を import しない（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   }
                 ]
               }
@@ -179,11 +179,11 @@
                   },
                   {
                     "group": ["node:fs", "node:fs/promises"],
-                    "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/layers.md）"
+                    "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["@/app", "@/app/**"],
-                    "message": "依存は src/app から src/lib への一方向なので、src/lib から src/app を import しない（.claude/rules/layers.md）"
+                    "message": "依存は src/app から src/lib への一方向なので、src/lib から src/app を import しない（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   }
                 ]
               }
