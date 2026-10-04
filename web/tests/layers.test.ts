@@ -50,13 +50,23 @@ function listPlacementGlobs(markdown: string): string[] {
   );
 }
 
+/**
+ * `files` のうち、どの glob（`globs`）にも当たらないファイルを返す。
+ *
+ * 全件が当たれば空配列を返す。
+ */
+function listUnplacedFiles(files: string[], globs: string[]): string[] {
+  return files.filter(
+    (file) => !globs.some((glob) => path.matchesGlob(file, glob)),
+  );
+}
+
+const layersGlobs = listPlacementGlobs(
+  readFileSync(path.join(repositoryRoot, ".claude/rules/layers.md"), "utf8"),
+);
+
 describe("layers.md の置き場", () => {
   it("web/src の追跡しているファイルは、どれも層の表か境界の表の置き場に当たる", () => {
-    const layers = readFileSync(
-      path.join(repositoryRoot, ".claude/rules/layers.md"),
-      "utf8",
-    );
-    const globs = listPlacementGlobs(layers);
     const sourceFiles = spawnSync("git", ["ls-files"], {
       cwd: path.join(repositoryRoot, "web/src"),
       encoding: "utf8",
@@ -65,11 +75,22 @@ describe("layers.md の置き場", () => {
       .filter((file) => file !== "")
       .map((file) => `src/${file}`);
 
-    const unplaced = sourceFiles.filter(
-      (file) => !globs.some((glob) => path.matchesGlob(file, glob)),
+    expect(sourceFiles).not.toEqual([]);
+    expect(listUnplacedFiles(sourceFiles, layersGlobs)).toEqual([]);
+  });
+
+  it("どの glob にも当たらないファイルは、未配置として返る", () => {
+    const unplaced = listUnplacedFiles(
+      ["src/lib/schema/series.ts", "src/lib/nope.ts"],
+      ["src/lib/schema/**"],
     );
 
-    expect(sourceFiles).not.toEqual([]);
-    expect(unplaced).toEqual([]);
+    expect(unplaced).toEqual(["src/lib/nope.ts"]);
+  });
+
+  it("層の表の glob は、実在しないファイルまで置き場に含めるほど広くない", () => {
+    expect(listUnplacedFiles(["src/lib/nope.ts"], layersGlobs)).toEqual([
+      "src/lib/nope.ts",
+    ]);
   });
 });
