@@ -9,7 +9,6 @@ const ASSIGNMENT: Assignment = {
   item: {
     guid: GUID,
     title: "【66-10】五賢帝時代はじまる！【COTEN RADIO 帝政ローマ編10】",
-    link: "https://podcasters.spotify.com/pod/show/coten/episodes/66-10",
     pubDate: "2026-08-19T21:00:00.000Z",
     audioUrl: "https://anchor.fm/s/8c2088c/podcast/play/122753786/episode.mp3",
     season: 66,
