@@ -1,6 +1,6 @@
 # 配信リンクは RSS の `<link>` をそのまま使う
 
-- **状態**: 採用
+- **状態**: supersede 済み（→ 20261009-three-platform-episode-links）
 - **決定日**: 2026-08-23（#13）
 - **関係する ADR**: 20260714-two-layer-data（データの二層）
 
