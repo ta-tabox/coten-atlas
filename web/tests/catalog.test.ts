@@ -14,6 +14,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import {
+  toLociGeoJsonText,
+  toSeriesJsonText,
+} from "@/lib/catalog-edit/catalog-text";
 import { presentEndOf } from "@/lib/era/scale";
 import {
   CATALOG_VALIDATORS,
@@ -37,9 +41,14 @@ import { parseSeries } from "@/lib/schema/series";
  */
 const CATALOG_DIR = fileURLToPath(new URL("../../catalog", import.meta.url));
 
+/** `catalog/` 直下の 1 本を文字列のまま読む。 */
+function readCatalogText(fileName: string): string {
+  return fs.readFileSync(path.join(CATALOG_DIR, fileName), "utf8");
+}
+
 /** `catalog/` 直下の 1 本を読んで JSON へ直す。 */
 function readCatalogFile(fileName: string): unknown {
-  return JSON.parse(fs.readFileSync(path.join(CATALOG_DIR, fileName), "utf8"));
+  return JSON.parse(readCatalogText(fileName));
 }
 
 /**
@@ -115,6 +124,25 @@ describe("catalog/", () => {
       const loci = parseLoci(readCatalogFile("loci.geojson"));
 
       expect(lociOutsideSeriesTimeRange(loci, series)).toEqual([]);
+    },
+  );
+
+  // 管理画面の保存は全件を書き出し直すので、現物が書き出しの書式から外れていると、一件を直しただけの保存で差分が外れた箇所にも広がる。
+  it.skipIf(!fs.existsSync(seriesFile))(
+    "series.json を読んで書き出すと、元のファイルとバイト単位で一致する",
+    () => {
+      const series = parseSeries(readCatalogFile("series.json"));
+
+      expect(toSeriesJsonText(series)).toBe(readCatalogText("series.json"));
+    },
+  );
+
+  it.skipIf(!fs.existsSync(lociFile))(
+    "loci.geojson を読んで書き出すと、元のファイルとバイト単位で一致する",
+    () => {
+      const loci = parseLoci(readCatalogFile("loci.geojson"));
+
+      expect(toLociGeoJsonText(loci)).toBe(readCatalogText("loci.geojson"));
     },
   );
 
