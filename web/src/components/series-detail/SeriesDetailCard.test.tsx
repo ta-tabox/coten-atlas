@@ -3,9 +3,10 @@
  * props に何を渡すかを決める配線は `MapCanvas.test.tsx` が検証する。
  */
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
+import { listenUrlOf } from "@/lib/links/listen-url";
 import type { Episode } from "@/lib/schema/episode";
 import {
   ANCHOR_UNLOCATED,
@@ -38,8 +39,7 @@ const SPARTA: Series = {
   tags: ["集団"],
 };
 
-const EPISODE_URL =
-  "https://podcasters.spotify.com/pod/show/coten/episodes/2-1-e3m0l9q";
+const EPISODE_URL = "https://open.spotify.com/episode/0000000000000000000000";
 
 const EPISODES: Episode[] = [
   episodeOf({
@@ -88,7 +88,7 @@ describe("SeriesDetailCard", () => {
     expect(screen.queryByText(/\d+年/)).toBeNull();
   });
 
-  it("エピソードのリンクをその回の配信ページへ向ける", () => {
+  it("各回に配信基盤ごとのリンクが 3 本あり、回を基盤で開く URL を指す", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
@@ -97,14 +97,23 @@ describe("SeriesDetailCard", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("link", {
-        name: "【2-1】スパルタ編1（新しいタブで開く）",
-      }),
-    ).toHaveAttribute("href", EPISODE_URL);
+    const row = screen.getByText("【2-1】スパルタ編1").closest("li");
+
+    if (row === null) {
+      throw new Error("回の行が無い");
+    }
+
+    const links = within(row).getAllByRole("link");
+
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      listenUrlOf(EPISODES[0], "spotify"),
+      listenUrlOf(EPISODES[0], "apple-podcasts"),
+      listenUrlOf(EPISODES[0], "youtube"),
+    ]);
+    expect(links[0]).toHaveAttribute("href", EPISODE_URL);
   });
 
-  it("エピソードのリンクを、opener と Referer を渡さずに別タブで開く", () => {
+  it("リンクの名前は基盤名と、新しいタブで開くことを持つ", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
@@ -113,17 +122,33 @@ describe("SeriesDetailCard", () => {
       />,
     );
 
-    const link = screen.getByRole("link", {
-      name: "【2-1】スパルタ編1（新しいタブで開く）",
-    });
-
-    expect(link).toHaveAttribute("target", "_blank");
-    expect(link.getAttribute("rel")?.split(" ")).toEqual(
-      expect.arrayContaining(["noopener", "noreferrer"]),
+    expect(screen.getAllByRole("link").map((link) => link.textContent)).toEqual(
+      [
+        "Spotify（新しいタブで開く）",
+        "Apple Podcasts（新しいタブで開く）",
+        "YouTube（新しいタブで開く）",
+      ],
     );
   });
 
-  it("配信リンクを持たない回は番組そのものへ向ける", () => {
+  it("配信基盤のリンクを、opener と Referer を渡さずに別タブで開く", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        episodes={{ kind: "loaded", episodes: EPISODES }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    for (const link of screen.getAllByRole("link")) {
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link.getAttribute("rel")?.split(" ")).toEqual(
+        expect.arrayContaining(["noopener", "noreferrer"]),
+      );
+    }
+  });
+
+  it("配信リンクを持たない回は、3 本とも基盤の番組ページへ向ける", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
@@ -138,11 +163,12 @@ describe("SeriesDetailCard", () => {
     );
 
     expect(
-      screen.getByRole("link", { name: "リンク無しの回（新しいタブで開く）" }),
-    ).toHaveAttribute(
-      "href",
+      screen.getAllByRole("link").map((link) => link.getAttribute("href")),
+    ).toEqual([
       "https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f",
-    );
+      "https://podcasts.apple.com/jp/podcast/id1450522865",
+      "https://www.youtube.com/@cotenradio",
+    ]);
   });
 
   it("エピソードが 0 件でもシリーズの側は出る", () => {
