@@ -49,7 +49,7 @@ paths:
 | 境界の検証 | `src/lib/schema/**` | `src/lib/schema/**` の中だけ | zod のスキーマと、そこから導く型・`parse*` の関数・ファイルをまたぐ参照の判定 |
 | フィードの二段 | `src/lib/feed/parse.*`（XML の表記を均す）・`src/lib/feed/schema.*`（値の規則）・`src/lib/feed/__fixtures__/**` | `src/lib/feed/` の中だけ | 均した記録と、検査済みの `FeedItem` |
 | 設定の定数 | `src/lib/base-path.*`・`src/lib/map/config.ts` | `src/lib/base-path.*` | 公開先のパスの接頭辞 `BASE_PATH`・ベースマップと worker の URL・地図の初期位置 |
-| 純粋な計算 | `src/lib/era/**`・`src/lib/map/**`・`src/lib/feed/assign.*`・`src/lib/format.*` | 境界の検証の型と定数・`src/lib/feed/schema.ts` の型・同じ層 | 関数とテスト |
+| 純粋な計算 | `src/lib/catalog-edit/**`・`src/lib/era/**`・`src/lib/map/**`・`src/lib/feed/assign.*`・`src/lib/format.*` | 境界の検証の型と定数・`src/lib/feed/schema.ts` の型・同じ層 | 関数とテスト |
 | 境界 | `src/lib/catalog-dir.*`・`src/lib/episodes.*`・`scripts/json-file.ts` | 境界の検証・設定の定数 | `node:fs` か `fetch` による読み書きと、境界の検証の呼び出し |
 | 描画 | `src/components/**`（直下にはディレクトリだけを置く） | 純粋な計算・境界の検証の型と定数・設定の定数・`src/lib/episodes.*`・同じ層 | React の部品 |
 | 配線 | `src/app/**`・`scripts/sync-feed.ts` | `src/app/**` は描画・`src/lib/catalog-dir.*`・純粋な計算、`scripts/sync-feed.ts` はフィードの二段・純粋な計算・境界の検証・`scripts/json-file.ts` | 受け取り・呼び出し・出力 |
