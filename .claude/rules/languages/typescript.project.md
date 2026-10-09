@@ -14,6 +14,6 @@ paths:
 
 | 規則 | 道具 | severity | 何のために |
 |---|---|---|---|
-| `node:fs` を import してよいのは `src/lib/catalog-dir.ts`・`scripts/**`・`tests/**` だけ | biome `style/noRestrictedImports` | error | ブラウザに届くコードへ `node:fs` が混ざらない |
+| `node:fs` を import してよいのは `src/lib/catalog-dir.*`・`scripts/**`・`tests/**` だけ | biome `style/noRestrictedImports` | error | ブラウザに届くコードへ `node:fs` が混ざらない |
 | `maplibre-gl`・`react-map-gl/maplibre` を import してよいのは `src/components/map/MapCanvas.tsx`・`src/components/map/SeriesLayers.tsx`・`src/lib/map/series-layer.ts` だけ | 同上 | error | 地図の DOM への依存を描画層と純粋な計算の一箇所に閉じる |
 | `src/lib/**` から `src/app/**` を import しない | 同上 | error | 依存を `src/app` から `src/lib` への一方向に保つ |

@@ -49,7 +49,7 @@
               },
               {
                 "group": ["node:fs", "node:fs/promises"],
-                "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                "message": "node:fs を import してよいのは src/lib/catalog-dir.*・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
               },
               {
                 "group": ["maplibre-gl", "react-map-gl/maplibre"],
@@ -115,7 +115,7 @@
                   },
                   {
                     "group": ["node:fs", "node:fs/promises"],
-                    "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                    "message": "node:fs を import してよいのは src/lib/catalog-dir.*・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["maplibre-gl", "react-map-gl/maplibre"],
@@ -133,7 +133,7 @@
       }
     },
     {
-      "includes": ["src/lib/catalog-dir.ts", "scripts/**", "tests/**"],
+      "includes": ["src/lib/catalog-dir.*", "scripts/**", "tests/**"],
       "linter": {
         "rules": {
           "style": {
@@ -179,7 +179,7 @@
                   },
                   {
                     "group": ["node:fs", "node:fs/promises"],
-                    "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                    "message": "node:fs を import してよいのは src/lib/catalog-dir.*・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["@/app", "@/app/**"],
