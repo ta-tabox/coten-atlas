@@ -199,7 +199,7 @@ export default function MapCanvas({
       <SeriesLayers
         loci={taggedLoci}
         currentWindow={eraWindow}
-        selectedSeriesId={selectedSeriesId}
+        selectedSeries={selectedSeries}
       />
       {/* 一覧パネルは地図の左上に置き、高さを画面の下に重なる era スライダーの上端までに収める。 */}
       <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-12rem)] max-w-[calc(100vw-2rem)] flex-col">

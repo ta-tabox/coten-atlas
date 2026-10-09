@@ -376,7 +376,7 @@ describe("MapCanvas", () => {
     renderMapCanvas();
 
     expect(seriesPanelProps().selectedSeriesId).toBeNull();
-    expect(seriesLayersProps().selectedSeriesId).toBeNull();
+    expect(seriesLayersProps().selectedSeries).toBeNull();
   });
 
   it("事物のクリックで選んだシリーズの id を、一覧パネルとシリーズのレイヤへ渡す", () => {
@@ -385,7 +385,7 @@ describe("MapCanvas", () => {
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
 
     expect(seriesPanelProps().selectedSeriesId).toBe("sparta");
-    expect(seriesLayersProps().selectedSeriesId).toBe("sparta");
+    expect(seriesLayersProps().selectedSeries?.id).toBe("sparta");
   });
 
   it("一覧パネルで選んだシリーズを、詳細カードへ渡し、シリーズのレイヤと一覧パネルへ同じ id で渡す", () => {
@@ -396,7 +396,7 @@ describe("MapCanvas", () => {
     expect(childOfType(SeriesDetailCard)).toMatchObject({
       props: { series: SPARTA },
     });
-    expect(seriesLayersProps().selectedSeriesId).toBe("sparta");
+    expect(seriesLayersProps().selectedSeries?.id).toBe("sparta");
     expect(seriesPanelProps().selectedSeriesId).toBe("sparta");
   });
 
@@ -420,7 +420,7 @@ describe("MapCanvas", () => {
     );
 
     expect(seriesPanelProps().selectedSeriesId).toBeNull();
-    expect(seriesLayersProps().selectedSeriesId).toBeNull();
+    expect(seriesLayersProps().selectedSeries).toBeNull();
   });
 
   it("一覧パネルで代表点を持つシリーズを選ぶと、その代表点へ panTo する", () => {
@@ -533,7 +533,7 @@ describe("MapCanvas", () => {
     act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
 
     expect(seriesPanelProps().selectedSeriesId).toBe("sparta");
-    expect(seriesLayersProps().selectedSeriesId).toBe("sparta");
+    expect(seriesLayersProps().selectedSeries?.id).toBe("sparta");
     expect(childOfType(SeriesDetailCard)).toMatchObject({
       props: { series: SPARTA },
     });
