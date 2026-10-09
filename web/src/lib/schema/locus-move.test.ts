@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseLocusMove } from "@/lib/schema/locus-move";
+import { parseLocusMove, parseLocusMoveResult } from "@/lib/schema/locus-move";
 
 describe("parseLocusMove", () => {
   it("事物の id と経度・緯度の対を受ける", () => {
@@ -28,5 +28,17 @@ describe("parseLocusMove", () => {
         seriesId: "x",
       }),
     ).toThrow();
+  });
+});
+
+describe("parseLocusMoveResult", () => {
+  it("理由の文の配列を持つ応答を受ける", () => {
+    expect(parseLocusMoveResult({ problems: ["理由"] })).toEqual({
+      problems: ["理由"],
+    });
+  });
+
+  it("problems を持たない応答は throw する", () => {
+    expect(() => parseLocusMoveResult({ ok: true })).toThrow();
   });
 });
