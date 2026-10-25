@@ -59,14 +59,6 @@ describe("parseFeed", () => {
     );
   });
 
-  it("link に Spotify のエピソードページを取る", () => {
-    const item = itemStartingWith(parseFeed(FEED_XML), "【66-10】");
-
-    expect(item.link).toBe(
-      "https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q",
-    );
-  });
-
   it("時:分:秒 の itunes:duration を秒へ直す", () => {
     const item = itemStartingWith(parseFeed(FEED_XML), "【66-10】");
 
@@ -96,13 +88,10 @@ describe("parseFeed", () => {
     const withoutBoth = FEED_XML.replace(
       "<pubDate>Wed, 19 Aug 2026 21:00:00 GMT</pubDate>",
       "",
-    ).replace(
-      "<link>https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q</link>",
-      "",
-    );
+    ).replace(/<enclosure url="[^"]*122753786[^>]*\/>/, "");
 
     // 最初に見つけた欄で投げると、直して走らせ直すまで次の欠けが見えない。
-    expect(() => parseFeed(withoutBoth)).toThrow(/link/);
+    expect(() => parseFeed(withoutBoth)).toThrow(/audioUrl/);
     expect(() => parseFeed(withoutBoth)).toThrow(/pubDate/);
   });
 

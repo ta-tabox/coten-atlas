@@ -98,7 +98,6 @@ const optionalDurationSecSchema = z
 export const feedItemSchema = z.object({
   guid: trimmedTextSchema,
   title: trimmedTextSchema,
-  link: trimmedTextSchema,
   pubDate: pubDateSchema,
   audioUrl: trimmedTextSchema,
   season: optionalPositiveIntSchema,

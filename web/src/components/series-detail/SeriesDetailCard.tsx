@@ -9,19 +9,10 @@
  * MapLibre の Popup を使わない理由は docs/adr/20260831-map-dom-boundary.md が正。
  */
 
-import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
+import ListenLinks from "@/components/series-detail/ListenLinks";
 import type { EpisodesState } from "@/lib/episodes";
 import { formatTimeRange } from "@/lib/format";
-import type { Episode } from "@/lib/schema/episode";
 import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
-
-/**
- * 番組全体の Spotify ページ。
- * `links` が空のエピソードは、この URL にフォールバックする。
- *
- * RSS の `<link>` は全エピソードにあるので、通常この URL は表示しない。
- */
-const SHOW_URL = "https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f";
 
 /**
  * `aside` の `aria-labelledby` が参照する、`h2` の id。
@@ -40,18 +31,6 @@ type SeriesDetailCardProps = {
   /** 閉じるボタンが押されたときに呼ぶ。 */
   onClose: () => void;
 };
-
-/**
- * `episode` を Spotify で開く URL を返す。
- * `platform` が `"spotify"` のリンクが無ければ `SHOW_URL` を返す。
- *
- * `find` の 1 件で足りる理由は `@/lib/schema/link` が正。
- */
-function spotifyUrlOf(episode: Episode): string {
-  const link = episode.links.find((one) => one.platform === "spotify");
-
-  return link?.url ?? SHOW_URL;
-}
 
 /**
  * エピソードの区画を、`state` ごとに別の内容で表示する。
@@ -78,21 +57,14 @@ function EpisodeList({ state }: { state: EpisodesState }) {
   return (
     <ol className="mt-2 flex flex-col gap-1.5 overflow-x-hidden overflow-y-auto pr-1.5 text-[0.9rem]">
       {state.episodes.map((episode) => (
-        <li key={episode.guid}>
-          <a
-            href={spotifyUrlOf(episode)}
-            title={episode.title}
-            // 地図の選択状態を残すため、Spotify は別タブで開く。
-            // noopener は開いた Spotify のページに window.opener を渡さず、noreferrer は Spotify へ Referer ヘッダを送らない。
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-start gap-2 rounded-md border border-zinc-200 px-3 py-2 hover:border-zinc-300 hover:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
-          >
-            <span className="line-clamp-2 min-w-0 grow">{episode.title}</span>
-            {/* ExternalLinkIcon は aria-hidden なので、別タブで開くことをスクリーンリーダーには文字で伝える。 */}
-            <span className="sr-only">（新しいタブで開く）</span>
-            <ExternalLinkIcon className="mt-[0.3em] size-[1em] flex-none text-zinc-400" />
-          </a>
+        <li
+          key={episode.guid}
+          className="flex items-center gap-2 rounded-md border border-zinc-200 py-1 pr-1 pl-3"
+        >
+          <span title={episode.title} className="line-clamp-2 min-w-0 grow">
+            {episode.title}
+          </span>
+          <ListenLinks episode={episode} />
         </li>
       ))}
     </ol>

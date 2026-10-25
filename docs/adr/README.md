@@ -106,7 +106,7 @@ ADR の外（コード・現況の文書・issue・PR）から指すときは、
 | [20260823-github-pages](20260823-github-pages.md) | GitHub Pages で配信し、独自ドメインは当てない | 2026-08-23 | 採用 | 0007 |
 | [20260823-openfreemap-positron](20260823-openfreemap-positron.md) | ベースマップに OpenFreeMap positron を採る（代替は Carto Positron） | 2026-08-23 | 採用 | 0004 |
 | [20260823-quote-titles-only](20260823-quote-titles-only.md) | 引用は題号に限り、説明文・ロゴ・カバーアートに触れない | 2026-08-23 | 採用 | 0008 |
-| [20260823-rss-link-as-episode-url](20260823-rss-link-as-episode-url.md) | 配信リンクは RSS の `<link>` をそのまま使う | 2026-08-23 | 採用 | 0006 |
+| [20260823-rss-link-as-episode-url](20260823-rss-link-as-episode-url.md) | 配信リンクは RSS の `<link>` をそのまま使う | 2026-08-23 | supersede 済み（→ 20261009-three-platform-episode-links） | 0006 |
 | [20260825-gh-review-trigger-narrowing](20260825-gh-review-trigger-narrowing.md) | gh-review の起動を絞るのは job 側の `if:` の一本にする | 2026-08-25 | 採用 | 0010 |
 | [20260825-pnpm-check](20260825-pnpm-check.md) | 判定の口を `pnpm check` へ移す（20260802-mise-run-check を supersede） | 2026-08-25 | supersede 済み（→ 20260914-pnpm-check-current-form） | 0009 |
 | [20260827-license](20260827-license.md) | コードは MIT、データは CC BY 4.0、番組由来の要素は範囲外と明記する | 2026-08-27 | 採用 | 0011 |
@@ -146,6 +146,7 @@ ADR の外（コード・現況の文書・issue・PR）から指すときは、
 | [20260914-pnpm-check-current-form](20260914-pnpm-check-current-form.md) | 判定の口は `web/` で打つ `pnpm check` の一本で、踏襲しているツールチェーンの規約と同じ形にする（20260825-pnpm-check を supersede） | 2026-09-14 | 採用 | 0045 |
 | [20260915-season-assignment-precedence](20260915-season-assignment-precedence.md) | エピソードの割当に使う season を、訂正表・題名の先頭の `【NN-M】`・`itunes:season` の順に決める（20260829-season-as-assignment-key を supersede） | 2026-09-15 | 採用 | 0046 |
 | [20260927-adr-date-slug-identifier](20260927-adr-date-slug-identifier.md) | ADR の識別子を決定日と slug にする | 2026-09-27 | 採用 | — |
+| [20261009-three-platform-episode-links](20261009-three-platform-episode-links.md) | エピソードの配信リンクを Spotify・Apple Podcasts・YouTube の 3 基盤で持ち、RSS の `<link>` を使わない（20260823-rss-link-as-episode-url を supersede） | 2026-10-09 | 採用 | — |
 
 **20260828-e2e-offline-smoke は人間の目視を L5 と呼んでいる。**
 `docs/HARNESS.md`「検証の層構造」は番号を `pnpm check` の連鎖の位置に限り、人間の目視に番号を与えないので、20260828-e2e-offline-smoke の L5 は「人間の目視」と読む。
