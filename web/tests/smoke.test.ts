@@ -1,18 +1,21 @@
 /**
- * 見るのは `scripts/smoke.ts` の純関数二つ。
- * 観測から違反を出す `violationsOf` と、配信してよいパスを決める `resolveWithinRoot` である。
- * どちらもブラウザを立てずに済むので、ここ（L2）で回す。
+ * 見るのは `scripts/smoke.ts` のうちブラウザを立てずに済む関数で、ここ（L2）で回す。
+ * 観測から違反を出す `violationsOf`、配信してよいパスを決める `resolveWithinRoot`、管理画面の混入を探す `listAdminPaths` である。
  *
  * ブラウザが要る側は `tests/smoke/` の spec が持つ。
  * 観測層が事故を拾えるかは `observation.spec.ts` の陽性対照が見る。
  */
 
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import {
+  listAdminPaths,
   type PageObservation,
   resolveWithinRoot,
   violationsOf,
 } from "@scripts/smoke.ts";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 /** smoke の project が使う viewport（playwright.config.ts）。 */
 const VIEWPORT = { width: 1280, height: 800 };
@@ -134,5 +137,32 @@ describe("resolveWithinRoot", () => {
     expect(resolveWithinRoot(ROOT, "/coten-atlas/a/../index.html")).toBe(
       "/srv/out/index.html",
     );
+  });
+});
+
+describe("listAdminPaths", () => {
+  let root: string;
+
+  beforeEach(() => {
+    root = fs.mkdtempSync(path.join(os.tmpdir(), "coten-atlas-out-"));
+    fs.writeFileSync(path.join(root, "index.html"), "");
+    fs.mkdirSync(path.join(root, "about"));
+    fs.writeFileSync(path.join(root, "about", "index.html"), "");
+  });
+
+  afterEach(() => {
+    fs.rmSync(root, { recursive: true });
+  });
+
+  it("名前に admin を含むものが無ければ空配列を返す", () => {
+    expect(listAdminPaths(root)).toEqual([]);
+  });
+
+  it("名前に admin を含むディレクトリとファイルを、root からの相対パスで返す", () => {
+    fs.mkdirSync(path.join(root, "admin"));
+    fs.writeFileSync(path.join(root, "admin", "index.html"), "");
+    fs.writeFileSync(path.join(root, "admin.txt"), "");
+
+    expect(listAdminPaths(root)).toEqual(["admin", "admin.txt"]);
   });
 });

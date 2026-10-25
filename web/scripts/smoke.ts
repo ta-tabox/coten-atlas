@@ -2,6 +2,7 @@
  * 静的成果物が自足しているかを見る検査（L4）。
  *
  * `next build` が吐いた `out/` を BASE_PATH 込みで配信し、ヘッドレスの Chromium で開いて、同一オリジンへの 4xx / 5xx・実行時エラー・地図の canvas の寸法の三点だけを見る。
+ * ブラウザを立てる前に、`next dev` でだけ立つ管理画面が `out/` に混ざっていないかも見る。
  * L2 は jsdom に WebGL が無いので地図を描けず、L3 はビルドの成否しか見ないので、「ビルドは通るがアセットへ到達できない」形はここでしか捕まらない。
  *
  * **地図の絵が正しいかは見ない**。
@@ -14,7 +15,7 @@
  *
  * ここが持つのは機構だけで、判定を回すのは `tests/smoke/` の spec である。
  * ブラウザの寿命も viewport も Playwright の project が持つので、この層は渡された page を使うだけにする。
- * 入口は observe（配信物を開いて観測を集める）と violationsOf（観測から違反を出す純関数）。
+ * 入口は observe（配信物を開いて観測を集める）と violationsOf（観測から違反を出す純関数）と listAdminPaths（管理画面の混入を探す）。
  */
 
 import fs from "node:fs";
@@ -314,4 +315,17 @@ export async function observe(
   } finally {
     server.close();
   }
+}
+
+/**
+ * 静的成果物の置き場（`root`）の下で、名前に `admin` を含むファイルとディレクトリを、`root` からの相対パスの昇順で返す。
+ * 無ければ空配列を返す。
+ *
+ * 管理画面は `next dev` でだけ立つ（拡張子の扱いは `next.config.ts` が正）ので、ここに何か返れば開発サーバ用のページか API が公開の成果物に入っている。
+ */
+export function listAdminPaths(root: string): string[] {
+  return fs
+    .readdirSync(root, { recursive: true, encoding: "utf8" })
+    .filter((relative) => path.basename(relative).includes("admin"))
+    .sort();
 }

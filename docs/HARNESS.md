@@ -173,6 +173,12 @@ worktree ごとの設定（`extensions.worktreeConfig`）に残った値は共�
 pnpm の既定の store は OS と版で変わるので、本体と worktree が違う store から依存を張ると、`pnpm install` と `pnpm exec` の前の依存の検査が `ERR_PNPM_UNEXPECTED_STORE` で止まる。
 `.npmrc` の `store-dir` は pnpm 11 では効かず、`web/pnpm-workspace.yaml` の `storeDir` が効く。
 
+### 管理画面
+
+管理画面は手元の `next dev` でだけ立ち、`web/` で `pnpm dev` を打った後に `http://localhost:3000/coten-atlas/admin` で開く。
+シリーズを選んで地図の代表点をドラッグすると、座標が `catalog/loci.geojson` へ保存される。
+保存はファイルを書き換えるだけなので、`git diff catalog/` で差分を確かめてからコミットし、座標を直したシリーズは典拠のファイル（`docs/sources/<シリーズ id>.md`）の「代表点」節も直す。
+
 ## 4. コンテナの外向き通信
 
 リモートのコンテナは外向き通信が許可制で、**環境側から塞ぐ手段が無い**。
