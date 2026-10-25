@@ -13,11 +13,14 @@ import SeriesLayers from "@/components/map/SeriesLayers";
 import type { CurrentWindow } from "@/lib/era/window";
 import type { MapLocusCollection } from "@/lib/map/loci";
 import {
+  CONTEMPORARY_SERIES_RING_LAYER,
+  contemporarySeriesRingLayerIn,
   SELECTED_SERIES_RING_LAYER,
   SERIES_CIRCLE_LAYER,
   selectedSeriesRingLayerIn,
   seriesCircleLayerIn,
 } from "@/lib/map/series-layer";
+import type { Series } from "@/lib/schema/series";
 
 /** `react-map-gl/maplibre` の `Layer` と差し替えるモック関数で、受け取った props を記録して null を返す。 */
 const layer = vi.hoisted(() => vi.fn<(props: LayerProps) => null>(() => null));
@@ -45,6 +48,19 @@ const LOCI: MapLocusCollection = {
       },
     },
   ],
+};
+
+/** `LOCI` の事物が指すスパルタのシリーズ。 */
+const SPARTA: Series = {
+  id: "sparta",
+  title: "スパルタ",
+  season: 1,
+  anchor: "sparta-city",
+  timeRange: { start: -900, end: -200 },
+  summary: "",
+  region: "ヨーロッパ",
+  links: [],
+  tags: ["古代ギリシア"],
 };
 
 /** スパルタの年に収まる現在窓。 */
@@ -79,7 +95,7 @@ describe("SeriesLayers", () => {
       <SeriesLayers
         loci={LOCI}
         currentWindow={WINDOW_INSIDE}
-        selectedSeriesId={null}
+        selectedSeries={null}
       />,
     );
 
@@ -93,7 +109,7 @@ describe("SeriesLayers", () => {
       <SeriesLayers
         loci={LOCI}
         currentWindow={WINDOW_INSIDE}
-        selectedSeriesId={null}
+        selectedSeries={null}
       />,
     );
     const before = seriesCircleLayerIn(WINDOW_INSIDE, LOCI).paint?.[
@@ -104,7 +120,7 @@ describe("SeriesLayers", () => {
       <SeriesLayers
         loci={LOCI}
         currentWindow={WINDOW_ACROSS_END}
-        selectedSeriesId={null}
+        selectedSeries={null}
       />,
     );
 
@@ -123,7 +139,7 @@ describe("SeriesLayers", () => {
       <SeriesLayers
         loci={LOCI}
         currentWindow={WINDOW_INSIDE}
-        selectedSeriesId="sparta"
+        selectedSeries={SPARTA}
       />,
     );
 
@@ -132,6 +148,24 @@ describe("SeriesLayers", () => {
         currentWindow: WINDOW_INSIDE,
         loci: LOCI,
         selectedSeriesId: "sparta",
+      }),
+    );
+  });
+
+  it("選択中のシリーズから組んだ同時代の輪のレイヤを Layer へ渡す", () => {
+    render(
+      <SeriesLayers
+        loci={LOCI}
+        currentWindow={WINDOW_INSIDE}
+        selectedSeries={SPARTA}
+      />,
+    );
+
+    expect(lastLayerPropsOf(CONTEMPORARY_SERIES_RING_LAYER.id)).toEqual(
+      contemporarySeriesRingLayerIn({
+        currentWindow: WINDOW_INSIDE,
+        loci: LOCI,
+        selectedSeries: SPARTA,
       }),
     );
   });

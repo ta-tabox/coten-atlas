@@ -1,7 +1,7 @@
 /**
  * シリーズを描くレイヤの定義。
  *
- * 第一段階の geometry は Point だけなので、レイヤは代表点の circle と、選択中のシリーズを囲む circle の 2 本で足りる。
+ * 第一段階の geometry は Point だけなので、レイヤは代表点の circle と、選択中のシリーズを囲む circle と、選択中のシリーズと同時代のシリーズを縁取る circle の 3 本で足りる。
  * `['geometry-type']` で図形を分ける枝は第二段階まで無い。
  *
  * 不透明度は、era スライダーの現在窓から求めた事物ごとの濃さだけで決まり、シリーズの属性で濃さを変えない。
@@ -20,6 +20,11 @@ import {
   overlapRatio,
 } from "@/lib/era/window";
 import type { MapLocusCollection } from "@/lib/map/loci";
+import {
+  type Series,
+  type SeriesTimeRange,
+  TIME_RANGE_UNTIMED,
+} from "@/lib/schema/series";
 
 /** 事物を取得する source の id。 */
 export const SERIES_SOURCE_ID = "series-loci";
@@ -59,6 +64,29 @@ export const SELECTED_SERIES_RING_LAYER: Omit<
     "circle-opacity": 0,
     "circle-stroke-width": 3,
     "circle-stroke-color": "#c2410c",
+  },
+};
+
+/**
+ * 選択中のシリーズと年が重なるシリーズの事物を縁取るレイヤ。
+ * `source` は `SERIES_CIRCLE_LAYER` と同じ理由で持たない。
+ *
+ * 強調を `circle-opacity` でなく縁（`circle-stroke-*`）で表すので、現在窓から求めた円の濃さは変わらず、薄く残る円は薄いまま縁だけが付く。
+ * 半径を `SERIES_CIRCLE_LAYER` の円と同じにして、円の輪郭をなぞる。
+ * 描く事物を絞る `filter` は `contemporarySeriesRingLayerIn` が設定する。
+ * 縁の色は、`SELECTED_SERIES_RING_LAYER` の縁と同じ色相で明るい Tailwind の `orange-400` にする。
+ */
+export const CONTEMPORARY_SERIES_RING_LAYER: Omit<
+  CircleLayerSpecification,
+  "source"
+> = {
+  id: "series-contemporary-ring",
+  type: "circle",
+  paint: {
+    "circle-radius": 6,
+    "circle-opacity": 0,
+    "circle-stroke-width": 2,
+    "circle-stroke-color": "#fb923c",
   },
 };
 
@@ -175,4 +203,65 @@ export function selectedSeriesRingLayerIn({
     ...SELECTED_SERIES_RING_LAYER,
     filter: ["in", ["get", "id"], ["literal", ringLocusIds]],
   };
+}
+
+/**
+ * `CONTEMPORARY_SERIES_RING_LAYER` に、`selectedSeries` と年が重なる他のシリーズの事物のうち `currentWindow` と重なるものだけを描く `filter` を設定したレイヤを返す。
+ * `selectedSeries` が null か、`timeRange` が `TIME_RANGE_UNTIMED` なら、どの事物も描かない `filter` を設定する。
+ *
+ * 年の重なりは、`selectedSeries` の `timeRange` と事物の `timeStart` / `timeEnd` を、両端を含む閉区間どうしとして比べる。
+ * 現在窓は重なりの判定に使わず、`selectedSeriesRingLayerIn` と同じ理由で描く事物を絞るためだけに使う。
+ * `selectedSeries` 自身の事物は `SELECTED_SERIES_RING_LAYER` が囲むので含めない。
+ */
+export function contemporarySeriesRingLayerIn({
+  currentWindow,
+  loci,
+  selectedSeries,
+}: {
+  currentWindow: CurrentWindow;
+  loci: MapLocusCollection;
+  selectedSeries: Series | null;
+}): Omit<CircleLayerSpecification, "source"> {
+  const ringLocusIds =
+    selectedSeries === null || selectedSeries.timeRange === TIME_RANGE_UNTIMED
+      ? []
+      : contemporaryLocusIdsOf({
+          currentWindow,
+          loci,
+          seriesId: selectedSeries.id,
+          timeRange: selectedSeries.timeRange,
+        });
+
+  return {
+    ...CONTEMPORARY_SERIES_RING_LAYER,
+    filter: ["in", ["get", "id"], ["literal", ringLocusIds]],
+  };
+}
+
+/**
+ * `loci` のうち、`seriesId` 以外のシリーズの事物で、年が `timeRange` と重なり、かつ `currentWindow` と重なるものの id を返す。
+ */
+function contemporaryLocusIdsOf({
+  currentWindow,
+  loci,
+  seriesId,
+  timeRange,
+}: {
+  currentWindow: CurrentWindow;
+  loci: MapLocusCollection;
+  seriesId: string;
+  timeRange: SeriesTimeRange;
+}): string[] {
+  const idsOnMap = new Set(fadesOf(currentWindow, loci).map(({ id }) => id));
+
+  return loci.features
+    .map(({ properties }) => properties)
+    .filter(
+      (locus) =>
+        idsOnMap.has(locus.id) &&
+        locus.seriesId !== seriesId &&
+        locus.timeStart <= timeRange.end &&
+        timeRange.start <= locus.timeEnd,
+    )
+    .map(({ id }) => id);
 }
