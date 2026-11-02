@@ -79,6 +79,29 @@ handoff_shims() {
   fi
 }
 
+# コンテナのイメージは Chromium を /opt/pw-browsers/chromium に置くが、その版は @playwright/test が探す版と一致するとは限らない。
+# 一致しないとスモークがブラウザを立てられず、配信元へも出られないので playwright install で取り直せない。
+# 置かれた Chromium のパスを環境変数で渡し、web/playwright.config.ts がそれを launchOptions.executablePath に使う。
+handoff_chromium() {
+  local chromium_path="/opt/pw-browsers/chromium"
+  local env_line="export PLAYWRIGHT_CHROMIUM_EXECUTABLE=$chromium_path"
+
+  if [ ! -x "$chromium_path" ]; then
+    log "$chromium_path が無い。スモークは Playwright が自分で入れたブラウザを探す"
+    return
+  fi
+
+  if [ -z "${CLAUDE_ENV_FILE:-}" ]; then
+    log "CLAUDE_ENV_FILE が無いので Chromium のパスを渡せない。web/ で打つ前に $env_line を通す"
+    return
+  fi
+
+  # 追記専用のファイルなので、resume のたびに同じ行が積まれないことを書く前に見る。
+  if ! grep -qxF "$env_line" "$CLAUDE_ENV_FILE" 2> /dev/null; then
+    echo "$env_line" >> "$CLAUDE_ENV_FILE"
+  fi
+}
+
 main() {
   # 手元とリモートを分ける材料はこれだけ。
   # 門を先に置けば、同じフックを両方の環境へ配れる。
@@ -108,6 +131,7 @@ main() {
 
   # 固定の版が揃うのはここまででフックの中だけなので、セッションのシェルへも渡す。
   handoff_shims
+  handoff_chromium
 
   log "準備完了。web/ で pnpm check が走る"
 }
