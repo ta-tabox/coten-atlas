@@ -79,9 +79,19 @@ handoff_shims() {
   fi
 }
 
-# コンテナのイメージは Chromium を /opt/pw-browsers/chromium に置くが、その版は @playwright/test が探す版と一致するとは限らない。
-# 一致しないとスモークがブラウザを立てられず、配信元へも出られないので playwright install で取り直せない。
-# 置かれた Chromium のパスを環境変数で渡し、web/playwright.config.ts がそれを launchOptions.executablePath に使う。
+# スモークのブラウザを、web/pnpm-lock.yaml の @playwright/test が探す版で揃える。
+# コンテナのイメージが /opt/pw-browsers に置く Chromium の版は Anthropic のイメージの更新で決まり、lockfile とは連動しない。
+# 環境の Allowed domains が Playwright の配信元を許していれば一致する版を取り、拒否されたらイメージの Chromium へフォールバックする。
+prepare_smoke_browser() {
+  if (cd "$REPO_ROOT/web" && mise exec -- pnpm exec playwright install chromium-headless-shell > /dev/null 2>&1); then
+    return
+  fi
+
+  log "Playwright の配信元へ出られないので、スモークはイメージ同梱の Chromium で走る"
+  handoff_chromium
+}
+
+# イメージの Chromium のパスを環境変数で渡し、web/playwright.config.ts がそれを launchOptions.executablePath に使う。
 handoff_chromium() {
   local chromium_path="/opt/pw-browsers/chromium"
   local env_line="export PLAYWRIGHT_CHROMIUM_EXECUTABLE=$chromium_path"
@@ -131,7 +141,7 @@ main() {
 
   # 固定の版が揃うのはここまででフックの中だけなので、セッションのシェルへも渡す。
   handoff_shims
-  handoff_chromium
+  prepare_smoke_browser
 
   log "準備完了。web/ で pnpm check が走る"
 }
