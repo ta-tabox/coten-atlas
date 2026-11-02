@@ -184,8 +184,7 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
   出られなければ地図の見た目はリモートで確認できない
 - **`https://anchor.fm/...`** — RSS（`pnpm sync` の取得先）。出られなければ同期スクリプトはリモートで動かない
 - **Playwright の配信元** — L4 のスモークが立てる Chromium のバイナリ
-  フックは `pnpm exec playwright install chromium-headless-shell` で lockfile に一致する版を取る
-  出られなければ、イメージが `/opt/pw-browsers/chromium` に置いた Chromium のパスを `PLAYWRIGHT_CHROMIUM_EXECUTABLE` でセッションへ渡し、スモークは `@playwright/test` の版と揃わないその Chromium で走る
+  出られればフックが lockfile に一致する版を取り、出られなければスモークはイメージ同梱の Chromium（`@playwright/test` の版と揃わない）で走る
   イメージの Chromium の版は Anthropic のイメージの更新で決まり、このリポジトリからは選べない
 
 ## 5. 設定の置き場
