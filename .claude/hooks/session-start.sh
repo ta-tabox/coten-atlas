@@ -48,7 +48,7 @@ enable_git_hooks() {
 }
 
 # mise 本体と、スナップショットに残る重い取得（ランタイム・依存・ブラウザ）は scripts/cloud-setup.sh がクラウド環境のセットアップスクリプト欄で入れる。
-# mise が無いのは欄が空か失敗したときなので、ここで毎セッション入れ直さず、直し方を告げて止める。
+# mise が無いのは欄が空か失敗したときなので、直し方を告げて止める。
 require_mise() {
   if command -v mise > /dev/null 2>&1; then
     return
