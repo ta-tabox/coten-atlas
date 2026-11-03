@@ -11,6 +11,10 @@ set -euo pipefail
 
 REPO_ROOT="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 
+# mise の shims の置き場。
+# `mise activate bash --shims` はコンテナで何も出力しないので、scripts/setup.sh と同じ既定の置き場を書く。
+MISE_SHIMS="$HOME/.local/share/mise/shims"
+
 log() {
   echo "[coten-atlas] $1"
 }
@@ -49,30 +53,15 @@ require_mise() {
 
 # セッションのシェルは mise を活性化しないので、放っておくとイメージ同梱の node と pnpm を掴む。
 # mise.toml の固定がフックの中でしか効かない状態になり、`pnpm check` が手元とも CI とも別の版で走る。
-# 渡し口はセッションのツールシェルが読む追記専用ファイル CLAUDE_ENV_FILE の一つだけ。
+# セッションのツールシェルへ渡せるのは追記専用ファイル CLAUDE_ENV_FILE の一つだけで、resume のたびに同じ行が積まれないよう、無いときだけ書く。
 handoff_shims() {
-  # shims の置き場をこちらで書くと mise の既定が変わったとき黙って外れるので、PATH の行は mise 自身に書かせる。
-  local path_line
-  path_line="$(mise activate bash --shims)"
-
-  # 下のべき等判定は出力が1行であることに依存する。
-  # grep -F は改行を含むパターンを行ごとの選択肢へ分解するので、複数行になると1行の一致で「追記済み」と読み、残りを落としたまま抜ける。
-  # 黙って PATH を欠けさせるより、渡さずに理由を言って止める。
-  if [ "$(printf '%s\n' "$path_line" | wc -l)" -ne 1 ]; then
-    log "mise activate の出力が1行ではない。PATH を渡さないので、web/ で打つ前に自分で通す"
-    return
-  fi
-
   if [ -z "${CLAUDE_ENV_FILE:-}" ]; then
-    log "CLAUDE_ENV_FILE が無いので PATH を渡せない。web/ で打つ前に $path_line を通す"
+    log "CLAUDE_ENV_FILE が無いので PATH を渡せない。web/ で打つ前に $MISE_SHIMS を PATH の先頭へ通す"
     return
   fi
 
-  # 追記専用なので、resume のたびに同じ行が積まれないことを書く前に見る。
-  # フックのプロセスの PATH には前回の追記が反映されないため、PATH を見ても判定にならない。
-  if ! grep -qxF "$path_line" "$CLAUDE_ENV_FILE" 2> /dev/null; then
-    echo "$path_line" >> "$CLAUDE_ENV_FILE"
-  fi
+  local path_line="export PATH=\"$MISE_SHIMS:\$PATH\""
+  grep -qxF "$path_line" "$CLAUDE_ENV_FILE" 2> /dev/null || echo "$path_line" >> "$CLAUDE_ENV_FILE"
 }
 
 main() {
