@@ -146,6 +146,8 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | ランタイムの活性化 | シェルが mise を活性化している | フックが渡した PATH で効く（下記） |
 
 `session-start.sh` は `CLAUDE_CODE_REMOTE` で手元とリモートを分け、手元では `scripts/setup.sh` を呼んで、それが途中で止まってもセッションを立てる。
+デスクトップアプリの worktree セッションでは `CLAUDE_PROJECT_DIR` が本体を指すので、フックは標準入力の JSON の `cwd` が属する作業ツリーの `scripts/setup.sh` を呼ぶ。
+フックの本文は本体のチェックアウトの版が走るので、フックの修正が worktree セッションに効くのは main へ取り込んだ後からである。
 `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL` はクラウド環境の環境変数欄が持ち、未設定ならフックが残りの準備をせずに止める。
 セットアップスクリプト欄はクラウド環境の環境変数が入る前に走るので、名義の検査はフックが持つ。
 mise が無いときもフックは止まり、`/root/coten-atlas-setup.log` に欄の段ごとの成否が残る。
