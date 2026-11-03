@@ -29,11 +29,15 @@ export default defineConfig({
   // 判定の口は pnpm check の一本なので、失敗を握り潰すレポータを挟まない。
   reporter: [["list"]],
 
-  // `PLAYWRIGHT_CHROMIUM_EXECUTABLE` が未設定なら、Playwright が自分で入れたブラウザを使う。
-  // 設定するのはリモートのセッション起動フック（`.claude/hooks/session-start.sh`）だけで、手元と CI は設定しない。
+  // Claude Code のクラウドのセッション（`CLAUDE_CODE_REMOTE=true`）では、イメージが同梱する Chrome for Testing を使う。
+  // イメージはそのパスを `CHROME_PATH` に置き、Playwright の配信元は既定の許可ドメインに無い。
+  // 手元と CI では `CHROME_PATH` を読まず、Playwright が自分で入れたブラウザを使う。
   use: {
     launchOptions: {
-      executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE,
+      executablePath:
+        process.env.CLAUDE_CODE_REMOTE === "true"
+          ? process.env.CHROME_PATH
+          : undefined,
     },
   },
 

@@ -165,7 +165,7 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | ランタイム | `mise.toml` | `scripts/setup.sh` | `session-start.sh` | `mise-action` |
 | 依存 | `web/pnpm-lock.yaml` | `scripts/setup.sh` | `session-start.sh` | `check.yml` |
 | pnpm の store の置き場 | `web/pnpm-workspace.yaml` の `storeDir` | pnpm が読む | pnpm が読む | pnpm が読む |
-| smoke テストのブラウザ | `web/pnpm-lock.yaml` の `@playwright/test` の版 | `scripts/setup.sh` | `session-start.sh`（§4） | `check.yml` |
+| smoke テストのブラウザ | 手元と CI は `web/pnpm-lock.yaml` の `@playwright/test` の版、リモートはイメージ同梱の Chrome | `scripts/setup.sh` | イメージ（`CHROME_PATH`。§4） | `check.yml` |
 
 `core.hooksPath` を絶対パスにすると、worktree の `.githooks` を直しても本体の版が走る。
 worktree ごとの設定（`extensions.worktreeConfig`）に残った値は共有の設定より優先されるので、`scripts/setup.sh` は先にそれを消す。
@@ -184,8 +184,9 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
   出られなければ地図の見た目はリモートで確認できない
 - **`https://anchor.fm/...`** — RSS（`pnpm sync` の取得先）。出られなければ同期スクリプトはリモートで動かない
 - **Playwright の配信元** — L4 のスモークが立てる Chromium のバイナリ
-  出られればフックが lockfile に一致する版を取り、出られなければスモークはイメージ同梱の Chromium（`@playwright/test` の版と揃わない）で走る
-  イメージの Chromium の版は Anthropic のイメージの更新で決まり、このリポジトリからは選べない
+  既定の許可ドメインに無いので取得しない
+  リモートのスモークは、イメージが同梱して `CHROME_PATH` に置く Chrome for Testing で走り、`web/playwright.config.ts` が `CLAUDE_CODE_REMOTE=true` のときだけそのパスを使う
+  この Chrome の版は Anthropic のイメージの更新で決まり、`@playwright/test` の版とは揃わない
 
 ## 5. 設定の置き場
 

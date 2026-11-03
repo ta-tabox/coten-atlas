@@ -79,39 +79,6 @@ handoff_shims() {
   fi
 }
 
-# スモークのブラウザを、web/pnpm-lock.yaml の @playwright/test が探す版で揃える。
-# コンテナのイメージが /opt/pw-browsers に置く Chromium の版は Anthropic のイメージの更新で決まり、lockfile とは連動しない。
-# 環境の Allowed domains が Playwright の配信元を許していれば一致する版を取り、拒否されたらイメージの Chromium へフォールバックする。
-prepare_smoke_browser() {
-  if (cd "$REPO_ROOT/web" && mise exec -- pnpm exec playwright install chromium-headless-shell > /dev/null 2>&1); then
-    return
-  fi
-
-  log "Playwright の配信元へ出られないので、スモークはイメージ同梱の Chromium で走る"
-  handoff_chromium
-}
-
-# イメージの Chromium のパスを環境変数で渡し、web/playwright.config.ts がそれを launchOptions.executablePath に使う。
-handoff_chromium() {
-  local chromium_path="/opt/pw-browsers/chromium"
-  local env_line="export PLAYWRIGHT_CHROMIUM_EXECUTABLE=$chromium_path"
-
-  if [ ! -x "$chromium_path" ]; then
-    log "$chromium_path が無い。スモークは Playwright が自分で入れたブラウザを探す"
-    return
-  fi
-
-  if [ -z "${CLAUDE_ENV_FILE:-}" ]; then
-    log "CLAUDE_ENV_FILE が無いので Chromium のパスを渡せない。web/ で打つ前に $env_line を通す"
-    return
-  fi
-
-  # 追記専用のファイルなので、resume のたびに同じ行が積まれないことを書く前に見る。
-  if ! grep -qxF "$env_line" "$CLAUDE_ENV_FILE" 2> /dev/null; then
-    echo "$env_line" >> "$CLAUDE_ENV_FILE"
-  fi
-}
-
 main() {
   # 手元とリモートを分ける材料はこれだけ。
   # 門を先に置けば、同じフックを両方の環境へ配れる。
@@ -141,8 +108,9 @@ main() {
 
   # 固定の版が揃うのはここまででフックの中だけなので、セッションのシェルへも渡す。
   handoff_shims
-  prepare_smoke_browser
 
+  # スモークのブラウザはここで入れない。
+  # イメージが同梱する Chrome を web/playwright.config.ts が CHROME_PATH から読む。
   log "準備完了。web/ で pnpm check が走る"
 }
 
