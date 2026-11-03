@@ -10,7 +10,7 @@
 #   - smoke テストのブラウザ（`playwright install chromium`）
 #
 # 版の正は mise.toml と web/pnpm-lock.yaml にあり、ここには書かない。
-# リモート（Claude Code on the web）の準備は .claude/hooks/session-start.sh が別に持ち、手元ではそのフックがこのスクリプトを呼ぶ。
+# リモート（Claude Code on the web）の準備は scripts/cloud-setup.sh と .claude/hooks/session-start.sh が別に持ち、手元ではそのフックがこのスクリプトを呼ぶ。
 # 人間が叩くときは、リポジトリのルートで `bash scripts/setup.sh`（どのディレクトリから呼んでも、このファイルが在るチェックアウトを揃える）。
 
 set -euo pipefail

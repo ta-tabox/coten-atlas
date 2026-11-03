@@ -3,7 +3,7 @@
 # セッション起動フック。
 # 責務は、どの環境でも `web/` で打つ `pnpm check` が立つところまで組むことである。
 # 手元（リポジトリ本体と worktree）の準備は scripts/setup.sh が持ち、このファイルが持つのはリモート（Claude Code on the web）の分だけである。
-# リモートは mise の入っていないコンテナなので、mise.toml が固定した版の node と pnpm をここで用意する。
+# リモートでスナップショットに残る分（mise・ランタイム・依存・ブラウザ）は scripts/cloud-setup.sh が持ち、ここが持つのはセッションごとに要る分である。
 #
 # リポジトリから復元できるものだけがここに来る（名義はクラウド環境の環境変数が持つ）。
 
@@ -36,19 +36,15 @@ enable_git_hooks() {
   git -C "$REPO_ROOT" config core.hooksPath .githooks
 }
 
-# コンテナから mise.run へは出られない（外向き通信が許可制）ので、
-# 公式のインストーラは使わず npm から入れる（jdx/mise が同名で publish している）。
-# イメージに同梱の node は mise.toml の指定と版が違うが、mise 本体を動かすだけなのでそのまま使う。
-#
-# mise 自体の版は固定しない。版を持つファイルがこのリポジトリに無く、手元でも環境側の都合で決まっているので、
-# ここへ書くとリモートだけが宣言を持つ非対称ができる。
-install_mise() {
+# mise 本体と、スナップショットに残る重い取得（ランタイム・依存・ブラウザ）は scripts/cloud-setup.sh がクラウド環境のセットアップスクリプト欄で入れる。
+# mise が無いのは欄が空か失敗したときなので、ここで毎セッション入れ直さず、直し方を告げて止める。
+require_mise() {
   if command -v mise > /dev/null 2>&1; then
     return
   fi
 
-  log "mise を入れる"
-  npm install -g --silent mise
+  echo "mise が無い。クラウド環境のセットアップスクリプト欄と許可ドメインを docs/HARNESS.md「設定の置き場」のとおりにし、/root/coten-atlas-setup.log を確かめる" >&2
+  exit 1
 }
 
 # セッションのシェルは mise を活性化しないので、放っておくとイメージ同梱の node と pnpm を掴む。
@@ -91,13 +87,14 @@ main() {
 
   require_git_author
   enable_git_hooks
-  install_mise
+  require_mise
 
   # クローンし直された設定ファイルは未信頼の扱いなので、mise install の前に通す。
   mise trust "$REPO_ROOT/mise.toml"
 
-  # 版の正は mise.toml。node と pnpm はここで置かれるので、フックは読む側にも回らない。
-  log "ランタイムと依存を入れる"
+  # スナップショットより後のコミットで mise.toml や lockfile が変わっていても、ここで追いつく。
+  # 揃っていれば何もしない。
+  log "ランタイムと依存を揃える"
   # pnpm は mise が置いた shim なので、この時点の PATH にはまだ載っていない。
   # フックは自分の PATH をいじらず mise exec 越しに呼ぶ。
   #
@@ -109,8 +106,6 @@ main() {
   # 固定の版が揃うのはここまででフックの中だけなので、セッションのシェルへも渡す。
   handoff_shims
 
-  # スモークのブラウザはここで入れない。
-  # イメージが同梱する Chrome を web/playwright.config.ts が CHROME_PATH から読む。
   log "準備完了。web/ で pnpm check が走る"
 }
 
