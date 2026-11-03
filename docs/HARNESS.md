@@ -138,7 +138,7 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 
 | | 手元 | リモート |
 |---|---|---|
-| GitHub への到達 | 到達する | セッションによっては到達しない。issue の登録・状態更新は手元で回す |
+| GitHub への到達 | `gh` で到達する | MCP の GitHub ツールで issue と PR を扱い、`gh api` の REST を予備にする。`gh` の GraphQL はプロキシが遮断するので、`gh pr` と `gh issue` の多くは HTTP 403 になる |
 | 外向き通信 | 制限なし | **許可制**（§4） |
 | commit の committer | 人間名義 | コンテナの名義のまま（署名が強制される）。author だけ人間名義へ焼く |
 | 環境の準備（スナップショット） | 無し | クラウド環境のセットアップスクリプト欄が `scripts/cloud-setup.sh` を呼び、mise・ランタイム・依存・ブラウザを入れる |
