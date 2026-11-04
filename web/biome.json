@@ -49,11 +49,11 @@
               },
               {
                 "group": ["node:fs", "node:fs/promises"],
-                "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                "message": "node:fs を import してよいのは src/lib/catalog-dir.*・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
               },
               {
                 "group": ["maplibre-gl", "react-map-gl/maplibre"],
-                "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts・src/components/admin/AnchorDragMap.tsx だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
               }
             ]
           }
@@ -115,11 +115,11 @@
                   },
                   {
                     "group": ["node:fs", "node:fs/promises"],
-                    "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                    "message": "node:fs を import してよいのは src/lib/catalog-dir.*・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["maplibre-gl", "react-map-gl/maplibre"],
-                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts・src/components/admin/AnchorDragMap.tsx だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["@/app", "@/app/**"],
@@ -133,7 +133,7 @@
       }
     },
     {
-      "includes": ["src/lib/catalog-dir.ts", "scripts/**", "tests/**"],
+      "includes": ["src/lib/catalog-dir.*", "scripts/**", "tests/**"],
       "linter": {
         "rules": {
           "style": {
@@ -147,7 +147,7 @@
                   },
                   {
                     "group": ["maplibre-gl", "react-map-gl/maplibre"],
-                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts・src/components/admin/AnchorDragMap.tsx だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["@/app", "@/app/**"],
@@ -164,7 +164,8 @@
       "includes": [
         "src/components/map/MapCanvas.*",
         "src/components/map/SeriesLayers.*",
-        "src/lib/map/series-layer.*"
+        "src/lib/map/series-layer.*",
+        "src/components/admin/AnchorDragMap.*"
       ],
       "linter": {
         "rules": {
@@ -179,7 +180,7 @@
                   },
                   {
                     "group": ["node:fs", "node:fs/promises"],
-                    "message": "node:fs を import してよいのは src/lib/catalog-dir.ts・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                    "message": "node:fs を import してよいのは src/lib/catalog-dir.*・scripts/**・tests/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["@/app", "@/app/**"],

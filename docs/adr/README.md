@@ -146,6 +146,7 @@ ADR の外（コード・現況の文書・issue・PR）から指すときは、
 | [20260914-pnpm-check-current-form](20260914-pnpm-check-current-form.md) | 判定の口は `web/` で打つ `pnpm check` の一本で、踏襲しているツールチェーンの規約と同じ形にする（20260825-pnpm-check を supersede） | 2026-09-14 | 採用 | 0045 |
 | [20260915-season-assignment-precedence](20260915-season-assignment-precedence.md) | エピソードの割当に使う season を、訂正表・題名の先頭の `【NN-M】`・`itunes:season` の順に決める（20260829-season-as-assignment-key を supersede） | 2026-09-15 | 採用 | 0046 |
 | [20260927-adr-date-slug-identifier](20260927-adr-date-slug-identifier.md) | ADR の識別子を決定日と slug にする | 2026-09-27 | 採用 | — |
+| [20261009-dev-only-page-extensions](20261009-dev-only-page-extensions.md) | 管理画面は公開サイトと同じ Next.js のアプリに置き、開発サーバでだけ読む拡張子で成果物から外す | 2026-10-09 | 採用 | — |
 
 **20260828-e2e-offline-smoke は人間の目視を L5 と呼んでいる。**
 `docs/HARNESS.md`「検証の層構造」は番号を `pnpm check` の連鎖の位置に限り、人間の目視に番号を与えないので、20260828-e2e-offline-smoke の L5 は「人間の目視」と読む。
