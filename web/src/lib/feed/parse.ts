@@ -22,7 +22,6 @@ import { type FeedItem, parseFeedItem } from "@/lib/feed/schema";
 type RawFeedItem = {
   guid?: string;
   title?: string;
-  link?: string;
   pubDate?: string;
   audioUrl?: string;
   season?: string;
@@ -99,7 +98,6 @@ function toRawFeedItem(item: Record<string, unknown>): RawFeedItem {
   return {
     guid: textOf(item.guid),
     title: textOf(item.title),
-    link: textOf(item.link),
     pubDate: textOf(item.pubDate),
     audioUrl: textOf(attributeOf(item.enclosure, "@_url")),
     season: textOf(item["itunes:season"]),

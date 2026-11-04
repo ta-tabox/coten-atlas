@@ -11,10 +11,14 @@ import * as z from "zod";
 import { duplicatesOf } from "@/lib/schema/duplicates";
 
 /**
- * 配信基盤。
- * RSS の `<link>` が指す先は Spotify のページである。
+ * 配信基盤の並び。
+ *
+ * 詳細カードは各回のボタンをこの順に並べる。
  */
-const platformSchema = z.enum(["spotify"]);
+export const PLATFORMS = ["spotify", "apple-podcasts", "youtube"] as const;
+
+/** 配信基盤。 */
+const platformSchema = z.enum(PLATFORMS);
 
 /** 配信リンク 1 本。 */
 export const linkSchema = z.strictObject({
@@ -28,7 +32,7 @@ export const linkSchema = z.strictObject({
  * 一つのシリーズ、または一つのエピソードが持つ配信リンク全部。
  *
  * 同じ基盤のリンクを 2 本持てない。
- * 詳細カードの「Spotify で聴く」は `links.find((link) => link.platform === "spotify")` の形で 1 本を取り出すので、2 本あるとボタンに出る 1 本が配列の並び順で決まる。
+ * 詳細カードは基盤ごとに `links.find` で 1 本を取り出すので、2 本あるとボタンが開く 1 本が配列の並び順で決まる。
  */
 export const linksSchema = z.array(linkSchema).superRefine((links, ctx) => {
   const platforms = links.map((link) => link.platform);
@@ -42,3 +46,5 @@ export const linksSchema = z.array(linkSchema).superRefine((links, ctx) => {
 });
 
 export type Link = z.infer<typeof linkSchema>;
+
+export type Platform = z.infer<typeof platformSchema>;
