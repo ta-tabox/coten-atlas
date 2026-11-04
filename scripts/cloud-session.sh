@@ -2,7 +2,7 @@
 #
 # クラウドのセッションの起動時に、scripts/setup.sh より前に要る分を揃える。
 # 名義と mise の有無を確かめ、mise の shims を Claude のツールのシェルへ渡す。
-# 共通の準備（git のフックの向き先・ランタイム・依存・ブラウザ）は scripts/setup.sh が持ち、スナップショットに残す分は scripts/cloud-setup.sh が持つ。
+# 共通の準備（git のフックの向き先・ランタイム・依存・ブラウザ）は scripts/setup.sh が持ち、スナップショットに残す分は scripts/cloud-snapshot.sh が持つ。
 # 名義か mise が無ければ、直し方を告げて exit 1 で終わる。
 # .claude/hooks/session-start.sh が、クラウドでだけ呼ぶ。
 
@@ -24,7 +24,7 @@ require_git_author() {
   exit 1
 }
 
-# mise 本体はセットアップスクリプト欄の scripts/cloud-setup.sh が入れる。
+# mise 本体はセットアップスクリプト欄の scripts/cloud-snapshot.sh が入れる。
 # 無いのは欄が空か失敗したときなので、ここで入れ直さず直し方を告げて止める。
 require_mise() {
   if command -v mise > /dev/null 2>&1; then

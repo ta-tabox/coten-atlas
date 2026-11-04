@@ -11,7 +11,7 @@
 #
 # 版の正は mise.toml と web/pnpm-lock.yaml にあり、ここには書かない。
 # .claude/hooks/session-start.sh がどの実行環境でもこのスクリプトを呼び、クラウドでは scripts/cloud-session.sh の後に呼ぶ。
-# クラウドでだけ要る分は scripts/cloud-setup.sh（スナップショット）と scripts/cloud-session.sh（セッションごと）が持つ。
+# クラウドでだけ要る分は scripts/cloud-snapshot.sh（スナップショット）と scripts/cloud-session.sh（セッションごと）が持つ。
 # 人間が叩くときは、リポジトリのルートで `bash scripts/setup.sh`（どのディレクトリから呼んでも、このファイルが在るチェックアウトを揃える）。
 
 set -euo pipefail

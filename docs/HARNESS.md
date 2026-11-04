@@ -141,7 +141,7 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | GitHub への到達 | `gh` で到達する | MCP の GitHub ツールで issue と PR を扱い、`gh api` の REST を予備にする。`gh` の GraphQL はプロキシが遮断するので、`gh pr` と `gh issue` の多くは HTTP 403 になる |
 | 外向き通信 | 制限なし | **許可制**（§4） |
 | commit の committer | 人間名義 | コンテナの名義のまま（署名が強制される）。author だけ人間名義へ焼く |
-| 環境の準備（スナップショット） | 無し | クラウド環境のセットアップスクリプト欄が `scripts/cloud-setup.sh` を呼び、mise・ランタイム・依存・ブラウザを入れる |
+| 環境の準備（スナップショット） | 無し | クラウド環境のセットアップスクリプト欄が `scripts/cloud-snapshot.sh` を呼び、mise・ランタイム・依存・ブラウザを入れる |
 | 環境の準備（セッションごと） | `.claude/hooks/session-start.sh` が `scripts/setup.sh` を呼ぶ | `.claude/hooks/session-start.sh` が `scripts/cloud-session.sh`（名義と mise の検査・shims の PATH の受け渡し）と `scripts/setup.sh` を順に呼ぶ |
 | ランタイムの活性化 | シェルが mise を活性化している | フックが渡した PATH で効く（下記） |
 
@@ -167,10 +167,10 @@ mise が無いときも `scripts/cloud-session.sh` は止まり、`/root/coten-a
 | 揃えるもの | 正 | 手元 | リモート | CI |
 |---|---|---|---|---|
 | git のフックの向き先（相対の `.githooks`） | `.githooks/` | `scripts/setup.sh` | `scripts/setup.sh` | 揃えない |
-| ランタイム | `mise.toml` | `scripts/setup.sh` | `scripts/cloud-setup.sh`・`scripts/setup.sh` | `mise-action` |
-| 依存 | `web/pnpm-lock.yaml` | `scripts/setup.sh` | `scripts/cloud-setup.sh`・`scripts/setup.sh` | `check.yml` |
+| ランタイム | `mise.toml` | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `mise-action` |
+| 依存 | `web/pnpm-lock.yaml` | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `check.yml` |
 | pnpm の store の置き場 | `web/pnpm-workspace.yaml` の `storeDir` | pnpm が読む | pnpm が読む | pnpm が読む |
-| smoke テストのブラウザ | `web/pnpm-lock.yaml` の `@playwright/test` の版 | `scripts/setup.sh` | `scripts/cloud-setup.sh`（§4） | `check.yml` |
+| smoke テストのブラウザ | `web/pnpm-lock.yaml` の `@playwright/test` の版 | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`（§4） | `check.yml` |
 
 `core.hooksPath` を絶対パスにすると、worktree の `.githooks` を直しても本体の版が走る。
 worktree ごとの設定（`extensions.worktreeConfig`）に残った値は共有の設定より優先されるので、`scripts/setup.sh` は先にそれを消す。
@@ -200,7 +200,7 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 | `.claude/settings.json` | 権限（`permissions`）・`SessionStart` の配線 |
 | `.claude/hooks/session-start.sh` | 実行環境を見分けて準備のスクリプトを呼ぶ順 |
 | `scripts/cloud-session.sh` | リモートのセッションごとの準備のうちクラウドでだけ要る分（名義と mise の検査・shims の PATH の受け渡し） |
-| `scripts/cloud-setup.sh` | リモートのスナップショットに残す準備（mise の版・ランタイム・依存・smoke テストのブラウザ） |
+| `scripts/cloud-snapshot.sh` | リモートのスナップショットに残す準備（mise の版・ランタイム・依存・smoke テストのブラウザ） |
 | `scripts/setup.sh` | どの実行環境でも要る環境準備（§3「揃えるもの」） |
 | `web/pnpm-workspace.yaml` | pnpm の store の置き場（`storeDir`） |
 | `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
@@ -212,7 +212,7 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 | `.vocabulary/banned.tsv` | 禁止語の検査が読む、`.claude/rules/writing.md` の表の写し |
 | `.vocabulary/allow` | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語） |
 | クラウド環境の環境変数欄 | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義） |
-| クラウド環境のセットアップスクリプト欄 | `bash /home/user/coten-atlas/scripts/cloud-setup.sh` の一行 |
+| クラウド環境のセットアップスクリプト欄 | `bash /home/user/coten-atlas/scripts/cloud-snapshot.sh` の一行 |
 | クラウド環境のネットワーク設定 | 許可ドメイン（§4） |
 | `.claude/skills/` | 同梱の規約 skill。プラグインを入れていないので本体を置いてある。`karpathy-guidelines` は外部由来（出所 https://github.com/multica-ai/andrej-karpathy-skills の `skills/karpathy-guidelines/SKILL.md`、固定 2c60614、MIT。上流の更新は手で取り込む） |
 | `mise.toml`（ルート） | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む |
