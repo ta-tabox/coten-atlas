@@ -188,10 +188,9 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 | `cdn.playwright.dev` | 足す | smoke テストのブラウザの取得 |
 | `anchor.fm` | 足す | `pnpm sync` が RSS を取得する（`web/scripts/sync-feed.ts`） |
 | `tiles.openfreemap.org` | 足す | ベースマップのスタイルとタイル（`web/src/lib/map/config.ts`）。ブラウザで地図を開くときに取得する |
+| `open.spotify.com`・`coten.co.jp` | 足す | 画面のリンク先。コンテナのブラウザでリンクを押し、遷移先が開くかを確かめるときに取得する |
 | `mise.run` | 足さない | mise は npm から入れるので要らない |
 | `mise-versions.jdx.dev` | 足さない | 届かなくても `mise install` は別の経路で版の一覧を取得する |
-
-画面のリンク先（`open.spotify.com`・`coten.co.jp`）は読み手のブラウザが開くだけで、コンテナからは取得しないので足さない。
 
 ## 5. 設定の置き場
 
