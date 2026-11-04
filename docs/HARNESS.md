@@ -142,19 +142,20 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 | 外向き通信 | 制限なし | **許可制**（§4） |
 | commit の committer | 人間名義 | コンテナの名義のまま（署名が強制される）。author だけ人間名義へ焼く |
 | 環境の準備（スナップショット） | 無し | クラウド環境のセットアップスクリプト欄が `scripts/cloud-setup.sh` を呼び、mise・ランタイム・依存・ブラウザを入れる |
-| 環境の準備（セッションごと） | `.claude/hooks/session-start.sh` が `scripts/setup.sh` を呼ぶ | `.claude/hooks/session-start.sh` が名義を検査し、ランタイムと依存を追いつかせ、shims の PATH をセッションへ渡す |
+| 環境の準備（セッションごと） | `.claude/hooks/session-start.sh` が `scripts/setup.sh` を呼ぶ | `.claude/hooks/session-start.sh` が `scripts/cloud-session.sh`（名義と mise の検査・shims の PATH の受け渡し）と `scripts/setup.sh` を順に呼ぶ |
 | ランタイムの活性化 | シェルが mise を活性化している | フックが渡した PATH で効く（下記） |
 
-`session-start.sh` は `CLAUDE_CODE_REMOTE` で手元とリモートを分け、手元では `scripts/setup.sh` を呼んで、それが途中で止まってもセッションを立てる。
-デスクトップアプリの worktree セッションでは `CLAUDE_PROJECT_DIR` が本体を指すので、フックは標準入力の JSON の `cwd` が属する作業ツリーの `scripts/setup.sh` を呼ぶ。
+`session-start.sh` は `CLAUDE_CODE_REMOTE` で手元とリモートを分ける振り分けだけを持つ。
+手元では `scripts/setup.sh` が途中で止まってもセッションを立て、リモートではどちらかのスクリプトが失敗したらセッションを止める。
+デスクトップアプリの worktree セッションでは `CLAUDE_PROJECT_DIR` が本体を指すので、フックは標準入力の JSON の `cwd` が属する作業ツリーのスクリプトを呼ぶ。
 フックの本文は本体のチェックアウトの版が走るので、フックの修正が worktree セッションに効くのは main へ取り込んだ後からである。
-`GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL` はクラウド環境の環境変数欄が持ち、未設定ならフックが残りの準備をせずに止める。
-セットアップスクリプト欄はクラウド環境の環境変数が入る前に走るので、名義の検査はフックが持つ。
-mise が無いときもフックは止まり、`/root/coten-atlas-setup.log` に欄の段ごとの成否が残る。
+`GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL` はクラウド環境の環境変数欄が持ち、未設定なら `scripts/cloud-session.sh` が残りの準備をせずに止める。
+セットアップスクリプト欄はクラウド環境の環境変数が入る前に走るので、名義の検査はセッションごとの側が持つ。
+mise が無いときも `scripts/cloud-session.sh` は止まり、`/root/coten-atlas-setup.log` に欄の段ごとの成否が残る。
 
-リモートのシェルは mise を活性化しないので、**フックが shims の PATH を `CLAUDE_ENV_FILE` へ渡す**。
+リモートのシェルは mise を活性化しないので、**`scripts/cloud-session.sh` が shims の PATH を `CLAUDE_ENV_FILE` へ渡す**。
 渡さないと `pnpm check` はイメージ同梱の node と pnpm で走り、`mise.toml` の固定が手元とも CI とも揃わない（このとき緑になっても、それは別の版で緑になったという意味しかない）。
-渡し口はこの追記専用ファイルの一つだけで、フックが自分の PATH を書き換えても子プロセスの外へは出ない。
+セッションのシェルへ渡せるのはこの追記専用ファイルの一つだけで、フックが自分の PATH を書き換えても子プロセスの外へは出ない。
 **効くのは次のセッションから**なので、フックを直した回では確かめられない。
 確かめるのは `node -v` と `pnpm -v` が `mise.toml` の固定と一致するか。
 
@@ -165,9 +166,9 @@ mise が無いときもフックは止まり、`/root/coten-atlas-setup.log` に
 
 | 揃えるもの | 正 | 手元 | リモート | CI |
 |---|---|---|---|---|
-| git のフックの向き先（相対の `.githooks`） | `.githooks/` | `scripts/setup.sh` | `session-start.sh` | 揃えない |
-| ランタイム | `mise.toml` | `scripts/setup.sh` | `scripts/cloud-setup.sh`・`session-start.sh` | `mise-action` |
-| 依存 | `web/pnpm-lock.yaml` | `scripts/setup.sh` | `scripts/cloud-setup.sh`・`session-start.sh` | `check.yml` |
+| git のフックの向き先（相対の `.githooks`） | `.githooks/` | `scripts/setup.sh` | `scripts/setup.sh` | 揃えない |
+| ランタイム | `mise.toml` | `scripts/setup.sh` | `scripts/cloud-setup.sh`・`scripts/setup.sh` | `mise-action` |
+| 依存 | `web/pnpm-lock.yaml` | `scripts/setup.sh` | `scripts/cloud-setup.sh`・`scripts/setup.sh` | `check.yml` |
 | pnpm の store の置き場 | `web/pnpm-workspace.yaml` の `storeDir` | pnpm が読む | pnpm が読む | pnpm が読む |
 | smoke テストのブラウザ | `web/pnpm-lock.yaml` の `@playwright/test` の版 | `scripts/setup.sh` | `scripts/cloud-setup.sh`（§4） | `check.yml` |
 
@@ -197,9 +198,10 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 | 置き場 | 持つもの |
 |---|---|
 | `.claude/settings.json` | 権限（`permissions`）・`SessionStart` の配線 |
-| `.claude/hooks/session-start.sh` | リモートのセッションごとの準備（名義の検査・ランタイムと依存の追いつき・shims の PATH の受け渡し）と、手元での `scripts/setup.sh` の呼び出し |
+| `.claude/hooks/session-start.sh` | 実行環境を見分けて準備のスクリプトを呼ぶ順 |
+| `scripts/cloud-session.sh` | リモートのセッションごとの準備のうちクラウドでだけ要る分（名義と mise の検査・shims の PATH の受け渡し） |
 | `scripts/cloud-setup.sh` | リモートのスナップショットに残す準備（mise の版・ランタイム・依存・smoke テストのブラウザ） |
-| `scripts/setup.sh` | 手元（本体と worktree）の環境準備（§3「揃えるもの」） |
+| `scripts/setup.sh` | どの実行環境でも要る環境準備（§3「揃えるもの」） |
 | `web/pnpm-workspace.yaml` | pnpm の store の置き場（`storeDir`） |
 | `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
 | `.githooks/commit-msg` | コミット本文の禁止語を commit の前で止める git フック |
@@ -221,7 +223,7 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 セットアップスクリプト欄の結果は、欄を設定した後に立てたセッションのスナップショットから残る。
 
 `.githooks/` のフックは git の既定の `.git/hooks/` に無いので、クローンごとに `git config core.hooksPath .githooks` で有効にする。
-手元では `scripts/setup.sh`、リモートでは `session-start.sh` がこの設定を入れる。
+どの実行環境でも `scripts/setup.sh` がこの設定を入れる。
 
 ## 6. 意図的にやらないこと
 

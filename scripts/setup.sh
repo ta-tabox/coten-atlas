@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 手元のチェックアウト（リポジトリ本体と worktree）で、`pnpm check` と `pnpm dev` が前置き無しで動くところまで揃える。
+# チェックアウト（リポジトリ本体・worktree・クラウドのクローン）で、`pnpm check` と `pnpm dev` が前置き無しで動くところまで揃える。
 # 何度走らせても同じ状態に落ち着く。
 #
 # 揃えるもの。
@@ -10,7 +10,8 @@
 #   - smoke テストのブラウザ（`playwright install chromium`）
 #
 # 版の正は mise.toml と web/pnpm-lock.yaml にあり、ここには書かない。
-# リモート（Claude Code on the web）の準備は scripts/cloud-setup.sh と .claude/hooks/session-start.sh が別に持ち、手元ではそのフックがこのスクリプトを呼ぶ。
+# .claude/hooks/session-start.sh がどの実行環境でもこのスクリプトを呼び、クラウドでは scripts/cloud-session.sh の後に呼ぶ。
+# クラウドでだけ要る分は scripts/cloud-setup.sh（スナップショット）と scripts/cloud-session.sh（セッションごと）が持つ。
 # 人間が叩くときは、リポジトリのルートで `bash scripts/setup.sh`（どのディレクトリから呼んでも、このファイルが在るチェックアウトを揃える）。
 
 set -euo pipefail

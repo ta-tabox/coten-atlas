@@ -9,9 +9,9 @@
 #   - smoke テストのブラウザ（`playwright install chromium`。版は web/pnpm-lock.yaml の `@playwright/test` が決める）
 #
 # 欄の結果はファイルシステムのスナップショットとして残り、セッションごとには走らない。
-# セッションごとの準備（名義の検査・git のフックの向き先・shims の PATH）は .claude/hooks/session-start.sh が持つ。
+# セッションごとの準備は .claude/hooks/session-start.sh が呼ぶ scripts/cloud-session.sh と scripts/setup.sh が持つ。
 # 欄は root で、クラウド環境の環境変数が入る前に走る。
-# 欄が失敗すると環境そのものが立たないので、段が失敗しても exit 0 で終え、失敗した段は起動フックが補う。
+# 欄が失敗すると環境そのものが立たないので、段が失敗しても exit 0 で終え、失敗した段は、セッションごとに scripts/cloud-session.sh が mise の欠けを告げて止め、scripts/setup.sh が残りを補う。
 # 各段の所要秒と成否は `/root/coten-atlas-setup.log` に残す。
 
 set -uo pipefail
