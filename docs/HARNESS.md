@@ -197,13 +197,14 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 
 | 置き場 | 持つもの |
 |---|---|
-| `.claude/settings.json` | 権限（`permissions`）・`SessionStart` の配線 |
+| `.claude/settings.json` | 権限（`permissions`。各規則の理由は下の「権限の規則」）・PreToolUse と `SessionStart` の配線 |
 | `.claude/hooks/session-start.sh` | 実行環境を見分けて準備のスクリプトを呼ぶ順 |
 | `scripts/cloud-session.sh` | リモートのセッションごとの準備のうちクラウドでだけ要る分（名義と mise の検査・shims の PATH の受け渡し） |
 | `scripts/cloud-snapshot.sh` | リモートのスナップショットに残す準備（mise の版・ランタイム・依存・smoke テストのブラウザ） |
 | `scripts/setup.sh` | どの実行環境でも要る環境準備（§3「揃えるもの」） |
 | `web/pnpm-workspace.yaml` | pnpm の store の置き場（`storeDir`） |
 | `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
+| `.claude/hooks/guard-gh-api.sh` | `gh api` の戻せない書き込みを ask へ回す PreToolUse フック |
 | `.githooks/commit-msg` | コミット本文の禁止語を commit の前で止める git フック |
 | `.githooks/pre-commit` | ステージした追加行の禁止語を、コミットを止めずに報告する git フック |
 | `scripts/lint-vocabulary.sh` | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る |
@@ -224,6 +225,30 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 
 `.githooks/` のフックは git の既定の `.git/hooks/` に無いので、クローンごとに `git config core.hooksPath .githooks` で有効にする。
 どの実行環境でも `scripts/setup.sh` がこの設定を入れる。
+
+### 権限の規則
+
+`.claude/settings.json` の `permissions` と PreToolUse フックのうち、設定の値だけでは理由が読めないものを並べる。
+どの操作を人間に訊くかの方針は `CLAUDE.md`「git」節が持つ。
+
+- **ask の `git push --force` 系・`--delete`・`--mirror` と、`gh api` の DELETE の2パターン**
+  権限のパターンは前方一致で、`git push origin --force` のようにフラグが後ろに来る語順を拾えない
+  語順に依存しない判定はフックが持ち、ask の列挙はフックを外したときの下限として残す
+- **フックの `if` を `Bash(git:*)`・`Bash(gh:*)` のコマンド名で絞る**
+  コマンド名より細かいパターンは、`$( )` を含むコマンドでフックを起動させずに通す
+- **`gh api` を allow に置き、判定を `guard-gh-api.sh` に任せる**
+  `gh api` はコマンド名が一つで、前方一致では読み取りと書き込みを分けられない
+  全部を ask にすると、`gh issue comment` と同じく戻せるレビューの読み取りや返信まで毎回訊かれる
+  フックが訊かずに通すのは、読み取り・コメント投稿・レビュースレッドの resolve だけである
+- **`pnpm check` を構成する個別のスクリプトを allow に置く**
+  失敗の切り分けで単体で打つ
+- **deny の `.env*` を Read と Edit で別に書く**
+  読みは秘密を持つ名前だけを塞いで `.env.example` を読める側に置き、書きは `.env*` を一律に塞ぐ
+  評価は deny・ask・allow の順で、狭い allow は deny を覆さないので、例外は名前の書き方で表す
+  `Write(パス)` の規則は受理されるが参照されないので、書きは `Edit` で書く
+- **MCP の GitHub ツールをツール名で ask と deny に置く**
+  `gh` を通らないので、`gh` に設定した規則もフックも効かない
+  PR と issue の本文やコメントの編集は GitHub の編集履歴から戻せるので、何も置かない
 
 ## 6. 意図的にやらないこと
 
