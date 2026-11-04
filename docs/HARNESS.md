@@ -186,14 +186,12 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 |---|---|---|
 | `registry.npmjs.org` | 既定のリストにある | mise 本体と依存の取得 |
 | `cdn.playwright.dev` | 足す | smoke テストのブラウザの取得 |
+| `anchor.fm` | 足す | `pnpm sync` が RSS を取得する（`web/scripts/sync-feed.ts`） |
+| `tiles.openfreemap.org` | 足す | ベースマップのスタイルとタイル（`web/src/lib/map/config.ts`）。ブラウザで地図を開くときに取得する |
 | `mise.run` | 足さない | mise は npm から入れるので要らない |
 | `mise-versions.jdx.dev` | 足さない | 届かなくても `mise install` は別の経路で版の一覧を取得する |
 
-次の2件は既定のリストに無く、足していない。
-
-- **`https://tiles.openfreemap.org`** — ベースマップのタイル。ブラウザプレビューから引く先
-  出られなければ地図の見た目はリモートで確認できない
-- **`https://anchor.fm/...`** — RSS（`pnpm sync` の取得先）。出られなければ同期スクリプトはリモートで動かない
+画面のリンク先（`open.spotify.com`・`coten.co.jp`・`github.com`）は読み手のブラウザが開くだけで、コンテナからは取得しないので足さない。
 
 ## 5. 設定の置き場
 
