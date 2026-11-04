@@ -191,7 +191,7 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 | `mise.run` | 足さない | mise は npm から入れるので要らない |
 | `mise-versions.jdx.dev` | 足さない | 届かなくても `mise install` は別の経路で版の一覧を取得する |
 
-画面のリンク先（`open.spotify.com`・`coten.co.jp`・`github.com`）は読み手のブラウザが開くだけで、コンテナからは取得しないので足さない。
+画面のリンク先（`open.spotify.com`・`coten.co.jp`）は読み手のブラウザが開くだけで、コンテナからは取得しないので足さない。
 
 ## 5. 設定の置き場
 
