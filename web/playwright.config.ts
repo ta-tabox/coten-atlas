@@ -29,14 +29,6 @@ export default defineConfig({
   // 判定の口は pnpm check の一本なので、失敗を握り潰すレポータを挟まない。
   reporter: [["list"]],
 
-  // `PLAYWRIGHT_CHROMIUM_EXECUTABLE` が未設定なら、Playwright が自分で入れたブラウザを使う。
-  // 設定するのはリモートのセッション起動フック（`.claude/hooks/session-start.sh`）だけで、手元と CI は設定しない。
-  use: {
-    launchOptions: {
-      executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE,
-    },
-  },
-
   projects: [
     {
       name: "smoke",
