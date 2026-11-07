@@ -7,7 +7,7 @@
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true,
-    "root": ".."
+    "root": "."
   },
   "formatter": {
     "enabled": true,
@@ -99,7 +99,7 @@
   },
   "overrides": [
     {
-      "includes": ["**/CLAUDE.md", "**/.claude/**"],
+      "includes": ["**/CLAUDE.md", "**/.claude/**", "**/.github/**/*.md"],
       "markdown": {
         "formatter": {
           "enabled": false
@@ -107,7 +107,7 @@
       }
     },
     {
-      "includes": ["vitest.config.ts", "next.config.ts"],
+      "includes": ["web/vitest.config.ts", "web/next.config.ts"],
       "linter": {
         "rules": {
           "style": {
@@ -117,7 +117,7 @@
       }
     },
     {
-      "includes": ["src/lib/**"],
+      "includes": ["web/src/lib/**"],
       "linter": {
         "rules": {
           "style": {
@@ -149,7 +149,11 @@
       }
     },
     {
-      "includes": ["src/lib/catalog-dir.ts", "scripts/**", "tests/**"],
+      "includes": [
+        "web/src/lib/catalog-dir.ts",
+        "web/scripts/**",
+        "web/tests/**"
+      ],
       "linter": {
         "rules": {
           "style": {
@@ -178,9 +182,9 @@
     },
     {
       "includes": [
-        "src/components/map/MapCanvas.*",
-        "src/components/map/SeriesLayers.*",
-        "src/lib/map/series-layer.*"
+        "web/src/components/map/MapCanvas.*",
+        "web/src/components/map/SeriesLayers.*",
+        "web/src/lib/map/series-layer.*"
       ],
       "linter": {
         "rules": {

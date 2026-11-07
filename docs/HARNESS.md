@@ -8,7 +8,7 @@
 | 層 | 何を見るか | 実体 |
 |---|---|---|
 | **L0 型** | 型が通るか | `tsc --noEmit` |
-| **L1 静的** | 規約・書式・明らかな誤り・コメントの禁止語 | `biome ci .` と `node scripts/lint-comments.ts` |
+| **L1 静的** | 規約・書式・明らかな誤り・コメントの禁止語 | `biome ci ..` と `node scripts/lint-comments.ts` |
 | **L2 ユニット** | 関数とコンポーネントの振る舞いと、`catalog/` の現物がスキーマに合うか | `vitest run`（+ React Testing Library、jsdom） |
 | **L3 ビルド** | static export が実際に吐けるか | `next build` |
 | **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法） | ヘッドレスの Chromium で `out/` を開く（`playwright test`） |
@@ -36,7 +36,7 @@ L4 を層に持つのは、L3 までがどれも「配信物へ実際に到達�
 アプリは `web/` 配下なので、**打つ場所も `web/` の中**。
 
 ```
-cd web && pnpm check   # tsc --noEmit → biome ci . → vitest run → next build → smoke
+cd web && pnpm check   # tsc --noEmit → biome ci .. → vitest run → next build → smoke
 ```
 
 L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next build` の出力だからである。

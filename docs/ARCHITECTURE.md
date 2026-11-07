@@ -365,6 +365,7 @@ catalog/
 ├── README.md              # リポジトリの玄関。GitHub がここを描く
 ├── LICENSE                # GitHub がライセンス欄に出す
 ├── CLAUDE.md              # セッションの入口（規約・git）
+├── biome.json             # lint と整形の設定。root からリポジトリ全体を見る
 ├── catalog/               # 人間キュレーション層と時代区分。アプリの外なのでルート側
 ├── docs/                  # リポジトリ自身の文書
 │   ├── ARCHITECTURE.md    # この文書（現況）
@@ -383,7 +384,7 @@ catalog/
     ├── tests/             # `src/` に併置しないテスト
     ├── package.json       # 依存とタスクの定義
     ├── next.config.ts     # ビルドと配信の設定（static export / GitHub Pages）
-    └── tsconfig.json / biome.json / postcss.config.mjs / vitest.config.ts / vitest-setup.ts
+    └── tsconfig.json / postcss.config.mjs / vitest.config.ts / vitest-setup.ts
 ```
 
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
