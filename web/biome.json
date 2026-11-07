@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.4/schema.json",
   "files": {
     "includes": ["**", "!**/.next", "!**/out", "!**/next-env.d.ts"]
   },
@@ -18,6 +18,14 @@
   "css": {
     "parser": {
       "tailwindDirectives": true
+    }
+  },
+  "markdown": {
+    "parser": {
+      "frontmatter": true
+    },
+    "formatter": {
+      "proseWrap": "preserve"
     }
   },
   "javascript": {
@@ -90,6 +98,14 @@
     }
   },
   "overrides": [
+    {
+      "includes": ["**/CLAUDE.md", "**/.claude/**"],
+      "markdown": {
+        "formatter": {
+          "enabled": false
+        }
+      }
+    },
     {
       "includes": ["vitest.config.ts", "next.config.ts"],
       "linter": {
