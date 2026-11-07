@@ -44,6 +44,7 @@
 - 隣接ファイルを読まずに新規ファイルを書くときは、先に `.claude/rules/coding.md` と該当言語の `languages/<lang>.md`（画面へ触るなら `design.md` も）を Read する
 - 書き終えたら、PR の前に skill `review-checklist` の表を、変更した各コメント・名前・ファイルへ当てる
 - `karpathy-guidelines` は外部由来（https://github.com/multica-ai/andrej-karpathy-skills の 2c60614、MIT）で、リモートの空のコンテナでも初回から効くよう本体を `.claude/skills/` へ同梱してある
+  上流の更新は手で取り込む
 - `ponytail` は外部由来（https://github.com/DietrichGebert/ponytail の 96608e0、MIT）で、クラウドセッションが plugin を読み込まないので `skills/` の `ponytail`・`ponytail-review`・`ponytail-audit` を `.claude/skills/` へ同梱してある
   外したのは強度の切り替え（hook とコマンドが前提で同梱では効かない）・`argument-hint`・コメントを 1 行の why に限る行（`coding.md` の JSDoc 規則が勝つ）で、review と audit は出力の言語を日本語へ置き換えた
   `shortcut:` コメントの行は上流のまま残してある
