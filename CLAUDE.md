@@ -1,7 +1,6 @@
 # coten-atlas
 
-目的: コテンラジオの各シリーズを世界地図×時系列にマッピングし、
-どの場所・どの時代の話か、どのシリーズと近接するかを一望できる Web アプリを作る。
+コテンラジオの各シリーズを世界地図×時系列にマッピングし、どの場所・どの時代の話か、どのシリーズと近接するかを一望できる Web アプリ。
 転職ポートフォリオ（coten-career と接続）として公開する。
 ポートフォリオとして見せられる品質に届くまで作り、その基準（完了条件の閾値）は `docs/ROADMAP.md` が持つ。
 恒久運用を前提にした造りにしない。
@@ -18,8 +17,9 @@
   PR の作成とマージは、人間がそう指示したときだけ
 - **戻せない操作（force push・履歴の書き換え・ブランチやタグの削除）・`gh pr merge`・`gh release` は、その都度人間に諾否を訊く**
   マージは main への push が本番デプロイや migration を起こしうるので、戻る操作に入れない
-- 機械の判定は `.claude/settings.json` の `permissions`（`gh repo delete`・`gh repo edit`・`gh secret`・`gh auth` は deny）と、コマンド全文を見る `.claude/hooks/guard-force-push.sh`・`guard-gh-api.sh` が持つ
+- 機械の判定は `.claude/settings.json` の `permissions`（`gh repo delete`・`gh repo edit`・`gh secret`・`gh auth` は deny。`gh` を通らない MCP の GitHub ツールもツール名で同じ層に置く）と、コマンド全文を見る `.claude/hooks/guard-force-push.sh`・`guard-gh-api.sh` が持つ
   `gh api` の読み取り・コメント投稿・レビュースレッドの resolve だけを訊かずに通す形は雛形からの逸脱で、正はこの節
+  各規則の仕組み上の理由は `docs/HARNESS.md`「権限の規則」が持つ
 
 ## 開発ハーネス（本文は `docs/HARNESS.md`）
 
