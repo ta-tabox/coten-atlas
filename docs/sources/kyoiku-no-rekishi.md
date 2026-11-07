@@ -1,13 +1,13 @@
 # 教育の歴史（`kyoiku-no-rekishi`・season 25）
 
-| `catalog/` の鍵 | 値 |
-|---|---|
-| `series.json` の `id` | `kyoiku-no-rekishi` |
-| `series.json` の `season` | 25 |
-| `series.json` の `timeRange` | `"untimed"` |
-| `series.json` の `anchor` | `"unlocated"` |
-| `series.json` の `region` | `地域なし` |
-| `loci.geojson` の事物 | 無し |
+| `catalog/` の鍵              | 値                  |
+| ---------------------------- | ------------------- |
+| `series.json` の `id`        | `kyoiku-no-rekishi` |
+| `series.json` の `season`    | 25                  |
+| `series.json` の `timeRange` | `"untimed"`         |
+| `series.json` の `anchor`    | `"unlocated"`       |
+| `series.json` の `region`    | `地域なし`          |
+| `loci.geojson` の事物        | 無し                |
 
 ## `timeRange`
 
@@ -19,10 +19,10 @@
 
 裏どりで確かめた年は、`catalog/` の値には使わず、年代の見せ方を決めるときの材料として次の表に残す。
 
-| 端 | 年 | 何の年か | 典拠 | 並立する説 |
-|---|---|---|---|---|
-| 始まり | -2500 | メソポタミアで学校の考古学的な痕跡が確認できる年代（第 1 回が扱う古代文明の学校） | [World History Encyclopedia: Mesopotamian Education](https://www.worldhistory.org/article/2203/mesopotamian-education/)（三次） | 無し |
-| 番組の範囲の終わり | 1852 | マサチューセッツ州の義務教育法の制定（第 13 回が扱う制度のうち最も遅い） | [Encyclopedia.com: Act Concerning the Attendance of Children at School](https://www.encyclopedia.com/social-sciences/applied-and-social-sciences-magazines/act-concerning-attendance-children-school)（三次） | 無し |
+| 端                 | 年    | 何の年か                                                                          | 典拠                                                                                                                                                                                                          | 並立する説 |
+| ------------------ | ----- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 始まり             | -2500 | メソポタミアで学校の考古学的な痕跡が確認できる年代（第 1 回が扱う古代文明の学校） | [World History Encyclopedia: Mesopotamian Education](https://www.worldhistory.org/article/2203/mesopotamian-education/)（三次）                                                                               | 無し       |
+| 番組の範囲の終わり | 1852  | マサチューセッツ州の義務教育法の制定（第 13 回が扱う制度のうち最も遅い）          | [Encyclopedia.com: Act Concerning the Attendance of Children at School](https://www.encyclopedia.com/social-sciences/applied-and-social-sciences-magazines/act-concerning-attendance-children-school)（三次） | 無し       |
 
 ## 代表点
 
@@ -42,16 +42,16 @@
 2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-20260910-untimed-concept-series に従って `timeRange` を `"untimed"` にした。
 2026-09-12 に人間が仮決定を採用して決着させた。
 
-| 論点 | 仮決定 | 覆りうる根拠 |
-|---|---|---|
+| 論点         | 仮決定      | 覆りうる根拠                                                                         |
+| ------------ | ----------- | ------------------------------------------------------------------------------------ |
 | 時期を持つか | `"untimed"` | 時期なしのシリーズの見せ方を決めて番組が語る範囲を年で出すなら、-2500..1852 を使える |
 
 ## 裏どりの出所
 
-| 出所 | 何を持つか |
-|---|---|
-| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりと番組の範囲の終わりの年・`kind` の裏どり |
-| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
-| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容から決めた年と、`region` の判断 |
-| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
-| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |
+| 出所                                                                                                          | 何を持つか                                                      |
+| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりと番組の範囲の終わりの年・`kind` の裏どり                 |
+| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200)        | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157)                                           | 各回の内容から決めた年と、`region` の判断                       |
+| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160)               | `timeRange` を `"untimed"` にした線                             |
+| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明                        | 各回が扱う主題                                                  |

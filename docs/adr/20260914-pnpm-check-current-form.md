@@ -16,13 +16,13 @@ ADR 規約 4 は「決定は生きていて帰結だけが古くなった場合�
 
 `web/` で打つ `pnpm check` の一本を機械判定の口にする。
 
-| 段 | script | 実体 |
-|---|---|---|
-| L0 型 | `typecheck` | `tsc --noEmit` |
-| L1 静的 | `lint` | `biome ci .` と `node scripts/lint-comments.ts` |
-| L2 ユニット | `test` | `vitest run`（`catalog/` の検査を含む） |
-| L3 ビルド | `build` | `next build` |
-| L4 スモーク | `smoke` | `playwright test --project=smoke` |
+| 段          | script      | 実体                                            |
+| ----------- | ----------- | ----------------------------------------------- |
+| L0 型       | `typecheck` | `tsc --noEmit`                                  |
+| L1 静的     | `lint`      | `biome ci .` と `node scripts/lint-comments.ts` |
+| L2 ユニット | `test`      | `vitest run`（`catalog/` の検査を含む）         |
+| L3 ビルド   | `build`     | `next build`                                    |
+| L4 スモーク | `smoke`     | `playwright test --project=smoke`               |
 
 並びは安いものから落とす。
 タスクは `web/package.json` の scripts が持ち、`mise.toml` は `[tools]` だけを持って `run = "pnpm check"` の薄いラッパを置かない。
