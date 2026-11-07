@@ -1,13 +1,13 @@
 # 民主主義の歴史（`minshushugi-no-rekishi`・season 46）
 
-| `catalog/` の鍵 | 値 |
-|---|---|
-| `series.json` の `id` | `minshushugi-no-rekishi` |
-| `series.json` の `season` | 46 |
-| `series.json` の `timeRange` | `"untimed"` |
-| `series.json` の `anchor` | `"unlocated"` |
-| `series.json` の `region` | `ヨーロッパ` |
-| `loci.geojson` の事物 | 無し |
+| `catalog/` の鍵              | 値                       |
+| ---------------------------- | ------------------------ |
+| `series.json` の `id`        | `minshushugi-no-rekishi` |
+| `series.json` の `season`    | 46                       |
+| `series.json` の `timeRange` | `"untimed"`              |
+| `series.json` の `anchor`    | `"unlocated"`            |
+| `series.json` の `region`    | `ヨーロッパ`             |
+| `loci.geojson` の事物        | 無し                     |
 
 ## `timeRange`
 
@@ -18,9 +18,9 @@
 
 裏どりで確かめた年は、`catalog/` の値には使わず、年代の見せ方を決めるときの材料として次の表に残す。
 
-| 端 | 年 | 何の年か | 典拠 | 並立する説 |
-|---|---|---|---|---|
-| 始まり | -508 | アテナイでのクレイステネスの改革（第 2 回が扱うアテナイの民主制の成立） | [Wikipedia: Cleisthenes](https://en.wikipedia.org/wiki/Cleisthenes)（参考程度） | 無し |
+| 端     | 年   | 何の年か                                                                | 典拠                                                                            | 並立する説 |
+| ------ | ---- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ---------- |
+| 始まり | -508 | アテナイでのクレイステネスの改革（第 2 回が扱うアテナイの民主制の成立） | [Wikipedia: Cleisthenes](https://en.wikipedia.org/wiki/Cleisthenes)（参考程度） | 無し       |
 
 始まりの典拠は英語版 Wikipedia 止まりで、`@historian` は脚注の先の文献までは辿れなかった。
 
@@ -46,18 +46,18 @@
 2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-20260910-untimed-concept-series に従って `timeRange` を `"untimed"` にした。
 2026-09-12 に人間が仮決定を採用して決着させ、見直しを [#210](https://github.com/ta-tabox/coten-atlas/issues/210)（民主主義の歴史（minshushugi-no-rekishi）の region をヨーロッパ・起源の区画・地域なしのどれにするか）へ切り出した。
 
-| 論点 | 仮決定 | 覆りうる根拠 |
-|---|---|---|
-| `region` | `ヨーロッパ` | 第 1 回はギリシア以前の民主主義の起源に触れる。その起源がヨーロッパの外なら本拠が変わる（配信フィードの説明からは起源の場所が読み取れず、典拠は取っていない）。見直しは #210 で行う |
-| 時期を持つか | `"untimed"` | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、クレイステネスの改革（-508）を使える。第 1 回が触れるギリシア以前の起源を起点に数えれば、始まりの年が早まる |
+| 論点         | 仮決定       | 覆りうる根拠                                                                                                                                                                        |
+| ------------ | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `region`     | `ヨーロッパ` | 第 1 回はギリシア以前の民主主義の起源に触れる。その起源がヨーロッパの外なら本拠が変わる（配信フィードの説明からは起源の場所が読み取れず、典拠は取っていない）。見直しは #210 で行う |
+| 時期を持つか | `"untimed"`  | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、クレイステネスの改革（-508）を使える。第 1 回が触れるギリシア以前の起源を起点に数えれば、始まりの年が早まる                 |
 
 ## 裏どりの出所
 
-| 出所 | 何を持つか |
-|---|---|
-| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりの年・`region` を支える事実・`kind` の裏どり |
-| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
-| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容から決めた年と、`region` と `id` の判断 |
-| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
-| [#210（見直し）](https://github.com/ta-tabox/coten-atlas/issues/210) | 採用した仮決定を人間が見直す論点と案 |
-| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |
+| 出所                                                                                                          | 何を持つか                                                      |
+| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりの年・`region` を支える事実・`kind` の裏どり              |
+| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200)        | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157)                                           | 各回の内容から決めた年と、`region` と `id` の判断               |
+| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160)               | `timeRange` を `"untimed"` にした線                             |
+| [#210（見直し）](https://github.com/ta-tabox/coten-atlas/issues/210)                                          | 採用した仮決定を人間が見直す論点と案                            |
+| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明                        | 各回が扱う主題                                                  |

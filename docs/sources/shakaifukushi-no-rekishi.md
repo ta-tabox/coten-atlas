@@ -1,13 +1,13 @@
 # 社会福祉の歴史（`shakaifukushi-no-rekishi`・season 38）
 
-| `catalog/` の鍵 | 値 |
-|---|---|
-| `series.json` の `id` | `shakaifukushi-no-rekishi` |
-| `series.json` の `season` | 38 |
-| `series.json` の `timeRange` | `"untimed"` |
-| `series.json` の `anchor` | `"unlocated"` |
-| `series.json` の `region` | `ヨーロッパ` |
-| `loci.geojson` の事物 | 無し |
+| `catalog/` の鍵              | 値                         |
+| ---------------------------- | -------------------------- |
+| `series.json` の `id`        | `shakaifukushi-no-rekishi` |
+| `series.json` の `season`    | 38                         |
+| `series.json` の `timeRange` | `"untimed"`                |
+| `series.json` の `anchor`    | `"unlocated"`              |
+| `series.json` の `region`    | `ヨーロッパ`               |
+| `loci.geojson` の事物        | 無し                       |
 
 ## `timeRange`
 
@@ -18,9 +18,9 @@
 
 裏どりで確かめた年は、`catalog/` の値には使わず、年代の見せ方を決めるときの材料として次の表に残す。
 
-| 端 | 年 | 何の年か | 典拠 | 並立する説 |
-|---|---|---|---|---|
-| 始まり | 1349 | イングランド王エドワード 3 世の労働者勅令の発布（1349 年 6 月 18 日。第 1 回が扱う施策のうち最も早い） | [Wikipedia: Ordinance of Labourers 1349](https://en.wikipedia.org/wiki/Ordinance_of_Labourers_1349)（参考程度） | 無し |
+| 端     | 年   | 何の年か                                                                                               | 典拠                                                                                                            | 並立する説 |
+| ------ | ---- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- | ---------- |
+| 始まり | 1349 | イングランド王エドワード 3 世の労働者勅令の発布（1349 年 6 月 18 日。第 1 回が扱う施策のうち最も早い） | [Wikipedia: Ordinance of Labourers 1349](https://en.wikipedia.org/wiki/Ordinance_of_Labourers_1349)（参考程度） | 無し       |
 
 始まりの典拠は英語版 Wikipedia 止まりで、`@historian` は脚注の先の文献までは辿れなかった。
 
@@ -46,18 +46,18 @@
 2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-20260910-untimed-concept-series に従って `timeRange` を `"untimed"` にした。
 2026-09-12 に人間が仮決定を採用して決着させ、見直しを [#212](https://github.com/ta-tabox/coten-atlas/issues/212)（社会福祉の歴史（shakaifukushi-no-rekishi）の region をヨーロッパと地域なしのどちらにするか）へ切り出した。
 
-| 論点 | 仮決定 | 覆りうる根拠 |
-|---|---|---|
-| `region` | `ヨーロッパ` | 第 2 回が扱うアメリカのニューディールを別の起源と見れば、表の 3 行目で `地域なし` になる。見直しは #212 で行う |
-| 時期を持つか | `"untimed"` | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、エドワード 3 世の労働者勅令（1349）を使える |
+| 論点         | 仮決定       | 覆りうる根拠                                                                                                   |
+| ------------ | ------------ | -------------------------------------------------------------------------------------------------------------- |
+| `region`     | `ヨーロッパ` | 第 2 回が扱うアメリカのニューディールを別の起源と見れば、表の 3 行目で `地域なし` になる。見直しは #212 で行う |
+| 時期を持つか | `"untimed"`  | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、エドワード 3 世の労働者勅令（1349）を使える            |
 
 ## 裏どりの出所
 
-| 出所 | 何を持つか |
-|---|---|
-| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりの年・`region` を支える事実・`kind` の裏どり |
-| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
-| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容から決めた年と、`region` と `id` の判断 |
-| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
-| [#212（見直し）](https://github.com/ta-tabox/coten-atlas/issues/212) | 採用した仮決定を人間が見直す論点と案 |
-| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |
+| 出所                                                                                                          | 何を持つか                                                      |
+| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりの年・`region` を支える事実・`kind` の裏どり              |
+| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200)        | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157)                                           | 各回の内容から決めた年と、`region` と `id` の判断               |
+| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160)               | `timeRange` を `"untimed"` にした線                             |
+| [#212（見直し）](https://github.com/ta-tabox/coten-atlas/issues/212)                                          | 採用した仮決定を人間が見直す論点と案                            |
+| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明                        | 各回が扱う主題                                                  |

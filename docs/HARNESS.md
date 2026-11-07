@@ -5,14 +5,14 @@
 
 ## 1. 検証の層構造
 
-| 層 | 何を見るか | 実体 |
-|---|---|---|
-| **L0 型** | 型が通るか | `tsc --noEmit` |
-| **L1 静的** | 規約・書式・明らかな誤り・コメントの禁止語 | `biome ci ..` と `node scripts/lint-comments.ts` |
-| **L2 ユニット** | 関数とコンポーネントの振る舞いと、`catalog/` の現物がスキーマに合うか | `vitest run`（+ React Testing Library、jsdom） |
-| **L3 ビルド** | static export が実際に吐けるか | `next build` |
-| **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法） | ヘッドレスの Chromium で `out/` を開く（`playwright test`） |
-| **人間の目視** | 地図の見た目・スライダーの手触り・実機 | 人間が `pnpm dev` で開く |
+| 層              | 何を見るか                                                            | 実体                                                        |
+| --------------- | --------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **L0 型**       | 型が通るか                                                            | `tsc --noEmit`                                              |
+| **L1 静的**     | 規約・書式・明らかな誤り・コメントの禁止語                            | `biome ci ..` と `node scripts/lint-comments.ts`            |
+| **L2 ユニット** | 関数とコンポーネントの振る舞いと、`catalog/` の現物がスキーマに合うか | `vitest run`（+ React Testing Library、jsdom）              |
+| **L3 ビルド**   | static export が実際に吐けるか                                        | `next build`                                                |
+| **L4 スモーク** | 静的成果物が自足しているか（4xx・実行時エラー・canvas の寸法）        | ヘッドレスの Chromium で `out/` を開く（`playwright test`） |
+| **人間の目視**  | 地図の見た目・スライダーの手触り・実機                                | 人間が `pnpm dev` で開く                                    |
 
 L0〜L4 は `pnpm check` の一本にまとまっている（下記）。
 番号が指すのはこの連鎖の中の位置で、安い順に並んでいる。
@@ -136,14 +136,14 @@ checkout の前に `RUNNER_TEMP` へ写してから渡している。
 
 手元（native fs）とリモート（Claude Code on the web）の二つで走る。差は次のとおり。
 
-| | 手元 | リモート |
-|---|---|---|
-| GitHub への到達 | `gh` で到達する | MCP の GitHub ツールで issue と PR を扱い、`gh api` の REST を予備にする。`gh` の GraphQL はプロキシが遮断するので、`gh pr` と `gh issue` の多くは HTTP 403 になる |
-| 外向き通信 | 制限なし | **許可制**（§4） |
-| commit の committer | 人間名義 | コンテナの名義のまま（署名が強制される）。author だけ人間名義へ焼く |
-| 環境の準備（スナップショット） | 無し | クラウド環境のセットアップスクリプト欄が `scripts/cloud-snapshot.sh` を呼び、mise・ランタイム・依存・ブラウザを入れる |
-| 環境の準備（セッションごと） | `.claude/hooks/session-start.sh` が `scripts/setup.sh` を呼ぶ | `.claude/hooks/session-start.sh` が `scripts/cloud-session.sh`（名義と mise の検査・shims の PATH の受け渡し）と `scripts/setup.sh` を順に呼ぶ |
-| ランタイムの活性化 | シェルが mise を活性化している | フックが渡した PATH で効く（下記） |
+|                                | 手元                                                          | リモート                                                                                                                                                           |
+| ------------------------------ | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| GitHub への到達                | `gh` で到達する                                               | MCP の GitHub ツールで issue と PR を扱い、`gh api` の REST を予備にする。`gh` の GraphQL はプロキシが遮断するので、`gh pr` と `gh issue` の多くは HTTP 403 になる |
+| 外向き通信                     | 制限なし                                                      | **許可制**（§4）                                                                                                                                                   |
+| commit の committer            | 人間名義                                                      | コンテナの名義のまま（署名が強制される）。author だけ人間名義へ焼く                                                                                                |
+| 環境の準備（スナップショット） | 無し                                                          | クラウド環境のセットアップスクリプト欄が `scripts/cloud-snapshot.sh` を呼び、mise・ランタイム・依存・ブラウザを入れる                                              |
+| 環境の準備（セッションごと）   | `.claude/hooks/session-start.sh` が `scripts/setup.sh` を呼ぶ | `.claude/hooks/session-start.sh` が `scripts/cloud-session.sh`（名義と mise の検査・shims の PATH の受け渡し）と `scripts/setup.sh` を順に呼ぶ                     |
+| ランタイムの活性化             | シェルが mise を活性化している                                | フックが渡した PATH で効く（下記）                                                                                                                                 |
 
 `session-start.sh` は `CLAUDE_CODE_REMOTE` で手元とリモートを分ける振り分けだけを持つ。
 手元では `scripts/setup.sh` が途中で止まってもセッションを立て、リモートではどちらかのスクリプトが失敗したらセッションを止める。
@@ -164,13 +164,13 @@ mise が無いときも `scripts/cloud-session.sh` は止まり、`/root/coten-a
 手元（リポジトリ本体と worktree）・リモート・CI は、次の同じものを揃えてから `pnpm check` を回す。
 手元の準備は何度走らせても同じ状態に落ち着き、人間はリポジトリのルートで `bash scripts/setup.sh` を叩けば同じものが揃う。
 
-| 揃えるもの | 正 | 手元 | リモート | CI |
-|---|---|---|---|---|
-| git のフックの向き先（相対の `.githooks`） | `.githooks/` | `scripts/setup.sh` | `scripts/setup.sh` | 揃えない |
-| ランタイム | `mise.toml` | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `mise-action` |
-| 依存 | `web/pnpm-lock.yaml` | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `check.yml` |
-| pnpm の store の置き場 | `web/pnpm-workspace.yaml` の `storeDir` | pnpm が読む | pnpm が読む | pnpm が読む |
-| smoke テストのブラウザ | `web/pnpm-lock.yaml` の `@playwright/test` の版 | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`（§4） | `check.yml` |
+| 揃えるもの                                 | 正                                              | 手元               | リモート                                        | CI            |
+| ------------------------------------------ | ----------------------------------------------- | ------------------ | ----------------------------------------------- | ------------- |
+| git のフックの向き先（相対の `.githooks`） | `.githooks/`                                    | `scripts/setup.sh` | `scripts/setup.sh`                              | 揃えない      |
+| ランタイム                                 | `mise.toml`                                     | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `mise-action` |
+| 依存                                       | `web/pnpm-lock.yaml`                            | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `check.yml`   |
+| pnpm の store の置き場                     | `web/pnpm-workspace.yaml` の `storeDir`         | pnpm が読む        | pnpm が読む                                     | pnpm が読む   |
+| smoke テストのブラウザ                     | `web/pnpm-lock.yaml` の `@playwright/test` の版 | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`（§4）               | `check.yml`   |
 
 `core.hooksPath` を絶対パスにすると、worktree の `.githooks` を直しても本体の版が走る。
 worktree ごとの設定（`extensions.worktreeConfig`）に残った値は共有の設定より優先されるので、`scripts/setup.sh` は先にそれを消す。
@@ -183,41 +183,41 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 リモートのコンテナは外向き通信が許可制で、許可するドメインはクラウド環境のネットワーク設定が持つ。
 設定は「カスタム」で既定のリストを含め、下の表の「足す」の行を加える。
 
-| 先 | 許可 | 使う場面 |
-|---|---|---|
-| `registry.npmjs.org` | 既定のリストにある | mise 本体と依存の取得 |
-| `cdn.playwright.dev` | 足す | smoke テストのブラウザの取得 |
-| `anchor.fm` | 足す | `pnpm sync` が RSS を取得する（`web/scripts/sync-feed.ts`） |
-| `tiles.openfreemap.org` | 足す | ベースマップのスタイルとタイル（`web/src/lib/map/config.ts`）。ブラウザで地図を開くときに取得する |
-| `open.spotify.com`・`coten.co.jp` | 足す | 画面のリンク先。コンテナのブラウザでリンクを押し、遷移先が開くかを確かめるときに取得する |
-| `mise.run` | 足さない | mise は npm から入れるので要らない |
-| `mise-versions.jdx.dev` | 足さない | 届かなくても `mise install` は別の経路で版の一覧を取得する |
+| 先                                | 許可               | 使う場面                                                                                          |
+| --------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------- |
+| `registry.npmjs.org`              | 既定のリストにある | mise 本体と依存の取得                                                                             |
+| `cdn.playwright.dev`              | 足す               | smoke テストのブラウザの取得                                                                      |
+| `anchor.fm`                       | 足す               | `pnpm sync` が RSS を取得する（`web/scripts/sync-feed.ts`）                                       |
+| `tiles.openfreemap.org`           | 足す               | ベースマップのスタイルとタイル（`web/src/lib/map/config.ts`）。ブラウザで地図を開くときに取得する |
+| `open.spotify.com`・`coten.co.jp` | 足す               | 画面のリンク先。コンテナのブラウザでリンクを押し、遷移先が開くかを確かめるときに取得する          |
+| `mise.run`                        | 足さない           | mise は npm から入れるので要らない                                                                |
+| `mise-versions.jdx.dev`           | 足さない           | 届かなくても `mise install` は別の経路で版の一覧を取得する                                        |
 
 ## 5. 設定の置き場
 
-| 置き場 | 持つもの |
-|---|---|
-| `.claude/settings.json` | 権限（`permissions`。各規則の理由は下の「権限の規則」）・PreToolUse と `SessionStart` の配線 |
-| `.claude/hooks/session-start.sh` | 実行環境を見分けて準備のスクリプトを呼ぶ順 |
-| `scripts/cloud-session.sh` | リモートのセッションごとの準備のうちクラウドでだけ要る分（名義と mise の検査・shims の PATH の受け渡し） |
-| `scripts/cloud-snapshot.sh` | リモートのスナップショットに残す準備（mise の版・ランタイム・依存・smoke テストのブラウザ） |
-| `scripts/setup.sh` | どの実行環境でも要る環境準備（§3「揃えるもの」） |
-| `web/pnpm-workspace.yaml` | pnpm の store の置き場（`storeDir`） |
-| `.claude/hooks/guard-force-push.sh` | force push 系を ask へ回す PreToolUse フック |
-| `.claude/hooks/guard-gh-api.sh` | `gh api` の戻せない書き込みを ask へ回す PreToolUse フック |
-| `.githooks/commit-msg` | コミット本文の禁止語を commit の前で止める git フック |
-| `.githooks/pre-commit` | ステージした追加行の禁止語を、コミットを止めずに報告する git フック |
-| `scripts/lint-vocabulary.sh` | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る |
-| `.github/workflows/lint-pr-body.yml` | PR 本文の禁止語を CI で報告する |
-| `scripts/diff-coding-standards.sh` | 規約の写しと共有の雛形の差を、手で走らせて報告する |
-| `.vocabulary/banned.tsv` | 禁止語の検査が読む、`.claude/rules/writing.md` の表の写し |
-| `.vocabulary/allow` | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語） |
-| クラウド環境の環境変数欄 | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義） |
-| クラウド環境のセットアップスクリプト欄 | `bash /home/user/coten-atlas/scripts/cloud-snapshot.sh` の一行 |
-| クラウド環境のネットワーク設定 | 許可ドメイン（§4） |
-| `.claude/skills/` | 同梱の規約 skill。プラグインを入れていないので本体を置いてある。`karpathy-guidelines` は外部由来（出所 https://github.com/multica-ai/andrej-karpathy-skills の `skills/karpathy-guidelines/SKILL.md`、固定 2c60614、MIT。上流の更新は手で取り込む） |
-| `mise.toml`（ルート） | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む |
-| `web/package.json` | `pnpm check` を含む scripts |
+| 置き場                                 | 持つもの                                                                                                                                                                                                                                            |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.claude/settings.json`                | 権限（`permissions`。各規則の理由は下の「権限の規則」）・PreToolUse と `SessionStart` の配線                                                                                                                                                        |
+| `.claude/hooks/session-start.sh`       | 実行環境を見分けて準備のスクリプトを呼ぶ順                                                                                                                                                                                                          |
+| `scripts/cloud-session.sh`             | リモートのセッションごとの準備のうちクラウドでだけ要る分（名義と mise の検査・shims の PATH の受け渡し）                                                                                                                                            |
+| `scripts/cloud-snapshot.sh`            | リモートのスナップショットに残す準備（mise の版・ランタイム・依存・smoke テストのブラウザ）                                                                                                                                                         |
+| `scripts/setup.sh`                     | どの実行環境でも要る環境準備（§3「揃えるもの」）                                                                                                                                                                                                    |
+| `web/pnpm-workspace.yaml`              | pnpm の store の置き場（`storeDir`）                                                                                                                                                                                                                |
+| `.claude/hooks/guard-force-push.sh`    | force push 系を ask へ回す PreToolUse フック                                                                                                                                                                                                        |
+| `.claude/hooks/guard-gh-api.sh`        | `gh api` の戻せない書き込みを ask へ回す PreToolUse フック                                                                                                                                                                                          |
+| `.githooks/commit-msg`                 | コミット本文の禁止語を commit の前で止める git フック                                                                                                                                                                                               |
+| `.githooks/pre-commit`                 | ステージした追加行の禁止語を、コミットを止めずに報告する git フック                                                                                                                                                                                 |
+| `scripts/lint-vocabulary.sh`           | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る                                                                                                                                                                                           |
+| `.github/workflows/lint-pr-body.yml`   | PR 本文の禁止語を CI で報告する                                                                                                                                                                                                                     |
+| `scripts/diff-coding-standards.sh`     | 規約の写しと共有の雛形の差を、手で走らせて報告する                                                                                                                                                                                                  |
+| `.vocabulary/banned.tsv`               | 禁止語の検査が読む、`.claude/rules/writing.md` の表の写し                                                                                                                                                                                           |
+| `.vocabulary/allow`                    | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語）                                                                                                                                                                           |
+| クラウド環境の環境変数欄               | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義）                                                                                                                                                                                  |
+| クラウド環境のセットアップスクリプト欄 | `bash /home/user/coten-atlas/scripts/cloud-snapshot.sh` の一行                                                                                                                                                                                      |
+| クラウド環境のネットワーク設定         | 許可ドメイン（§4）                                                                                                                                                                                                                                  |
+| `.claude/skills/`                      | 同梱の規約 skill。プラグインを入れていないので本体を置いてある。`karpathy-guidelines` は外部由来（出所 https://github.com/multica-ai/andrej-karpathy-skills の `skills/karpathy-guidelines/SKILL.md`、固定 2c60614、MIT。上流の更新は手で取り込む） |
+| `mise.toml`（ルート）                  | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む                                                                                                                                                                                    |
+| `web/package.json`                     | `pnpm check` を含む scripts                                                                                                                                                                                                                         |
 
 リモートで効かせたい設定はリポジトリに置く。
 クラウド環境の設定画面には、名義のようにリポジトリへ置けないものと、リポジトリのスクリプトを呼ぶ一行と許可ドメインだけを置く。
