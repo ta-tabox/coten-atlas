@@ -39,11 +39,15 @@
 ## 規約の入口
 - 規約は `.claude/rules/`
   `writing.md` は常時、残り（`coding.md`・`layers.md`・`design.md`・`languages/*.md`）は frontmatter の `paths` に当たるファイルを Read した時点で読み込まれる
-- **コードを書く前に** skill `coding-standards`（判断の例）と `karpathy-guidelines`（過剰実装と巻き込み変更の抑制）を開く
+- **コードを書く前に** skill `coding-standards`（判断の例）と `karpathy-guidelines`（過剰実装と巻き込み変更の抑制）と `ponytail`（書く前の判定）を開く
   実装・テスト追加・バグ修正・レビュー・リファクタのすべてが対象
 - 隣接ファイルを読まずに新規ファイルを書くときは、先に `.claude/rules/coding.md` と該当言語の `languages/<lang>.md`（画面へ触るなら `design.md` も）を Read する
 - 書き終えたら、PR の前に skill `review-checklist` の表を、変更した各コメント・名前・ファイルへ当てる
 - `karpathy-guidelines` は外部由来（https://github.com/multica-ai/andrej-karpathy-skills の 2c60614、MIT）で、リモートの空のコンテナでも初回から効くよう本体を `.claude/skills/` へ同梱してある
+- `ponytail` は外部由来（https://github.com/DietrichGebert/ponytail の 96608e0、MIT）で、クラウドセッションが plugin を読み込まないので `skills/` の `ponytail`・`ponytail-review`・`ponytail-audit` を `.claude/skills/` へ同梱してある
+  外したのは強度の切り替え（hook とコマンドが前提で同梱では効かない）・`argument-hint`・コメントを 1 行の why に限る行（`coding.md` の JSDoc 規則が勝つ）で、review と audit は出力の言語を日本語へ置き換えた
+  `shortcut:` コメントの行は上流のまま残してある
+  差分や全体のレビューが要るときだけ `ponytail-review`・`ponytail-audit` を呼ぶ
   上流の更新は手で取り込む
 
 ## 配布物の追随
