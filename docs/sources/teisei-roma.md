@@ -18,7 +18,7 @@
 デジタル大辞泉は、帝政の開始（前 27 年）から西ローマ帝国の滅亡（476 年）までを古代ローマ帝国と呼ぶと補説しており、-27 と 476 の組はその区切りと一致する。
 英語圏では 476 年は Gibbon 以来の便宜上の区切りで、480 年を採る説も併存する（[Wikipedia: Fall of the Western Roman Empire](https://en.wikipedia.org/wiki/Fall_of_the_Western_Roman_Empire)。参考程度）。
 
-種別は `集団` なので、`osman-teikoku`・`mughal-teikoku` と同じく、集団が存続した期間で引いた。
+種別は `集団` なので、`osman-teikoku`・`mughal-teikoku` と同じく、集団が存続した期間を `timeRange` にした。
 配信フィードの各回の説明によれば、第 1〜5 回がカエサルの暗殺からアウグストゥスの統治、第 6〜8 回がユリウス＝クラウディウス朝とウェスパシアヌス、第 9 回がローマ人の暮らし、第 10〜14 回が五賢帝からセウェルス朝と軍人皇帝時代を扱う。
 各回は 3 世紀までを扱うが、`timeRange` は集団の存続期間に揃えた。
 
@@ -51,7 +51,7 @@
 | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
 | [`@historian` 1 回目（2026-10-09）](https://github.com/ta-tabox/coten-atlas/issues/252#issuecomment-6075143238) | `timeRange`・座標・`region`・`title` の裏どり |
 | [`@historian` 2 回目（2026-11-08）](https://github.com/ta-tabox/coten-atlas/pull/293#issuecomment-6719244127)   | 1 回目の後に書き足した事実の裏どり            |
-| [#293 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/293)                                             | `timeRange` を存続期間で引いた判断            |
+| [#293 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/293)                                             | `timeRange` を存続期間にした判断              |
 
 1 回目は -27 の典拠を [コトバンク: ローマ帝国](https://kotobank.jp/word/ローマ帝国) としたが、2 回目はその項が -27 の称号の授与を書くことを確かめられず、アウグストゥスの項へ差し替えた。
 2 回目もアウグストゥスの項の本文は開けず、検索結果の抜粋で前 27 年の尊称の授与を確かめた。
