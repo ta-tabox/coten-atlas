@@ -88,16 +88,16 @@ main への push で `.github/workflows/deploy.yml` が GitHub Pages へ配信�
 開発は Claude Code を使って進める。
 作業単位は GitHub Issues、決定は `docs/adr/` が持つ。
 
-| 置き場 | 持つもの |
-|---|---|
-| [CLAUDE.md](CLAUDE.md) | セッションの入口（git の運用・文書の層） |
-| [.claude/rules/](.claude/rules/) | コード・文章・UI の規約 |
-| [.claude/skills/](.claude/skills/) | 判断の例と、シリーズの値を決める手順 |
-| [.claude/hooks/](.claude/hooks/) | force push と戻せない `gh api` の書き込みを人間の確認へ回すフック |
-| `.github/workflows/claude-code-review.yml` | PR を開いたときの自動レビュー（正しさと規約の二観点） |
-| `.github/workflows/claude.yml` | コメントで `@claude` と名指したときの再レビュー |
-| `.github/workflows/claude-history-review.yml` | コメントで `@historian` と名指したときの歴史の裏どり |
-| `scripts/lint-vocabulary.sh` | コミット本文と PR 本文の禁止語の報告 |
+| 置き場                                        | 持つもの                                                          |
+| --------------------------------------------- | ----------------------------------------------------------------- |
+| [CLAUDE.md](CLAUDE.md)                        | セッションの入口（git の運用・文書の層）                          |
+| [.claude/rules/](.claude/rules/)              | コード・文章・UI の規約                                           |
+| [.claude/skills/](.claude/skills/)            | 判断の例と、シリーズの値を決める手順                              |
+| [.claude/hooks/](.claude/hooks/)              | force push と戻せない `gh api` の書き込みを人間の確認へ回すフック |
+| `.github/workflows/claude-code-review.yml`    | PR を開いたときの自動レビュー（正しさと規約の二観点）             |
+| `.github/workflows/claude.yml`                | コメントで `@claude` と名指したときの再レビュー                   |
+| `.github/workflows/claude-history-review.yml` | コメントで `@historian` と名指したときの歴史の裏どり              |
+| `scripts/lint-vocabulary.sh`                  | コミット本文と PR 本文の禁止語の報告                              |
 
 ## 技術スタック
 

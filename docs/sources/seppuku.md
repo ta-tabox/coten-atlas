@@ -1,20 +1,20 @@
 # 切腹（`seppuku`・season 31）
 
-| `catalog/` の鍵 | 値 |
-|---|---|
-| `series.json` の `id` | `seppuku` |
-| `series.json` の `season` | 31 |
-| `series.json` の `timeRange` | 988..1868 |
-| `series.json` の `anchor` | `"unlocated"` |
-| `series.json` の `region` | `日本` |
-| `loci.geojson` の事物 | 無し |
+| `catalog/` の鍵              | 値            |
+| ---------------------------- | ------------- |
+| `series.json` の `id`        | `seppuku`     |
+| `series.json` の `season`    | 31            |
+| `series.json` の `timeRange` | 988..1868     |
+| `series.json` の `anchor`    | `"unlocated"` |
+| `series.json` の `region`    | `日本`        |
+| `loci.geojson` の事物        | 無し          |
 
 ## `timeRange`
 
-| 欄 | 値 | 何の年か | 典拠 | 並立する説 |
-|---|---|---|---|---|
-| `start` | 988 | 藤原保輔の自害（永延 2 年 6 月 17 日に獄中で死去） | [コトバンク: 藤原保輔（デジタル版日本人名大辞典+Plus）](https://kotobank.jp/word/藤原保輔-1106544)（三次） | 無し |
-| `end` | 1868 | 堺事件で土佐藩士が切腹した年（慶応 4 年 2 月 23 日） | [堺市: 土佐十一烈士墓](https://www.city.sakai.lg.jp/kanko/rekishi/bunkazai/bunkazai/shokai/bunya/shiseki/tosaresshihaka.html)（三次） | 無し |
+| 欄      | 値   | 何の年か                                             | 典拠                                                                                                                                  | 並立する説 |
+| ------- | ---- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `start` | 988  | 藤原保輔の自害（永延 2 年 6 月 17 日に獄中で死去）   | [コトバンク: 藤原保輔（デジタル版日本人名大辞典+Plus）](https://kotobank.jp/word/藤原保輔-1106544)（三次）                            | 無し       |
+| `end`   | 1868 | 堺事件で土佐藩士が切腹した年（慶応 4 年 2 月 23 日） | [堺市: 土佐十一烈士墓](https://www.city.sakai.lg.jp/kanko/rekishi/bunkazai/bunkazai/shokai/bunya/shiseki/tosaresshihaka.html)（三次） | 無し       |
 
 種別が `概念史` だけの位置なしのシリーズだが、年を書く。
 主題の切腹の慣行は終わっていて、両端を史実の年で言えるので、skill `series-vocabulary` の手順 7（[ADR-20260910-untimed-concept-series（時期なしの概念史のシリーズ）](../adr/20260910-untimed-concept-series.md)）の表の 2 行目に当たる。
@@ -46,17 +46,17 @@ ADR-20260907-series-vocabulary はこの表の 1 行目の例に「ショート 
 2026-09-11 に ADR-20260910-untimed-concept-series の線を当て、年を持つ側に当たることを確かめた。
 2026-09-12 に人間が仮決定を採用して決着させ、見直しを [#215](https://github.com/ta-tabox/coten-atlas/issues/215)（切腹（seppuku）の timeRange の終わりを堺事件と刑罰の廃止のどちらにするか）へ切り出した。
 
-| 論点 | 仮決定 | 覆りうる根拠 |
-|---|---|---|
+| 論点  | 仮決定         | 覆りうる根拠                                                                                                                       |
+| ----- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `end` | 1868（堺事件） | 番組が扱う事例でなく制度の終わりで数えるなら、刑罰としての切腹が廃された年が終端になる（典拠は取っていない）。見直しは #215 で行う |
 
 ## 裏どりの出所
 
-| 出所 | 何を持つか |
-|---|---|
-| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | `timeRange` の両端・`kind` の裏どり |
-| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
-| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各端を決めた回 |
-| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160) | 種別が `概念史` だけの位置なしのシリーズに年を残す線 |
-| [#215（見直し）](https://github.com/ta-tabox/coten-atlas/issues/215) | 採用した仮決定を人間が見直す論点と案 |
-| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |
+| 出所                                                                                                          | 何を持つか                                                      |
+| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | `timeRange` の両端・`kind` の裏どり                             |
+| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200)        | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157)                                           | 各端を決めた回                                                  |
+| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160)               | 種別が `概念史` だけの位置なしのシリーズに年を残す線            |
+| [#215（見直し）](https://github.com/ta-tabox/coten-atlas/issues/215)                                          | 採用した仮決定を人間が見直す論点と案                            |
+| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明                        | 各回が扱う主題                                                  |

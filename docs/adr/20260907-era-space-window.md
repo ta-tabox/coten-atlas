@@ -16,14 +16,14 @@ era 空間は `catalog/eras.json` の各区間を等幅に並べた 0..1 の数�
 
 **現在窓の幅は era 空間の位置で決め、窓の両端を年へ変換してから `timeRange` と比べる。**
 
-| 論点 | 決定 |
-|---|---|
-| 窓の幅 | era 空間の 1 区間の幅に対する割合で持つ（`WINDOW_WIDTH_IN_ERAS = 0.5`）。位置の上で幅を決め、窓の両端をそれぞれ年へ変換する |
-| 区間の端 | 窓は `timeRange` と同じく両端を含む閉区間で扱う。era の半開区間（`end` を含まない）を扱うのは `positionToYear` だけにする |
-| 重なり率 | 重なる年数を、窓と `timeRange` のうち短い方の年数で割る。年数は `end - start + 1` で数える |
-| 重なり率から opacity | smoothstep（`r² (3 - 2r)`）を通す |
-| `"present"` の右端 | 現在年。`positionToYear` と `currentWindow` が `presentEnd` で受け取り、時計を読むのは `presentEndOf(presentDate)` だけにする |
-| 置き場 | `web/src/lib/era/`。`scale.ts`（位置 → 年）と `window.ts`（窓 → opacity）に分け、`node:fs`・React・MapLibre を import しない |
+| 論点                 | 決定                                                                                                                          |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| 窓の幅               | era 空間の 1 区間の幅に対する割合で持つ（`WINDOW_WIDTH_IN_ERAS = 0.5`）。位置の上で幅を決め、窓の両端をそれぞれ年へ変換する   |
+| 区間の端             | 窓は `timeRange` と同じく両端を含む閉区間で扱う。era の半開区間（`end` を含まない）を扱うのは `positionToYear` だけにする     |
+| 重なり率             | 重なる年数を、窓と `timeRange` のうち短い方の年数で割る。年数は `end - start + 1` で数える                                    |
+| 重なり率から opacity | smoothstep（`r² (3 - 2r)`）を通す                                                                                             |
+| `"present"` の右端   | 現在年。`positionToYear` と `currentWindow` が `presentEnd` で受け取り、時計を読むのは `presentEndOf(presentDate)` だけにする |
+| 置き場               | `web/src/lib/era/`。`scale.ts`（位置 → 年）と `window.ts`（窓 → opacity）に分け、`node:fs`・React・MapLibre を import しない  |
 
 ## 理由
 

@@ -1,115 +1,67 @@
 #!/bin/bash
 #
 # セッション起動フック。
-# 責務は、どの環境でも `web/` で打つ `pnpm check` が立つところまで組むことである。
-# 手元（リポジトリ本体と worktree）の準備は scripts/setup.sh が持ち、このファイルが持つのはリモート（Claude Code on the web）の分だけである。
-# リモートは mise の入っていないコンテナなので、mise.toml が固定した版の node と pnpm をここで用意する。
-#
-# リポジトリから復元できるものだけがここに来る（名義はクラウド環境の環境変数が持つ）。
+# 実行環境を見分けて、準備のスクリプトを呼ぶ順だけを持つ。
+#   手元と worktree: scripts/setup.sh
+#   クラウド:        scripts/cloud-session.sh → scripts/setup.sh
+# 準備の中身は呼ぶ先のスクリプトが持ち、ここには書かない。
 
 set -euo pipefail
 
 REPO_ROOT="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 
-log() {
-  echo "[coten-atlas] $1"
+# フックの標準入力（JSON）を最初に読み切る。
+# 端末につながっているときは待たずに空とする。
+HOOK_INPUT=""
+if [ ! -t 0 ]; then
+  HOOK_INPUT="$(cat || true)"
+fi
+
+# 標準入力の JSON の `cwd` を返す。
+# デスクトップアプリの worktree セッションでは、`CLAUDE_PROJECT_DIR` とフックの作業ディレクトリが本体を指し、worktree の位置は `cwd` にだけ入る。
+# JSON が空・壊れている・`cwd` が無いときは、何も出さずに成功で終わる。
+read_hook_cwd() {
+  local script='let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{const c=JSON.parse(s).cwd;if(typeof c==="string")process.stdout.write(c)}catch{}})'
+
+  if command -v node > /dev/null 2>&1; then
+    printf '%s' "$HOOK_INPUT" | node -e "$script" 2> /dev/null || true
+  elif command -v python3 > /dev/null 2>&1; then
+    printf '%s' "$HOOK_INPUT" | python3 -c 'import json,sys
+try:
+    c = json.load(sys.stdin).get("cwd")
+    sys.stdout.write(c if isinstance(c, str) else "")
+except Exception:
+    pass' 2> /dev/null || true
+  fi
 }
 
-# author の名義は利用者に固有なので、リポジトリでなくクラウド環境の環境変数が持つ。
-# GIT_AUTHOR_* は config より優先されるので、リポジトリ側の user.name / user.email は要らない。
-# committer はコンテナの global config（Claude 名義・署名鍵つき）から落ちるので触らない。
-#
-# 未設定のまま進めると author が Claude になり、
-# 「第三者が出したものを承認した」という嘘の外形を誰も気づかないまま履歴へ残すので、止める。
-require_git_author() {
-  if [ -n "${GIT_AUTHOR_NAME:-}" ] && [ -n "${GIT_AUTHOR_EMAIL:-}" ]; then
+# 準備する対象のチェックアウトのルートを返す。
+# `cwd` が git の作業ツリーでなければ `REPO_ROOT` を返す。
+resolve_checkout_root() {
+  local hook_cwd
+  hook_cwd="$(read_hook_cwd)"
+
+  if [ -n "$hook_cwd" ] && git -C "$hook_cwd" rev-parse --show-toplevel 2> /dev/null; then
     return
   fi
 
-  echo "GIT_AUTHOR_NAME / GIT_AUTHOR_EMAIL がこの環境に無い。クラウド環境の環境変数へ入れ、セッションを立て直す" >&2
-  exit 1
-}
-
-# コミット本文の禁止語を止める commit-msg フックは `.githooks/` にある。
-# git は既定で `.git/hooks/` しか見ないので、このクローンの設定で向け先を替える。
-enable_git_hooks() {
-  git -C "$REPO_ROOT" config core.hooksPath .githooks
-}
-
-# コンテナから mise.run へは出られない（外向き通信が許可制）ので、
-# 公式のインストーラは使わず npm から入れる（jdx/mise が同名で publish している）。
-# イメージに同梱の node は mise.toml の指定と版が違うが、mise 本体を動かすだけなのでそのまま使う。
-#
-# mise 自体の版は固定しない。版を持つファイルがこのリポジトリに無く、手元でも環境側の都合で決まっているので、
-# ここへ書くとリモートだけが宣言を持つ非対称ができる。
-install_mise() {
-  if command -v mise > /dev/null 2>&1; then
-    return
-  fi
-
-  log "mise を入れる"
-  npm install -g --silent mise
-}
-
-# セッションのシェルは mise を活性化しないので、放っておくとイメージ同梱の node と pnpm を掴む。
-# mise.toml の固定がフックの中でしか効かない状態になり、`pnpm check` が手元とも CI とも別の版で走る。
-# 渡し口はセッションのツールシェルが読む追記専用ファイル CLAUDE_ENV_FILE の一つだけ。
-handoff_shims() {
-  # shims の置き場をこちらで書くと mise の既定が変わったとき黙って外れるので、PATH の行は mise 自身に書かせる。
-  local path_line
-  path_line="$(mise activate bash --shims)"
-
-  # 下のべき等判定は出力が1行であることに依存する。
-  # grep -F は改行を含むパターンを行ごとの選択肢へ分解するので、複数行になると1行の一致で「追記済み」と読み、残りを落としたまま抜ける。
-  # 黙って PATH を欠けさせるより、渡さずに理由を言って止める。
-  if [ "$(printf '%s\n' "$path_line" | wc -l)" -ne 1 ]; then
-    log "mise activate の出力が1行ではない。PATH を渡さないので、web/ で打つ前に自分で通す"
-    return
-  fi
-
-  if [ -z "${CLAUDE_ENV_FILE:-}" ]; then
-    log "CLAUDE_ENV_FILE が無いので PATH を渡せない。web/ で打つ前に $path_line を通す"
-    return
-  fi
-
-  # 追記専用なので、resume のたびに同じ行が積まれないことを書く前に見る。
-  # フックのプロセスの PATH には前回の追記が反映されないため、PATH を見ても判定にならない。
-  if ! grep -qxF "$path_line" "$CLAUDE_ENV_FILE" 2> /dev/null; then
-    echo "$path_line" >> "$CLAUDE_ENV_FILE"
-  fi
+  echo "$REPO_ROOT"
 }
 
 main() {
-  # 手元とリモートを分ける材料はこれだけ。
-  # 門を先に置けば、同じフックを両方の環境へ配れる。
-  if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
-    # 手元では止めない。
-    # 準備が途中で止まってもセッションは立ち、足りない分は pnpm check が同じ相手で落ちて言う。
-    bash "$REPO_ROOT/scripts/setup.sh" || echo "[coten-atlas] 手元の準備が途中で止まった。bash scripts/setup.sh を叩き直す" >&2
-    exit 0
+  local checkout_root
+  checkout_root="$(resolve_checkout_root)"
+  cd "$checkout_root"
+
+  if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ]; then
+    bash scripts/cloud-session.sh
+    bash scripts/setup.sh
+    return
   fi
 
-  require_git_author
-  enable_git_hooks
-  install_mise
-
-  # クローンし直された設定ファイルは未信頼の扱いなので、mise install の前に通す。
-  mise trust "$REPO_ROOT/mise.toml"
-
-  # 版の正は mise.toml。node と pnpm はここで置かれるので、フックは読む側にも回らない。
-  log "ランタイムと依存を入れる"
-  # pnpm は mise が置いた shim なので、この時点の PATH にはまだ載っていない。
-  # フックは自分の PATH をいじらず mise exec 越しに呼ぶ。
-  #
-  # mise はルートの mise.toml を、pnpm は web/ の package.json を読む（#39）。
-  # 版とアプリで置き場が分かれたので、cd も二つに分かれる。
-  (cd "$REPO_ROOT" && mise install)
-  (cd "$REPO_ROOT/web" && mise exec -- pnpm install --frozen-lockfile)
-
-  # 固定の版が揃うのはここまででフックの中だけなので、セッションのシェルへも渡す。
-  handoff_shims
-
-  log "準備完了。web/ で pnpm check が走る"
+  # 手元では止めない。
+  # 準備が途中で止まってもセッションは立ち、足りない分は pnpm check が同じ相手で落ちて言う。
+  bash scripts/setup.sh || echo "[coten-atlas] 手元の準備が途中で止まった。bash scripts/setup.sh を叩き直す" >&2
 }
 
 main "$@"
