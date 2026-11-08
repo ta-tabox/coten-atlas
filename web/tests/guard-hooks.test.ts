@@ -10,23 +10,18 @@ const repositoryRoot = spawnSync("git", ["rev-parse", "--show-toplevel"], {
 }).stdout.trim();
 
 /**
- * フックのファイル名 `name` から、リポジトリの中の実体のパスを返す。
+ * フックのファイル名 `name` から、`.claude/hooks/` の直下にある実体のパスを返す。
  *
  * 見つからなければ throw する。
- * 配布先では `.claude/hooks/` の直下、雛形そのものを持つリポジトリでは `tools/gh-review/hooks/` に置かれる。
  */
 function findHook(name: string): string {
-  const candidates = [
-    path.join(repositoryRoot, ".claude/hooks", name),
-    path.join(repositoryRoot, "tools/gh-review/hooks", name),
-  ];
-  const found = candidates.find((candidate) => existsSync(candidate));
+  const hookPath = path.join(repositoryRoot, ".claude/hooks", name);
 
-  if (found === undefined) {
-    throw new Error(`${name} が見つからない: ${candidates.join(", ")}`);
+  if (!existsSync(hookPath)) {
+    throw new Error(`${name} が見つからない: ${hookPath}`);
   }
 
-  return found;
+  return hookPath;
 }
 
 const hooks = {
