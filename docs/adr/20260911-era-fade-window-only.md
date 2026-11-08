@@ -27,18 +27,18 @@ MapLibre のクリックとホバーの判定は円の半径と縁の幅だけ�
 
 **事物ごとの濃さは `web/src/lib/era/window.ts` の関数で求めて `match` 式へ数値で埋め込み、そのまま `circle-opacity` にする。濃さが 0 の事物は `filter` で地図から除く。**
 
-| 論点 | 決定 |
-|---|---|
-| 濃さを求める場所 | TypeScript。`seriesCircleLayerIn(currentWindow, loci)` が事物ごとに `fadeOpacity(overlapRatio(...))` を求める |
-| `circle-opacity` | `["match", ["get", "id"], <id>, <濃さ>, …, 0]`。窓と重なる事物が無ければ `match` の代わりに `0` を置く |
-| 窓と重ならない事物 | `filter` の `["in", ["get", "id"], ["literal", <濃さが 0 を超える事物の id の列>]]` で除く |
-| 窓より長いシリーズ | 薄くしない。濃さは窓の濃さだけで決まる |
-| 濃さの遷移 | `circle-opacity-transition` を `{ duration: 0 }` にする |
-| `presentEnd` | ビルドした時点の年。`web/src/app/page.tsx` が `presentEndOf(new Date())` を呼んで `MapCanvas` へ渡す |
-| スライダーの状態 | `MapCanvas` の `useState`（`eraPosition`）。`page.tsx` との間に client wrapper を足さない |
-| スライダーの表示 | 現在窓の年の範囲を、文字とトラックの上の帯で示す。スライダーが指している 1 年は表示しない |
-| 初期位置 | id が `ancient`（古代）の区間の中央。`catalog/eras.json` にその id が無ければ描画時に throw する |
-| 目盛り | 1 区間を 100 目盛りに割った `<input type="range">`。キーボードの操作はブラウザ既定の挙動に任せる |
+| 論点               | 決定                                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------- |
+| 濃さを求める場所   | TypeScript。`seriesCircleLayerIn(currentWindow, loci)` が事物ごとに `fadeOpacity(overlapRatio(...))` を求める |
+| `circle-opacity`   | `["match", ["get", "id"], <id>, <濃さ>, …, 0]`。窓と重なる事物が無ければ `match` の代わりに `0` を置く        |
+| 窓と重ならない事物 | `filter` の `["in", ["get", "id"], ["literal", <濃さが 0 を超える事物の id の列>]]` で除く                    |
+| 窓より長いシリーズ | 薄くしない。濃さは窓の濃さだけで決まる                                                                        |
+| 濃さの遷移         | `circle-opacity-transition` を `{ duration: 0 }` にする                                                       |
+| `presentEnd`       | ビルドした時点の年。`web/src/app/page.tsx` が `presentEndOf(new Date())` を呼んで `MapCanvas` へ渡す          |
+| スライダーの状態   | `MapCanvas` の `useState`（`eraPosition`）。`page.tsx` との間に client wrapper を足さない                     |
+| スライダーの表示   | 現在窓の年の範囲を、文字とトラックの上の帯で示す。スライダーが指している 1 年は表示しない                     |
+| 初期位置           | id が `ancient`（古代）の区間の中央。`catalog/eras.json` にその id が無ければ描画時に throw する              |
+| 目盛り             | 1 区間を 100 目盛りに割った `<input type="range">`。キーボードの操作はブラウザ既定の挙動に任せる              |
 
 ## 理由
 

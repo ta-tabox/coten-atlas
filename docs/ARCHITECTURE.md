@@ -14,24 +14,24 @@
 
 結論だけを置く。理由は ADR を開く。
 
-| 項目 | 確定 | 理由 |
-|---|---|---|
-| スタック | Next.js (App Router) + TypeScript、static export（`output: 'export'`） | [ADR-20260714-nextjs-static-export（static export）](adr/20260714-nextjs-static-export.md) |
-| スタイル | Tailwind v4（`globals.css` が `@import "tailwindcss"`、`@theme` のトークン、擬似要素へユーティリティを当てる `@custom-variant` を持つ）。`*.module.css` は持たない | [ADR-20260831-tailwind-v4（Tailwind v4）](adr/20260831-tailwind-v4.md) |
-| 地図の DOM 境界 | overlay は React + Tailwind。MapLibre 由来の DOM は canvas コンテナと attribution だけ | [ADR-20260831-map-dom-boundary（地図の DOM の境界）](adr/20260831-map-dom-boundary.md) |
-| 地図 | MapLibre GL JS（+ react-map-gl の maplibre エントリ） | [ADR-20260714-maplibre（地図ライブラリの選択）](adr/20260714-maplibre.md) |
-| ベースマップ | OpenFreeMap positron（代替は Carto Positron） | [ADR-20260823-openfreemap-positron（ベースマップの選択）](adr/20260823-openfreemap-positron.md) |
-| データ | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層 | [ADR-20260904-two-layer-data-without-inbox（データの二層分離）](adr/20260904-two-layer-data-without-inbox.md) |
-| 位置情報 | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で精緻な図形を足す。代表点は第二段階でも独立に持ち、どちらを描くかは利用者が切り替える | [ADR-20260902-two-phase-location（位置情報の二段階）](adr/20260902-two-phase-location.md) |
-| シリーズと事物 | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ | [ADR-20260902-series-and-loci（シリーズと事物の分離）](adr/20260902-series-and-loci.md) |
-| 管理画面 | 手元でだけ動き、`catalog/` のファイルへ書く。公開サイトの成果物に含まれない | [ADR-20260902-local-only-admin（手元でだけ動く管理画面）](adr/20260902-local-only-admin.md) |
-| 配信リンク | RSS の `<link>`（Spotify のエピソードページ） | [ADR-20260823-rss-link-as-episode-url（配信リンク）](adr/20260823-rss-link-as-episode-url.md) |
-| デプロイ | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`） | [ADR-20260823-github-pages（GitHub Pages での配信）](adr/20260823-github-pages.md) |
-| 引用の範囲 | シリーズ名とエピソードタイトルのみ | [ADR-20260823-quote-titles-only（引用は題号に限る）](adr/20260823-quote-titles-only.md) |
-| 判定の口 | `pnpm check` の一本 | [ADR-20260914-pnpm-check-current-form（判定を `pnpm check` の一本にする）](adr/20260914-pnpm-check-current-form.md) |
-| ツールチェーン | mise + pnpm + Biome | ADR を持たない。このリポジトリの外で決めた既定をそのまま踏襲する。`mise.toml` は `[tools]` のみでランタイム版管理に徹する |
-| テスト | Vitest（+ React Testing Library）／ ブラウザを立てる層は Playwright | 単体側は ADR を持たない。踏襲元の既定が JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない。ブラウザ側を分ける理由は [ADR-20260829-playwright-runner（ブラウザを立てる検証の担当）](adr/20260829-playwright-runner.md) |
-| エピソード取得 | RSS を正とする自動同期（ビルド前スクリプト） | ADR を持たない。手順は §5 が持つ。今後の追加に耐えるため |
+| 項目            | 確定                                                                                                                                                                        | 理由                                                                                                                                                                                                                                                                                        |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| スタック        | Next.js (App Router) + TypeScript、static export（`output: 'export'`）                                                                                                      | [ADR-20260714-nextjs-static-export（static export）](adr/20260714-nextjs-static-export.md)                                                                                                                                                                                                  |
+| スタイル        | Tailwind v4（`globals.css` が `@import "tailwindcss"`、`@theme` のトークン、擬似要素へユーティリティを当てる `@custom-variant` を持つ）。`*.module.css` は持たない          | [ADR-20260831-tailwind-v4（Tailwind v4）](adr/20260831-tailwind-v4.md)                                                                                                                                                                                                                      |
+| 地図の DOM 境界 | overlay は React + Tailwind。MapLibre 由来の DOM は canvas コンテナと attribution だけ                                                                                      | [ADR-20260831-map-dom-boundary（地図の DOM の境界）](adr/20260831-map-dom-boundary.md)                                                                                                                                                                                                      |
+| 地図            | MapLibre GL JS（+ react-map-gl の maplibre エントリ）                                                                                                                       | [ADR-20260714-maplibre（地図ライブラリの選択）](adr/20260714-maplibre.md)                                                                                                                                                                                                                   |
+| ベースマップ    | OpenFreeMap positron（代替は Carto Positron）                                                                                                                               | [ADR-20260823-openfreemap-positron（ベースマップの選択）](adr/20260823-openfreemap-positron.md)                                                                                                                                                                                             |
+| データ          | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層                                                                                                                | [ADR-20260904-two-layer-data-without-inbox（データの二層分離）](adr/20260904-two-layer-data-without-inbox.md)                                                                                                                                                                               |
+| 位置情報        | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で精緻な図形を足す。代表点は第二段階でも独立に持ち、どちらを描くかは利用者が切り替える | [ADR-20260902-two-phase-location（位置情報の二段階）](adr/20260902-two-phase-location.md)                                                                                                                                                                                                   |
+| シリーズと事物  | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ                                                                    | [ADR-20260902-series-and-loci（シリーズと事物の分離）](adr/20260902-series-and-loci.md)                                                                                                                                                                                                     |
+| 管理画面        | 手元でだけ動き、`catalog/` のファイルへ書く。公開サイトの成果物に含まれない                                                                                                 | [ADR-20260902-local-only-admin（手元でだけ動く管理画面）](adr/20260902-local-only-admin.md)                                                                                                                                                                                                 |
+| 配信リンク      | RSS の `<link>`（Spotify のエピソードページ）                                                                                                                               | [ADR-20260823-rss-link-as-episode-url（配信リンク）](adr/20260823-rss-link-as-episode-url.md)                                                                                                                                                                                               |
+| デプロイ        | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`）                                                                                      | [ADR-20260823-github-pages（GitHub Pages での配信）](adr/20260823-github-pages.md)                                                                                                                                                                                                          |
+| 引用の範囲      | シリーズ名とエピソードタイトルのみ                                                                                                                                          | [ADR-20260823-quote-titles-only（引用は題号に限る）](adr/20260823-quote-titles-only.md)                                                                                                                                                                                                     |
+| 判定の口        | `pnpm check` の一本                                                                                                                                                         | [ADR-20260914-pnpm-check-current-form（判定を `pnpm check` の一本にする）](adr/20260914-pnpm-check-current-form.md)                                                                                                                                                                         |
+| ツールチェーン  | mise + pnpm + Biome                                                                                                                                                         | ADR を持たない。このリポジトリの外で決めた既定をそのまま踏襲する。`mise.toml` は `[tools]` のみでランタイム版管理に徹する                                                                                                                                                                   |
+| テスト          | Vitest（+ React Testing Library）／ ブラウザを立てる層は Playwright                                                                                                         | 単体側は ADR を持たない。踏襲元の既定が JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない。ブラウザ側を分ける理由は [ADR-20260829-playwright-runner（ブラウザを立てる検証の担当）](adr/20260829-playwright-runner.md) |
+| エピソード取得  | RSS を正とする自動同期（ビルド前スクリプト）                                                                                                                                | ADR を持たない。手順は §5 が持つ。今後の追加に耐えるため                                                                                                                                                                                                                                    |
 
 ## 2. システム全体像
 
@@ -53,7 +53,7 @@ catalog/eras.json    （時代区分）─────────────�
                           ブラウザ: MapLibre がシリーズを描き、era スライダーが opacity を動かす
 ```
 
-実行時 fetch を持たない。RSS の取得は常にビルド前のデータ更新として走る。
+実行時に RSS を取得しない。RSS の取得は常にビルド前のデータ更新として走る。
 管理画面は手元でだけ立ち、公開サイトの成果物には含まれない。
 
 ## 3. データモデル
@@ -85,11 +85,16 @@ catalog/
       "guid": "4d80b4a3-deee-41f3-8045-d06ade19132f",
       // フィードの文字列をそのまま持つ。シリーズ名をここから抽出しない（表記が揺れている）
       "title": "【66-10】五賢帝時代はじまる！…【COTEN RADIO 帝政ローマ編10】",
-      "pubDate": "2026-08-19T21:00:00Z",  // ISO 8601。RFC 822（フィードは全件 GMT）からの正規化は同期側
-      "season": 66,              // 割当に使った season（§5 の手順 2）。決まらない回（番外編・特別編・告知）は null
-      "seriesId": "teisei-roma",  // season から割当。未割当なら null
+      "pubDate": "2026-08-19T21:00:00Z", // ISO 8601。RFC 822（フィードは全件 GMT）からの正規化は同期側
+      "season": 66, // 割当に使った season（§5 の手順 2）。決まらない回（番外編・特別編・告知）は null
+      "seriesId": "teisei-roma", // season から割当。未割当なら null
       // RSS の <link>。エピソード単位の Spotify ページで、open.spotify.com/episode/… はフィードに無い
-      "links": [{ "platform": "spotify", "url": "https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q" }]
+      "links": [
+        {
+          "platform": "spotify",
+          "url": "https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q"
+        }
+      ]
     }
   ]
 }
@@ -102,19 +107,19 @@ catalog/
   {
     "id": "sparta",
     "title": "スパルタ",
-    "anchor": "sparta-city",                      // 代表点の事物 id（loci.geojson の properties.id）
-    "timeRange": { "start": -900, "end": -200 },  // 両端を含む閉区間。負値 = BC
-    "summary": "",         // 自前の要約を入れる欄。番組の説明文は引用しないので当面は空
+    "anchor": "sparta-city", // 代表点の事物 id（loci.geojson の properties.id）
+    "timeRange": { "start": -900, "end": -200 }, // 両端を含む閉区間。負値 = BC
+    "summary": "", // 自前の要約を入れる欄。番組の説明文は引用しないので当面は空
     "region": "ヨーロッパ",
-    "season": 2,           // 割当キー。itunes:season の値
-    "links": [],           // シリーズ単位の配信ページは存在しないので、何を指すかは未決定
+    "season": 2, // 割当キー。itunes:season の値
+    "links": [], // シリーズ単位の配信ページは存在しないので、何を指すかは未決定
     "tags": ["集団", "戦争"]
   },
   {
     "id": "sekai-sandai-shukyo",
     "title": "世界三大宗教",
-    "anchor": "unlocated",  // 位置なし。JSON に定数は無いので文字列をそのまま書き、コードは ANCHOR_UNLOCATED の名で読む。地図に出ず、一覧パネルの別区画に出る（§4）
-    "timeRange": "untimed",  // 時期なし。コードは TIME_RANGE_UNTIMED の名で読む。置けるのは種別が概念史だけの位置なしのシリーズに限る
+    "anchor": "unlocated", // 位置なし。JSON に定数は無いので文字列をそのまま書き、コードは ANCHOR_UNLOCATED の名で読む。地図に出ず、一覧パネルの別区画に出る（§4）
+    "timeRange": "untimed", // 時期なし。コードは TIME_RANGE_UNTIMED の名で読む。置けるのは種別が概念史だけの位置なしのシリーズに限る
     "summary": "",
     "region": "地域なし",
     "season": 7,
@@ -133,11 +138,11 @@ catalog/
   "features": [
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [22.43, 37.07] },  // 第一段階は Point だけ
+      "geometry": { "type": "Point", "coordinates": [22.43, 37.07] }, // 第一段階は Point だけ
       "properties": {
-        "id": "sparta-city",       // 鍵。属性は series.json が持つ
-        "seriesId": "sparta",      // シリーズへの参照。1 対多はこの欄が担う
-        "timeRange": "series"      // 「シリーズの timeRange と同じ」の意（コードでは TIME_RANGE_OF_SERIES）。代表点は必ずこれで、第二段階の事物は年の閉区間を書く
+        "id": "sparta-city", // 鍵。属性は series.json が持つ
+        "seriesId": "sparta", // シリーズへの参照。1 対多はこの欄が担う
+        "timeRange": "series" // 「シリーズの timeRange と同じ」の意（コードでは TIME_RANGE_OF_SERIES）。代表点は必ずこれで、第二段階の事物は年の閉区間を書く
       }
     }
     // 位置なしのシリーズはここに現れない
@@ -150,9 +155,9 @@ catalog/
 ```jsonc
 [
   {
-    "guid": "de11d2d5-62dc-4c83-923b-419b71c94193",  // 訂正する回の RSS の guid。前後に空白を付けない
-    "season": 40,  // 割当に使う season。正の整数か、どのシリーズにも割り当てないことを表す null
-    "reason": "題名の【40-6】どおりサラディンと十字軍の回で、フィードの itunes:season 37（障害の歴史）が誤っている"  // なぜ訂正するかの 1 文
+    "guid": "de11d2d5-62dc-4c83-923b-419b71c94193", // 訂正する回の RSS の guid。前後に空白を付けない
+    "season": 40, // 割当に使う season。正の整数か、どのシリーズにも割り当てないことを表す null
+    "reason": "題名の【40-6】どおりサラディンと十字軍の回で、フィードの itunes:season 37（障害の歴史）が誤っている" // なぜ訂正するかの 1 文
   }
   // 以下、訂正する 1 回 = 1 要素が並ぶ。同じ guid の行を二つ書かない
 ]
@@ -222,13 +227,13 @@ catalog/
 ```jsonc
 // catalog/eras.json — この 7 区間が era 空間を 7 等分する
 [
-  { "id": "prehistory", "label": "先史",   "start": -10000, "end": -800 },
-  { "id": "ancient",    "label": "古代",   "start": -800,   "end": 550 },
-  { "id": "medieval",   "label": "中世",   "start": 550,    "end": 1450 },
-  { "id": "earlymodern","label": "近世",   "start": 1450,   "end": 1800 },
-  { "id": "modern19",   "label": "19世紀", "start": 1800,   "end": 1900 },
-  { "id": "modern20a",  "label": "〜WWII", "start": 1900,   "end": 1945 },
-  { "id": "modern20b",  "label": "戦後",   "start": 1945,   "end": "present" }
+  { "id": "prehistory", "label": "先史", "start": -10000, "end": -800 },
+  { "id": "ancient", "label": "古代", "start": -800, "end": 550 },
+  { "id": "medieval", "label": "中世", "start": 550, "end": 1450 },
+  { "id": "earlymodern", "label": "近世", "start": 1450, "end": 1800 },
+  { "id": "modern19", "label": "19世紀", "start": 1800, "end": 1900 },
+  { "id": "modern20a", "label": "〜WWII", "start": 1900, "end": 1945 },
+  { "id": "modern20b", "label": "戦後", "start": 1945, "end": "present" }
 ]
 ```
 
@@ -268,7 +273,6 @@ catalog/
   `catalog/` は `web/` の外にあって `public/` へ入らないので、ビルドの前に複製する手順が要る
   worker の複製（`web/package.json` の `sync-map-worker`）と同じ形で `predev` / `prebuild` へ繋ぐ
 - 読み込みの経路の禁止則（`catalog/` を `import` で読まない・URL に `BASE_PATH` を付ける・読んだ値をスキーマに通す）の正は `.claude/rules/layers.md`
-- §7 の「実行時 fetch を持たない」が指すのは RSS の取得で、自分で配った静的 JSON を引くことではない（#92 が文言を絞る）
 
 ## 4. UI 構成
 
@@ -352,7 +356,7 @@ catalog/
   手を入れる先は手動層の `series.json`・`loci.geojson`・`season-corrections.json` だけで、`episodes.json` は毎回フィードから組み直すので編集しない
   未割当を溜める置き場も持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ
   軌道に乗ったら GitHub Actions の cron で sync + PR 自動作成に昇格（S8 以降の任意課題）
-- 静的サイトなので実行時 fetch はしない。同期は常にビルド前のデータ更新として行う
+- 静的サイトなので、実行時に RSS を取得しない。同期は常にビルド前のデータ更新として行う
 
 ## 6. ディレクトリ構造
 
@@ -366,6 +370,7 @@ catalog/
 ├── README.md              # リポジトリの玄関。GitHub がここを描く
 ├── LICENSE                # GitHub がライセンス欄に出す
 ├── CLAUDE.md              # セッションの入口（規約・git）
+├── biome.json             # lint と整形の設定。root からリポジトリ全体を見る
 ├── catalog/               # 人間キュレーション層と時代区分。アプリの外なのでルート側
 ├── docs/                  # リポジトリ自身の文書
 │   ├── ARCHITECTURE.md    # この文書（現況）
@@ -384,7 +389,7 @@ catalog/
     ├── tests/             # `src/` に併置しないテスト
     ├── package.json       # 依存とタスクの定義
     ├── next.config.ts     # ビルドと配信の設定（static export / GitHub Pages）
-    └── tsconfig.json / biome.json / postcss.config.mjs / vitest.config.ts / vitest-setup.ts
+    └── tsconfig.json / postcss.config.mjs / vitest.config.ts / vitest-setup.ts
 ```
 
 `web/CLAUDE.md` は空殻——`create-next-app` の生成物やエージェントが `web/` 直下へ規約を
@@ -412,7 +417,7 @@ RSS 同期（`sync-feed.ts`）は `web/src/` のモジュールを import し `p
   データの編集は手元の管理画面が担い、公開サイトの成果物に含まれない
 - **第一段階で Point 以外の図形を持たない**。版図や経路の精緻な図形は第二段階（S9）で、完了条件の外
 - **シリーズ間の明示的な関連リンク（`related` のような属性）を持たない**（§4）
-- **実行時 fetch を持たない**。同期は常にビルド前（§5）
+- **実行時に RSS を取得しない**。同期は常にビルド前（§5）
 
 ## 8. 持ち越した開いた問い
 

@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.4/schema.json",
   "files": {
     "includes": ["**", "!**/.next", "!**/out", "!**/next-env.d.ts"]
   },
@@ -7,7 +7,7 @@
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true,
-    "root": ".."
+    "root": "."
   },
   "formatter": {
     "enabled": true,
@@ -18,6 +18,14 @@
   "css": {
     "parser": {
       "tailwindDirectives": true
+    }
+  },
+  "markdown": {
+    "parser": {
+      "frontmatter": true
+    },
+    "formatter": {
+      "proseWrap": "preserve"
     }
   },
   "javascript": {
@@ -91,7 +99,15 @@
   },
   "overrides": [
     {
-      "includes": ["vitest.config.ts", "next.config.ts"],
+      "includes": ["**/CLAUDE.md", "**/.claude/**", "**/.github/**/*.md"],
+      "markdown": {
+        "formatter": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "includes": ["web/vitest.config.ts", "web/next.config.ts"],
       "linter": {
         "rules": {
           "style": {
@@ -101,7 +117,7 @@
       }
     },
     {
-      "includes": ["src/lib/**"],
+      "includes": ["web/src/lib/**"],
       "linter": {
         "rules": {
           "style": {
@@ -133,7 +149,11 @@
       }
     },
     {
-      "includes": ["src/lib/catalog-dir.*", "scripts/**", "tests/**"],
+      "includes": [
+        "web/src/lib/catalog-dir.*",
+        "web/scripts/**",
+        "web/tests/**"
+      ],
       "linter": {
         "rules": {
           "style": {
@@ -162,10 +182,10 @@
     },
     {
       "includes": [
-        "src/components/map/MapCanvas.*",
-        "src/components/map/SeriesLayers.*",
-        "src/lib/map/series-layer.*",
-        "src/components/admin/AnchorDragMap.*"
+        "web/src/components/map/MapCanvas.*",
+        "web/src/components/map/SeriesLayers.*",
+        "web/src/lib/map/series-layer.*",
+        "web/src/components/admin/AnchorDragMap.*"
       ],
       "linter": {
         "rules": {
