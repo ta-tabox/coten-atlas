@@ -756,23 +756,18 @@ describe("禁止語の一覧", () => {
 });
 
 /**
- * リポジトリの中の `writing.md` のパスを返す。
+ * リポジトリの中の `writing.md`（`.claude/rules/` の直下）のパスを返す。
  *
  * 見つからなければ throw する。
- * 配布先では `.claude/rules/` の直下、雛形そのものを持つリポジトリでは `tools/coding-standards/rules/` に置かれる。
  */
 function findWritingRules(): string {
-  const candidates = [
-    path.join(repositoryRoot, ".claude/rules/writing.md"),
-    path.join(repositoryRoot, "tools/coding-standards/rules/writing.md"),
-  ];
-  const found = candidates.find((candidate) => existsSync(candidate));
+  const writingRules = path.join(repositoryRoot, ".claude/rules/writing.md");
 
-  if (found === undefined) {
-    throw new Error(`writing.md が見つからない: ${candidates.join(", ")}`);
+  if (!existsSync(writingRules)) {
+    throw new Error(`writing.md が見つからない: ${writingRules}`);
   }
 
-  return found;
+  return writingRules;
 }
 
 /**
