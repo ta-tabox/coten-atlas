@@ -215,7 +215,7 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 | クラウド環境の環境変数欄 | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義） |
 | クラウド環境のセットアップスクリプト欄 | `bash /home/user/coten-atlas/scripts/cloud-snapshot.sh` の一行 |
 | クラウド環境のネットワーク設定 | 許可ドメイン（§4） |
-| `.claude/skills/` | 同梱の規約 skill。プラグインを入れていないので本体を置いてある。`karpathy-guidelines` は外部由来（出所 https://github.com/multica-ai/andrej-karpathy-skills の `skills/karpathy-guidelines/SKILL.md`、固定 2c60614、MIT。上流の更新は手で取り込む） |
+| `.claude/skills/` | 同梱の規約 skill。外部由来のものの出所は各 skill の `SOURCE.md` が持つ |
 | `mise.toml`（ルート） | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む |
 | `web/package.json` | `pnpm check` を含む scripts |
 
