@@ -1,13 +1,13 @@
 # 人類のコミュニケーション史（`jinrui-no-komyunikeshonshi`・season 3）
 
-| `catalog/` の鍵 | 値 |
-|---|---|
-| `series.json` の `id` | `jinrui-no-komyunikeshonshi` |
-| `series.json` の `season` | 3 |
-| `series.json` の `timeRange` | `"untimed"` |
-| `series.json` の `anchor` | `"unlocated"` |
-| `series.json` の `region` | `地域なし` |
-| `loci.geojson` の事物 | 無し |
+| `catalog/` の鍵              | 値                           |
+| ---------------------------- | ---------------------------- |
+| `series.json` の `id`        | `jinrui-no-komyunikeshonshi` |
+| `series.json` の `season`    | 3                            |
+| `series.json` の `timeRange` | `"untimed"`                  |
+| `series.json` の `anchor`    | `"unlocated"`                |
+| `series.json` の `region`    | `地域なし`                   |
+| `loci.geojson` の事物        | 無し                         |
 
 ## `timeRange`
 
@@ -18,8 +18,8 @@
 
 裏どりで確かめた年は、`catalog/` の値には使わず、年代の見せ方を決めるときの材料として次の表に残す。
 
-| 端 | 年 | 何の年か | 典拠 | 並立する説 |
-|---|---|---|---|---|
+| 端     | 年    | 何の年か                                                  | 典拠                                                                                     | 並立する説                                                                 |
+| ------ | ----- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | 始まり | -3200 | ウルクで楔形文字が発達した時期（第 2 回が扱う文字の成立） | [World History Encyclopedia: Cuneiform](https://www.worldhistory.org/cuneiform/)（三次） | 同じ典拠が、シュメール人による文字の発明そのものを前3600〜前3500年頃に置く |
 
 ## 代表点
@@ -45,17 +45,17 @@
 2026-09-10 に Claude が `@historian` の結果を見て仮決定し、2026-09-11 に ADR-20260910-untimed-concept-series に従って `timeRange` を `"untimed"` にした。
 2026-09-12 に人間が仮決定を採用して決着させた。
 
-| 論点 | 仮決定 | 覆りうる根拠 |
-|---|---|---|
-| 時期を持つか | `"untimed"` | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、ウルクでの楔形文字の発達（前3200年頃）か、文字の発明（前3600〜前3500年頃）を使える |
-| `id` の表記 | `komyunikeshonshi` | カタカナの普通名詞にもラテン文字の綴りを使うなら `communication` を含む形になる。ADR-20260907-series-vocabulary はカタカナの普通名詞を名指ししていない |
+| 論点         | 仮決定             | 覆りうる根拠                                                                                                                                           |
+| ------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 時期を持つか | `"untimed"`        | 時期なしのシリーズの見せ方を決めて始まりの年が要るなら、ウルクでの楔形文字の発達（前3200年頃）か、文字の発明（前3600〜前3500年頃）を使える             |
+| `id` の表記  | `komyunikeshonshi` | カタカナの普通名詞にもラテン文字の綴りを使うなら `communication` を含む形になる。ADR-20260907-series-vocabulary はカタカナの普通名詞を名指ししていない |
 
 ## 裏どりの出所
 
-| 出所 | 何を持つか |
-|---|---|
-| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりの年・`kind` の裏どり |
-| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200) | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
-| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157) | 各回の内容から決めた年と、`region` と `id` の判断 |
-| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160) | `timeRange` を `"untimed"` にした線 |
-| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明 | 各回が扱う主題 |
+| 出所                                                                                                          | 何を持つか                                                      |
+| ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [`@historian` 1 回目（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724847) | 始まりの年・`kind` の裏どり                                     |
+| [自動レビュー（2026-09-10）](https://github.com/ta-tabox/coten-atlas/pull/157#issuecomment-5618724200)        | `id` の表記と ADR-20260907-series-vocabulary の規則の突き合わせ |
+| [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157)                                           | 各回の内容から決めた年と、`region` と `id` の判断               |
+| [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160)               | `timeRange` を `"untimed"` にした線                             |
+| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明                        | 各回が扱う主題                                                  |

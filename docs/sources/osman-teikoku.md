@@ -1,20 +1,20 @@
 # オスマン帝国（`osman-teikoku`・season 18）
 
-| `catalog/` の鍵 | 値 |
-|---|---|
-| `series.json` の `id` | `osman-teikoku` |
-| `series.json` の `season` | 18 |
-| `series.json` の `timeRange` | 1299..1922 |
-| `series.json` の `anchor` | `constantinople` |
-| `series.json` の `region` | `西アジア` |
-| `loci.geojson` の座標 | `[28.976, 41.008]` |
+| `catalog/` の鍵              | 値                 |
+| ---------------------------- | ------------------ |
+| `series.json` の `id`        | `osman-teikoku`    |
+| `series.json` の `season`    | 18                 |
+| `series.json` の `timeRange` | 1299..1922         |
+| `series.json` の `anchor`    | `constantinople`   |
+| `series.json` の `region`    | `西アジア`         |
+| `loci.geojson` の座標        | `[28.976, 41.008]` |
 
 ## `timeRange`
 
-| 欄 | 値 | 何の年か | 典拠 | 並立する説 |
-|---|---|---|---|---|
-| `start` | 1299 | 建国の伝承年 | Cemal Kafadar, *Between Two Worlds*（1995。二次。`@historian` の報告による）・[Wikipedia: History of the Ottoman Empire](https://en.wikipedia.org/wiki/History_of_the_Ottoman_Empire)（参考程度） | 無し（伝承上の起点） |
-| `end` | 1922 | スルタン制の廃止（11 月 1 日） | [Wikipedia: Abolition of the Ottoman sultanate](https://en.wikipedia.org/wiki/Abolition_of_the_Ottoman_sultanate)（参考程度） | 無し |
+| 欄      | 値   | 何の年か                       | 典拠                                                                                                                                                                                              | 並立する説           |
+| ------- | ---- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| `start` | 1299 | 建国の伝承年                   | Cemal Kafadar, _Between Two Worlds_（1995。二次。`@historian` の報告による）・[Wikipedia: History of the Ottoman Empire](https://en.wikipedia.org/wiki/History_of_the_Ottoman_Empire)（参考程度） | 無し（伝承上の起点） |
+| `end`   | 1922 | スルタン制の廃止（11 月 1 日） | [Wikipedia: Abolition of the Ottoman sultanate](https://en.wikipedia.org/wiki/Abolition_of_the_Ottoman_sultanate)（参考程度）                                                                     | 無し                 |
 
 1299 年は学術的に確定した建国年でなく、15 世紀に成立したオスマン家の年代記が伝える伝承上の起点である。
 `@historian` は、PR 本文が「建国の伝承年」と書いているので、この扱いに問題は無いと返した。
@@ -25,22 +25,22 @@
 
 ## 代表点
 
-| 欄 | 値 |
-|---|---|
+| 欄           | 値                                                                                             |
+| ------------ | ---------------------------------------------------------------------------------------------- |
 | 典拠が示す値 | 28.9654, 41.0072（Pleiades の代表点。Wikidata Q16869 の 28.976018, 41.012240 とも数百 m 以内） |
-| 典拠 | [Pleiades 520998](https://pleiades.stoa.org/places/520998) |
-| 典拠の格 | 三次 |
+| 典拠         | [Pleiades 520998](https://pleiades.stoa.org/places/520998)                                     |
+| 典拠の格     | 三次                                                                                           |
 
 種別は `集団` だけなので、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の「代表点と `kind` の選び方」の表の 3 行目で、本拠の都市に代表点を置いた。
 帝国の都は時期によって移ったので、ADR-20260911-series-vocabulary-tiebreaks の決定（#171）により、番組が扱う主な事績が起きた地を本拠の都市とした。
 各回の第 6〜9 回がコンスタンティノープルの攻略と攻略後の都市の再建を扱い、1453 年から帝国の終わりまでの都でもあるので、ここにした。
 `@historian` は、この選び方を妥当と返した。
 
-| 候補 | 置くと何が起きるか |
-|---|---|
+| 候補                             | 置くと何が起きるか                  |
+| -------------------------------- | ----------------------------------- |
 | コンスタンティノープル（現在値） | 1453 年以降の都と、各回の山場に寄る |
-| ブルサ・エディルネ | 1453 年より前の都に寄る |
-| ソユト | 発祥の地に寄る |
+| ブルサ・エディルネ               | 1453 年より前の都に寄る             |
+| ソユト                           | 発祥の地に寄る                      |
 
 ## `region`・`title`
 
@@ -58,18 +58,18 @@
 2026-09-11 に人間が仮決定を採用して決着させた。
 2026-09-12 に人間が、規則と各回の配分で決まった値に残る別の候補も優先度を下げて見直すと決め、見直しを [#197](https://github.com/ta-tabox/coten-atlas/issues/197)（オスマン帝国（osman-teikoku）の代表点をコンスタンティノープルとブルサ・エディルネのどれにするか）へ切り出した。
 
-| 論点 | 仮決定 | 覆りうる根拠 |
-|---|---|---|
-| `start` | 1299（建国の伝承年） | 伝承上の起点で、学術的に確定した年ではない |
-| 代表点 | `constantinople` | 事績の中心を建国と拡大の時期（第 1〜5 回）に置けば、ブルサかエディルネになる。見直しは #197 で行う |
+| 論点    | 仮決定               | 覆りうる根拠                                                                                       |
+| ------- | -------------------- | -------------------------------------------------------------------------------------------------- |
+| `start` | 1299（建国の伝承年） | 伝承上の起点で、学術的に確定した年ではない                                                         |
+| 代表点  | `constantinople`     | 事績の中心を建国と拡大の時期（第 1〜5 回）に置けば、ブルサかエディルネになる。見直しは #197 で行う |
 
 ## 裏どりの出所
 
-| 出所 | 何を持つか |
-|---|---|
-| [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange`・座標・`region` の裏どり |
-| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799) | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
-| [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167) | 代表点を選んだ判断と候補 |
-| [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171) | 拠点や舞台が複数あるときに、番組が扱う主な事績が起きた地を中心の場所とする規則 |
-| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明 | 各回が扱う年代と舞台 |
-| [#197（見直し）](https://github.com/ta-tabox/coten-atlas/issues/197) | 採用した仮決定を人間が見直す論点と案 |
+| 出所                                                                                                          | 何を持つか                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| [`@historian` 1 回目（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628151771) | `timeRange`・座標・`region` の裏どり                                                                                     |
+| [自動レビュー（2026-09-11）](https://github.com/ta-tabox/coten-atlas/pull/167#issuecomment-5628144799)        | `id`・事物の `id`・`region`・`tags`・`timeRange` と ADR-20260907-series-vocabulary（手で書く欄の語彙）の規則の突き合わせ |
+| [#167 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/167)                                           | 代表点を選んだ判断と候補                                                                                                 |
+| [#171 の決定（2026-09-11）](https://github.com/ta-tabox/coten-atlas/issues/171)                               | 拠点や舞台が複数あるときに、番組が扱う主な事績が起きた地を中心の場所とする規則                                           |
+| 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-11 取得）の各回の説明                        | 各回が扱う年代と舞台                                                                                                     |
+| [#197（見直し）](https://github.com/ta-tabox/coten-atlas/issues/197)                                          | 採用した仮決定を人間が見直す論点と案                                                                                     |

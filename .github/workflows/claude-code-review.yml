@@ -63,9 +63,9 @@ jobs:
           additional_permissions: |
             actions: read
 
-          plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
-          plugins: 'code-review@claude-code-plugins'
-          prompt: '/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
+          plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
+          plugins: "code-review@claude-code-plugins"
+          prompt: "/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
           # 既定の automation mode は指摘をインラインコメントにしか出さず、指摘がゼロだと何も残さない。
           # レビューが走ったのか読めずに黙ったのかを外から区別できないので、tag mode を強制してトラッキングコメントへ結果を書かせる。
           track_progress: true

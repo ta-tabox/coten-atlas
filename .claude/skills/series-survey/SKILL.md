@@ -144,7 +144,7 @@ for it in ET.parse(sys.stdin).getroot().iter("item"):
 4. `web/` で `pnpm check` を緑にし、`feat(catalog): <束の名前>の N シリーズを載せる` でコミットする
 
 `catalog/` の 2 ファイルは、`timeRange` と `geometry` を 1 行の object で書く書式である。
-`web/` の biome は `catalog/` を整形しないので、ファイル全体を `JSON.stringify` や `json.dump` で書き出すと既存の要素まで展開され、差分が全件に広がる。
+ルートの biome は `catalog/` の整形を検査するので、ファイル全体を `JSON.stringify` や `json.dump` で書き出すと既存の要素まで展開され、`pnpm check` が赤くなり、差分も全件に広がる。
 既存の要素と同じ雛形で各要素を書き出し、`git diff --numstat catalog/` で削除の行数が 0 であることを確かめる。
 
 ## 5. PR を開く

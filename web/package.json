@@ -11,7 +11,7 @@
     "prebuild": "pnpm sync-map-worker && pnpm sync-catalog",
     "build": "next build",
     "typecheck": "tsc --noEmit",
-    "lint": "biome ci . && node scripts/lint-comments.ts",
+    "lint": "biome ci .. && node scripts/lint-comments.ts",
     "pretest": "pnpm sync-map-worker",
     "test": "vitest run",
     "pretest:watch": "pnpm sync-map-worker",
@@ -31,7 +31,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.10",
+    "@biomejs/biome": "^2.6.4",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/dom": "^10.4.1",
