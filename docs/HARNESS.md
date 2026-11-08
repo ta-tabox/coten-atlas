@@ -195,29 +195,29 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 
 ## 5. 設定の置き場
 
-| 置き場                                 | 持つもの                                                                                                                                                                                                                                            |
-| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.claude/settings.json`                | 権限（`permissions`。各規則の理由は下の「権限の規則」）・PreToolUse と `SessionStart` の配線                                                                                                                                                        |
-| `.claude/hooks/session-start.sh`       | 実行環境を見分けて準備のスクリプトを呼ぶ順                                                                                                                                                                                                          |
-| `scripts/cloud-session.sh`             | リモートのセッションごとの準備のうちクラウドでだけ要る分（名義と mise の検査・shims の PATH の受け渡し）                                                                                                                                            |
-| `scripts/cloud-snapshot.sh`            | リモートのスナップショットに残す準備（mise の版・ランタイム・依存・smoke テストのブラウザ）                                                                                                                                                         |
-| `scripts/setup.sh`                     | どの実行環境でも要る環境準備（§3「揃えるもの」）                                                                                                                                                                                                    |
-| `web/pnpm-workspace.yaml`              | pnpm の store の置き場（`storeDir`）                                                                                                                                                                                                                |
-| `.claude/hooks/guard-force-push.sh`    | force push 系を ask へ回す PreToolUse フック                                                                                                                                                                                                        |
-| `.claude/hooks/guard-gh-api.sh`        | `gh api` の戻せない書き込みを ask へ回す PreToolUse フック                                                                                                                                                                                          |
-| `.githooks/commit-msg`                 | コミット本文の禁止語を commit の前で止める git フック                                                                                                                                                                                               |
-| `.githooks/pre-commit`                 | ステージした追加行の禁止語を、コミットを止めずに報告する git フック                                                                                                                                                                                 |
-| `scripts/lint-vocabulary.sh`           | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る                                                                                                                                                                                           |
-| `.github/workflows/lint-pr-body.yml`   | PR 本文の禁止語を CI で報告する                                                                                                                                                                                                                     |
-| `scripts/diff-coding-standards.sh`     | 規約の写しと共有の雛形の差を、手で走らせて報告する                                                                                                                                                                                                  |
-| `.vocabulary/banned.tsv`               | 禁止語の検査が読む、`.claude/rules/writing.md` の表の写し                                                                                                                                                                                           |
-| `.vocabulary/allow`                    | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語）                                                                                                                                                                           |
-| クラウド環境の環境変数欄               | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義）                                                                                                                                                                                  |
-| クラウド環境のセットアップスクリプト欄 | `bash /home/user/coten-atlas/scripts/cloud-snapshot.sh` の一行                                                                                                                                                                                      |
-| クラウド環境のネットワーク設定         | 許可ドメイン（§4）                                                                                                                                                                                                                                  |
-| `.claude/skills/`                      | 同梱の規約 skill。プラグインを入れていないので本体を置いてある。`karpathy-guidelines` は外部由来（出所 https://github.com/multica-ai/andrej-karpathy-skills の `skills/karpathy-guidelines/SKILL.md`、固定 2c60614、MIT。上流の更新は手で取り込む） |
-| `mise.toml`（ルート）                  | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む                                                                                                                                                                                    |
-| `web/package.json`                     | `pnpm check` を含む scripts                                                                                                                                                                                                                         |
+| 置き場                                 | 持つもの                                                                                                 |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `.claude/settings.json`                | 権限（`permissions`。各規則の理由は下の「権限の規則」）・PreToolUse と `SessionStart` の配線             |
+| `.claude/hooks/session-start.sh`       | 実行環境を見分けて準備のスクリプトを呼ぶ順                                                               |
+| `scripts/cloud-session.sh`             | リモートのセッションごとの準備のうちクラウドでだけ要る分（名義と mise の検査・shims の PATH の受け渡し） |
+| `scripts/cloud-snapshot.sh`            | リモートのスナップショットに残す準備（mise の版・ランタイム・依存・smoke テストのブラウザ）              |
+| `scripts/setup.sh`                     | どの実行環境でも要る環境準備（§3「揃えるもの」）                                                         |
+| `web/pnpm-workspace.yaml`              | pnpm の store の置き場（`storeDir`）                                                                     |
+| `.claude/hooks/guard-force-push.sh`    | force push 系を ask へ回す PreToolUse フック                                                             |
+| `.claude/hooks/guard-gh-api.sh`        | `gh api` の戻せない書き込みを ask へ回す PreToolUse フック                                               |
+| `.githooks/commit-msg`                 | コミット本文の禁止語を commit の前で止める git フック                                                    |
+| `.githooks/pre-commit`                 | ステージした追加行の禁止語を、コミットを止めずに報告する git フック                                      |
+| `scripts/lint-vocabulary.sh`           | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る                                                |
+| `.github/workflows/lint-pr-body.yml`   | PR 本文の禁止語を CI で報告する                                                                          |
+| `scripts/diff-coding-standards.sh`     | 規約の写しと共有の雛形の差を、手で走らせて報告する                                                       |
+| `.vocabulary/banned.tsv`               | 禁止語の検査が読む、`.claude/rules/writing.md` の表の写し                                                |
+| `.vocabulary/allow`                    | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語）                                |
+| クラウド環境の環境変数欄               | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義）                                       |
+| クラウド環境のセットアップスクリプト欄 | `bash /home/user/coten-atlas/scripts/cloud-snapshot.sh` の一行                                           |
+| クラウド環境のネットワーク設定         | 許可ドメイン（§4）                                                                                       |
+| `.claude/skills/`                      | 同梱の規約 skill。外部由来のものの出所は各 skill の `SOURCE.md` が持つ                                   |
+| `mise.toml`（ルート）                  | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む                                         |
+| `web/package.json`                     | `pnpm check` を含む scripts                                                                              |
 
 リモートで効かせたい設定はリポジトリに置く。
 クラウド環境の設定画面には、名義のようにリポジトリへ置けないものと、リポジトリのスクリプトを呼ぶ一行と許可ドメインだけを置く。
