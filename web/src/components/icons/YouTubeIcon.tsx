@@ -4,6 +4,10 @@
  * 形は Simple Icons 16.34.0（CC0）が配る 24x24 のパスで、YouTube の規定が改変を禁じているので d 属性は編集しない。
  * 赤は brand.youtube が配る色版のアイコンの画像から読んだ値で、YouTube の規定は色版の三角を常に白にするよう求めるので、三角は背景の色に関わらず白で塗る。
  * 大きさは className で外から与える。
+ *
+ * @see https://brand.youtube/ 利用の規定（色版・最小の大きさ・余白・改変の禁止）。
+ * @see https://www.youtube.com/howyoutubeworks/resources/brand-resources/ マークのリンク先をチャンネルに限る規定（旧ページ）。
+ * @see https://developers.google.com/youtube/terms/branding-guidelines API の利用者に当たる規定（マークのリンク先は YouTube のコンテンツ）。
  */
 
 /** YouTube のマークを描く。 */

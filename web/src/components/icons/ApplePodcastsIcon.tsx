@@ -4,6 +4,9 @@
  * 形と色は、Apple が配る「Apple Podcasts で聴く」のバッジの SVG（`tools.applemediaservices.com`）からアイコンの部分を写したもので、Apple の規定が改変を禁じているので d 属性と色は編集しない。
  * 座標はバッジの中の位置のままなので、viewBox でアイコンの部分だけを切り出す。
  * 大きさは className で外から与える。
+ *
+ * @see https://marketing.services.apple/apple-podcasts-identity-guidelines 利用の規定（アイコン単体を使ってよい場面・承認済みの版）。
+ * @see https://tools.applemediaservices.com/api/badges/listen-on-apple-podcasts/badge/ja-jp 形と色を写したバッジの SVG。
  */
 
 import { useId } from "react";

@@ -5,6 +5,9 @@
  * 規定は緑のアイコンを黒の背景で使うことを認めており、黒の四角は Apple Podcasts のアイコンと形を揃えるために敷く。
  * マークは四角の一辺の 21/32 で描き、四角を 32px にしたときにマークが規定の最小の 21px になる。
  * 大きさは className で外から与える。
+ *
+ * @see https://developer.spotify.com/documentation/design 利用の規定（色・最小の大きさ・余白・禁じる改変）。
+ * @see https://developer.spotify.com/images/guidelines/design/2024-spotify-logo-icon.zip 形と色を写した配布物。
  */
 
 /** Spotify のマークを、黒の角丸の四角の上に描く。 */
