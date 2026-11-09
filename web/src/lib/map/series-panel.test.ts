@@ -24,7 +24,7 @@ function seriesOf(fixture: SeriesFixture): Series {
     title: fixture.id,
     summary: "",
     region: "ヨーロッパ",
-    links: [],
+    links: {},
     tags: ["概念史"],
     ...fixture,
   };

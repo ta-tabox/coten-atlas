@@ -35,7 +35,7 @@ const SPARTA: Series = {
   summary: "軍事に全振りした都市国家の話。",
   region: "ヨーロッパ",
   season: 2,
-  links: [],
+  links: {},
   tags: ["集団"],
 };
 
@@ -45,7 +45,7 @@ const EPISODES: Episode[] = [
   episodeOf({
     guid: "sparta-1",
     title: "【2-1】スパルタ編1",
-    links: [{ platform: "spotify", url: EPISODE_URL }],
+    links: { spotify: EPISODE_URL },
   }),
 ];
 
@@ -161,7 +161,7 @@ describe("SeriesDetailCard", () => {
         episodes={{
           kind: "loaded",
           episodes: [
-            episodeOf({ guid: "sparta-2", title: "リンク無しの回", links: [] }),
+            episodeOf({ guid: "sparta-2", title: "リンク無しの回", links: {} }),
           ],
         }}
         onClose={vi.fn()}

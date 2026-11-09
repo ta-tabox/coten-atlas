@@ -29,20 +29,20 @@ const PREVIOUS_EPISODE: Episode = {
   pubDate: "2026-08-19T21:00:00.000Z",
   season: 66,
   seriesId: "imperial-rome",
-  links: [{ platform: "apple-podcasts", url: APPLE_PODCASTS_URL }],
+  links: { "apple-podcasts": APPLE_PODCASTS_URL },
 };
 
 describe("toEpisode", () => {
   it("前回の同じ guid の回が持っていた links を引き継ぐ", () => {
     const previous = new Map([[GUID, PREVIOUS_EPISODE]]);
 
-    expect(toEpisode(ASSIGNMENT, previous).links).toEqual([
-      { platform: "apple-podcasts", url: APPLE_PODCASTS_URL },
-    ]);
+    expect(toEpisode(ASSIGNMENT, previous).links).toEqual({
+      "apple-podcasts": APPLE_PODCASTS_URL,
+    });
   });
 
   it("前回に無い回の links は、フィードの link を入れず空にする", () => {
-    expect(toEpisode(ASSIGNMENT, new Map()).links).toEqual([]);
+    expect(toEpisode(ASSIGNMENT, new Map()).links).toEqual({});
   });
 
   it("links 以外の欄は前回の値でなくフィードと割当から組み直す", () => {

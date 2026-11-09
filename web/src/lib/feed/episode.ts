@@ -19,7 +19,7 @@ export type Assignment = {
 
 /**
  * 割当を済ませたフィードの 1 件（`assignment`）を、`episodes.json` の 1 件へ写す。
- * `links` は前回の同期のエピソード（`previous`、guid が鍵）の同じ guid の回から引き継ぎ、前回に無い回は空配列にする。
+ * `links` は前回の同期のエピソード（`previous`、guid が鍵）の同じ guid の回から引き継ぎ、前回に無い回は空のオブジェクトにする。
  *
  * `season` には `itunes:season` でなく割当に使った season を入れる。
  * `audioUrl`・`episodeNumber`・`durationSec` は `episodeSchema` に欄が無いので写さない。
@@ -34,6 +34,6 @@ export function toEpisode(
     pubDate: item.pubDate,
     season: key.season,
     seriesId,
-    links: previous.get(item.guid)?.links ?? [],
+    links: previous.get(item.guid)?.links ?? {},
   };
 }

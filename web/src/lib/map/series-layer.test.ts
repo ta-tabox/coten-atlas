@@ -61,7 +61,7 @@ function seriesOf(id: string, timeRange: Series["timeRange"]): Series {
     timeRange,
     summary: "",
     region: "ヨーロッパ",
-    links: [],
+    links: {},
     tags: ["概念史"],
   };
 }

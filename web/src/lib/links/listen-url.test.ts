@@ -6,7 +6,7 @@ const SPOTIFY_EPISODE_URL =
 
 /** Spotify の回の URL だけを持ち、Apple Podcasts の URL を持たない回。 */
 const SPOTIFY_ONLY = {
-  links: [{ platform: "spotify" as const, url: SPOTIFY_EPISODE_URL }],
+  links: { spotify: SPOTIFY_EPISODE_URL },
 };
 
 describe("listenUrlOf", () => {
@@ -21,6 +21,6 @@ describe("listenUrlOf", () => {
   });
 
   it("links が空の回では、どの基盤でも番組ページを返す", () => {
-    expect(listenUrlOf({ links: [] }, "spotify")).toBe(SHOW_URLS.spotify);
+    expect(listenUrlOf({ links: {} }, "spotify")).toBe(SHOW_URLS.spotify);
   });
 });

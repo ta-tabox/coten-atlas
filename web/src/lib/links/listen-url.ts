@@ -20,15 +20,11 @@ export const SHOW_URLS: Record<Platform, string> = {
 
 /**
  * エピソード（`episode`）を配信基盤（`platform`）で開く URL を返す。
- * その基盤のリンクを `links` に持たなければ、`SHOW_URLS` の番組ページの URL を返す。
- *
- * `find` の 1 件で足りる理由は `@/lib/schema/link` が正。
+ * その基盤の URL を `links` に持たなければ、`SHOW_URLS` の番組ページの URL を返す。
  */
 export function listenUrlOf(
   episode: Pick<Episode, "links">,
   platform: Platform,
 ): string {
-  const link = episode.links.find((one) => one.platform === platform);
-
-  return link?.url ?? SHOW_URLS[platform];
+  return episode.links[platform] ?? SHOW_URLS[platform];
 }
