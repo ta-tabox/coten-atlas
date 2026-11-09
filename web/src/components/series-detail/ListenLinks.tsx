@@ -48,7 +48,7 @@ export default function ListenLinks({
               // noopener は開いたページに window.opener を渡さず、noreferrer は配信基盤へ Referer ヘッダを送らない。
               target="_blank"
               rel="noopener noreferrer"
-              className="flex size-9 items-center justify-center rounded-md text-black hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              className="flex size-9 items-center justify-center rounded-md hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
             >
               <Icon className="size-6" />
               {/* マークは aria-hidden なので、基盤名と別タブで開くことをスクリーンリーダーには文字で伝える。 */}
