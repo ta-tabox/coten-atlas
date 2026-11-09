@@ -21,7 +21,7 @@ export default function YouTubeChannelLink() {
       rel="noopener noreferrer"
       className="flex items-center gap-1.5 rounded-md px-1.5 py-1 text-[0.8rem] text-zinc-700 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
     >
-      <YouTubeIcon className="h-5 w-5 flex-none text-black" />
+      <YouTubeIcon className="h-5 w-5 flex-none" />
       <span>@cotenradio</span>
       <span className="sr-only">
         （YouTube の公式チャンネルを新しいタブで開く）
