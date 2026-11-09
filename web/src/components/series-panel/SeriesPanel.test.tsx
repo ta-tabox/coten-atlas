@@ -22,7 +22,7 @@ const SPARTA: Series = {
   summary: "",
   region: "ヨーロッパ",
   season: 2,
-  links: [],
+  links: {},
   tags: ["集団"],
 };
 

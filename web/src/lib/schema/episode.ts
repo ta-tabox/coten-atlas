@@ -51,7 +51,7 @@ export const episodeSchema = z
     /** `season` をシリーズ側の索引で引いた結果。 */
     seriesId: trimmedNonEmptyStringSchema.nullable(),
 
-    /** RSS の `<link>` が入る。 */
+    /** 各基盤から取得した、この回のページの URL。 */
     links: linksSchema,
   })
   .superRefine((episode, ctx) => {

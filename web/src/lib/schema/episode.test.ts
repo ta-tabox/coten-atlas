@@ -12,12 +12,9 @@ const episode = {
   pubDate: "2026-08-19T21:00:00Z",
   season: 66,
   seriesId: "teisei-roma",
-  links: [
-    {
-      platform: "spotify",
-      url: "https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q",
-    },
-  ],
+  links: {
+    spotify: "https://open.spotify.com/episode/0000000000000000000000",
+  },
 };
 
 /** エピソード 1 件だけを持つ episodes.json 相当。 */
@@ -81,24 +78,6 @@ describe("episodeSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("同じ配信基盤のリンクを 2 本持つ回を落とす", () => {
-    const result = episodeSchema.safeParse({
-      ...episode,
-      links: [
-        {
-          platform: "spotify",
-          url: "https://podcasters.spotify.com/pod/show/coten/episodes/a",
-        },
-        {
-          platform: "spotify",
-          url: "https://podcasters.spotify.com/pod/show/coten/episodes/b",
-        },
-      ],
-    });
-
-    expect(result.success).toBe(false);
-  });
-
   it("スキーマに無いキーを持つ回を落とす", () => {
     const result = episodeSchema.safeParse({
       ...episode,
@@ -108,14 +87,22 @@ describe("episodeSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("スキーマに無いキーを持つリンクを落とす", () => {
+  it("URL でない配信リンクを拒否する", () => {
+    const result = episodeSchema.safeParse({
+      ...episode,
+      links: { spotify: "Spotify で聴く" },
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("配信リンクを旧い配列の形で持つ回を拒否する", () => {
     const result = episodeSchema.safeParse({
       ...episode,
       links: [
         {
           platform: "spotify",
-          url: "https://podcasters.spotify.com/pod/show/coten/episodes/a",
-          label: "Spotify で聴く",
+          url: "https://open.spotify.com/episode/0000000000000000000000",
         },
       ],
     });
@@ -126,7 +113,7 @@ describe("episodeSchema", () => {
   it("未知の配信基盤を落とす", () => {
     const result = episodeSchema.safeParse({
       ...episode,
-      links: [{ platform: "apple", url: "https://podcasts.apple.com/x" }],
+      links: { apple: "https://podcasts.apple.com/x" },
     });
 
     expect(result.success).toBe(false);

@@ -7,7 +7,7 @@
     "summary": "",
     "region": "日本",
     "season": 1,
-    "links": [],
+    "links": {},
     "tags": ["人物", "幕末", "思想", "教育"]
   },
   {
@@ -18,7 +18,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 2,
-    "links": [],
+    "links": {},
     "tags": ["集団", "戦争"]
   },
   {
@@ -29,7 +29,7 @@
     "summary": "",
     "region": "地域なし",
     "season": 3,
-    "links": [],
+    "links": {},
     "tags": ["メディア", "技術", "概念史"]
   },
   {
@@ -40,7 +40,7 @@
     "summary": "",
     "region": "日本",
     "season": 4,
-    "links": [],
+    "links": {},
     "tags": ["政治", "宗教", "概念史"]
   },
   {
@@ -51,7 +51,7 @@
     "summary": "",
     "region": "中国",
     "season": 5,
-    "links": [],
+    "links": {},
     "tags": ["人物", "帝国"]
   },
   {
@@ -62,7 +62,7 @@
     "summary": "",
     "region": "中国",
     "season": 6,
-    "links": [],
+    "links": {},
     "tags": ["人物", "三国志", "戦争"]
   },
   {
@@ -73,7 +73,7 @@
     "summary": "",
     "region": "地域なし",
     "season": 7,
-    "links": [],
+    "links": {},
     "tags": ["宗教", "概念史"]
   },
   {
@@ -84,7 +84,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 8,
-    "links": [],
+    "links": {},
     "tags": ["人物", "戦争"]
   },
   {
@@ -95,7 +95,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 9,
-    "links": [],
+    "links": {},
     "tags": ["出来事", "政治", "思想"]
   },
   {
@@ -106,7 +106,7 @@
     "summary": "",
     "region": "南アジア",
     "season": 10,
-    "links": [],
+    "links": {},
     "tags": ["人物", "思想", "宗教", "政治"]
   },
   {
@@ -117,7 +117,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 11,
-    "links": [],
+    "links": {},
     "tags": ["人物", "遠征", "帝国"]
   },
   {
@@ -128,7 +128,7 @@
     "summary": "",
     "region": "地域なし",
     "season": 12,
-    "links": [],
+    "links": {},
     "tags": ["経済", "概念史"]
   },
   {
@@ -139,7 +139,7 @@
     "summary": "",
     "region": "中国",
     "season": 13,
-    "links": [],
+    "links": {},
     "tags": ["人物", "宗教", "旅"]
   },
   {
@@ -150,7 +150,7 @@
     "summary": "",
     "region": "日本",
     "season": 14,
-    "links": [],
+    "links": {},
     "tags": ["人物", "幕末", "戦争"]
   },
   {
@@ -161,7 +161,7 @@
     "summary": "",
     "region": "北アメリカ",
     "season": 15,
-    "links": [],
+    "links": {},
     "tags": ["出来事", "開拓"]
   },
   {
@@ -172,7 +172,7 @@
     "summary": "",
     "region": "北アメリカ",
     "season": 16,
-    "links": [],
+    "links": {},
     "tags": ["人物", "障害", "教育", "福祉"]
   },
   {
@@ -183,7 +183,7 @@
     "summary": "",
     "region": "中央ユーラシア",
     "season": 17,
-    "links": [],
+    "links": {},
     "tags": ["人物", "帝国", "戦争", "遠征"]
   },
   {
@@ -194,7 +194,7 @@
     "summary": "",
     "region": "西アジア",
     "season": 18,
-    "links": [],
+    "links": {},
     "tags": ["集団", "帝国", "戦争"]
   },
   {
@@ -205,7 +205,7 @@
     "summary": "",
     "region": "日本",
     "season": 19,
-    "links": [],
+    "links": {},
     "tags": ["人物", "宗教"]
   },
   {
@@ -216,7 +216,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 20,
-    "links": [],
+    "links": {},
     "tags": ["人物", "帝国", "戦争"]
   },
   {
@@ -227,7 +227,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 21,
-    "links": [],
+    "links": {},
     "tags": ["出来事", "宗教"]
   },
   {
@@ -238,7 +238,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 22,
-    "links": [],
+    "links": {},
     "tags": ["出来事", "戦争", "帝国", "技術"]
   },
   {
@@ -249,7 +249,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 23,
-    "links": [],
+    "links": {},
     "tags": ["人物", "政治", "戦争"]
   },
   {
@@ -260,7 +260,7 @@
     "summary": "",
     "region": "日本",
     "season": 24,
-    "links": [],
+    "links": {},
     "tags": ["人物", "武士", "戦争", "政治"]
   },
   {
@@ -271,7 +271,7 @@
     "summary": "",
     "region": "地域なし",
     "season": 25,
-    "links": [],
+    "links": {},
     "tags": ["教育", "概念史"]
   },
   {
@@ -282,7 +282,7 @@
     "summary": "",
     "region": "地域なし",
     "season": 26,
-    "links": [],
+    "links": {},
     "tags": ["性", "宗教", "概念史"]
   },
   {
@@ -293,7 +293,7 @@
     "summary": "",
     "region": "中国",
     "season": 27,
-    "links": [],
+    "links": {},
     "tags": ["人物", "政治", "帝国"]
   },
   {
@@ -304,7 +304,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 28,
-    "links": [],
+    "links": {},
     "tags": ["経済", "思想", "概念史"]
   },
   {
@@ -315,7 +315,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 29,
-    "links": [],
+    "links": {},
     "tags": ["人物", "思想", "経済", "政治"]
   },
   {
@@ -326,7 +326,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 30,
-    "links": [],
+    "links": {},
     "tags": ["人物", "戦争", "思想", "政治"]
   },
   {
@@ -337,7 +337,7 @@
     "summary": "",
     "region": "日本",
     "season": 31,
-    "links": [],
+    "links": {},
     "tags": ["武士", "死", "概念史"]
   },
   {
@@ -348,7 +348,7 @@
     "summary": "",
     "region": "中国",
     "season": 32,
-    "links": [],
+    "links": {},
     "tags": ["出来事", "戦争", "帝国", "外交"]
   },
   {
@@ -359,7 +359,7 @@
     "summary": "",
     "region": "アフリカ",
     "season": 33,
-    "links": [],
+    "links": {},
     "tags": ["人物", "帝国"]
   },
   {
@@ -370,7 +370,7 @@
     "summary": "",
     "region": "日本",
     "season": 34,
-    "links": [],
+    "links": {},
     "tags": ["集団", "武士", "戦争", "政治"]
   },
   {
@@ -381,7 +381,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 35,
-    "links": [],
+    "links": {},
     "tags": ["人物", "思想"]
   },
   {
@@ -392,7 +392,7 @@
     "summary": "",
     "region": "地域なし",
     "season": 36,
-    "links": [],
+    "links": {},
     "tags": ["死", "宗教", "概念史"]
   },
   {
@@ -403,7 +403,7 @@
     "summary": "",
     "region": "地域なし",
     "season": 37,
-    "links": [],
+    "links": {},
     "tags": ["障害", "福祉", "科学", "概念史"]
   },
   {
@@ -414,7 +414,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 38,
-    "links": [],
+    "links": {},
     "tags": ["福祉", "経済", "概念史"]
   },
   {
@@ -425,7 +425,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 39,
-    "links": [],
+    "links": {},
     "tags": ["人物", "メディア", "政治", "戦争"]
   },
   {
@@ -436,7 +436,7 @@
     "summary": "",
     "region": "西アジア",
     "season": 40,
-    "links": [],
+    "links": {},
     "tags": ["人物", "出来事", "戦争", "宗教"]
   },
   {
@@ -447,7 +447,7 @@
     "summary": "",
     "region": "北アメリカ",
     "season": 41,
-    "links": [],
+    "links": {},
     "tags": ["人物", "技術"]
   },
   {
@@ -458,7 +458,7 @@
     "summary": "",
     "region": "アフリカ",
     "season": 42,
-    "links": [],
+    "links": {},
     "tags": ["人物", "戦争", "遠征"]
   },
   {
@@ -469,7 +469,7 @@
     "summary": "",
     "region": "中国",
     "season": 43,
-    "links": [],
+    "links": {},
     "tags": ["宗教", "概念史"]
   },
   {
@@ -480,7 +480,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 44,
-    "links": [],
+    "links": {},
     "tags": ["人物", "戦争", "虐殺"]
   },
   {
@@ -491,7 +491,7 @@
     "summary": "",
     "region": "日本",
     "season": 45,
-    "links": [],
+    "links": {},
     "tags": ["人物", "政治", "文学"]
   },
   {
@@ -502,7 +502,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 46,
-    "links": [],
+    "links": {},
     "tags": ["政治", "思想", "概念史"]
   },
   {
@@ -513,7 +513,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 47,
-    "links": [],
+    "links": {},
     "tags": ["人物", "政治", "戦争", "帝国"]
   },
   {
@@ -524,7 +524,7 @@
     "summary": "",
     "region": "日本",
     "season": 48,
-    "links": [],
+    "links": {},
     "tags": ["人物", "文学", "美術", "戦争"]
   },
   {
@@ -535,7 +535,7 @@
     "summary": "",
     "region": "日本",
     "season": 49,
-    "links": [],
+    "links": {},
     "tags": ["人物", "文学"]
   },
   {
@@ -546,7 +546,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 50,
-    "links": [],
+    "links": {},
     "tags": ["人物", "戦争", "宗教"]
   },
   {
@@ -557,7 +557,7 @@
     "summary": "",
     "region": "中国",
     "season": 51,
-    "links": [],
+    "links": {},
     "tags": ["人物", "戦争"]
   },
   {
@@ -568,7 +568,7 @@
     "summary": "",
     "region": "日本",
     "season": 52,
-    "links": [],
+    "links": {},
     "tags": ["人物", "武士", "戦争", "政治"]
   },
   {
@@ -579,7 +579,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 53,
-    "links": [],
+    "links": {},
     "tags": ["人物", "美術"]
   },
   {
@@ -590,7 +590,7 @@
     "summary": "",
     "region": "南アジア",
     "season": 54,
-    "links": [],
+    "links": {},
     "tags": ["集団", "帝国", "宗教"]
   },
   {
@@ -601,7 +601,7 @@
     "summary": "",
     "region": "中国",
     "season": 55,
-    "links": [],
+    "links": {},
     "tags": ["人物", "思想"]
   },
   {
@@ -612,7 +612,7 @@
     "summary": "",
     "region": "中国",
     "season": 56,
-    "links": [],
+    "links": {},
     "tags": ["人物", "宗教", "旅"]
   },
   {
@@ -623,7 +623,7 @@
     "summary": "",
     "region": "日本",
     "season": 57,
-    "links": [],
+    "links": {},
     "tags": ["人物", "性", "思想", "メディア"]
   },
   {
@@ -634,7 +634,7 @@
     "summary": "",
     "region": "地域なし",
     "season": 58,
-    "links": [],
+    "links": {},
     "tags": ["科学", "技術", "概念史"]
   },
   {
@@ -645,7 +645,7 @@
     "summary": "",
     "region": "日本",
     "season": 59,
-    "links": [],
+    "links": {},
     "tags": ["出来事", "人物", "幕末", "外交"]
   },
   {
@@ -656,7 +656,7 @@
     "summary": "",
     "region": "中国",
     "season": 60,
-    "links": [],
+    "links": {},
     "tags": ["人物", "戦争"]
   },
   {
@@ -667,7 +667,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 61,
-    "links": [],
+    "links": {},
     "tags": ["人物", "技術", "科学"]
   },
   {
@@ -678,7 +678,7 @@
     "summary": "",
     "region": "北アメリカ",
     "season": 62,
-    "links": [],
+    "links": {},
     "tags": ["人物", "奴隷", "政治", "戦争"]
   },
   {
@@ -689,7 +689,7 @@
     "summary": "",
     "region": "西アジア",
     "season": 63,
-    "links": [],
+    "links": {},
     "tags": ["人物", "文学"]
   },
   {
@@ -700,7 +700,7 @@
     "summary": "",
     "region": "日本",
     "season": 64,
-    "links": [],
+    "links": {},
     "tags": ["人物", "幕末", "戦争", "政治"]
   },
   {
@@ -711,7 +711,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 65,
-    "links": [],
+    "links": {},
     "tags": ["人物", "科学", "性", "教育"]
   },
   {
@@ -722,7 +722,7 @@
     "summary": "",
     "region": "ヨーロッパ",
     "season": 66,
-    "links": [],
+    "links": {},
     "tags": ["集団", "帝国"]
   },
   {
@@ -733,7 +733,7 @@
     "summary": "",
     "region": "日本",
     "season": 67,
-    "links": [],
+    "links": {},
     "tags": ["出来事", "戦争", "帝国", "政治"]
   }
 ]

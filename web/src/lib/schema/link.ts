@@ -1,44 +1,29 @@
 /**
- * 配信リンク 1 本の形。
+ * 配信リンクの形と、配信リンクを持てる配信基盤を置く。
  * シリーズのページとエピソード（各回のページ）が同じ形を共有する。
  *
- * `platform` を enum に閉じてあるので、配信基盤が増えたときに直す場所はここだけになる。
- * 生の URL 文字列へ緩めると、増えた基盤を見分ける手が消える。
- * 表示名などの欄を黙って受けると、増えた形が検査に映らないので、スキーマに無いキーは落とす。
+ * 配信リンクは基盤を鍵、URL を値にしたオブジェクトで持つ（例: `{ "apple-podcasts": "https://podcasts.apple.com/…" }`）。
+ * 鍵を `platformSchema` に閉じてあるので、未知の基盤の鍵はスキーマが拒否し、基盤を足すときに直すのは `platformSchema` だけになる。
  */
 
 import * as z from "zod";
-import { duplicatesOf } from "@/lib/schema/duplicates";
 
 /**
- * 配信基盤。
- * RSS の `<link>` が指す先は Spotify のページである。
+ * 配信リンクを持てる配信基盤。
+ *
+ * 並び順は、詳細カードが各回のボタンを並べる順でもある。
  */
-const platformSchema = z.enum(["spotify"]);
+const platformSchema = z.enum(["spotify", "apple-podcasts"]);
 
-/** 配信リンク 1 本。 */
-export const linkSchema = z.strictObject({
-  platform: platformSchema,
+/** 配信基盤の並び。 */
+export const PLATFORMS = platformSchema.options;
 
-  /** その基盤でこの回、またはこのシリーズを開くページの URL。 */
-  url: z.url(),
-});
+export type Platform = z.infer<typeof platformSchema>;
 
 /**
  * 一つのシリーズ、または一つのエピソードが持つ配信リンク全部。
- *
- * 同じ基盤のリンクを 2 本持てない。
- * 詳細カードの「Spotify で聴く」は `links.find((link) => link.platform === "spotify")` の形で 1 本を取り出すので、2 本あるとボタンに出る 1 本が配列の並び順で決まる。
+ * 各基盤の値は、その基盤でこの回、またはこのシリーズを開くページの URL で、URL を持たない基盤は鍵ごと持たない。
  */
-export const linksSchema = z.array(linkSchema).superRefine((links, ctx) => {
-  const platforms = links.map((link) => link.platform);
+export const linksSchema = z.partialRecord(platformSchema, z.url());
 
-  for (const platform of duplicatesOf(platforms)) {
-    ctx.addIssue({
-      code: "custom",
-      message: `同じ配信基盤のリンクが 2 本ある: ${platform}`,
-    });
-  }
-});
-
-export type Link = z.infer<typeof linkSchema>;
+export type Links = z.infer<typeof linksSchema>;

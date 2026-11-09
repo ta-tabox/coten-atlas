@@ -24,7 +24,7 @@ describe("toSeriesJsonText", () => {
         summary: "",
         region: "ヨーロッパ",
         season: 2,
-        links: [],
+        links: {},
         tags: ["集団", "戦争"],
       },
     ];
@@ -40,7 +40,7 @@ describe("toSeriesJsonText", () => {
         '    "summary": "",',
         '    "region": "ヨーロッパ",',
         '    "season": 2,',
-        '    "links": [],',
+        '    "links": {},',
         '    "tags": ["集団", "戦争"]',
         "  }",
         "]",
