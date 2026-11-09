@@ -3,7 +3,7 @@
 /**
  * 管理画面の地図に事物の全件を円で描き、円のドラッグで座標を書き換える部品を置く。
  *
- * 保存は持たず、離した位置を `onDrop` で返す。
+ * 保存は持たず、動かして離した位置を `onDrop` で返す。
  * ドラッグの間だけ動かした座標をこの部品の state に持ち、事物の全件（`loci`）は書き換えない。
  * 円は `<Marker>` でなく円のレイヤで描き、レイヤの mousedown・mousemove・mouseup でドラッグを組む。
  */
@@ -63,10 +63,20 @@ function locusIdOf(event: MapLayerMouseEvent): string | null {
   return typeof id === "string" ? id : null;
 }
 
+/**
+ * 掴んでいる事物の状態。
+ * `offset` は掴んだ点から円の中心までの `[経度, 緯度]` の差で、動かしても円がポインタの位置へ跳ばないように保つ。
+ * `hasMoved` は掴んでから一度でも動かしたかで、押して離しただけの操作を保存しないために見る。
+ */
+type Dragging = LocusMove & {
+  offset: [number, number];
+  hasMoved: boolean;
+};
+
 /** 事物の全件（`loci`）のうち、ドラッグ中の事物（`dragging`）の座標だけを動かした全件を返す。 */
 function withDragging(
   loci: LocusCollection,
-  dragging: LocusMove | null,
+  dragging: Dragging | null,
 ): LocusCollection {
   if (dragging === null) {
     return loci;
@@ -114,7 +124,7 @@ export default function AnchorDragMap({
   onDrop,
 }: AnchorDragMapProps) {
   const mapRef = useRef<MapRef>(null);
-  const [dragging, setDragging] = useState<LocusMove | null>(null);
+  const [dragging, setDragging] = useState<Dragging | null>(null);
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
 
   useEffect(() => {
@@ -127,36 +137,60 @@ export default function AnchorDragMap({
     });
   }, [panTarget]);
 
-  /** 円の上で押されたら、その事物を掴む。 */
+  /** 円の上で押されたら、その事物を、掴んだ点と円の中心の差を覚えて掴む。 */
   function grab(event: MapLayerMouseEvent): void {
     const id = locusIdOf(event);
+    const locus = loci.features.find((feature) => feature.properties.id === id);
 
-    if (id === null) {
+    if (id === null || locus === undefined) {
       return;
     }
 
     // mousedown の既定の動作は地図のパンなので、止めないと円と一緒に地図も動く。
     event.preventDefault();
-    setDragging({ id, coordinates: event.lngLat.toArray() });
+
+    const [longitude, latitude] = locus.geometry.coordinates;
+
+    setDragging({
+      id,
+      coordinates: locus.geometry.coordinates,
+      offset: [longitude - event.lngLat.lng, latitude - event.lngLat.lat],
+      hasMoved: false,
+    });
   }
 
-  /** 掴んでいる事物を、ポインタの位置へ動かす。 */
+  /** 掴んでいる事物の中心を、掴んだ点との差を保ったままポインタに合わせて動かす。 */
   function drag(event: MapLayerMouseEvent): void {
     if (dragging === null) {
       return;
     }
 
-    setDragging({ id: dragging.id, coordinates: event.lngLat.toArray() });
+    const [offsetLongitude, offsetLatitude] = dragging.offset;
+
+    setDragging({
+      ...dragging,
+      coordinates: [
+        event.lngLat.lng + offsetLongitude,
+        event.lngLat.lat + offsetLatitude,
+      ],
+      hasMoved: true,
+    });
   }
 
-  /** 掴んでいる事物を放し、放した位置を `onDrop` へ渡す。 */
+  /**
+   * 掴んでいる事物を放し、動かしていれば中心の位置を `onDrop` へ渡す。
+   * 押して離しただけなら `onDrop` を呼ばない。
+   */
   function drop(): void {
     if (dragging === null) {
       return;
     }
 
     setDragging(null);
-    onDrop(dragging);
+
+    if (dragging.hasMoved) {
+      onDrop({ id: dragging.id, coordinates: dragging.coordinates });
+    }
   }
 
   // attributionControl は渡さない。
