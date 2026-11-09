@@ -3,9 +3,10 @@
  * props に何を渡すかを決める配線は `MapCanvas.test.tsx` が検証する。
  */
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
+import { listenUrlOf } from "@/lib/links/listen-url";
 import type { Episode } from "@/lib/schema/episode";
 import {
   ANCHOR_UNLOCATED,
@@ -34,18 +35,17 @@ const SPARTA: Series = {
   summary: "軍事に全振りした都市国家の話。",
   region: "ヨーロッパ",
   season: 2,
-  links: [],
+  links: {},
   tags: ["集団"],
 };
 
-const EPISODE_URL =
-  "https://podcasters.spotify.com/pod/show/coten/episodes/2-1-e3m0l9q";
+const EPISODE_URL = "https://open.spotify.com/episode/0000000000000000000000";
 
 const EPISODES: Episode[] = [
   episodeOf({
     guid: "sparta-1",
     title: "【2-1】スパルタ編1",
-    links: [{ platform: "spotify", url: EPISODE_URL }],
+    links: { spotify: EPISODE_URL },
   }),
 ];
 
@@ -88,7 +88,7 @@ describe("SeriesDetailCard", () => {
     expect(screen.queryByText(/\d+年/)).toBeNull();
   });
 
-  it("エピソードのリンクをその回の配信ページへ向ける", () => {
+  it("各回に配信基盤ごとのリンクが 2 本あり、回を基盤で開く URL を指す", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
@@ -96,15 +96,48 @@ describe("SeriesDetailCard", () => {
         onClose={vi.fn()}
       />,
     );
+
+    const row = screen.getByText("【2-1】スパルタ編1").closest("li");
+
+    if (row === null) {
+      throw new Error("回の行が無い");
+    }
+
+    const links = within(row).getAllByRole("link");
+
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      listenUrlOf(EPISODES[0], "spotify"),
+      listenUrlOf(EPISODES[0], "apple-podcasts"),
+    ]);
+    expect(links[0]).toHaveAttribute("href", EPISODE_URL);
+  });
+
+  it("リンクの名前は基盤名と、新しいタブで開くことを持つ", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        episodes={{ kind: "loaded", episodes: EPISODES }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const row = screen.getByText("【2-1】スパルタ編1").closest("li");
+
+    if (row === null) {
+      throw new Error("回の行が無い");
+    }
 
     expect(
-      screen.getByRole("link", {
-        name: "【2-1】スパルタ編1（新しいタブで開く）",
-      }),
-    ).toHaveAttribute("href", EPISODE_URL);
+      within(row)
+        .getAllByRole("link")
+        .map((link) => link.textContent),
+    ).toEqual([
+      "Spotify（新しいタブで開く）",
+      "Apple Podcasts（新しいタブで開く）",
+    ]);
   });
 
-  it("エピソードのリンクを、opener と Referer を渡さずに別タブで開く", () => {
+  it("配信基盤のリンクを、opener と Referer を渡さずに別タブで開く", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
@@ -113,35 +146,61 @@ describe("SeriesDetailCard", () => {
       />,
     );
 
-    const link = screen.getByRole("link", {
-      name: "【2-1】スパルタ編1（新しいタブで開く）",
-    });
-
-    expect(link).toHaveAttribute("target", "_blank");
-    expect(link.getAttribute("rel")?.split(" ")).toEqual(
-      expect.arrayContaining(["noopener", "noreferrer"]),
-    );
+    for (const link of screen.getAllByRole("link")) {
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link.getAttribute("rel")?.split(" ")).toEqual(
+        expect.arrayContaining(["noopener", "noreferrer"]),
+      );
+    }
   });
 
-  it("配信リンクを持たない回は番組そのものへ向ける", () => {
+  it("配信リンクを持たない回は、2 本とも基盤の番組ページへ向ける", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
         episodes={{
           kind: "loaded",
           episodes: [
-            episodeOf({ guid: "sparta-2", title: "リンク無しの回", links: [] }),
+            episodeOf({ guid: "sparta-2", title: "リンク無しの回", links: {} }),
           ],
         }}
         onClose={vi.fn()}
       />,
     );
 
+    const row = screen.getByText("リンク無しの回").closest("li");
+
+    if (row === null) {
+      throw new Error("回の行が無い");
+    }
+
     expect(
-      screen.getByRole("link", { name: "リンク無しの回（新しいタブで開く）" }),
-    ).toHaveAttribute(
-      "href",
+      within(row)
+        .getAllByRole("link")
+        .map((link) => link.getAttribute("href")),
+    ).toEqual([
       "https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f",
+      "https://podcasts.apple.com/jp/podcast/id1450522865",
+    ]);
+  });
+
+  it("YouTube は回ごとでなく、公式チャンネルへのリンクを 1 本だけ出す", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        episodes={{ kind: "loaded", episodes: EPISODES }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const youtubeLinks = screen
+      .getAllByRole("link")
+      .filter((link) => link.getAttribute("href")?.includes("youtube.com"));
+
+    expect(youtubeLinks).toHaveLength(1);
+    expect(youtubeLinks[0]).toHaveAttribute(
+      "href",
+      "https://www.youtube.com/@cotenradio",
     );
   });
 

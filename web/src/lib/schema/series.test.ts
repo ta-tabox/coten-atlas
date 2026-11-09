@@ -15,7 +15,7 @@ const sparta = {
   summary: "",
   region: "ヨーロッパ",
   season: 2,
-  links: [],
+  links: {},
   tags: ["集団", "戦争"],
 };
 
@@ -67,24 +67,6 @@ describe("seriesListSchema", () => {
       sparta,
       seriesWith({ id: "sparta-2" }),
     ]);
-
-    expect(result.success).toBe(false);
-  });
-
-  it("同じ配信基盤のリンクを 2 本持つシリーズを落とす", () => {
-    const twoSpotify = seriesWith({
-      links: [
-        {
-          platform: "spotify",
-          url: "https://podcasters.spotify.com/pod/show/coten/episodes/a",
-        },
-        {
-          platform: "spotify",
-          url: "https://podcasters.spotify.com/pod/show/coten/episodes/b",
-        },
-      ],
-    });
-    const result = seriesListSchema.safeParse([twoSpotify]);
 
     expect(result.success).toBe(false);
   });

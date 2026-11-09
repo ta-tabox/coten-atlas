@@ -37,7 +37,7 @@ function seriesListOf(
     summary: "",
     region: "ヨーロッパ",
     season,
-    links: [],
+    links: {},
     tags: ["集団"],
   }));
 }
@@ -84,7 +84,7 @@ function episodeCollectionOf(
       pubDate: "2026-08-19T21:00:00Z",
       season,
       seriesId,
-      links: [],
+      links: {},
     })),
   };
 }

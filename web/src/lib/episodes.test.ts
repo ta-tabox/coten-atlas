@@ -15,7 +15,7 @@ function episodeOf(fixture: EpisodeFixture): Episode {
   return {
     title: fixture.guid,
     season: fixture.seriesId === null ? null : 1,
-    links: [],
+    links: {},
     ...fixture,
   };
 }

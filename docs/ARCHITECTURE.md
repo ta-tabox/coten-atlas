@@ -25,7 +25,7 @@
 | 位置情報        | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で精緻な図形を足す。代表点は第二段階でも独立に持ち、どちらを描くかは利用者が切り替える | [ADR-20260902-two-phase-location（位置情報の二段階）](adr/20260902-two-phase-location.md)                                                                                                                                                                                                   |
 | シリーズと事物  | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ                                                                    | [ADR-20260902-series-and-loci（シリーズと事物の分離）](adr/20260902-series-and-loci.md)                                                                                                                                                                                                     |
 | 管理画面        | 手元でだけ動き、`catalog/` のファイルへ書く。公開サイトの成果物に含まれない                                                                                                 | [ADR-20260902-local-only-admin（手元でだけ動く管理画面）](adr/20260902-local-only-admin.md)                                                                                                                                                                                                 |
-| 配信リンク      | RSS の `<link>`（Spotify のエピソードページ）                                                                                                                               | [ADR-20260823-rss-link-as-episode-url（配信リンク）](adr/20260823-rss-link-as-episode-url.md)                                                                                                                                                                                               |
+| 配信リンク      | 回ごとは Spotify と Apple Podcasts、YouTube は公式チャンネルへのリンク 1 つ（RSS の `<link>` は使わない）                                                                   | [ADR-20261109-episode-links-and-youtube-channel（配信リンクと YouTube のチャンネル）](adr/20261109-episode-links-and-youtube-channel.md)                                                                                                                                                    |
 | デプロイ        | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`）                                                                                      | [ADR-20260823-github-pages（GitHub Pages での配信）](adr/20260823-github-pages.md)                                                                                                                                                                                                          |
 | 引用の範囲      | シリーズ名とエピソードタイトルのみ                                                                                                                                          | [ADR-20260823-quote-titles-only（引用は題号に限る）](adr/20260823-quote-titles-only.md)                                                                                                                                                                                                     |
 | 判定の口        | `pnpm check` の一本                                                                                                                                                         | [ADR-20260914-pnpm-check-current-form（判定を `pnpm check` の一本にする）](adr/20260914-pnpm-check-current-form.md)                                                                                                                                                                         |
@@ -88,13 +88,10 @@ catalog/
       "pubDate": "2026-08-19T21:00:00Z", // ISO 8601。RFC 822（フィードは全件 GMT）からの正規化は同期側
       "season": 66, // 割当に使った season（§5 の手順 2）。決まらない回（番外編・特別編・告知）は null
       "seriesId": "teisei-roma", // season から割当。未割当なら null
-      // RSS の <link>。エピソード単位の Spotify ページで、open.spotify.com/episode/… はフィードに無い
-      "links": [
-        {
-          "platform": "spotify",
-          "url": "https://podcasters.spotify.com/pod/show/coten/episodes/66-10COTEN-RADIO-10-e3m0l9q"
-        }
-      ]
+      // 基盤ごとの回の URL。同期は前回の同じ guid の回から引き継ぎ、フィードからは作らない。空なら詳細カードは番組ページを開く
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/id1450522865?i=…"
+      }
     }
   ]
 }
@@ -112,7 +109,7 @@ catalog/
     "summary": "", // 自前の要約を入れる欄。番組の説明文は引用しないので当面は空
     "region": "ヨーロッパ",
     "season": 2, // 割当キー。itunes:season の値
-    "links": [], // シリーズ単位の配信ページは存在しないので、何を指すかは未決定
+    "links": {}, // シリーズ単位の配信ページは存在しないので、何を指すかは未決定
     "tags": ["集団", "戦争"]
   },
   {
@@ -123,7 +120,7 @@ catalog/
     "summary": "",
     "region": "地域なし",
     "season": 7,
-    "links": [],
+    "links": {},
     "tags": ["宗教", "概念史"]
   }
   // 以下、1 シリーズ = 1 要素が並ぶ
@@ -198,9 +195,9 @@ catalog/
 - 代表点に正確さを求めない
   活動の中心地か舞台の代表地点を 1 点置く
   代表点を 1 つ置くと嘘になるシリーズ（お金の歴史のように、同じ仕組みが各地で独立に立ち上がるもの）は位置なしにする
-- `links` は `{ platform, url }` の配列で、シリーズもエピソードも同じ形
-  `platform` を enum にしてあるので、配信基盤が増えたときに壊れる場所が一箇所で済む
-  エピソード側は RSS の `<link>` を入れる
+- `links` は配信基盤を鍵、ページの URL を値にしたオブジェクトで、シリーズもエピソードも同じ形
+  URL を持たない基盤は鍵ごと持たない
+  エピソード側は各基盤から取得した回の URL を入れ、同期は前回の `episodes.json` の同じ guid の回から引き継ぐ
   配信側にシリーズ単位のページが無いので、**シリーズ側が何を指すかは未決定**である
 - 地図に出すか一覧にだけ出すかは `anchor` だけで決まり、シリーズは描き分けの欄を持たない
   代表点が主題の中心の場所でなく代わりに置いた点（生地など）でも、地図は他のシリーズと同じ規則で描く
@@ -285,7 +282,7 @@ catalog/
   切り替えを出すかどうかは環境変数が決め、精緻な事物を持たないシリーズは代表点へフォールバックする
   代表点は `series.anchor` の参照で見分けるので、二つの集合は同じ `loci.geojson` から割れる
   実装は #111
-- オブジェクトクリック → 詳細カード（summary・年代・エピソード一覧・Spotify リンク）
+- オブジェクトクリック → 詳細カード（summary・年代・エピソード一覧・各回の Spotify と Apple Podcasts のボタン・YouTube の公式チャンネルへのリンク）
 - 状態管理は React の範囲で足りる想定（selection / era window / tag 絞り込み / panel 開閉のみ）
   外部ライブラリを足す前に本当に要るか問う
 - 地図の DOM の禁止則（MapLibre が出す DOM の範囲と、地図の上に載せる overlay の書き方）の正は `.claude/rules/layers.md`
@@ -339,7 +336,7 @@ catalog/
     ただし初期の 5 件だけ `anchor.fm` のエピソード URL が入っており、先頭に空白が付く
     突き合わせのキーにする前に trim する
   - `pubDate` は RFC 822（`Wed, 19 Aug 2026 21:00:00 GMT`）で、全件 GMT 表記
-  - `<link>` は Spotify のエピソードページで、これが配信リンクになる
+  - `<link>` は Spotify for Creators のエピソードページで、同期は読まない
   - `enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）
     音声を再生する画面が無いので episodes.json へは保存しない
   - シリーズ番号は `itunes:season`。1〜66 が欠番なく並ぶが、752 件中 176 件（番外編・特別編・告知）はこれを持たない
@@ -353,6 +350,7 @@ catalog/
      未割当は「規則で確定」（season が決まらない回・番外編・訂正表で外した回）と「シリーズ未作成」に割って数える
 - 運用: 当面は手動で `pnpm sync` → サマリの「シリーズ未作成」を見て `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット
   手を入れる先は手動層の `series.json`・`loci.geojson`・`season-corrections.json` だけで、`episodes.json` は毎回フィードから組み直すので編集しない
+  例外は各回の `links` で、同期は前回の `episodes.json` の同じ guid の回から引き継ぐ
   未割当を溜める置き場も持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ
   軌道に乗ったら GitHub Actions の cron で sync + PR 自動作成に昇格（S8 以降の任意課題）
 - 静的サイトなので、実行時に RSS を取得しない。同期は常にビルド前のデータ更新として行う
