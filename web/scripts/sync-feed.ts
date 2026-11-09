@@ -108,7 +108,10 @@ function readSeries(file: string): SeriesList {
  * 前回の同期が書き出したエピソード一覧を読み、guid からその回を取得できる対応表にして返す。
  * ファイルがまだ無い初回は空の対応表になり、フィードの全件が新着として扱われる。
  *
- * 鍵（guid）の有無が「その回が新着か」を決め、値の `seriesId` が「前回付いていた割当が外れたり別のシリーズへ移ったりしていないか」を、値の `links` が引き継ぐ配信リンクを決める。
+ * 同期は対応表から次の 3 つを読む。
+ * - 鍵（guid）の有無: その回が新着か
+ * - 値の `seriesId`: 前回付いていた割当が外れたり、別のシリーズへ移ったりしていないか
+ * - 値の `links`: 次の `episodes.json` へ引き継ぐ配信リンク
  */
 function readPreviousEpisodes(file: string): Map<string, Episode> {
   if (!fs.existsSync(file)) {
