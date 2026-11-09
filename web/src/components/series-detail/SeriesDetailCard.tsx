@@ -10,6 +10,7 @@
  */
 
 import ListenLinks from "@/components/series-detail/ListenLinks";
+import YouTubeChannelLink from "@/components/series-detail/YouTubeChannelLink";
 import type { EpisodesState } from "@/lib/episodes";
 import { formatTimeRange } from "@/lib/format";
 import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
@@ -117,9 +118,12 @@ export default function SeriesDetailCard({
       )}
 
       <section className="mt-4 flex min-h-0 flex-col">
-        <h3 className="text-[0.8rem] tracking-[0.04em] text-zinc-500">
-          エピソード
-        </h3>
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-[0.8rem] tracking-[0.04em] text-zinc-500">
+            エピソード
+          </h3>
+          <YouTubeChannelLink />
+        </div>
 
         <EpisodeList state={episodes} />
       </section>

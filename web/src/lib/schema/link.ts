@@ -15,7 +15,7 @@ import { duplicatesOf } from "@/lib/schema/duplicates";
  *
  * 詳細カードは各回のボタンをこの順に並べる。
  */
-export const PLATFORMS = ["spotify", "apple-podcasts", "youtube"] as const;
+export const PLATFORMS = ["spotify", "apple-podcasts"] as const;
 
 /** 配信基盤。 */
 const platformSchema = z.enum(PLATFORMS);

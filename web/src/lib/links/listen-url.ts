@@ -11,12 +11,11 @@ import type { Platform } from "@/lib/schema/link";
 /**
  * 配信基盤ごとの、番組全体のページの URL。
  *
- * Apple Podcasts の id は lookup API の collection id で、YouTube は番組の公式チャンネルである。
+ * Apple Podcasts の id は lookup API の collection id である。
  */
 export const SHOW_URLS: Record<Platform, string> = {
   spotify: "https://open.spotify.com/show/3qiAapMhh8UgWVfDWTSq2f",
   "apple-podcasts": "https://podcasts.apple.com/jp/podcast/id1450522865",
-  youtube: "https://www.youtube.com/@cotenradio",
 };
 
 /**

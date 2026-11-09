@@ -4,7 +4,7 @@ import { listenUrlOf, SHOW_URLS } from "@/lib/links/listen-url";
 const SPOTIFY_EPISODE_URL =
   "https://open.spotify.com/episode/0000000000000000000000";
 
-/** Spotify の回の URL だけを持ち、Apple Podcasts と YouTube の URL を持たない回。 */
+/** Spotify の回の URL だけを持ち、Apple Podcasts の URL を持たない回。 */
 const SPOTIFY_ONLY = {
   links: [{ platform: "spotify" as const, url: SPOTIFY_EPISODE_URL }],
 };
@@ -18,7 +18,6 @@ describe("listenUrlOf", () => {
     expect(listenUrlOf(SPOTIFY_ONLY, "apple-podcasts")).toBe(
       SHOW_URLS["apple-podcasts"],
     );
-    expect(listenUrlOf(SPOTIFY_ONLY, "youtube")).toBe(SHOW_URLS.youtube);
   });
 
   it("links が空の回では、どの基盤でも番組ページを返す", () => {
