@@ -339,7 +339,7 @@ catalog/
     ただし初期の 5 件だけ `anchor.fm` のエピソード URL が入っており、先頭に空白が付く
     突き合わせのキーにする前に trim する
   - `pubDate` は RFC 822（`Wed, 19 Aug 2026 21:00:00 GMT`）で、全件 GMT 表記
-  - `<link>` は Spotify for Creators のエピソードページで、リスナーはその回に届かないので読まない
+  - `<link>` は Spotify for Creators のエピソードページで、同期は読まない
   - `enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）
     音声を再生する画面が無いので episodes.json へは保存しない
   - シリーズ番号は `itunes:season`。1〜66 が欠番なく並ぶが、752 件中 176 件（番外編・特別編・告知）はこれを持たない
