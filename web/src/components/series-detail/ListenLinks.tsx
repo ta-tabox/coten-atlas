@@ -2,8 +2,8 @@
  * エピソード 1 回を、配信基盤ごとに別タブで開くリンクの並びを描く部品を置く。
  *
  * 開く URL は `listenUrlOf` が決め、この部品は `PLATFORMS` の順にリンクを描くだけにする。
- * Apple Podcasts の規定は、形と大きさの揃ったアイコンの並びの中でだけアイコン単体を認めるので、マークはどの基盤も同じ 24px で描く。
- * リンクは 36px 四方にして、Spotify の最小 21px と、マークの高さの半分の余白を満たす。
+ * Apple Podcasts の規定は、形と大きさの揃ったアイコンの並びの中でだけアイコン単体を認めるので、マークはどの基盤も同じ 32px の角丸の四角で描く。
+ * 32px は、Spotify の四角の中のマークが規定の最小の 21px になる大きさである。
  */
 
 import type { ComponentType } from "react";
@@ -48,9 +48,9 @@ export default function ListenLinks({
               // noopener は開いたページに window.opener を渡さず、noreferrer は配信基盤へ Referer ヘッダを送らない。
               target="_blank"
               rel="noopener noreferrer"
-              className="flex size-9 items-center justify-center rounded-md hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              className="flex size-10 items-center justify-center rounded-md hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
             >
-              <Icon className="size-6" />
+              <Icon className="size-8" />
               {/* マークは aria-hidden なので、基盤名と別タブで開くことをスクリーンリーダーには文字で伝える。 */}
               <span className="sr-only">
                 {PLATFORM_NAMES[platform]}（新しいタブで開く）
