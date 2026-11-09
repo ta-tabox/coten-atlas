@@ -5,7 +5,6 @@
  *
  * 保存は持たず、動かして離した位置を `onDrop` で返す。
  * ドラッグの間だけ動かした座標をこの部品の state に持ち、事物の全件（`loci`）は書き換えない。
- * 円は `<Marker>` でなく円のレイヤで描き、レイヤの mousedown・mousemove・mouseup でドラッグを組む。
  */
 
 import { useEffect, useRef, useState } from "react";
