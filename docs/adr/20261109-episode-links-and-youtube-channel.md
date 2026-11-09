@@ -37,9 +37,6 @@
 20260904-two-layer-data-without-inbox の「自動層（`episodes.json`）は同期が毎回組み直す」に対して、`links` だけは前回の値を引き継ぐ例外にする。
 `links` 以外の欄（題名・日付・season・`seriesId`）は従来どおり毎回組み直す。
 
-決定時点の例: 基盤の値は `web/src/lib/schema/link.ts` の `PLATFORMS`、番組ページの URL と開く URL を決める関数は `web/src/lib/links/listen-url.ts`、引き継ぎは `web/src/lib/feed/episode.ts` の `toEpisode` が持つ。
-現況はコードが持つ。
-
 ## 理由
 
 - RSS の `<link>` はリスナーをその回へ届けないので、配信リンクとしての役目を果たさない
