@@ -16,7 +16,7 @@
 - 開発サーバかどうかは、Next の設定の関数が受けるフェーズが `PHASE_DEVELOPMENT_SERVER` かで判定し、そのときだけ `pageExtensions` に開発用の拡張子を足す
 - 成果物に混ざらないことは、スモークが `out/` を走査して示す
 
-現況は `web/next.config.ts` と `docs/HARNESS.md` が持つ。
+現況は `web/next.config.ts` と `README.md` が持つ。
 
 ## 理由
 

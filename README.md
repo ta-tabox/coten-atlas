@@ -99,6 +99,12 @@ main への push で `.github/workflows/deploy.yml` が GitHub Pages へ配信�
 | `.github/workflows/claude-history-review.yml` | コメントで `@historian` と名指したときの歴史の裏どり              |
 | `scripts/lint-vocabulary.sh`                  | コミット本文と PR 本文の禁止語の報告                              |
 
+### 管理画面でデータを編集する
+
+管理画面は手元の `next dev` でだけ立ち、`web/` で `pnpm dev` を打った後に `http://localhost:3000/coten-atlas/admin` で開く。
+シリーズを選んで地図の代表点をドラッグすると、座標が `catalog/loci.geojson` へ保存される。
+保存はファイルを書き換えるだけなので、`git diff catalog/` で差分を確かめてからコミットし、座標を直したシリーズは典拠のファイル（`docs/sources/<シリーズ id>.md`）の「代表点」節も直す。
+
 ## 技術スタック
 
 Next.js (App Router) + TypeScript を static export する。
