@@ -7,7 +7,7 @@
  */
 
 import { loadLoci, saveLoci } from "@/lib/catalog-dir";
-import { updateLocusCoordinates } from "@/lib/catalog-edit/locus-coordinates";
+import { updateLocusCoordinates } from "@/lib/catalog-editor/locus-coordinates";
 import {
   type LocusMove,
   type LocusMoveResult,

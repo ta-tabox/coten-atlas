@@ -14,7 +14,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { toLociGeoJsonText } from "@/lib/catalog-edit/catalog-text";
+import { toLociGeoJsonText } from "@/lib/catalog-editor/catalog-text";
 import { type EraList, parseEras } from "@/lib/schema/era";
 import { type LocusCollection, parseLoci } from "@/lib/schema/locus";
 import {

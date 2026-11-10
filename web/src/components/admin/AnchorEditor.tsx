@@ -14,7 +14,7 @@ import AnchorDragMap, {
   type PanTarget,
 } from "@/components/admin/AnchorDragMap";
 import { postLocusMove } from "@/lib/admin-api";
-import { updateLocusCoordinates } from "@/lib/catalog-edit/locus-coordinates";
+import { updateLocusCoordinates } from "@/lib/catalog-editor/locus-coordinates";
 import type { LocusCollection } from "@/lib/schema/locus";
 import type { LocusMove } from "@/lib/schema/locus-move";
 import type { SeriesList } from "@/lib/schema/series";

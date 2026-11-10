@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest";
 import {
   toLociGeoJsonText,
   toSeriesJsonText,
-} from "@/lib/catalog-edit/catalog-text";
+} from "@/lib/catalog-editor/catalog-text";
 import type { LocusCollection } from "@/lib/schema/locus";
 import type { SeriesList } from "@/lib/schema/series";
 

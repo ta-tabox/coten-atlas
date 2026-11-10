@@ -17,7 +17,7 @@ import { describe, expect, it } from "vitest";
 import {
   toLociGeoJsonText,
   toSeriesJsonText,
-} from "@/lib/catalog-edit/catalog-text";
+} from "@/lib/catalog-editor/catalog-text";
 import { presentEndOf } from "@/lib/era/scale";
 import {
   CATALOG_VALIDATORS,

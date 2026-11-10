@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { updateLocusCoordinates } from "@/lib/catalog-edit/locus-coordinates";
+import { updateLocusCoordinates } from "@/lib/catalog-editor/locus-coordinates";
 import { type LocusCollection, TIME_RANGE_OF_SERIES } from "@/lib/schema/locus";
 
 /** 代表点を 2 件持つ事物の全件。 */
