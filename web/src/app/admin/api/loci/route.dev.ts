@@ -1,36 +1,35 @@
 /**
- * 管理画面から事物 1 件の座標を書き換える要求を受け、`catalog/loci.geojson` へ保存する Route Handler を置く。
+ * 管理画面から事物 1 件を書き換える要求を受け、`catalog/loci.geojson` へ保存する Route Handler を置く。
  * `next dev` でだけ立ち、`next build` の成果物には入らない（拡張子の扱いは `next.config.ts` が正）。
- *
- * 応答の本文はどの場合も `LocusMoveResult` で、保存しなかった理由を `problems` に入れる。
- * 要求の形が違えば 400、事物が無ければ 404、全件の検査に通らなければ 422 を返す。
  */
 
 import { loadLoci, saveLoci } from "@/lib/catalog-dir";
-import { updateLocusCoordinates } from "@/lib/catalog-editor/locus-coordinates";
-import {
-  type LocusMove,
-  type LocusMoveResult,
-  parseLocusMove,
-} from "@/lib/schema/locus-move";
+import { updateLocus } from "@/lib/catalog-editor/locus-patch";
+import { type LocusPatch, parseLocusPatch } from "@/lib/schema/locus-patch";
+import type { SaveResult } from "@/lib/schema/save-result";
 
 /** `problems` を本文にした、状態コード `status` の応答を返す。 */
 function resultResponse(problems: string[], status: number): Response {
-  const result: LocusMoveResult = { problems };
+  const result: SaveResult = { problems };
 
   return Response.json(result, { status });
 }
 
-/** 要求の本文を読み、座標を書き換えた事物の全件を検査に通してから保存する。 */
-export async function POST(request: Request): Promise<Response> {
-  let move: LocusMove;
+/**
+ * 要求の本文（`LocusPatch`）のとおりに事物 1 件を書き換え、事物の全件を検査に通してから保存する。
+ *
+ * 応答の本文はどの場合も `SaveResult` で、保存しなかった理由を `problems` に入れる。
+ * 要求の形が違えば 400、事物が無ければ 404、全件の検査に通らなければ 422 を返す。
+ */
+export async function PATCH(request: Request): Promise<Response> {
+  let patch: LocusPatch;
 
   try {
     const body: unknown = await request.json();
 
-    move = parseLocusMove(body);
+    patch = parseLocusPatch(body);
   } catch (error) {
-    // request.json の SyntaxError と parseLocusMove の検査の失敗だけを要求の誤りとして返し、それ以外は投げ直す。
+    // request.json の SyntaxError と parseLocusPatch の検査の失敗だけを要求の誤りとして返し、それ以外は投げ直す。
     if (!(error instanceof Error)) {
       throw error;
     }
@@ -38,10 +37,10 @@ export async function POST(request: Request): Promise<Response> {
     return resultResponse([error.message], 400);
   }
 
-  const updated = updateLocusCoordinates(loadLoci(), move);
+  const updated = updateLocus(loadLoci(), patch);
 
   if (updated === undefined) {
-    return resultResponse([`事物 ${move.id} が loci.geojson に無い`], 404);
+    return resultResponse([`事物 ${patch.id} が loci.geojson に無い`], 404);
   }
 
   const problems = saveLoci(updated);

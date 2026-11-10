@@ -16,7 +16,7 @@ import {
   MAP_WORKER_URL,
 } from "@/lib/map/config";
 import type { LocusCollection } from "@/lib/schema/locus";
-import type { LocusMove } from "@/lib/schema/locus-move";
+import type { LocusPatch } from "@/lib/schema/locus-patch";
 
 /** 事物を載せる source の id。 */
 const LOCI_SOURCE_ID = "admin-loci";
@@ -47,7 +47,7 @@ type AnchorDragMapProps = {
    */
   panTarget: PanTarget | null;
   /** 円を動かして離したときに、事物の `id` と離した位置を渡して呼ぶ。 */
-  onDrop: (move: LocusMove) => void;
+  onDrop: (patch: LocusPatch) => void;
 };
 
 /**
@@ -67,7 +67,7 @@ function locusIdOf(event: MapLayerMouseEvent): string | null {
  * `offset` は掴んだ点から円の中心までの `[経度, 緯度]` の差で、動かしても円がポインタの位置へ跳ばないように保つ。
  * `hasMoved` は掴んでから一度でも動かしたかで、押して離しただけの操作を保存しないために見る。
  */
-type Dragging = LocusMove & {
+type Dragging = LocusPatch & {
   offset: [number, number];
   hasMoved: boolean;
 };

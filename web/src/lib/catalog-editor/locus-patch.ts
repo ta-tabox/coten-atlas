@@ -1,5 +1,5 @@
 /**
- * 事物の全件のうち 1 件の座標を書き換えた全件を作る純関数を置く。
+ * 事物の全件のうち 1 件を、書き換える要求（`LocusPatch`）のとおりに書き換えた全件を作る純関数を置く。
  * 書き換えた後の全件の検査とファイルへの書き込みは持たず、`@/lib/catalog-dir` の保存の関数が持つ。
  *
  * 座標は小数第 3 位（約 100 m）で丸める。
@@ -7,7 +7,7 @@
  */
 
 import type { LocusCollection } from "@/lib/schema/locus";
-import type { LocusMove } from "@/lib/schema/locus-move";
+import type { LocusPatch } from "@/lib/schema/locus-patch";
 
 /** 座標を丸める小数の桁数。 */
 const COORDINATE_FRACTION_DIGITS = 3;
@@ -20,21 +20,21 @@ function roundCoordinate(value: number): number {
 }
 
 /**
- * 事物の全件（`loci`）のうち `id` が `move.id` の事物の座標を `move.coordinates` に書き換えた、新しい全件を返す。
+ * 事物の全件（`loci`）のうち `id` が `patch.id` の事物を、`patch` の欄で書き換えた新しい全件を返す。
  * 該当する事物が無ければ undefined を返す。
  *
- * 書き換えるのは該当する事物の座標だけで、並び順と他の欄は `loci` のまま保つ。
- * 保存の差分を座標の 1 行に限るための保証である。
+ * 書き換えるのは該当する事物の `patch` が持つ欄だけで、並び順と他の欄は `loci` のまま保つ。
+ * 保存の差分を書き換えた欄の行に限るための保証である。
  */
-export function updateLocusCoordinates(
+export function updateLocus(
   loci: LocusCollection,
-  move: LocusMove,
+  patch: LocusPatch,
 ): LocusCollection | undefined {
-  if (!loci.features.some((feature) => feature.properties.id === move.id)) {
+  if (!loci.features.some((feature) => feature.properties.id === patch.id)) {
     return undefined;
   }
 
-  const [longitude, latitude] = move.coordinates;
+  const [longitude, latitude] = patch.coordinates;
   const coordinates: [number, number] = [
     roundCoordinate(longitude),
     roundCoordinate(latitude),
@@ -43,7 +43,7 @@ export function updateLocusCoordinates(
   return {
     ...loci,
     features: loci.features.map((feature) =>
-      feature.properties.id === move.id
+      feature.properties.id === patch.id
         ? { ...feature, geometry: { ...feature.geometry, coordinates } }
         : feature,
     ),

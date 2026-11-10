@@ -13,10 +13,10 @@ import AdminSeriesList from "@/components/admin/AdminSeriesList";
 import AnchorDragMap, {
   type PanTarget,
 } from "@/components/admin/AnchorDragMap";
-import { postLocusMove } from "@/lib/admin-api";
-import { updateLocusCoordinates } from "@/lib/catalog-editor/locus-coordinates";
+import { patchLocus } from "@/lib/admin-api";
+import { updateLocus } from "@/lib/catalog-editor/locus-patch";
 import type { LocusCollection } from "@/lib/schema/locus";
-import type { LocusMove } from "@/lib/schema/locus-move";
+import type { LocusPatch } from "@/lib/schema/locus-patch";
 import type { SeriesList } from "@/lib/schema/series";
 
 type AnchorEditorProps = {
@@ -71,19 +71,19 @@ export default function AnchorEditor({
     }
   }
 
-  /** 動かした座標（`move`）を保存の API へ送り、保存できたら事物の全件へ反映する。 */
-  async function save(move: LocusMove): Promise<void> {
-    setStatus({ kind: "saving", id: move.id });
+  /** 書き換える要求（`patch`）を API へ送り、保存できたら事物の全件へ反映する。 */
+  async function save(patch: LocusPatch): Promise<void> {
+    setStatus({ kind: "saving", id: patch.id });
 
-    const problems = await postLocusMove(move);
+    const problems = await patchLocus(patch);
 
     if (problems.length > 0) {
-      setStatus({ kind: "failed", id: move.id, problems });
+      setStatus({ kind: "failed", id: patch.id, problems });
       return;
     }
 
-    setLoci((current) => updateLocusCoordinates(current, move) ?? current);
-    setStatus({ kind: "saved", id: move.id });
+    setLoci((current) => updateLocus(current, patch) ?? current);
+    setStatus({ kind: "saved", id: patch.id });
   }
 
   return (
@@ -92,7 +92,7 @@ export default function AnchorEditor({
         loci={loci}
         selectedSeriesId={selectedSeriesId}
         panTarget={panTarget}
-        onDrop={(move) => void save(move)}
+        onDrop={(patch) => void save(patch)}
       />
       {/* 一覧は地図の左上に置き、高さを画面の下の結果の欄の上端までに収める。 */}
       <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-10rem)] w-64 flex-col rounded-lg bg-white/85 p-2 shadow">
