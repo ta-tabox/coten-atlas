@@ -1,8 +1,9 @@
 "use client";
 
 /**
- * 管理画面の画面を組み立てる部品を置く。
- * シリーズの一覧で選んだシリーズの代表点へ地図を寄せ、地図で動かした代表点の座標を保存の API へ送って、結果を画面に出す。
+ * 管理画面で、代表点の座標を地図のドラッグで直す画面を組み立てる部品を置く。
+ * 例えば一覧でスパルタを選ぶと地図が代表点 `sparta-city` へ寄り、その円をドラッグして離すと座標が `catalog/loci.geojson` へ保存され、一覧のスパルタの行に変更前と変更後の座標と「元に戻す」が出る。
+ * 変更前の座標は、最後のコミットの `catalog/loci.geojson` の値である。
  *
  * 事物の全件は、保存に成功した座標だけを反映した値をこの部品の state に持つ。
  * 保存に失敗したら state を変えないので、地図の円は動かす前の位置へ戻る。
@@ -14,6 +15,10 @@ import EditorMap, { type PanTarget } from "@/components/admin/map/EditorMap";
 import SeriesPicker from "@/components/admin/SeriesPicker";
 import { patchLocus } from "@/lib/admin-api";
 import { updateLocus } from "@/lib/catalog-editor/locus-patch";
+import {
+  listMovedLoci,
+  type MovedLocus,
+} from "@/lib/catalog-editor/moved-loci";
 import type { LocusCollection } from "@/lib/schema/locus";
 import type { LocusPatch } from "@/lib/schema/locus-patch";
 import type { SeriesList } from "@/lib/schema/series";
@@ -23,6 +28,8 @@ type AnchorEditorProps = {
   seriesList: SeriesList;
   /** 管理画面を開いた時点の事物の全件。 */
   initialLoci: LocusCollection;
+  /** 最後のコミットにある事物の全件で、変更前の座標として一覧に出す。 */
+  committedLoci: LocusCollection;
 };
 
 /** 最後の保存の状態。 */
@@ -50,11 +57,16 @@ function messageOf(status: SaveStatus): string {
 export default function AnchorEditor({
   seriesList,
   initialLoci,
+  committedLoci,
 }: AnchorEditorProps) {
   const [loci, setLoci] = useState(initialLoci);
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
   const [panTarget, setPanTarget] = useState<PanTarget | null>(null);
   const [status, setStatus] = useState<SaveStatus>({ kind: "idle" });
+
+  const movedLociById = new Map(
+    listMovedLoci(committedLoci, loci).map((moved) => [moved.id, moved]),
+  );
 
   /** `seriesId` のシリーズを選び、代表点を持つならそこへ地図を寄せる。 */
   function select(seriesId: string): void {
@@ -101,7 +113,11 @@ export default function AnchorEditor({
         <SeriesPicker
           seriesList={seriesList}
           selectedSeriesId={selectedSeriesId}
+          movedLociById={movedLociById}
           onSelect={select}
+          onReset={(moved: MovedLocus) =>
+            void save({ id: moved.id, coordinates: moved.before })
+          }
         />
       </div>
       {/* 保存の結果は地図の下部の中央に置く。 */}

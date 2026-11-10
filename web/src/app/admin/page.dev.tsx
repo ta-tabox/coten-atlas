@@ -6,9 +6,15 @@
  */
 
 import AnchorEditor from "@/components/admin/AnchorEditor";
-import { loadLoci, loadSeries } from "@/lib/catalog-dir";
+import { loadCommittedLoci, loadLoci, loadSeries } from "@/lib/catalog-dir";
 
-/** `catalog/` から読んだシリーズと事物の全件を `AnchorEditor` へ渡し、管理画面を描く。 */
+/** `catalog/` から読んだシリーズと事物の全件と、最後のコミットにある事物の全件を `AnchorEditor` へ渡し、管理画面を描く。 */
 export default function AdminPage() {
-  return <AnchorEditor seriesList={loadSeries()} initialLoci={loadLoci()} />;
+  return (
+    <AnchorEditor
+      seriesList={loadSeries()}
+      initialLoci={loadLoci()}
+      committedLoci={loadCommittedLoci()}
+    />
+  );
 }

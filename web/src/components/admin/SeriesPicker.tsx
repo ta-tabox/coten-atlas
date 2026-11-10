@@ -3,11 +3,13 @@
 /**
  * 管理画面でシリーズの全件を、選択のボタンの列として表示する部品を置く。
  *
- * 選択を保持しない。
- * 選択中のシリーズは props で受け取り、押されたシリーズの id は `onSelect` で返す。
+ * 選択も保存も持たない。
+ * 選択中のシリーズと座標が変わった代表点は props で受け取り、押されたシリーズの id は `onSelect`、戻す代表点は `onReset` で返す。
  */
 
-import { ANCHOR_UNLOCATED, type SeriesList } from "@/lib/schema/series";
+import SeriesPickerItem from "@/components/admin/SeriesPickerItem";
+import type { MovedLocus } from "@/lib/catalog-editor/moved-loci";
+import type { SeriesList } from "@/lib/schema/series";
 
 type SeriesPickerProps = {
   /** 並べるシリーズの全件。 */
@@ -17,42 +19,35 @@ type SeriesPickerProps = {
    * 選択が無ければ null。
    */
   selectedSeriesId: string | null;
+  /** 座標が最後のコミットから変わった事物を、事物の `id` で取得する表。 */
+  movedLociById: ReadonlyMap<string, MovedLocus>;
   /** シリーズが押されたときに、その id を渡して呼ぶ。 */
   onSelect: (seriesId: string) => void;
+  /** 元に戻すボタンが押されたときに、戻す代表点を渡して呼ぶ。 */
+  onReset: (movedAnchor: MovedLocus) => void;
 };
 
-/**
- * シリーズの全件（`seriesList`）の名前と代表点の `id` を、押すと `onSelect` を呼ぶボタンで並べる。
- * 位置なしのシリーズは代表点の代わりに「位置なし」と出す。
- */
+/** シリーズの全件（`seriesList`）を、座標が変わった代表点の変更前と変更後を添えて並べる。 */
 export default function SeriesPicker({
   seriesList,
   selectedSeriesId,
+  movedLociById,
   onSelect,
+  onReset,
 }: SeriesPickerProps) {
   return (
     <ul className="flex flex-col gap-0.5 overflow-y-auto">
-      {seriesList.map((series) => {
-        const isSelected = series.id === selectedSeriesId;
-
-        return (
-          <li key={series.id}>
-            <button
-              type="button"
-              onClick={() => onSelect(series.id)}
-              aria-current={isSelected ? "true" : undefined}
-              className={`w-full rounded-md border-l-4 px-3 py-1 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${isSelected ? "border-l-orange-700 bg-orange-100/70 font-bold" : "border-l-transparent hover:bg-white/60"}`}
-            >
-              <span className="block text-[0.85rem]">{series.title}</span>
-              <span className="block text-[0.7rem] font-normal text-zinc-600">
-                {series.anchor === ANCHOR_UNLOCATED
-                  ? "位置なし"
-                  : series.anchor}
-              </span>
-            </button>
-          </li>
-        );
-      })}
+      {seriesList.map((series) => (
+        <li key={series.id}>
+          <SeriesPickerItem
+            series={series}
+            isSelected={series.id === selectedSeriesId}
+            movedAnchor={movedLociById.get(series.anchor)}
+            onSelect={onSelect}
+            onReset={onReset}
+          />
+        </li>
+      ))}
     </ul>
   );
 }
