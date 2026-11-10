@@ -11,7 +11,13 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { loadEras, loadLoci, loadSeries, saveLoci } from "@/lib/catalog-dir";
+import {
+  loadCommittedLoci,
+  loadEras,
+  loadLoci,
+  loadSeries,
+  saveLoci,
+} from "@/lib/catalog-dir";
 import type { LocusCollection } from "@/lib/schema/locus";
 
 describe("loadSeries", () => {
@@ -23,6 +29,12 @@ describe("loadSeries", () => {
 describe("loadLoci", () => {
   it("現物を読んで検査に通す", () => {
     expect(loadLoci().features.length).toBeGreaterThan(0);
+  });
+});
+
+describe("loadCommittedLoci", () => {
+  it("最後のコミットの loci.geojson を読んで検査に通す", () => {
+    expect(loadCommittedLoci().features.length).toBeGreaterThan(0);
   });
 });
 

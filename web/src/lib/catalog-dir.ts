@@ -12,6 +12,7 @@
  * 隣の `tests/catalog.test.ts` が同じ形を使えているのは、vitest がその変換を掛けないからである。
  */
 
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { toLociGeoJsonText } from "@/lib/catalog-editor/catalog-text";
@@ -60,6 +61,21 @@ export function loadSeries(dir = CATALOG_DIR): SeriesList {
 /** 事物の全件を検査して返す。 */
 export function loadLoci(dir = CATALOG_DIR): LocusCollection {
   return parseLoci(readCatalogFile("loci.geojson", dir));
+}
+
+/**
+ * 最後のコミット（`HEAD`）にある事物の全件を検査して返す。
+ * 管理画面が、保存した座標を変更前の座標と並べるために読む。
+ *
+ * `HEAD` に `loci.geojson` が無いか、git のリポジトリの外で動かしたときは、`git show` の失敗を throw する。
+ */
+export function loadCommittedLoci(): LocusCollection {
+  const text = execFileSync("git", ["show", "HEAD:./loci.geojson"], {
+    cwd: CATALOG_DIR,
+    encoding: "utf8",
+  });
+
+  return parseLoci(JSON.parse(text));
 }
 
 /** 時代区分の全件を検査して返す。 */
