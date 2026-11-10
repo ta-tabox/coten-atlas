@@ -42,3 +42,14 @@ export function formatTagCondition(tags: readonly string[]): string {
 
   return tags.length === 1 ? `${quoted}を持つ` : `${quoted}をすべて持つ`;
 }
+
+/**
+ * `[経度, 緯度]` の座標（`coordinates`）を「経度 131.399・緯度 34.408」の形式の文字列へ整形する。
+ * 値は丸めず、持っている桁のまま出す。
+ */
+export function formatCoordinates([longitude, latitude]: readonly [
+  number,
+  number,
+]): string {
+  return `経度 ${longitude}・緯度 ${latitude}`;
+}

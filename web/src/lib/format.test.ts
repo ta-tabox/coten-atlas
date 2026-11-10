@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  formatCoordinates,
   formatTagCondition,
   formatTimeRange,
   formatYearWithoutUnit,
@@ -37,5 +38,11 @@ describe("formatTagCondition", () => {
     expect(formatTagCondition(["戦争", "人物"])).toBe(
       "「戦争」「人物」をすべて持つ",
     );
+  });
+});
+
+describe("formatCoordinates", () => {
+  it("経度と緯度を名前を添えて、持っている桁のまま並べる", () => {
+    expect(formatCoordinates([131.399, 34.4])).toBe("経度 131.399・緯度 34.4");
   });
 });
