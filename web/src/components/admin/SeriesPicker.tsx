@@ -9,9 +9,9 @@
 
 import { ANCHOR_UNLOCATED, type SeriesList } from "@/lib/schema/series";
 
-type AdminSeriesListProps = {
+type SeriesPickerProps = {
   /** 並べるシリーズの全件。 */
-  series: SeriesList;
+  seriesList: SeriesList;
   /**
    * 選択中のシリーズの id。
    * 選択が無ければ null。
@@ -22,30 +22,32 @@ type AdminSeriesListProps = {
 };
 
 /**
- * `series` の名前と代表点の `id` を、押すと `onSelect` を呼ぶボタンで並べる。
+ * シリーズの全件（`seriesList`）の名前と代表点の `id` を、押すと `onSelect` を呼ぶボタンで並べる。
  * 位置なしのシリーズは代表点の代わりに「位置なし」と出す。
  */
-export default function AdminSeriesList({
-  series,
+export default function SeriesPicker({
+  seriesList,
   selectedSeriesId,
   onSelect,
-}: AdminSeriesListProps) {
+}: SeriesPickerProps) {
   return (
     <ul className="flex flex-col gap-0.5 overflow-y-auto">
-      {series.map((one) => {
-        const isSelected = one.id === selectedSeriesId;
+      {seriesList.map((series) => {
+        const isSelected = series.id === selectedSeriesId;
 
         return (
-          <li key={one.id}>
+          <li key={series.id}>
             <button
               type="button"
-              onClick={() => onSelect(one.id)}
+              onClick={() => onSelect(series.id)}
               aria-current={isSelected ? "true" : undefined}
               className={`w-full rounded-md border-l-4 px-3 py-1 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${isSelected ? "border-l-orange-700 bg-orange-100/70 font-bold" : "border-l-transparent hover:bg-white/60"}`}
             >
-              <span className="block text-[0.85rem]">{one.title}</span>
+              <span className="block text-[0.85rem]">{series.title}</span>
               <span className="block text-[0.7rem] font-normal text-zinc-600">
-                {one.anchor === ANCHOR_UNLOCATED ? "位置なし" : one.anchor}
+                {series.anchor === ANCHOR_UNLOCATED
+                  ? "位置なし"
+                  : series.anchor}
               </span>
             </button>
           </li>

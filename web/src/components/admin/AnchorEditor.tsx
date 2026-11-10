@@ -9,9 +9,9 @@
  */
 
 import { useState } from "react";
-import AdminSeriesList from "@/components/admin/AdminSeriesList";
 import AnchorDragLayer from "@/components/admin/map/AnchorDragLayer";
 import EditorMap, { type PanTarget } from "@/components/admin/map/EditorMap";
+import SeriesPicker from "@/components/admin/SeriesPicker";
 import { patchLocus } from "@/lib/admin-api";
 import { updateLocus } from "@/lib/catalog-editor/locus-patch";
 import type { LocusCollection } from "@/lib/schema/locus";
@@ -20,7 +20,7 @@ import type { SeriesList } from "@/lib/schema/series";
 
 type AnchorEditorProps = {
   /** 一覧に並べるシリーズの全件。 */
-  series: SeriesList;
+  seriesList: SeriesList;
   /** 管理画面を開いた時点の事物の全件。 */
   initialLoci: LocusCollection;
 };
@@ -48,7 +48,7 @@ function messageOf(status: SaveStatus): string {
 
 /** シリーズの一覧・代表点を動かす地図・保存の結果を重ねて描く。 */
 export default function AnchorEditor({
-  series,
+  seriesList,
   initialLoci,
 }: AnchorEditorProps) {
   const [loci, setLoci] = useState(initialLoci);
@@ -60,7 +60,9 @@ export default function AnchorEditor({
   function select(seriesId: string): void {
     setSelectedSeriesId(seriesId);
 
-    const anchorId = series.find((one) => one.id === seriesId)?.anchor;
+    const anchorId = seriesList.find(
+      (series) => series.id === seriesId,
+    )?.anchor;
     const anchor = loci.features.find(
       (feature) => feature.properties.id === anchorId,
     );
@@ -96,8 +98,8 @@ export default function AnchorEditor({
       </EditorMap>
       {/* 一覧は地図の左上に置き、高さを画面の下の結果の欄の上端までに収める。 */}
       <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-10rem)] w-64 flex-col rounded-lg bg-white/85 p-2 shadow">
-        <AdminSeriesList
-          series={series}
+        <SeriesPicker
+          seriesList={seriesList}
           selectedSeriesId={selectedSeriesId}
           onSelect={select}
         />

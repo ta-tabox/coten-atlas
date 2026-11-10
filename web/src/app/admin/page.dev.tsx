@@ -10,5 +10,5 @@ import { loadLoci, loadSeries } from "@/lib/catalog-dir";
 
 /** `catalog/` から読んだシリーズと事物の全件を `AnchorEditor` へ渡し、管理画面を描く。 */
 export default function AdminPage() {
-  return <AnchorEditor series={loadSeries()} initialLoci={loadLoci()} />;
+  return <AnchorEditor seriesList={loadSeries()} initialLoci={loadLoci()} />;
 }
