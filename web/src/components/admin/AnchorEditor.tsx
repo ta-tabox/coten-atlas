@@ -10,9 +10,8 @@
 
 import { useState } from "react";
 import AdminSeriesList from "@/components/admin/AdminSeriesList";
-import AnchorDragMap, {
-  type PanTarget,
-} from "@/components/admin/AnchorDragMap";
+import AnchorDragLayer from "@/components/admin/map/AnchorDragLayer";
+import EditorMap, { type PanTarget } from "@/components/admin/map/EditorMap";
 import { patchLocus } from "@/lib/admin-api";
 import { updateLocus } from "@/lib/catalog-editor/locus-patch";
 import type { LocusCollection } from "@/lib/schema/locus";
@@ -88,12 +87,13 @@ export default function AnchorEditor({
 
   return (
     <main className="relative">
-      <AnchorDragMap
-        loci={loci}
-        selectedSeriesId={selectedSeriesId}
-        panTarget={panTarget}
-        onDrop={(patch) => void save(patch)}
-      />
+      <EditorMap panTarget={panTarget}>
+        <AnchorDragLayer
+          loci={loci}
+          selectedSeriesId={selectedSeriesId}
+          onDrop={(patch) => void save(patch)}
+        />
+      </EditorMap>
       {/* 一覧は地図の左上に置き、高さを画面の下の結果の欄の上端までに収める。 */}
       <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-10rem)] w-64 flex-col rounded-lg bg-white/85 p-2 shadow">
         <AdminSeriesList

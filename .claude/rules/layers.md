@@ -19,7 +19,7 @@ paths:
 | RSS（ネットワーク） | `scripts/sync-feed.ts` の `fetchFeed` | XML の文字列。`src/lib/feed/parse.ts` の `parseFeed` が検査済みの `FeedItem` の配列にする |
 | 配信した `episodes.json`（ブラウザの fetch） | `src/lib/episodes.ts` の `fetchEpisodes` | `EpisodesResult`（`parseEpisodes` を通した `Episode` の配列か、取得の失敗） |
 | 管理画面の保存の API（HTTP） | 受け手は `src/app/admin/api/loci/route.dev.ts`、送り手は `src/lib/admin-api.ts` の `patchLocus` | 受け手は `parseLocusPatch` を通した `LocusPatch`、送り手は `parseSaveResult` を通した保存しなかった理由の文の配列 |
-| MapLibre の DOM とイベント | 公開の地図は `src/components/map/MapCanvas.tsx`（source と layer は子の `src/components/map/SeriesLayers.tsx`）、管理画面の地図は `src/components/admin/AnchorDragMap.tsx` | 公開の地図はクリックした事物の `seriesId`、管理画面の地図はドラッグして離した事物の `LocusPatch` |
+| MapLibre の DOM とイベント | 公開の地図は `src/components/map/MapCanvas.tsx`（source と layer は子の `src/components/map/SeriesLayers.tsx`）、管理画面の地図は `src/components/admin/map/**`（ベースマップは `EditorMap.tsx`、編集の機能ごとのレイヤはその子） | 公開の地図はクリックした事物の `seriesId`、管理画面の地図はドラッグして離した事物の `LocusPatch` |
 
 ## 境界の禁止則
 
