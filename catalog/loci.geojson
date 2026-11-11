@@ -477,6 +477,15 @@
         "seriesId": "mongol-teikoku-shurai",
         "timeRange": "series"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [2.332, 48.862] },
+      "properties": {
+        "id": "tuileries",
+        "seriesId": "france-kakumei-to-inboron",
+        "timeRange": "series"
+      }
     }
   ]
 }
