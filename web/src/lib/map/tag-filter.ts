@@ -28,12 +28,13 @@ export function panelTagsOf(
   selectedTags: readonly string[],
 ): PanelTag[] {
   const panelSeries = [...sections.onMap, ...sections.unlocated];
-  const tags = [...new Set(panelSeries.flatMap((one) => one.tags))];
+  const tags = [...new Set(panelSeries.flatMap((series) => series.tags))];
 
   const counted = tags
     .map((tag) => ({
       tag,
-      seriesCount: panelSeries.filter((one) => one.tags.includes(tag)).length,
+      seriesCount: panelSeries.filter((series) => series.tags.includes(tag))
+        .length,
     }))
     .toSorted((a, b) => b.seriesCount - a.seriesCount);
   const missingSelected = selectedTags
@@ -44,21 +45,21 @@ export function panelTagsOf(
 }
 
 /**
- * `series` のうち、選択中のタグ（`selectedTags`）をすべて持つシリーズを返す。
- * 選択中のタグが無ければ `series` をそのまま返す。
+ * `seriesList` のうち、選択中のタグ（`selectedTags`）をすべて持つシリーズを返す。
+ * 選択中のタグが無ければ `seriesList` をそのまま返す。
  *
- * 残したシリーズの順序は `series` のまま変えないので、一覧パネルの位置なしの区画は絞る前と同じ順に並ぶ。
+ * 残したシリーズの順序は `seriesList` のまま変えないので、一覧パネルの位置なしの区画は絞る前と同じ順に並ぶ。
  */
 export function taggedSeriesOf(
-  series: SeriesList,
+  seriesList: SeriesList,
   selectedTags: readonly string[],
 ): SeriesList {
   if (selectedTags.length === 0) {
-    return series;
+    return seriesList;
   }
 
-  return series.filter((one) =>
-    selectedTags.every((tag) => one.tags.includes(tag)),
+  return seriesList.filter((series) =>
+    selectedTags.every((tag) => series.tags.includes(tag)),
   );
 }
 
@@ -71,7 +72,7 @@ export function toggledTagsOf(
   tag: string,
 ): string[] {
   if (selectedTags.includes(tag)) {
-    return selectedTags.filter((one) => one !== tag);
+    return selectedTags.filter((selectedTag) => selectedTag !== tag);
   }
 
   return [...selectedTags, tag];

@@ -137,7 +137,7 @@ function renderMapCanvas(eras: EraList = ERAS): void {
   render(
     <MapCanvas
       loci={LOCI}
-      series={SERIES}
+      seriesList={SERIES}
       eras={eras}
       presentEnd={PRESENT_END}
     />,
@@ -361,7 +361,7 @@ describe("MapCanvas", () => {
 
     expect(seriesPanelProps().sections).toEqual(
       seriesPanelSectionsOf({
-        series: SERIES,
+        seriesList: SERIES,
         loci: LOCI,
         currentWindow: currentWindow({
           position: 0.9,
@@ -459,7 +459,7 @@ describe("MapCanvas", () => {
     expect(seriesPanelProps().tags).toEqual(
       panelTagsOf(
         seriesPanelSectionsOf({
-          series: SERIES,
+          seriesList: SERIES,
           loci: LOCI,
           currentWindow: currentWindow({
             position: 0.5,
@@ -515,7 +515,7 @@ describe("MapCanvas", () => {
     expect(seriesLayersProps().loci).toEqual(LOCI);
     expect(seriesPanelProps().sections).toEqual(
       seriesPanelSectionsOf({
-        series: SERIES,
+        seriesList: SERIES,
         loci: LOCI,
         currentWindow: currentWindow({
           position: 0.5,

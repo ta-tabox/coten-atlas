@@ -38,10 +38,10 @@ function seriesOf(fixture: SeriesFixture): Series {
 function lociOf(...properties: Locus["properties"][]): LocusCollection {
   return {
     type: "FeatureCollection",
-    features: properties.map((one) => ({
+    features: properties.map((properties) => ({
       type: "Feature",
       geometry: { type: "Point", coordinates: [0, 0] },
-      properties: one,
+      properties: properties,
     })),
   };
 }
