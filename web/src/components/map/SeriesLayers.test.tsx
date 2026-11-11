@@ -2,7 +2,7 @@
  * MapLibre 本体は jsdom で描画できないので、`react-map-gl/maplibre` の `Source` と `Layer` をモックに差し替える。
  * 検証するのは現在窓と選択から組んだレイヤの定義を `Layer` へ渡すことであって、地図の描画ではない。
  *
- * 現在窓と選択からレイヤを組む規則そのものは `@/lib/map/series-layer.test.ts` が検証する。
+ * 現在窓と選択からレイヤを組む規則そのものは `@/lib/map/layers/` のレイヤごとのテストが検証する。
  */
 
 import { render } from "@testing-library/react";
@@ -11,15 +11,17 @@ import type { LayerProps } from "react-map-gl/maplibre";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import type { CurrentWindow } from "@/lib/era/window";
-import type { MapLocusCollection } from "@/lib/map/loci";
 import {
   CONTEMPORARY_SERIES_RING_LAYER,
   contemporarySeriesRingLayerIn,
+} from "@/lib/map/layers/contemporary-series-ring";
+import {
   SELECTED_SERIES_RING_LAYER,
-  SERIES_CIRCLE_LAYER,
   selectedSeriesRingLayerIn,
-  seriesCircleLayerIn,
-} from "@/lib/map/series-layer";
+} from "@/lib/map/layers/selected-series-ring";
+import { seriesCircleLayerIn } from "@/lib/map/layers/series-circle";
+import type { MapLocusCollection } from "@/lib/map/loci";
+import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
 import type { Series } from "@/lib/schema/series";
 
 /** `react-map-gl/maplibre` の `Layer` と差し替えるモック関数で、受け取った props を記録して null を返す。 */

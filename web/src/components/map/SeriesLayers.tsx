@@ -8,18 +8,16 @@
  *
  * 渡す形を組むのは `@/lib/map/loci` である。
  * ここは組み終わった値を source へ載せるだけで、シリーズを引き直さない。
- * 円の不透明度と、選択中のシリーズを囲む輪・同時代のシリーズを縁取る輪の `filter` を現在窓から組むのは `@/lib/map/series-layer` である。
+ * 円の不透明度と、選択中のシリーズを囲む輪・同時代のシリーズを縁取る輪の `filter` を現在窓から組むのは `@/lib/map/layers/` のレイヤごとのモジュールである。
  */
 
 import { Layer, Source } from "react-map-gl/maplibre";
 import type { CurrentWindow } from "@/lib/era/window";
+import { contemporarySeriesRingLayerIn } from "@/lib/map/layers/contemporary-series-ring";
+import { selectedSeriesRingLayerIn } from "@/lib/map/layers/selected-series-ring";
+import { seriesCircleLayerIn } from "@/lib/map/layers/series-circle";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import {
-  contemporarySeriesRingLayerIn,
-  SERIES_SOURCE_ID,
-  selectedSeriesRingLayerIn,
-  seriesCircleLayerIn,
-} from "@/lib/map/series-layer";
+import { SERIES_SOURCE_ID } from "@/lib/map/series-layer";
 import type { Series } from "@/lib/schema/series";
 
 type SeriesLayersProps = {
