@@ -23,7 +23,7 @@ import type { MapLocusCollection } from "@/lib/map/loci";
 
 /**
  * シリーズを描くレイヤ 1 枚の定義。
- * `source` は `<Source>` の子に置くと react-map-gl が入れるので持たない。
+ * `source` は持たず、`@/components/map/series-layers/` の部品が `SERIES_SOURCE_ID` を `<Layer>` へ渡す。
  *
  * `@/lib/map/layers/` のモジュールは `react-map-gl/maplibre` を import できないので、レイヤの型はこの別名で受け取る。
  */

@@ -1,6 +1,7 @@
 /**
  * MapLibre 本体は jsdom で描画できないので、`react-map-gl/maplibre` の `Source` と `Layer` をモックに差し替える。
- * 検証するのは現在窓と選択から組んだレイヤの定義を `Layer` へ渡すことであって、地図の描画ではない。
+ * 検証するのは現在窓と選択から組んだレイヤの定義と source の id を `Layer` へ渡すことであって、地図の描画ではない。
+ * モックの `Source` は子へ `source` を入れないので、`source` の欠けは本物と同じくこのテストでも赤になる。
  *
  * 現在窓と選択からレイヤを組む規則そのものは `@/lib/map/layers/` のレイヤごとのテストが検証する。
  */
@@ -21,7 +22,7 @@ import {
 } from "@/lib/map/layers/selected-series-ring";
 import { seriesCircleLayerIn } from "@/lib/map/layers/series-circle";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
+import { SERIES_CIRCLE_LAYER, SERIES_SOURCE_ID } from "@/lib/map/series-layer";
 import type { Series } from "@/lib/schema/series";
 
 /** `react-map-gl/maplibre` の `Layer` と差し替えるモック関数で、受け取った props を記録して null を返す。 */
@@ -101,9 +102,10 @@ describe("SeriesLayers", () => {
       />,
     );
 
-    expect(lastLayerPropsOf(SERIES_CIRCLE_LAYER.id)).toEqual(
-      seriesCircleLayerIn(WINDOW_INSIDE, LOCI),
-    );
+    expect(lastLayerPropsOf(SERIES_CIRCLE_LAYER.id)).toEqual({
+      ...seriesCircleLayerIn(WINDOW_INSIDE, LOCI),
+      source: SERIES_SOURCE_ID,
+    });
   });
 
   it("現在窓が動くと、Layer へ渡す circle-opacity が変わる", () => {
@@ -145,13 +147,14 @@ describe("SeriesLayers", () => {
       />,
     );
 
-    expect(lastLayerPropsOf(SELECTED_SERIES_RING_LAYER.id)).toEqual(
-      selectedSeriesRingLayerIn({
+    expect(lastLayerPropsOf(SELECTED_SERIES_RING_LAYER.id)).toEqual({
+      ...selectedSeriesRingLayerIn({
         currentWindow: WINDOW_INSIDE,
         loci: LOCI,
         selectedSeriesId: "sparta",
       }),
-    );
+      source: SERIES_SOURCE_ID,
+    });
   });
 
   it("選択中のシリーズから組んだ同時代の輪のレイヤを Layer へ渡す", () => {
@@ -163,12 +166,13 @@ describe("SeriesLayers", () => {
       />,
     );
 
-    expect(lastLayerPropsOf(CONTEMPORARY_SERIES_RING_LAYER.id)).toEqual(
-      contemporarySeriesRingLayerIn({
+    expect(lastLayerPropsOf(CONTEMPORARY_SERIES_RING_LAYER.id)).toEqual({
+      ...contemporarySeriesRingLayerIn({
         currentWindow: WINDOW_INSIDE,
         loci: LOCI,
         selectedSeries: SPARTA,
       }),
-    );
+      source: SERIES_SOURCE_ID,
+    });
   });
 });
