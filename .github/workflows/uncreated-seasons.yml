@@ -1,0 +1,68 @@
+name: Uncreated seasons
+
+# 配信フィードに回が在るのに catalog/series.json にシリーズが無い season を探し、シーズン調査の issue を起票する。
+# 起票する題と本文は web/ の pnpm seasons:uncreated が決め、このワークフローは既存の issue の題を渡して、出力を 1 件ずつ起票するだけにする。
+
+on:
+  schedule:
+    # 毎週月曜 00:00 UTC。
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+jobs:
+  uncreated-seasons:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # 前の run が起票し終える前に次の run が既存の issue の題を読むと、同じ season を二度起票する。
+    concurrency:
+      group: uncreated-seasons
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      issues: write
+
+    # アプリは web/ の中。uses: のアクションには working-directory が効かないので、run: のステップだけを web/ で回す。
+    defaults:
+      run:
+        working-directory: web
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      # ランタイムの版はルートの mise.toml が持つ。
+      - uses: jdx/mise-action@v4
+
+      - run: pnpm install --frozen-lockfile
+
+      # 閉じた issue も渡す。
+      # 開いた issue だけと比べると、調査を終えて閉じた season へ同じ issue を二度起票する。
+      # gh issue list は既定で 30 件しか返さないので、--limit で全件を取る。
+      - name: List existing survey issues
+        run: |
+          gh issue list --state all --search "シーズン調査: in:title" --limit 1000 \
+            --json title --jq '[.[].title]' > "$RUNNER_TEMP/issue-titles.json"
+
+      # --silent で pnpm 自身の出力を止め、標準出力を JSON だけにする。
+      - name: Find uncreated seasons
+        run: |
+          pnpm --silent seasons:uncreated "$RUNNER_TEMP/issue-titles.json" > "$RUNNER_TEMP/survey-issues.json"
+          jq -r '.[].title' "$RUNNER_TEMP/survey-issues.json"
+
+      - name: Create survey issues
+        run: |
+          count=$(jq length "$RUNNER_TEMP/survey-issues.json")
+          for index in $(seq 0 $((count - 1))); do
+            jq -r ".[$index].body" "$RUNNER_TEMP/survey-issues.json" > "$RUNNER_TEMP/survey-issue-body.md"
+            gh issue create \
+              --title "$(jq -r ".[$index].title" "$RUNNER_TEMP/survey-issues.json")" \
+              --body-file "$RUNNER_TEMP/survey-issue-body.md" \
+              --label tooling \
+              --label claude
+          done
