@@ -2,7 +2,7 @@
  * 公式 RSS を引いて `catalog/episodes.json` を書き直し、未割当の内訳を標準出力へ出す。
  *
  * ここが持つのは同期の段取りだけである。
- * フィードの読み方は `src/lib/feed/parse.ts`、割当の規則は同 `assign.ts`、JSON の読み書きは `json-file.ts` が持つ。
+ * フィードの取得は `fetch-feed.ts`、読み方は `src/lib/feed/parse.ts`、割当の規則は同 `assign.ts`、JSON の読み書きは `json-file.ts` が持つ。
  * どのファイルをどの順で読み書きするかを決めるのがこの層の仕事で、その順序は main を上から読めば追える。
  *
  * `episodes.json` はフィードから毎回組み直す。
@@ -22,6 +22,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { fetchFeed } from "@scripts/fetch-feed";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
 import {
   listUncorrectedSeasonMismatches,
@@ -39,19 +40,6 @@ import {
 import { parseSeries, type SeriesList } from "@/lib/schema/series";
 
 /**
- * 公式 RSS の在り処。
- * Apple Podcasts の lookup API が返す `feedUrl` の値で、同期は lookup API を経由せずこの URL を直接叩く。
- */
-const FEED_URL = "https://anchor.fm/s/8c2088c/podcast/rss";
-
-/**
- * 取得を諦めるまでの時間。
- * 応答を返さない配信元に当たったとき、待ち続けると同期が終わりも失敗もしない状態で止まる。
- * 7.2 MB のフィードの取得は 2 秒弱で終わるので、桁が二つ違えば異常と見てよい。
- */
-const FETCH_TIMEOUT_MS = 60_000;
-
-/**
  * データ層の置き場。
  *
  * `pnpm sync` の作業ディレクトリ（`web/`）から辿る。
@@ -66,24 +54,6 @@ const SEASON_CORRECTIONS_FILE = path.join(
   CATALOG_DIR,
   "season-corrections.json",
 );
-
-/**
- * RSS を取ってくる。
- * 応答が 2xx でなければ投げる。
- */
-async function fetchFeed(url: string): Promise<string> {
-  const response = await fetch(url, {
-    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `RSS を取得できない: ${response.status} ${response.statusText} (${url})`,
-    );
-  }
-
-  return response.text();
-}
 
 /**
  * 人間が書いたシリーズ一覧を読む。
@@ -316,7 +286,7 @@ function reportSummary(assignments: Assignment[], added: Assignment[]): void {
 async function main(): Promise<void> {
   assertCatalogDir();
 
-  const items = parseFeed(await fetchFeed(FEED_URL));
+  const items = parseFeed(await fetchFeed());
   const series = readSeries(SERIES_FILE);
   const corrections = parseSeasonCorrections(
     readJsonFile(SEASON_CORRECTIONS_FILE),
