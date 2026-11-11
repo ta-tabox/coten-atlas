@@ -23,7 +23,7 @@ type SelectedSeriesRingLayerProps = {
   selectedSeriesId: string | null;
 };
 
-/** `selectedSeriesId` のシリーズの事物のうち、`currentWindow` と重なるものを輪で囲む。 */
+/** 選択中のシリーズ（`selectedSeriesId`）の事物のうち、現在窓（`currentWindow`）と重なるものを輪で囲む。 */
 export default function SelectedSeriesRingLayer({
   loci,
   currentWindow,

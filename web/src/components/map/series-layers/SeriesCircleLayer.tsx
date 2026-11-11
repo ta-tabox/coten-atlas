@@ -18,7 +18,7 @@ type SeriesCircleLayerProps = {
   currentWindow: CurrentWindow;
 };
 
-/** `loci` の各事物を、`currentWindow` との年の重なりから求めた濃さを不透明度にした円で描く。 */
+/** 事物（`loci`）の各件を、現在窓（`currentWindow`）との年の重なりから求めた濃さを不透明度にした円で描く。 */
 export default function SeriesCircleLayer({
   loci,
   currentWindow,

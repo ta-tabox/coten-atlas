@@ -24,7 +24,7 @@ type ContemporarySeriesRingLayerProps = {
   selectedSeries: Series | null;
 };
 
-/** `selectedSeries` と年が重なる他のシリーズの事物のうち、`currentWindow` と重なるものを縁取る。 */
+/** 選択中のシリーズ（`selectedSeries`）と年が重なる他のシリーズの事物のうち、現在窓（`currentWindow`）と重なるものを縁取る。 */
 export default function ContemporarySeriesRingLayer({
   loci,
   currentWindow,
