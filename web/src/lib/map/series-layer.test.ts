@@ -1,29 +1,11 @@
 /**
- * レイヤ定義は宣言的なデータなので、描画でなく定義を見る。
- * jsdom に WebGL は無く、描いた結果を確かめる手立てがこの層に無い（docs/HARNESS.md「1. 検証の層構造」）。
+ * 現在窓と重なる事物から、地図に出ているシリーズの id を求める関数のテストを置く。
  */
 
 import { describe, expect, it } from "vitest";
-import {
-  type CurrentWindow,
-  fadeOpacity,
-  overlapRatio,
-} from "@/lib/era/window";
+import type { CurrentWindow } from "@/lib/era/window";
 import type { MapLocusCollection, MapLocusFeature } from "@/lib/map/loci";
-import {
-  CONTEMPORARY_SERIES_RING_LAYER,
-  contemporarySeriesRingLayerIn,
-  SELECTED_SERIES_RING_LAYER,
-  SERIES_CIRCLE_LAYER,
-  selectedSeriesRingLayerIn,
-  seriesCircleLayerIn,
-  seriesIdsOnMapIn,
-} from "@/lib/map/series-layer";
-import {
-  ANCHOR_UNLOCATED,
-  type Series,
-  TIME_RANGE_UNTIMED,
-} from "@/lib/schema/series";
+import { seriesIdsOnMapIn } from "@/lib/map/series-layer";
 
 const WINDOW: CurrentWindow = { start: 100, end: 200 };
 
@@ -51,97 +33,10 @@ function withSeriesId(
   return { ...locus, properties: { ...locus.properties, seriesId } };
 }
 
-/** `id` のシリーズを、`timeRange` の年で 1 件作る。 */
-function seriesOf(id: string, timeRange: Series["timeRange"]): Series {
-  return {
-    id,
-    title: id,
-    season: 1,
-    anchor: ANCHOR_UNLOCATED,
-    timeRange,
-    summary: "",
-    region: "ヨーロッパ",
-    links: {},
-    tags: ["概念史"],
-  };
-}
-
 /** `features` を地図へ渡す形の全件にする。 */
 function lociOf(...features: MapLocusFeature[]): MapLocusCollection {
   return { type: "FeatureCollection", features };
 }
-
-describe("seriesCircleLayerIn", () => {
-  it("事物ごとの窓との重なりから求めた濃さを、そのまま不透明度にする", () => {
-    const inside = locusOf("inside", 120, 140);
-    const partial = locusOf("partial", 190, 300);
-
-    const layer = seriesCircleLayerIn(WINDOW, lociOf(inside, partial));
-
-    expect(layer.paint?.["circle-opacity"]).toEqual([
-      "match",
-      ["get", "id"],
-      "inside",
-      1,
-      "partial",
-      fadeOpacity(overlapRatio(WINDOW, { start: 190, end: 300 })),
-      0,
-    ]);
-  });
-
-  it("窓と重ならない事物を filter で除く", () => {
-    const inside = locusOf("inside", 120, 140);
-    const outside = locusOf("outside", 500, 600);
-
-    const layer = seriesCircleLayerIn(WINDOW, lociOf(inside, outside));
-
-    expect(layer.filter).toEqual([
-      "in",
-      ["get", "id"],
-      ["literal", ["inside"]],
-    ]);
-  });
-
-  it("窓と重なる事物が 1 件も無ければ、不透明度を 0 にする", () => {
-    const outside = locusOf("outside", 500, 600);
-
-    const layer = seriesCircleLayerIn(WINDOW, lociOf(outside));
-
-    expect(layer.paint?.["circle-opacity"]).toBe(0);
-    expect(layer.filter).toEqual(["in", ["get", "id"], ["literal", []]]);
-  });
-
-  it("窓が動くと circle-opacity が変わる", () => {
-    const loci = lociOf(locusOf("partial", 190, 300));
-
-    const before = seriesCircleLayerIn(WINDOW, loci);
-    const after = seriesCircleLayerIn({ start: 150, end: 250 }, loci);
-
-    expect(after.paint?.["circle-opacity"]).not.toEqual(
-      before.paint?.["circle-opacity"],
-    );
-  });
-
-  it("不透明度の遷移を 0 にする", () => {
-    const layer = seriesCircleLayerIn(WINDOW, lociOf());
-
-    expect(layer.paint?.["circle-opacity-transition"]).toEqual({
-      duration: 0,
-    });
-  });
-
-  it("id と色と半径は SERIES_CIRCLE_LAYER から変えない", () => {
-    const layer = seriesCircleLayerIn(WINDOW, lociOf());
-
-    expect(layer.id).toBe(SERIES_CIRCLE_LAYER.id);
-    expect(layer.paint?.["circle-color"]).toBe(
-      SERIES_CIRCLE_LAYER.paint?.["circle-color"],
-    );
-    expect(layer.paint?.["circle-radius"]).toBe(
-      SERIES_CIRCLE_LAYER.paint?.["circle-radius"],
-    );
-  });
-});
 
 describe("seriesIdsOnMapIn", () => {
   it("窓と重なる事物を持つシリーズの id だけを返す", () => {
@@ -160,106 +55,5 @@ describe("seriesIdsOnMapIn", () => {
     expect(seriesIdsOnMapIn(WINDOW, lociOf(first, second))).toEqual(
       new Set(["sparta"]),
     );
-  });
-});
-
-describe("selectedSeriesRingLayerIn", () => {
-  it("選択中のシリーズの事物のうち、窓と重なるものだけを filter に残す", () => {
-    const selectedInside = withSeriesId(locusOf("in", 120, 140), "sparta");
-    const selectedOutside = withSeriesId(locusOf("out", 500, 600), "sparta");
-    const other = locusOf("other", 120, 140);
-
-    const layer = selectedSeriesRingLayerIn({
-      currentWindow: WINDOW,
-      loci: lociOf(selectedInside, selectedOutside, other),
-      selectedSeriesId: "sparta",
-    });
-
-    expect(layer.filter).toEqual(["in", ["get", "id"], ["literal", ["in"]]]);
-  });
-
-  it("選択が無ければ、どの事物も filter に残さない", () => {
-    const layer = selectedSeriesRingLayerIn({
-      currentWindow: WINDOW,
-      loci: lociOf(locusOf("inside", 120, 140)),
-      selectedSeriesId: null,
-    });
-
-    expect(layer.filter).toEqual(["in", ["get", "id"], ["literal", []]]);
-  });
-
-  it("id と縁の描き方は SELECTED_SERIES_RING_LAYER から変えない", () => {
-    const layer = selectedSeriesRingLayerIn({
-      currentWindow: WINDOW,
-      loci: lociOf(),
-      selectedSeriesId: null,
-    });
-
-    expect(layer.id).toBe(SELECTED_SERIES_RING_LAYER.id);
-    expect(layer.paint).toEqual(SELECTED_SERIES_RING_LAYER.paint);
-  });
-});
-
-describe("contemporarySeriesRingLayerIn", () => {
-  it("選択中のシリーズと年が重なる他のシリーズの事物だけを filter に残す", () => {
-    const own = locusOf("selected", 120, 140);
-    const overlapping = locusOf("overlapping", 140, 200);
-    const touching = locusOf("touching", 150, 180);
-    const apart = locusOf("apart", 160, 200);
-
-    const layer = contemporarySeriesRingLayerIn({
-      currentWindow: WINDOW,
-      loci: lociOf(own, overlapping, touching, apart),
-      selectedSeries: seriesOf("selected", { start: 100, end: 150 }),
-    });
-
-    expect(layer.filter).toEqual([
-      "in",
-      ["get", "id"],
-      ["literal", ["overlapping", "touching"]],
-    ]);
-  });
-
-  it("選択中のシリーズと年が重なっても、窓と重ならない事物は filter に残さない", () => {
-    const outside = locusOf("outside", 500, 600);
-
-    const layer = contemporarySeriesRingLayerIn({
-      currentWindow: WINDOW,
-      loci: lociOf(outside),
-      selectedSeries: seriesOf("selected", { start: 100, end: 600 }),
-    });
-
-    expect(layer.filter).toEqual(["in", ["get", "id"], ["literal", []]]);
-  });
-
-  it("選択が無ければ、どの事物も filter に残さない", () => {
-    const layer = contemporarySeriesRingLayerIn({
-      currentWindow: WINDOW,
-      loci: lociOf(locusOf("inside", 120, 140)),
-      selectedSeries: null,
-    });
-
-    expect(layer.filter).toEqual(["in", ["get", "id"], ["literal", []]]);
-  });
-
-  it("選択中のシリーズが時期を持たなければ、どの事物も filter に残さない", () => {
-    const layer = contemporarySeriesRingLayerIn({
-      currentWindow: WINDOW,
-      loci: lociOf(locusOf("inside", 120, 140)),
-      selectedSeries: seriesOf("okane", TIME_RANGE_UNTIMED),
-    });
-
-    expect(layer.filter).toEqual(["in", ["get", "id"], ["literal", []]]);
-  });
-
-  it("id と縁の描き方は CONTEMPORARY_SERIES_RING_LAYER から変えない", () => {
-    const layer = contemporarySeriesRingLayerIn({
-      currentWindow: WINDOW,
-      loci: lociOf(),
-      selectedSeries: null,
-    });
-
-    expect(layer.id).toBe(CONTEMPORARY_SERIES_RING_LAYER.id);
-    expect(layer.paint).toEqual(CONTEMPORARY_SERIES_RING_LAYER.paint);
   });
 });

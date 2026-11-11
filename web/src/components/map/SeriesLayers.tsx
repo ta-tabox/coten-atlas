@@ -3,23 +3,21 @@
 /**
  * シリーズを地図の上の見えるものにするレイヤ群。
  *
- * source と layer の対だけを置き、地図そのものは持たない。
+ * source と、地図上の見た目ごとのレイヤの部品（`@/components/map/series-layers/`）を並べるだけで、地図そのものは持たない。
  * 置く先は `MapCanvas` の子で、react-map-gl は親の地図を context から取得する。
+ * `<Source>` が `source` の id を入れるのは直下の子だけなので、子の部品の中の `<Layer>` へは届かず、各部品が `SERIES_SOURCE_ID` を自分で渡す。
  *
  * 渡す形を組むのは `@/lib/map/loci` である。
- * ここは組み終わった値を source へ載せるだけで、シリーズを引き直さない。
- * 円の不透明度と、選択中のシリーズを囲む輪・同時代のシリーズを縁取る輪の `filter` を現在窓から組むのは `@/lib/map/series-layer` である。
+ * ここは組み終わった値を source へ載せるだけで、シリーズを取得し直さない。
  */
 
-import { Layer, Source } from "react-map-gl/maplibre";
+import { Source } from "react-map-gl/maplibre";
+import ContemporarySeriesRingLayer from "@/components/map/series-layers/ContemporarySeriesRingLayer";
+import SelectedSeriesRingLayer from "@/components/map/series-layers/SelectedSeriesRingLayer";
+import SeriesCircleLayer from "@/components/map/series-layers/SeriesCircleLayer";
 import type { CurrentWindow } from "@/lib/era/window";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import {
-  contemporarySeriesRingLayerIn,
-  SERIES_SOURCE_ID,
-  selectedSeriesRingLayerIn,
-  seriesCircleLayerIn,
-} from "@/lib/map/series-layer";
+import { SERIES_SOURCE_ID } from "@/lib/map/series-layer";
 import type { Series } from "@/lib/schema/series";
 
 type SeriesLayersProps = {
@@ -48,20 +46,16 @@ export default function SeriesLayers({
 }: SeriesLayersProps) {
   return (
     <Source id={SERIES_SOURCE_ID} type="geojson" data={loci}>
-      <Layer {...seriesCircleLayerIn(currentWindow, loci)} />
-      <Layer
-        {...contemporarySeriesRingLayerIn({
-          currentWindow,
-          loci,
-          selectedSeries,
-        })}
+      <SeriesCircleLayer loci={loci} currentWindow={currentWindow} />
+      <ContemporarySeriesRingLayer
+        loci={loci}
+        currentWindow={currentWindow}
+        selectedSeries={selectedSeries}
       />
-      <Layer
-        {...selectedSeriesRingLayerIn({
-          currentWindow,
-          loci,
-          selectedSeriesId: selectedSeries?.id ?? null,
-        })}
+      <SelectedSeriesRingLayer
+        loci={loci}
+        currentWindow={currentWindow}
+        selectedSeriesId={selectedSeries?.id ?? null}
       />
     </Source>
   );
