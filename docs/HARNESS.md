@@ -132,6 +132,13 @@ Actions 経由の Claude はコメントしか残せないので、レビュー�
 `claude-code-action` は open PR のとき PR ブランチへ checkout し直すので、作業ディレクトリのファイルを直に指すと PR が歴史側の指示そのものを書き換えられる。
 checkout の前に `RUNNER_TEMP` へ写してから渡している。
 
+### シリーズ未作成の season の定期検出
+
+`.github/workflows/uncreated-seasons.yml` は毎週月曜 00:00 UTC と `workflow_dispatch` で走り、`catalog/series.json` にシリーズが無い season ごとに、題が `シーズン調査: <シリーズ名>編（season <N>）` の issue をラベル `tooling`・`claude` で起票する。
+題に `（season <N>）` を含む issue が open か closed で既に在る season は起票しない。
+起票する題と本文は `web/` の `pnpm seasons:uncreated <既存の issue の題の JSON>` が標準出力へ書くので、手元で同じ出力を確かめられる。
+起票された issue は skill `series-survey` の手順で扱う。
+
 ## 3. 実行環境
 
 手元（native fs）とリモート（Claude Code on the web）の二つで走る。差は次のとおり。
