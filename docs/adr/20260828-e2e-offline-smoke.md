@@ -1,6 +1,6 @@
 # E2E を入れる（外部を遮断したスモーク1枚に限る）
 
-- **状態**: 採用
+- **状態**: supersede 済み（→ 20261112-smoke-mobile-webkit-chromium）
 - **決定日**: 2026-08-28
 - **関係する ADR**: 20260825-pnpm-check、20260827-maplibre-worker-self-hosted、20260714-maplibre、20260823-openfreemap-positron
 
