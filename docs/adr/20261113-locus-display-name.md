@@ -2,7 +2,7 @@
 
 - **状態**: 採用
 - **決定日**: 2026-11-13（#327）
-- **関係する ADR**: 20260902-series-and-loci（これを supersede する）、20260829-era-open-end（終わっていない era を表す値）、20260901-map-feature-carries-key-only（地図から返る feature は鍵の運搬に限る）、20260902-two-phase-location（位置情報の段階分け）、20260911-drop-series-kind（`kind` の廃止）、20260911-series-vocabulary-without-kind（手で書く欄の語彙）、20261112-quote-titles-only-without-summary（シリーズは独自の説明の欄を持たない）
+- **関係する ADR**: 20260902-series-and-loci（これを supersede する）、20260829-era-open-end（終わっていない era を表す値）、20260901-map-feature-carries-key-only（地図から返る feature は鍵の運搬に限る）、20260902-two-phase-location（位置情報の段階分け）、20260902-local-only-admin（管理画面は手元でだけ動かす）、20260911-drop-series-kind（`kind` の廃止）、20260911-series-vocabulary-without-kind（手で書く欄の語彙）、20261112-quote-titles-only-without-summary（シリーズは独自の説明の欄を持たない）
 
 ## 文脈
 
@@ -17,7 +17,7 @@
 地名は場所の構造化した値に当たる。
 
 20260902-series-and-loci の決定のうち、`kind` は 20260911-drop-series-kind で廃止され、`data/` は `catalog/` へ改名された。
-この版はそれらを反映して複写し、事物の欄に地名を足す。
+この版は `kind` の廃止と `catalog/` への改名を反映して旧 ADR を複写し、事物の欄に地名を足す。
 
 ## 決定
 
