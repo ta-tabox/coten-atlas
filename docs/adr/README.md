@@ -155,7 +155,7 @@ ADR の外（コード・現況の文書・issue・PR）から指すときは、
 `docs/HARNESS.md`「検証の層構造」は番号を `pnpm check` の連鎖の位置に限り、人間の目視に番号を与えないので、20260828-e2e-offline-smoke の L5 は「人間の目視」と読む。
 
 **`kind` を廃止する前に書かれたレコードは、シリーズが `kind` の欄を持つものとして書かれている。**
-`kind` は [20260911-drop-series-kind](20260911-drop-series-kind.md) で廃止したので、supersede されていないレコード（20260823-quote-titles-only・20260831-tailwind-v4・20260902-two-phase-location・20260902-series-and-loci・20260909-history-review-lane・20260907-era-space-window・20260910-untimed-concept-series）にある `kind` の記述は、欄が在った時点の設計として読む。
+`kind` は [20260911-drop-series-kind](20260911-drop-series-kind.md) で廃止したので、supersede されていないレコード（20260831-tailwind-v4・20260902-two-phase-location・20260902-series-and-loci・20260909-history-review-lane・20260907-era-space-window・20260910-untimed-concept-series）にある `kind` の記述は、欄が在った時点の設計として読む。
 
 **呼び名を `series` へ揃える前に書かれたレコードは `テーマ` の語で書かれている。**
 地図の 1 エントリの呼び名を [20260830-series-rename](20260830-series-rename.md) で `series`（シリーズ）へ揃えたので、決定日が 20260830-series-rename より前のレコードにある「テーマ」は「シリーズ」と読む。
