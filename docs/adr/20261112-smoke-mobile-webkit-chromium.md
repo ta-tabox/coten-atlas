@@ -49,8 +49,11 @@
 
 以下は 20260828-e2e-offline-smoke の理由から変わらない部分の複写である。
 
-- ヘッドレスのブラウザは地図を描ける。Playwright の Chromium は WebGL を SwiftShader（ソフトウェアラスタライザ）で通し、`visibilityState` は `visible` になるので、`requestAnimationFrame` が回ってラベルまで描画される
-- 外部を遮断しても配信物の自足の穴は捕まる。maplibre はスタイルにソースが無くても worker を要求するため、404 の側が残る。事故を捕まえるのは 4xx であって画素ではない
+- ヘッドレスのブラウザは地図を描ける
+  Playwright の Chromium は WebGL を SwiftShader（ソフトウェアラスタライザ）で通し、`visibilityState` は `visible` になるので、`requestAnimationFrame` が回ってラベルまで描画される
+- 外部を遮断しても配信物の自足の穴は捕まる
+  maplibre はスタイルにソースが無くても worker を要求するため、404 の側が残る
+  事故を捕まえるのは 4xx であって画素ではない
 - canvas の寸法は配信物の自足の穴を捕まえないが、CSS で高さが 0 になる別の失敗に効く
 
 | 採らなかった案                                              | 採らなかった理由                                                                                                 |
