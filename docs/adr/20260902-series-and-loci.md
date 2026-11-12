@@ -1,6 +1,6 @@
 # シリーズと事物を分け、シリーズは代表点の参照か位置なしの印を持つ
 
-- **状態**: 採用
+- **状態**: supersede 済み（→ 20261113-locus-display-name）
 - **決定日**: 2026-09-02（#108）
 - **関係する ADR**: 20260714-two-layer-data（データの二層分離）、20260829-season-as-assignment-key（割当キーは `itunes:season`）、20260829-era-open-end（終わっていない era の印）、20260901-map-feature-carries-key-only（地図から返る feature は鍵の運搬に限る）、20260902-two-phase-location（位置情報の段階分け）
 
