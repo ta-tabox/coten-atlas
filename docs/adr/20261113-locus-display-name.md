@@ -97,10 +97,7 @@ geometry を組み直す合成は要らない。
 
 ## 帰結
 
-- 20260901-map-feature-carries-key-only の「読んでよいのは鍵だけ」は変わらない。
-  詳細カードは `name` を地図から返る feature でなく、検査に通した事物の集合から `id` で取得する
-- 地図へ渡す形は `name` を写さない。
-  `catalog/` の形だけが変わる
+- 20260901-map-feature-carries-key-only の「読んでよいのは鍵だけ」は変わらない
 - 既存の事物すべてに `name` を書く作業と、表記の細則を skill `series-vocabulary` に足す作業が要る。
   値は代表点の典拠（`docs/sources/<シリーズ id>.md`）と照らして人間が確かめる
 - 事物を足す PR は、`id` と同時に `name` を書く
