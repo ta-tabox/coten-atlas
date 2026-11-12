@@ -735,5 +735,16 @@
     "season": 67,
     "links": {},
     "tags": ["出来事", "戦争", "帝国", "政治"]
+  },
+  {
+    "id": "france-kakumei-to-inboron",
+    "title": "フランス革命と陰謀論",
+    "anchor": "tuileries",
+    "timeRange": { "start": 1789, "end": 1794 },
+    "summary": "",
+    "region": "ヨーロッパ",
+    "season": 68,
+    "links": {},
+    "tags": ["出来事", "政治", "思想"]
   }
 ]
