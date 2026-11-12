@@ -2,7 +2,7 @@
 
 - **状態**: 採用
 - **決定日**: 2026-11-13（#327）
-- **関係する ADR**: 20260902-series-and-loci（これを supersede する）、20260829-era-open-end（終わっていない era の印）、20260901-map-feature-carries-key-only（地図から返る feature は鍵の運搬に限る）、20260902-two-phase-location（位置情報の段階分け）、20260911-drop-series-kind（`kind` の廃止）、20260911-series-vocabulary-without-kind（手で書く欄の語彙）、20261112-quote-titles-only-without-summary（シリーズは独自の説明の欄を持たない）
+- **関係する ADR**: 20260902-series-and-loci（これを supersede する）、20260829-era-open-end（終わっていない era を表す値）、20260901-map-feature-carries-key-only（地図から返る feature は鍵の運搬に限る）、20260902-two-phase-location（位置情報の段階分け）、20260911-drop-series-kind（`kind` の廃止）、20260911-series-vocabulary-without-kind（手で書く欄の語彙）、20261112-quote-titles-only-without-summary（シリーズは独自の説明の欄を持たない）
 
 ## 文脈
 
@@ -32,7 +32,7 @@
    シリーズと事物の 1 対多は、多の側にある `seriesId` が担う。
    第一段階の geometry は Point だけ
 3. **シリーズは `anchor` を持ち、値は代表点の事物 id か、位置なしを表す値 `"unlocated"`（コードでは `ANCHOR_UNLOCATED`）のどちらか。**
-   `anchor` は紐づけではなく、そのシリーズの事物のうちどれが代表点かを示す印である。
+   `anchor` は紐づけではなく、そのシリーズの事物のうちどれが代表点かを示す値である。
    null を使わない。
    事物の id に `"unlocated"` は使えない
 4. **ファイルをまたぐ整合を `references.ts` が見る。**
@@ -55,17 +55,17 @@
 
 シリーズと図形の多重度を 1 対多にするには、図形を別のファイルへ出すしかない。
 属性を持つファイルが geometry を持たなければ、第二段階で重い輪郭がどこに置かれても、人間が読む属性の diff は汚れない。
-`loci.geojson` が GeoJSON なので、地図へ渡す形は properties へ鍵から引いた値を写すだけで組める。
+`loci.geojson` が GeoJSON なので、地図へ渡す形は properties へ鍵で取得した値を写すだけで組める。
 geometry を組み直す合成は要らない。
 
-位置なしを印にするのは、「まだ置いていない」と「置かないと決めた」を分けるためである。
+位置なしを専用の値で表すのは、「まだ置いていない」と「置かないと決めた」を分けるためである。
 欄の欠落や null はどちらとも読める。
 20260829-era-open-end と同じ理由で、読んだ人が意味を推測せずに済む語を置く。
 
 事物に `timeRange` を第一段階から持たせるのは、描画の濃淡が読む欄を段階で変えないためである。
 第二段階で欄が増えると、地図へ渡す形も era スライダーの入力も組み直すことになる。
 代表点は常にシリーズ全体を代表するので、年を写すと同じ値を二箇所に持つ。
-一致を `"series"` の印で表せば、シリーズの `timeRange` を直したときに代表点が追随し忘れることが無い。
+一致を `"series"` の値で表せば、シリーズの `timeRange` を直したときに代表点が追随し忘れることが無い。
 
 地名を事物の欄に持つのは、地名が地点の属性で、地点と同じ行にあれば事物を足す人が同じ場で書き、同じ PR で確かめられるからである。
 必須にするのは、欄の欠落を許すと、事物を足した PR が地名を書き忘れても検査が緑のままになるからである。
@@ -98,7 +98,7 @@ geometry を組み直す合成は要らない。
 ## 帰結
 
 - 20260901-map-feature-carries-key-only の「読んでよいのは鍵だけ」は変わらない。
-  詳細カードは `name` を地図から返る feature でなく、検査に通した事物の集合から引く
+  詳細カードは `name` を地図から返る feature でなく、検査に通した事物の集合から `id` で取得する
 - 地図へ渡す形は `name` を写さない。
   `catalog/` の形だけが変わる
 - 既存の事物すべてに `name` を書く作業と、表記の細則を skill `series-vocabulary` に足す作業が要る。
