@@ -98,15 +98,15 @@ export function findAnchorLocus(
 }
 
 /**
- * `loci` から、`series` に含まれるシリーズの事物だけを残して返す。
+ * `loci` から、`seriesList` に含まれるシリーズの事物だけを残して返す。
  *
- * タグで絞り込んだシリーズの点だけを地図に描くために、絞った後のシリーズを `series` に渡して呼ぶ。
+ * タグで絞り込んだシリーズの点だけを地図に描くために、絞った後のシリーズを `seriesList` に渡して呼ぶ。
  */
 export function lociForSeries(
   loci: MapLocusCollection,
-  series: SeriesList,
+  seriesList: SeriesList,
 ): MapLocusCollection {
-  const seriesIds = new Set(series.map((one) => one.id));
+  const seriesIds = new Set(seriesList.map((series) => series.id));
 
   return {
     type: "FeatureCollection",
@@ -119,9 +119,9 @@ export function lociForSeries(
 /** 事物の全件を、地図の source へ渡す形へ直す。 */
 export function toMapLoci(
   loci: LocusCollection,
-  series: SeriesList,
+  seriesList: SeriesList,
 ): MapLocusCollection {
-  const seriesById = new Map(series.map((one) => [one.id, one]));
+  const seriesById = new Map(seriesList.map((series) => [series.id, series]));
 
   return {
     type: "FeatureCollection",

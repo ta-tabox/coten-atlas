@@ -37,7 +37,7 @@ const PROPS: ComponentProps<typeof SeriesPanelSection> = {
   heading: "地図に出ているシリーズ",
   marker: <span />,
   note: "スライダーが指す時代に重なるシリーズを並べている。",
-  series: [SPARTA, ROUSHI],
+  seriesList: [SPARTA, ROUSHI],
   emptyNote: "この時代に地図に出ているシリーズは無い。",
   selectedSeriesId: null,
   onSelect: () => {},
@@ -64,7 +64,7 @@ describe("SeriesPanelSection", () => {
   });
 
   it("シリーズが無ければ、一覧の代わりに emptyNote を出す", () => {
-    render(<SeriesPanelSection {...PROPS} series={[]} />);
+    render(<SeriesPanelSection {...PROPS} seriesList={[]} />);
 
     expect(within(section()).getByText(PROPS.emptyNote)).toBeVisible();
   });
