@@ -21,8 +21,8 @@ import {
   selectedSeriesRingLayerIn,
 } from "@/lib/map/layers/selected-series-ring";
 import { seriesCircleLayerIn } from "@/lib/map/layers/series-circle";
+import { SERIES_CIRCLE_LAYER, SERIES_SOURCE_ID } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { SERIES_CIRCLE_LAYER, SERIES_SOURCE_ID } from "@/lib/map/series-layer";
 import type { Series } from "@/lib/schema/series";
 
 /** `react-map-gl/maplibre` の `Layer` と差し替えるモック関数で、受け取った props を記録して null を返す。 */

@@ -25,12 +25,12 @@ import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
 } from "@/lib/map/config";
+import { SERIES_CIRCLE_LAYER } from "@/lib/map/layers/shared";
 import {
   findAnchorLocus,
   lociForSeries,
   type MapLocusCollection,
 } from "@/lib/map/loci";
-import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
 import type { EraList } from "@/lib/schema/era";

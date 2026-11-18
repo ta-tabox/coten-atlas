@@ -4,8 +4,11 @@
  */
 
 import type { CurrentWindow } from "@/lib/era/window";
+import {
+  fadesOf,
+  type SeriesLayerSpecification,
+} from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { fadesOf, type SeriesLayerSpecification } from "@/lib/map/series-layer";
 import {
   type Series,
   type SeriesTimeRange,

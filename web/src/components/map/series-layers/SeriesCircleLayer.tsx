@@ -8,8 +8,8 @@
 import { Layer } from "react-map-gl/maplibre";
 import type { CurrentWindow } from "@/lib/era/window";
 import { seriesCircleLayerIn } from "@/lib/map/layers/series-circle";
+import { SERIES_SOURCE_ID } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { SERIES_SOURCE_ID } from "@/lib/map/series-layer";
 
 type SeriesCircleLayerProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */

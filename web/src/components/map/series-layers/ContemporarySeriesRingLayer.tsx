@@ -8,8 +8,8 @@
 import { Layer } from "react-map-gl/maplibre";
 import type { CurrentWindow } from "@/lib/era/window";
 import { contemporarySeriesRingLayerIn } from "@/lib/map/layers/contemporary-series-ring";
+import { SERIES_SOURCE_ID } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { SERIES_SOURCE_ID } from "@/lib/map/series-layer";
 import type { Series } from "@/lib/schema/series";
 
 type ContemporarySeriesRingLayerProps = {

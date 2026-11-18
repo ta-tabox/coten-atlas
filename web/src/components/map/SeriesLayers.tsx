@@ -16,8 +16,8 @@ import ContemporarySeriesRingLayer from "@/components/map/series-layers/Contempo
 import SelectedSeriesRingLayer from "@/components/map/series-layers/SelectedSeriesRingLayer";
 import SeriesCircleLayer from "@/components/map/series-layers/SeriesCircleLayer";
 import type { CurrentWindow } from "@/lib/era/window";
+import { SERIES_SOURCE_ID } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { SERIES_SOURCE_ID } from "@/lib/map/series-layer";
 import type { Series } from "@/lib/schema/series";
 
 type SeriesLayersProps = {

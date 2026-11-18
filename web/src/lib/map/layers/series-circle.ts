@@ -1,16 +1,16 @@
 /**
  * 代表点の円のレイヤへ、現在窓から求めた事物ごとの濃さを不透明度と `filter` として設定する関数を置く。
- * 円のレイヤそのものの定義と、濃さを求める `fadesOf` は持たず、`@/lib/map/series-layer` が持つ。
+ * 円のレイヤそのものの定義と、濃さを求める `fadesOf` は持たず、`@/lib/map/layers/shared` が持つ。
  */
 
 import type { CurrentWindow } from "@/lib/era/window";
-import type { MapLocusCollection } from "@/lib/map/loci";
 import {
   fadesOf,
   type LocusFade,
   SERIES_CIRCLE_LAYER,
   type SeriesLayerSpecification,
-} from "@/lib/map/series-layer";
+} from "@/lib/map/layers/shared";
+import type { MapLocusCollection } from "@/lib/map/loci";
 
 /** 円のレイヤの `circle-opacity` に置ける値の型。 */
 type CircleOpacity = NonNullable<

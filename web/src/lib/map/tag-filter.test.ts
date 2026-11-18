@@ -7,12 +7,12 @@
 
 import { describe, expect, it } from "vitest";
 import type { CurrentWindow } from "@/lib/era/window";
+import { seriesIdsOnMapIn } from "@/lib/map/layers/shared";
 import {
   lociForSeries,
   type MapLocusCollection,
   type MapLocusFeature,
 } from "@/lib/map/loci";
-import { seriesIdsOnMapIn } from "@/lib/map/series-layer";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import {
   panelTagsOf,

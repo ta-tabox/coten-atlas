@@ -37,7 +37,7 @@ paths:
   地図の上に載せるものは React + Tailwind の overlay で書く
   理由は `docs/adr/20260831-map-dom-boundary.md` が持つ
 - `maplibre-gl`・`react-map-gl/maplibre` を import してよいモジュールは biome が見る（`.claude/rules/languages/typescript.project.md`「機械が見ている分」）
-  そのうち `src/lib/map/series-layer.ts` が import するのは型だけにする（値と型の区別は biome では見分けられない）
+  そのうち `src/lib/map/layers/shared.ts` が import するのは型だけにする（値と型の区別は biome では見分けられない）
 
 ## 層と、import してよい相手
 

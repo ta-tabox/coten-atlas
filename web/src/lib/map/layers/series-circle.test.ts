@@ -10,8 +10,8 @@ import {
   overlapRatio,
 } from "@/lib/era/window";
 import { seriesCircleLayerIn } from "@/lib/map/layers/series-circle";
+import { SERIES_CIRCLE_LAYER } from "@/lib/map/layers/shared";
 import type { MapLocusCollection, MapLocusFeature } from "@/lib/map/loci";
-import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
 
 const WINDOW: CurrentWindow = { start: 100, end: 200 };
 

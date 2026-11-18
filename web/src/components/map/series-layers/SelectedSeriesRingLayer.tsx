@@ -8,8 +8,8 @@
 import { Layer } from "react-map-gl/maplibre";
 import type { CurrentWindow } from "@/lib/era/window";
 import { selectedSeriesRingLayerIn } from "@/lib/map/layers/selected-series-ring";
+import { SERIES_SOURCE_ID } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { SERIES_SOURCE_ID } from "@/lib/map/series-layer";
 
 type SelectedSeriesRingLayerProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */

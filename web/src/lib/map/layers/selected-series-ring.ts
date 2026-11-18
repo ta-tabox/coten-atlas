@@ -4,8 +4,11 @@
  */
 
 import type { CurrentWindow } from "@/lib/era/window";
+import {
+  fadesOf,
+  type SeriesLayerSpecification,
+} from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { fadesOf, type SeriesLayerSpecification } from "@/lib/map/series-layer";
 
 /**
  * 選択中のシリーズの事物を囲む輪のレイヤ。

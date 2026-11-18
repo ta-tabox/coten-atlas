@@ -4,8 +4,8 @@
 
 import { describe, expect, it } from "vitest";
 import type { CurrentWindow } from "@/lib/era/window";
+import { seriesIdsOnMapIn } from "@/lib/map/layers/shared";
 import type { MapLocusCollection, MapLocusFeature } from "@/lib/map/loci";
-import { seriesIdsOnMapIn } from "@/lib/map/series-layer";
 
 const WINDOW: CurrentWindow = { start: 100, end: 200 };
 
