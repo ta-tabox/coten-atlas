@@ -350,7 +350,7 @@ catalog/
   3. 結果サマリを stdout へ
      未割当は「規則で確定」（season が決まらない回・番外編・訂正表で外した回）と「シリーズ未作成」に割って数える
 - 運用: 当面は手動で `pnpm sync` → サマリの「シリーズ未作成」かシーズン調査の issue を見て `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット
-  シーズン調査の issue は、`.github/workflows/uncreated-seasons.yml` が毎週 `pnpm seasons:uncreated` を走らせ、`series.json` にシリーズが無く issue もまだ無い season ごとに起票する
+  シーズン調査の issue は、`.github/workflows/uncreated-seasons.yml` が配信日（月曜と木曜）の夜に `pnpm seasons:uncreated` を走らせ、`series.json` にシリーズが無く issue もまだ無い season ごとに起票する
   手を入れる先は手動層の `series.json`・`loci.geojson`・`season-corrections.json` だけで、`episodes.json` は毎回フィードから組み直すので編集しない
   例外は各回の `links` で、同期は前回の `episodes.json` の同じ guid の回から引き継ぐ
   未割当を溜める置き場も持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ

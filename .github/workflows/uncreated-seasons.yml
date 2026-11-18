@@ -5,8 +5,10 @@ name: Uncreated seasons
 
 on:
   schedule:
-    # 毎週月曜 00:00 UTC。
-    - cron: "0 0 * * 1"
+    # 月曜と木曜の 12:17 UTC（21:17 JST）。
+    # 番組は月曜と木曜の 06:00 JST に配信するので、同じ日の夜に走らせて新しい回を拾う。
+    # 毎時 0 分は定期実行が集中して起動が遅れるので、分をずらす。
+    - cron: "17 12 * * 1,4"
   workflow_dispatch:
 
 jobs:
