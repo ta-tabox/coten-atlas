@@ -9,13 +9,13 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   listAdminPaths,
   type PageObservation,
   resolveWithinRoot,
   violationsOf,
 } from "@scripts/smoke.ts";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 /** smoke の project が使う viewport（playwright.config.ts）。 */
 const VIEWPORT = { width: 1280, height: 800 };

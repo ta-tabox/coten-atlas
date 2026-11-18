@@ -9,9 +9,9 @@
  */
 
 import path from "node:path";
+import * as z from "zod";
 import { fetchFeed } from "@scripts/fetch-feed";
 import { readJsonFile } from "@scripts/json-file";
-import * as z from "zod";
 import { parseFeed } from "@/lib/feed/parse";
 import { toSurveyIssue } from "@/lib/feed/survey-issue";
 import {
