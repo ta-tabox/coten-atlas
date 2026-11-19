@@ -18,6 +18,8 @@ env:
 
 jobs:
   sync:
+    # 変化の判定は起動したブランチの episodes.json と比べ、PR は main へ開くので、main 以外から起動すると食い違った差分の PR が開く。
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # 前の run が起票し終える前に次の run が既存の issue の題を読むと、同じ season を二度起票する。
