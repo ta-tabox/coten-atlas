@@ -20,7 +20,7 @@ const UNKNOWN_SERIES_NAME = "（シリーズ名は未確定）";
 
 /**
  * 起票する issue の題と本文。
- * `toSurveyIssue` が作り、`scripts/find-uncreated-seasons.ts` が JSON で標準出力へ書く。
+ * `toSurveyIssue` が作り、`scripts/sync-feed.ts` が JSON のファイルへ書く。
  */
 export type SurveyIssue = {
   title: string;
@@ -57,7 +57,7 @@ function bodyOf({
 
   return `**前提**: なし ／ **担当**: Claude（仮決定の採用とマージは人間） ／ **参照**: skill \`series-survey\`、skill \`series-vocabulary\`、\`docs/sources/README.md\`、\`docs/HARNESS.md\`「歴史の裏どりを呼ぶ」
 
-この issue は、ワークフロー \`.github/workflows/uncreated-seasons.yml\`（シリーズ未作成の season の定期検出）が起票した。
+この issue は、配信フィードを定期に同期するワークフロー \`.github/workflows/sync.yml\` が起票した。
 
 ## 目的
 

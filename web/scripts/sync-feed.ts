@@ -11,6 +11,9 @@
  * 未割当を溜める置き場も持たない。
  * 前回との差分を取るのは、新着を数えるためと、割当が外れた回と別のシリーズへ移った回を報せるためである。
  *
+ * `--issue-titles <既存の issue の題の JSON>` と `--survey-issues <書き出し先>` を渡すと、割当の結果からシリーズが無い season を求め、シーズン調査の issue がまだ無い season の題と本文を書き出し先へ JSON で書く。
+ * 起票はせず、`.github/workflows/sync.yml` が書き出し先の 1 件ごとに `gh issue create` を呼ぶ。
+ *
  * 失敗は黙って飲まずに落とす。
  * 空の結果を正常な差分として書くと、フィードが壊れた日に `episodes.json` が消える。
  *
@@ -22,6 +25,8 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { parseArgs } from "node:util";
+import * as z from "zod";
 import { fetchFeed } from "@scripts/fetch-feed";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
 import {
@@ -32,6 +37,11 @@ import {
 import { type Assignment, toEpisode } from "@/lib/feed/episode";
 import { parseFeed } from "@/lib/feed/parse";
 import type { FeedItem } from "@/lib/feed/schema";
+import { toSurveyIssue } from "@/lib/feed/survey-issue";
+import {
+  listUncreatedSeasons,
+  listUnreportedSeasons,
+} from "@/lib/feed/uncreated-seasons";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
 import {
   parseSeasonCorrections,
@@ -281,9 +291,89 @@ function reportSummary(assignments: Assignment[], added: Assignment[]): void {
 }
 
 /**
+ * シーズン調査の issue を書き出すときの、入力と出力のファイルのパス。
+ * `readSurveyIssueOptions` が作り、`writeSurveyIssues` へ渡す。
+ */
+type SurveyIssueOptions = {
+  issueTitlesFile: string;
+  surveyIssuesFile: string;
+};
+
+/**
+ * コマンドの引数から、シーズン調査の issue を書き出すときのファイルのパスを読む。
+ * 二つとも無ければ null で、片方だけなら、両方を渡すよう添えて throw する。
+ */
+function readSurveyIssueOptions(
+  args: readonly string[],
+): SurveyIssueOptions | null {
+  const { values } = parseArgs({
+    args: [...args],
+    options: {
+      "issue-titles": { type: "string" },
+      "survey-issues": { type: "string" },
+    },
+  });
+  const issueTitlesFile = values["issue-titles"];
+  const surveyIssuesFile = values["survey-issues"];
+
+  if (issueTitlesFile === undefined && surveyIssuesFile === undefined) {
+    return null;
+  }
+
+  if (issueTitlesFile === undefined || surveyIssuesFile === undefined) {
+    throw new Error(
+      "--issue-titles と --survey-issues は両方を渡す（pnpm sync --issue-titles <既存の issue の題の JSON> --survey-issues <書き出し先>）",
+    );
+  }
+
+  return { issueTitlesFile, surveyIssuesFile };
+}
+
+/**
+ * 既存の issue の題の一覧のファイルの形。
+ * `gh issue list --json title --jq '[.[].title]'` の出力に当たる。
+ */
+const issueTitlesSchema = z.array(z.string());
+
+/**
+ * 既存の issue の題の一覧をファイル（`file`）から読む。
+ * 文字列の配列でなければ、ファイルの名前を添えて throw する。
+ */
+function readIssueTitles(file: string): string[] {
+  const parsed = issueTitlesSchema.safeParse(readJsonFile(file));
+
+  if (!parsed.success) {
+    throw new Error(
+      `issue の題の一覧が文字列の配列でない: ${file}\n${z.prettifyError(parsed.error)}`,
+    );
+  }
+
+  return parsed.data;
+}
+
+/**
+ * 割当の結果（`assignments`）からシリーズが無い season を求め、シーズン調査の issue がまだ無い season の題と本文を、書き出し先（`options.surveyIssuesFile`）へ書く。
+ * 起票する season が無ければ空配列を書き、ワークフローが件数を読めるようにする。
+ */
+function writeSurveyIssues(
+  assignments: readonly Assignment[],
+  options: SurveyIssueOptions,
+): void {
+  const issueTitles = readIssueTitles(options.issueTitlesFile);
+  const uncreated = listUncreatedSeasons(assignments);
+  const issues = listUnreportedSeasons(uncreated, issueTitles).map(
+    toSurveyIssue,
+  );
+
+  writeJsonFile(options.surveyIssuesFile, issues);
+}
+
+/**
  * 取得から書き出しまでを通す。
  */
 async function main(): Promise<void> {
+  const surveyIssueOptions = readSurveyIssueOptions(process.argv.slice(2));
+
   assertCatalogDir();
 
   const items = parseFeed(await fetchFeed());
@@ -321,6 +411,10 @@ async function main(): Promise<void> {
   );
 
   reportSummary(assignments, added);
+
+  if (surveyIssueOptions !== null) {
+    writeSurveyIssues(assignments, surveyIssueOptions);
+  }
 }
 
 await main();

@@ -1,7 +1,7 @@
-name: Uncreated seasons
+name: Sync feed
 
-# 配信フィードに回が在るのに catalog/series.json にシリーズが無い season を探し、シーズン調査の issue を起票する。
-# 起票する題と本文は web/ の pnpm seasons:uncreated が決め、このワークフローは既存の issue の題を渡して、出力を 1 件ずつ起票するだけにする。
+# 配信フィードを同期し、catalog/series.json にシリーズが無い season のシーズン調査の issue を起票する。
+# 起票する題と本文は web/ の pnpm sync が決め、このワークフローは既存の issue の題を渡して、書き出された 1 件ずつを起票するだけにする。
 
 on:
   schedule:
@@ -12,12 +12,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  uncreated-seasons:
+  sync:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # 前の run が起票し終える前に次の run が既存の issue の題を読むと、同じ season を二度起票する。
     concurrency:
-      group: uncreated-seasons
+      group: sync
       cancel-in-progress: false
     permissions:
       contents: read
@@ -51,10 +51,9 @@ jobs:
           gh issue list --state all --search "シーズン調査: in:title" --limit 1000 \
             --json title --jq '[.[].title]' > "$RUNNER_TEMP/issue-titles.json"
 
-      # --silent で pnpm 自身の出力を止め、標準出力を JSON だけにする。
-      - name: Find uncreated seasons
+      - name: Sync feed
         run: |
-          pnpm --silent seasons:uncreated "$RUNNER_TEMP/issue-titles.json" > "$RUNNER_TEMP/survey-issues.json"
+          pnpm sync --issue-titles "$RUNNER_TEMP/issue-titles.json" --survey-issues "$RUNNER_TEMP/survey-issues.json"
           jq -r '.[].title' "$RUNNER_TEMP/survey-issues.json"
 
       - name: Create survey issues

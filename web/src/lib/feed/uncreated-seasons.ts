@@ -2,16 +2,14 @@
  * 配信フィードの回のうち、`series.json` にシリーズが無い season をまとめる純関数を置く。
  * issue の題と本文は組まず、`survey-issue.ts` が組む。
  *
- * season は同期の割当と同じ `seasonKeyOf` で決めるので、番外編・訂正表で外した回・番号の無い回は数えない。
+ * 同期の割当の結果だけから数え、season を自分で決め直さない。
  * 割当と違う規則で数えると、同期が割り当てる回を未作成と言い、同期が未割当に残す回を見落とす。
  *
  * 入口は listUncreatedSeasons と listUnreportedSeasons。
  */
 
-import { seasonKeyOf, seriesIdOf } from "@/lib/feed/assign";
+import type { Assignment } from "@/lib/feed/episode";
 import type { FeedItem } from "@/lib/feed/schema";
-import type { SeasonCorrectionList } from "@/lib/schema/season-correction";
-import type { SeriesList } from "@/lib/schema/series";
 
 /**
  * 題の末尾の `【COTEN RADIO <名前>編<回>】` に当たる正規表現。
@@ -35,21 +33,20 @@ export type UncreatedSeason = {
 };
 
 /**
- * フィードの回（`items`）のうち、シリーズ一覧（`series`）に無い season ごとに、シリーズ名・回の数・最初の回を返す。
+ * 同期の割当の結果（`assignments`）のうち、season は決まったのにシリーズが無い回を season ごとにまとめ、シリーズ名・回の数・最初の回を返す。
  * 無ければ空配列。
  *
+ * 番外編・訂正表で外した回・番号の無い回は割当で season が null になるので、ここでは数えない。
  * 結果は season の昇順に並べ、起票の順と issue の番号の順を season の順に揃える。
  */
 export function listUncreatedSeasons(
-  items: readonly FeedItem[],
-  series: SeriesList,
-  corrections: SeasonCorrectionList,
+  assignments: readonly Assignment[],
 ): UncreatedSeason[] {
-  const uncreatedItems = items
-    .map((item) => ({ item, season: seasonKeyOf(item, corrections).season }))
+  const uncreatedItems = assignments
+    .map(({ item, key, seriesId }) => ({ item, season: key.season, seriesId }))
     .filter(
-      (entry): entry is { item: FeedItem; season: number } =>
-        entry.season !== null && seriesIdOf(entry.season, series) === null,
+      (entry): entry is { item: FeedItem; season: number; seriesId: null } =>
+        entry.season !== null && entry.seriesId === null,
     );
   const itemsBySeason = Map.groupBy(uncreatedItems, ({ season }) => season);
 
