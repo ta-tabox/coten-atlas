@@ -52,9 +52,9 @@ describe("toSurveyIssue", () => {
   it("本文の対象の表と事実に、シリーズ番号・シリーズ名・回の数・最初の回の題と pubDate が入る", () => {
     const { body } = toSurveyIssue(FRENCH_REVOLUTION);
 
-    expect(body).toContain("| 68 | フランス革命と陰謀論 |");
+    expect(body).toContain("| 68 | `フランス革命と陰謀論` |");
     expect(body).toContain("season 68 の回は 2 回ある");
-    expect(body).toContain(`「${FRENCH_REVOLUTION.firstEpisode.title}」`);
+    expect(body).toContain(`\`${FRENCH_REVOLUTION.firstEpisode.title}\``);
     expect(body).toContain("`2026-11-01T21:00:00.000Z`");
   });
 });

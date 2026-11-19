@@ -53,7 +53,9 @@ function bodyOf({
   episodeCount,
   firstEpisode,
 }: UncreatedSeason): string {
-  const seriesCell = seriesName ?? UNKNOWN_SERIES_NAME;
+  // フィードから来た文字列（シリーズ名と、下の本文の最初の回の題）は、`@名前` が入っても GitHub が通知を飛ばさないようにコードの書式で囲む。
+  const seriesCell =
+    seriesName === null ? UNKNOWN_SERIES_NAME : `\`${seriesName}\``;
 
   return `**前提**: なし ／ **担当**: Claude（仮決定の採用とマージは人間） ／ **参照**: skill \`series-survey\`、skill \`series-vocabulary\`、\`docs/sources/README.md\`、\`docs/HARNESS.md\`「歴史の裏どりを呼ぶ」
 
@@ -68,7 +70,7 @@ function bodyOf({
 
 - \`catalog/series.json\` に season ${season} のシリーズは無い
 - season ${season} の回は ${episodeCount} 回ある
-- 最初の回の題は「${firstEpisode.title}」で、\`pubDate\` は \`${firstEpisode.pubDate}\` である
+- 最初の回の題は \`${firstEpisode.title}\` で、\`pubDate\` は \`${firstEpisode.pubDate}\` である
 
 ## 対象（1 件）
 
