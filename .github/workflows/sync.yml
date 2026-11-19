@@ -1,7 +1,7 @@
 name: Sync feed
 
-# 配信フィードを同期し、catalog/series.json にシリーズが無い season のシーズン調査の issue を起票する。
-# 起票する題と本文は web/ の pnpm sync が決め、このワークフローは既存の issue の題を渡して、書き出された 1 件ずつを起票するだけにする。
+# 配信フィードを同期し、catalog/episodes.json が変わったら PR を開き、catalog/series.json にシリーズが無い season のシーズン調査の issue を起票する。
+# episodes.json の中身と、起票する題と本文は web/ の pnpm sync が決め、このワークフローは書き出された結果をコミットと起票へ渡すだけにする。
 
 on:
   schedule:
@@ -14,23 +14,30 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     # 前の run が起票し終える前に次の run が既存の issue の題を読むと、同じ season を二度起票する。
     concurrency:
       group: sync
       cancel-in-progress: false
+    # contents: write は同期のブランチへの push、pull-requests: write は PR の作成、issues: write は起票に要る。
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
       issues: write
 
     # アプリは web/ の中。uses: のアクションには working-directory が効かないので、run: のステップだけを web/ で回す。
+    # shell: bash を名指すと pipefail が付き、pnpm sync を tee へ繋いでも pnpm sync の失敗でステップが止まる。
     defaults:
       run:
         working-directory: web
+        shell: bash
 
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
+      # 同期の結果を載せるブランチ。
+      # run ごとに main から作り直して force push するので、開いた PR は 1 本のまま最新の同期の結果に置き換わる。
+      SYNC_BRANCH: sync/episodes
 
     steps:
       - name: Checkout repository
@@ -51,9 +58,11 @@ jobs:
           gh issue list --state all --search "シーズン調査: in:title" --limit 1000 \
             --json title --jq '[.[].title]' > "$RUNNER_TEMP/issue-titles.json"
 
+      # 同期のサマリと警告は PR の本文に載せるので、ファイルにも残す。
       - name: Sync feed
         run: |
-          pnpm sync --issue-titles "$RUNNER_TEMP/issue-titles.json" --survey-issues "$RUNNER_TEMP/survey-issues.json"
+          pnpm sync --issue-titles "$RUNNER_TEMP/issue-titles.json" --survey-issues "$RUNNER_TEMP/survey-issues.json" \
+            2>&1 | tee "$RUNNER_TEMP/sync-summary.txt"
           jq -r '.[].title' "$RUNNER_TEMP/survey-issues.json"
 
       - name: Create survey issues
@@ -67,3 +76,61 @@ jobs:
               --label tooling \
               --label claude
           done
+
+      # syncedAt は同期のたびに変わるので、syncedAt を除いた中身で main と比べる。
+      - name: Detect episodes change
+        id: episodes
+        run: |
+          if diff <(git show HEAD:catalog/episodes.json | jq 'del(.syncedAt)') <(jq 'del(.syncedAt)' ../catalog/episodes.json) > /dev/null; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # GITHUB_TOKEN で開いた PR では check.yml が起動しないので、PR を開く前にこの run で同じ pnpm check を回す。
+      # ブラウザの取得とキャッシュの扱いは check.yml と揃える。
+      - name: Cache Playwright browsers
+        if: steps.episodes.outputs.changed == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('web/pnpm-lock.yaml') }}
+
+      - if: steps.episodes.outputs.changed == 'true'
+        run: pnpm exec playwright install --with-deps chromium
+
+      - if: steps.episodes.outputs.changed == 'true'
+        run: pnpm check
+
+      - name: Open sync pull request
+        if: steps.episodes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$SYNC_BRANCH"
+          git add ../catalog/episodes.json
+          git commit -m "chore(catalog): 配信フィードの同期で episodes.json を更新する"
+          git push --force origin "$SYNC_BRANCH"
+
+          {
+            echo "定期実行の同期（\`.github/workflows/sync.yml\`）が \`catalog/episodes.json\` を更新した。"
+            echo "この PR は \`GITHUB_TOKEN\` で開いたので \`check.yml\` が起動しない。"
+            echo "代わりに、PR を開いた run が同じ \`pnpm check\` を回して緑だった。"
+            echo
+            echo "run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo
+            echo "## 同期のサマリ"
+            echo
+            echo '```'
+            cat "$RUNNER_TEMP/sync-summary.txt"
+            echo '```'
+          } > "$RUNNER_TEMP/sync-pr-body.md"
+
+          open_pr=$(gh pr list --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number')
+          if [ -z "$open_pr" ]; then
+            gh pr create --base main --head "$SYNC_BRANCH" \
+              --title "配信フィードの同期で episodes.json を更新する" \
+              --body-file "$RUNNER_TEMP/sync-pr-body.md"
+          else
+            gh pr edit "$open_pr" --body-file "$RUNNER_TEMP/sync-pr-body.md"
+          fi
