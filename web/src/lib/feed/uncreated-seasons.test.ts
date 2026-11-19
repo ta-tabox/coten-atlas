@@ -43,7 +43,7 @@ const FRENCH_REVOLUTION = [
 ];
 
 describe("listUncreatedSeasons", () => {
-  it("シリーズが無い season は、題の末尾のシリーズ名・回の数・最も古い回とともに返る", () => {
+  it("シリーズが無いシリーズ番号は、題の末尾のシリーズ名・回の数・最も古い回とともに返る", () => {
     expect(listUncreatedSeasons(FRENCH_REVOLUTION)).toEqual([
       {
         season: 68,
@@ -68,7 +68,7 @@ describe("listUncreatedSeasons", () => {
     expect(listUncreatedSeasons([assigned])).toEqual([]);
   });
 
-  it("割当で season が決まらなかった回（番外編など）は数えない", () => {
+  it("割当でシリーズ番号が決まらなかった回（番外編など）は数えない", () => {
     const bonus: Assignment = {
       item: item({ guid: "guid-bonus", title: "【番外編＃115】おたより回" }),
       key: { source: "none", season: null },
@@ -78,7 +78,7 @@ describe("listUncreatedSeasons", () => {
     expect(listUncreatedSeasons([bonus])).toEqual([]);
   });
 
-  it("題が【COTEN RADIOショート 〜編N】で終わる season も、シリーズ名を取り出す", () => {
+  it("題が【COTEN RADIOショート 〜編N】で終わるシリーズ番号も、シリーズ名を取り出す", () => {
     const shortItem = item({
       title:
         "【68-1】革命のはじまり【COTEN RADIOショート フランス革命と陰謀論編1】",
@@ -89,7 +89,7 @@ describe("listUncreatedSeasons", () => {
     ).toBe("フランス革命と陰謀論");
   });
 
-  it("題が【COTEN RADIO 〜編N】で終わらない season は、シリーズ名が null になる", () => {
+  it("題が【COTEN RADIO 〜編N】で終わらないシリーズ番号は、シリーズ名が null になる", () => {
     const untitledItem = item({ title: "【68-1】革命のはじまり" });
 
     expect(
@@ -97,7 +97,7 @@ describe("listUncreatedSeasons", () => {
     ).toBeNull();
   });
 
-  it("未作成の season が複数あれば season の昇順に並ぶ", () => {
+  it("未作成のシリーズ番号が複数あればシリーズ番号の昇順に並ぶ", () => {
     const laterItem = item({
       guid: "guid-69-1",
       title: "【69-1】はじまり【COTEN RADIO 次のシリーズ編1】",
@@ -120,7 +120,7 @@ describe("listUnreportedSeasons", () => {
     firstEpisode: { title: "", pubDate: "2026-11-01T21:00:00.000Z" },
   }));
 
-  it("題に（season 68）を含む issue が在ると season 68 だけが除かれ、season 6 は残る", () => {
+  it("題に（season 68）を含む issue が在るとシリーズ番号 68 だけが除かれ、6 は残る", () => {
     expect(
       listUnreportedSeasons(uncreated, [
         "シーズン調査: フランス革命と陰謀論編（season 68）",

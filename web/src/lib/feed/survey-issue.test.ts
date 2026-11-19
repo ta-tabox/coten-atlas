@@ -28,13 +28,13 @@ const SECTION_HEADINGS = [
 ];
 
 describe("toSurveyIssue", () => {
-  it("シリーズ名が取れた season の題は「シーズン調査: <名前>編（season N）」になる", () => {
+  it("シリーズ名が取れたシリーズ番号の題は「シーズン調査: <名前>編（season N）」になる", () => {
     expect(toSurveyIssue(FRENCH_REVOLUTION).title).toBe(
       "シーズン調査: フランス革命と陰謀論編（season 68）",
     );
   });
 
-  it("シリーズ名が null の season の題は、名前の位置に（シリーズ名は未確定）を置く", () => {
+  it("シリーズ名が null のシリーズ番号の題は、名前の位置に（シリーズ名は未確定）を置く", () => {
     expect(
       toSurveyIssue({ ...FRENCH_REVOLUTION, seriesName: null }).title,
     ).toBe("シーズン調査: （シリーズ名は未確定）（season 68）");
@@ -49,7 +49,7 @@ describe("toSurveyIssue", () => {
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
   });
 
-  it("本文の対象の表と事実に、season・シリーズ名・回の数・最初の回の題と pubDate が入る", () => {
+  it("本文の対象の表と事実に、シリーズ番号・シリーズ名・回の数・最初の回の題と pubDate が入る", () => {
     const { body } = toSurveyIssue(FRENCH_REVOLUTION);
 
     expect(body).toContain("| 68 | フランス革命と陰謀論 |");

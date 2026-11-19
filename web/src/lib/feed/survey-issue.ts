@@ -1,6 +1,6 @@
 /**
- * 未作成の season 1 件から、シーズン調査の issue の題と本文を組む純関数を置く。
- * 未作成の season の求め方は持たず、`uncreated-seasons.ts` が持つ。
+ * シリーズが無いシリーズ番号（`season`）1 件から、シーズン調査の issue の題と本文を組む純関数を置く。
+ * 未作成のシリーズ番号の求め方は持たず、`uncreated-seasons.ts` が持つ。
  *
  * 題は `シーズン調査: <シリーズ名>編（season <N>）` の形にする。
  * skill `series-survey` の手順 1 は並行するセッションの宣言を題の `シーズン調査:` で探すので、接頭辞を変えると手順 1 が issue を見落とす。
@@ -14,7 +14,7 @@ import {
 } from "@/lib/feed/uncreated-seasons";
 
 /**
- * シリーズ名が取れなかった season の題で、シリーズ名の位置に置く語。
+ * シリーズ名が取れなかったシリーズ番号の題で、シリーズ名の位置に置く語。
  */
 const UNKNOWN_SERIES_NAME = "（シリーズ名は未確定）";
 
@@ -28,14 +28,14 @@ export type SurveyIssue = {
 };
 
 /**
- * 未作成の season（`season`）から、シーズン調査の issue の題と本文を作る。
+ * 未作成のシリーズ番号（`season`）から、シーズン調査の issue の題と本文を作る。
  */
 export function toSurveyIssue(season: UncreatedSeason): SurveyIssue {
   return { title: titleOf(season), body: bodyOf(season) };
 }
 
 /**
- * 未作成の season（`season`）の issue の題を返す。
+ * 未作成のシリーズ番号（`season`）の issue の題を返す。
  * シリーズ名が null なら、シリーズ名の位置に `UNKNOWN_SERIES_NAME` を置く。
  */
 function titleOf({ season, seriesName }: UncreatedSeason): string {
@@ -45,7 +45,7 @@ function titleOf({ season, seriesName }: UncreatedSeason): string {
 }
 
 /**
- * 未作成の season（`season`）の issue の本文を、前提・目的・事実・対象・作るもの・触らないもの・完了条件・人間の判定の節で組む。
+ * 未作成のシリーズ番号（`season`）の issue の本文を、前提・目的・事実・対象・作るもの・触らないもの・完了条件・人間の判定の節で組む。
  */
 function bodyOf({
   season,
