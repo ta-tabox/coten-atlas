@@ -3,7 +3,7 @@
 /**
  * シリーズを地図の上の見えるものにするレイヤ群。
  *
- * source と、地図上の見た目ごとのレイヤの部品（`@/components/map/series-layers/`）を並べるだけで、地図そのものは持たない。
+ * source と、地図上の見た目ごとのレイヤの部品（`@/components/map/layers/`）を並べるだけで、地図そのものは持たない。
  * 置く先は `MapCanvas` の子で、react-map-gl は親の地図を context から取得する。
  * `<Source>` が `source` の id を入れるのは直下の子だけなので、子の部品の中の `<Layer>` へは届かず、各部品が `SERIES_SOURCE_ID` を自分で渡す。
  *
@@ -12,9 +12,9 @@
  */
 
 import { Source } from "react-map-gl/maplibre";
-import ContemporarySeriesRingLayer from "@/components/map/series-layers/ContemporarySeriesRingLayer";
-import SelectedSeriesRingLayer from "@/components/map/series-layers/SelectedSeriesRingLayer";
-import SeriesCircleLayer from "@/components/map/series-layers/SeriesCircleLayer";
+import ContemporarySeriesRingLayer from "@/components/map/layers/ContemporarySeriesRingLayer";
+import SelectedSeriesRingLayer from "@/components/map/layers/SelectedSeriesRingLayer";
+import SeriesCircleLayer from "@/components/map/layers/SeriesCircleLayer";
 import type { CurrentWindow } from "@/lib/era/window";
 import { SERIES_SOURCE_ID } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
