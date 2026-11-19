@@ -79,6 +79,7 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 `Check` と自動レビューは起動条件が違うので、push の後に待つものを取り違えない。
 
 - **`Check`（`check.yml`）は PR への push ごとに走る**。`pull_request` にフィルタを置いていないので、md 一枚の変更でも回る
+  同期のボットが開く PR（ブランチ `sync/episodes`）には `pull_request` が起動しないので、`sync.yml` が PR を開いた後に `workflow_dispatch` で起動する
 - **自動レビュー（`claude-code-review.yml`）は `opened` / `ready_for_review` / `reopened` でだけ走る**
   push は `synchronize` なので拾わず、レビュー指摘へ対応して push しても再レビューは来ない
   job は二つで、`claude-review` が正しさを、`claude-style-review` が規約（`.claude/rules/` と skill `coding-standards`「レビューで繰り返し指摘される型」）を差分へ当てる

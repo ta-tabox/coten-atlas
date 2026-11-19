@@ -7,6 +7,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  # sync.yml が GITHUB_TOKEN で開いた同期の PR には pull_request が起動しないので、sync.yml がこの起動で同期のブランチを検査する。
+  workflow_dispatch:
 
 jobs:
   check:
