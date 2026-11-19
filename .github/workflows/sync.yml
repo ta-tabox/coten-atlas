@@ -61,7 +61,7 @@ jobs:
       # 同期のサマリと警告は PR の本文に載せるので、ファイルにも残す。
       - name: Sync feed
         run: |
-          pnpm sync --issue-titles "$RUNNER_TEMP/issue-titles.json" --survey-issues "$RUNNER_TEMP/survey-issues.json" \
+          pnpm sync --existing-issue-titles "$RUNNER_TEMP/issue-titles.json" --survey-issues-out "$RUNNER_TEMP/survey-issues.json" \
             2>&1 | tee "$RUNNER_TEMP/sync-summary.txt"
           jq -r '.[].title' "$RUNNER_TEMP/survey-issues.json"
 

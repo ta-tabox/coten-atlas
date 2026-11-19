@@ -11,8 +11,9 @@
  * 未割当を溜める置き場も持たない。
  * 前回との差分を取るのは、新着を数えるためと、割当が外れた回と別のシリーズへ移った回を報せるためである。
  *
- * `--issue-titles <既存の issue の題の JSON>` と `--survey-issues <書き出し先>` を渡すと、割当の結果からシリーズが無い season を求め、シーズン調査の issue がまだ無い season の題と本文を書き出し先へ JSON で書く。
- * 起票はせず、`.github/workflows/sync.yml` が書き出し先の 1 件ごとに `gh issue create` を呼ぶ。
+ * 次の二つの引数を両方渡したときだけ、シリーズが無いシリーズ番号について、起票するシーズン調査の issue の題と本文を書き出す。
+ * - `--existing-issue-titles <ファイル>`（入力）: 既存の issue の題を並べた JSON で、題に `（season <N>）` を含む issue が在るシリーズ番号は書き出さない
+ * - `--survey-issues-out <ファイル>`（出力）: 起票する issue の題と本文を書く JSON で、起票は `.github/workflows/sync.yml` が 1 件ごとに `gh issue create` で行う
  *
  * 失敗は黙って飲まずに落とす。
  * 空の結果を正常な差分として書くと、フィードが壊れた日に `episodes.json` が消える。
@@ -325,8 +326,8 @@ function reportSummary(assignments: Assignment[], added: Assignment[]): void {
  * `readSurveyIssueOptions` が作り、`writeSurveyIssues` へ渡す。
  */
 type SurveyIssueOptions = {
-  issueTitlesFile: string;
-  surveyIssuesFile: string;
+  existingIssueTitlesFile: string;
+  surveyIssuesOutFile: string;
 };
 
 /**
@@ -339,24 +340,30 @@ function readSurveyIssueOptions(
   const { values } = parseArgs({
     args: [...args],
     options: {
-      "issue-titles": { type: "string" },
-      "survey-issues": { type: "string" },
+      "existing-issue-titles": { type: "string" },
+      "survey-issues-out": { type: "string" },
     },
   });
-  const issueTitlesFile = values["issue-titles"];
-  const surveyIssuesFile = values["survey-issues"];
+  const existingIssueTitlesFile = values["existing-issue-titles"];
+  const surveyIssuesOutFile = values["survey-issues-out"];
 
-  if (issueTitlesFile === undefined && surveyIssuesFile === undefined) {
+  if (
+    existingIssueTitlesFile === undefined &&
+    surveyIssuesOutFile === undefined
+  ) {
     return null;
   }
 
-  if (issueTitlesFile === undefined || surveyIssuesFile === undefined) {
+  if (
+    existingIssueTitlesFile === undefined ||
+    surveyIssuesOutFile === undefined
+  ) {
     throw new Error(
-      "--issue-titles と --survey-issues は両方を渡す（pnpm sync --issue-titles <既存の issue の題の JSON> --survey-issues <書き出し先>）",
+      "--existing-issue-titles と --survey-issues-out は両方を渡す（pnpm sync --existing-issue-titles <既存の issue の題の JSON> --survey-issues-out <書き出し先>）",
     );
   }
 
-  return { issueTitlesFile, surveyIssuesFile };
+  return { existingIssueTitlesFile, surveyIssuesOutFile };
 }
 
 /**
@@ -382,20 +389,20 @@ function readIssueTitles(file: string): string[] {
 }
 
 /**
- * 割当の結果（`assignments`）からシリーズが無い season を求め、シーズン調査の issue がまだ無い season の題と本文を、書き出し先（`options.surveyIssuesFile`）へ書く。
+ * 割当の結果（`assignments`）からシリーズが無い season を求め、シーズン調査の issue がまだ無い season の題と本文を、書き出し先（`options.surveyIssuesOutFile`）へ書く。
  * 起票する season が無ければ空配列を書き、ワークフローが件数を読めるようにする。
  */
 function writeSurveyIssues(
   assignments: readonly Assignment[],
   options: SurveyIssueOptions,
 ): void {
-  const issueTitles = readIssueTitles(options.issueTitlesFile);
+  const issueTitles = readIssueTitles(options.existingIssueTitlesFile);
   const uncreated = listUncreatedSeasons(assignments);
   const issues = listUnreportedSeasons(uncreated, issueTitles).map(
     toSurveyIssue,
   );
 
-  writeJsonFile(options.surveyIssuesFile, issues);
+  writeJsonFile(options.surveyIssuesOutFile, issues);
 }
 
 /**
