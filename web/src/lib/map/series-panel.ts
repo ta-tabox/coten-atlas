@@ -1,14 +1,14 @@
 /**
  * 一覧パネルに並べるシリーズを、地図に出ている区画と地図に出ない区画へ分ける。
  *
- * 地図に出ているかは `@/lib/map/series-layer` の `seriesIdsOnMapIn` で決め、地図の円を描くレイヤと同じ判定を使う。
+ * 地図に出ているかは `@/lib/map/layers/shared` の `seriesIdsOnMapIn` で決め、地図の円を描くレイヤと同じ判定を使う。
  * 位置なしのシリーズの大半は `timeRange` が `TIME_RANGE_UNTIMED` で現在窓と比べられないので、位置なしの区画は現在窓で絞らずに全件を入れる。
  * 描画（React）と選択の状態はここに置かない。
  */
 
 import type { CurrentWindow } from "@/lib/era/window";
+import { seriesIdsOnMapIn } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { seriesIdsOnMapIn } from "@/lib/map/series-layer";
 import {
   ANCHOR_UNLOCATED,
   type Series,

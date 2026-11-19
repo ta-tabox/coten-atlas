@@ -2,7 +2,7 @@
  * 一覧パネルの区画の分け方を見る。
  *
  * 相手は現物でなく手で置いた最小の組み合わせである。
- * 窓と事物の重なりの計算そのものは `@/lib/map/series-layer.test.ts` と `@/lib/era/window.test.ts` が持つ。
+ * 窓と事物の重なりの計算そのものは `@/lib/map/layers/shared.test.ts` と `@/lib/era/window.test.ts` が持つ。
  */
 
 import { describe, expect, it } from "vitest";
