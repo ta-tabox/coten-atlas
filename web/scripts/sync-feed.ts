@@ -307,8 +307,11 @@ function assertCatalogDir(): void {
 function reportSummary(assignments: Assignment[], added: Assignment[]): void {
   const unassigned = assignments.filter(({ seriesId }) => seriesId === null);
   const settledByRule = unassigned.filter(({ key }) => key.season === null);
-  const awaitingSeries = unassigned.filter(({ key }) => key.season !== null);
-  const awaitingSeasons = new Set(awaitingSeries.map(({ key }) => key.season));
+  const uncreated = listUncreatedSeasons(assignments);
+  const awaitingEpisodeCount = uncreated.reduce(
+    (total, { episodeCount }) => total + episodeCount,
+    0,
+  );
 
   console.log(
     `フィード ${assignments.length} 件 / 新規 ${added.length} 件 / 割当 ${assignments.length - unassigned.length} 件 / 未割当 ${unassigned.length} 件`,
@@ -317,7 +320,7 @@ function reportSummary(assignments: Assignment[], added: Assignment[]): void {
     `  規則で確定      ${settledByRule.length} 件（season が決まらない回・番外編・訂正表で外した回）`,
   );
   console.log(
-    `  シリーズ未作成  ${awaitingSeries.length} 件（season ${awaitingSeasons.size} 件）`,
+    `  シリーズ未作成  ${awaitingEpisodeCount} 件（season ${uncreated.length} 件）`,
   );
 }
 
