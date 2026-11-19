@@ -56,10 +56,11 @@ jobs:
 
       # 閉じた issue も渡す。
       # 開いた issue だけと比べると、調査を終えて閉じた season へ同じ issue を二度起票する。
+      # --search は検索の索引を通り、直前の run が起票した issue が索引へ反映される前だと見落とすので、一覧から全件を取る。
       # gh issue list は既定で 30 件しか返さないので、--limit で全件を取る。
-      - name: List existing survey issues
+      - name: List existing issue titles
         run: |
-          gh issue list --state all --search "シーズン調査: in:title" --limit 1000 \
+          gh issue list --state all --limit 1000 \
             --json title --jq '[.[].title]' > "$RUNNER_TEMP/issue-titles.json"
 
       # 同期のサマリと警告は PR の本文に載せるので、ファイルにも残す。
