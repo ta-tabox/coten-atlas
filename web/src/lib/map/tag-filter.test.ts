@@ -200,7 +200,7 @@ describe("タグで絞ったシリーズから組んだ一覧パネルの区画�
     const taggedLoci = lociForSeries(LOCI, tagged);
 
     const { onMap } = seriesPanelSectionsOf({
-      series: tagged,
+      seriesList: tagged,
       loci: taggedLoci,
       currentWindow: WINDOW,
     });
@@ -215,7 +215,7 @@ describe("タグで絞ったシリーズから組んだ一覧パネルの区画�
     const tagged = taggedSeriesOf(SERIES, ["戦争"]);
 
     const { unlocated } = seriesPanelSectionsOf({
-      series: tagged,
+      seriesList: tagged,
       loci: lociForSeries(LOCI, tagged),
       currentWindow: WINDOW,
     });
@@ -226,7 +226,7 @@ describe("タグで絞ったシリーズから組んだ一覧パネルの区画�
   it("タグを選ぶと、絞った区画から数えたタグは、選んだタグと一緒に持たれているタグだけになる", () => {
     const tagged = taggedSeriesOf(SERIES, ["人物"]);
     const sections = seriesPanelSectionsOf({
-      series: tagged,
+      seriesList: tagged,
       loci: lociForSeries(LOCI, tagged),
       currentWindow: WINDOW,
     });
@@ -245,13 +245,13 @@ describe("タグで絞ったシリーズから組んだ一覧パネルの区画�
     expect(releasedLoci).toEqual(LOCI);
     expect(
       seriesPanelSectionsOf({
-        series: released,
+        seriesList: released,
         loci: releasedLoci,
         currentWindow: WINDOW,
       }),
     ).toEqual(
       seriesPanelSectionsOf({
-        series: SERIES,
+        seriesList: SERIES,
         loci: LOCI,
         currentWindow: WINDOW,
       }),

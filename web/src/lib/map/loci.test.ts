@@ -35,13 +35,13 @@ function seriesOf(fixture: SeriesFixture): Series {
 }
 
 /** 事物を、座標を問わない 1 点として並べる。 */
-function lociOf(...properties: Locus["properties"][]): LocusCollection {
+function lociOf(...propertiesList: Locus["properties"][]): LocusCollection {
   return {
     type: "FeatureCollection",
-    features: properties.map((one) => ({
+    features: propertiesList.map((properties) => ({
       type: "Feature",
       geometry: { type: "Point", coordinates: [0, 0] },
-      properties: one,
+      properties,
     })),
   };
 }

@@ -52,7 +52,7 @@ type MapCanvasProps = {
    * シリーズの全件。
    * 地図のクリックが返すのは `Locus` なので、`seriesId` に一致する `Series` をこの配列から検索する。
    */
-  series: SeriesList;
+  seriesList: SeriesList;
   /** era スライダーの目盛りに並べる時代区分の全件。 */
   eras: EraList;
   /** `end` が `ERA_END_PRESENT` の era の右端に置く年。 */
@@ -104,10 +104,10 @@ function initialEraPositionOf(eras: EraList): number {
   return (index + 0.5) / eras.length;
 }
 
-/** ベースマップの上に、`loci` の代表点・`series` の一覧パネル・`eras` の era スライダー・選択した `series` の詳細カードを重ねて描く。 */
+/** ベースマップの上に、`loci` の代表点・`seriesList` の一覧パネル・`eras` の era スライダー・選択した `series` の詳細カードを重ねて描く。 */
 export default function MapCanvas({
   loci,
-  series,
+  seriesList,
   eras,
   presentEnd,
 }: MapCanvasProps) {
@@ -144,13 +144,13 @@ export default function MapCanvas({
   // 「選択が無い」を null に統一する。
   // find の undefined をそのまま保持すると、同じ状態が null と undefined の 2 通りで表れる。
   const selectedSeries: Series | null =
-    series.find((one) => one.id === selectedSeriesId) ?? null;
+    seriesList.find((series) => series.id === selectedSeriesId) ?? null;
   const eraWindow = currentWindow({ position: eraPosition, eras, presentEnd });
 
-  const taggedSeries = taggedSeriesOf(series, selectedTags);
+  const taggedSeries = taggedSeriesOf(seriesList, selectedTags);
   const taggedLoci = lociForSeries(loci, taggedSeries);
   const taggedSections = seriesPanelSectionsOf({
-    series: taggedSeries,
+    seriesList: taggedSeries,
     loci: taggedLoci,
     currentWindow: eraWindow,
   });
@@ -163,7 +163,7 @@ export default function MapCanvas({
   function selectFromPanel(seriesId: string): void {
     setSelectedSeriesId(seriesId);
 
-    const clicked = series.find((one) => one.id === seriesId);
+    const clicked = seriesList.find((series) => series.id === seriesId);
     const anchor =
       clicked === undefined ? undefined : findAnchorLocus(loci, clicked);
 

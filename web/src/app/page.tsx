@@ -17,12 +17,12 @@ import { toMapLoci } from "@/lib/map/loci";
 
 /** `catalog/` から読んだシリーズ・事物・時代区分とビルドした時点の年を `MapCanvas` へ渡し、地図のトップページを描く。 */
 export default function Page() {
-  const series = loadSeries();
+  const seriesList = loadSeries();
 
   return (
     <MapCanvas
-      loci={toMapLoci(loadLoci(), series)}
-      series={series}
+      loci={toMapLoci(loadLoci(), seriesList)}
+      seriesList={seriesList}
       eras={loadEras()}
       presentEnd={presentEndOf(new Date())}
     />

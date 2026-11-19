@@ -98,7 +98,7 @@ const SEPPUKU = seriesOf({
 describe("seriesPanelSectionsOf", () => {
   it("現在窓と重なる事物を持つシリーズだけを地図の区画に入れる", () => {
     const { onMap } = seriesPanelSectionsOf({
-      series: [SPARTA, TEISEI_ROMA],
+      seriesList: [SPARTA, TEISEI_ROMA],
       loci: lociOf(SPARTA, TEISEI_ROMA),
       currentWindow: WINDOW,
     });
@@ -108,7 +108,7 @@ describe("seriesPanelSectionsOf", () => {
 
   it("地図の区画を timeRange の start の昇順に並べる", () => {
     const { onMap } = seriesPanelSectionsOf({
-      series: [ROUSHI, SPARTA],
+      seriesList: [ROUSHI, SPARTA],
       loci: lociOf(ROUSHI, SPARTA),
       currentWindow: WINDOW,
     });
@@ -118,7 +118,7 @@ describe("seriesPanelSectionsOf", () => {
 
   it("位置なしのシリーズは、時期を持たなくても年が現在窓と重ならなくても、別区画に入る", () => {
     const { unlocated } = seriesPanelSectionsOf({
-      series: [SPARTA, OKANE, SEPPUKU],
+      seriesList: [SPARTA, OKANE, SEPPUKU],
       loci: lociOf(SPARTA),
       currentWindow: WINDOW,
     });
@@ -128,7 +128,7 @@ describe("seriesPanelSectionsOf", () => {
 
   it("位置なしのシリーズを地図の区画に入れない", () => {
     const { onMap } = seriesPanelSectionsOf({
-      series: [SPARTA, OKANE, SEPPUKU],
+      seriesList: [SPARTA, OKANE, SEPPUKU],
       loci: lociOf(SPARTA),
       currentWindow: WINDOW,
     });
