@@ -127,6 +127,15 @@ jobs:
             gh pr edit "$open_pr" --body-file "$RUNNER_TEMP/sync-pr-body.md"
           fi
 
+      # main がすでに同期の結果と同じ中身なら、開いたままの同期の PR は古い差分を持つので閉じる。
+      - name: Close stale sync pull request
+        if: steps.episodes.outputs.changed != 'true'
+        run: |
+          open_pr=$(gh pr list --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number')
+          if [ -n "$open_pr" ]; then
+            gh pr close "$open_pr" --comment "main の episodes.json が最新の同期の結果と同じ中身（syncedAt を除く）になったので閉じる。run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          fi
+
   # GITHUB_TOKEN で開いた PR や push では check.yml の pull_request が起動しないので、workflow_dispatch で同期のブランチに対して起動する。
   # actions: write は他のワークフローの起動と run の削除もできる権限なので、依存のコードを走らせる sync の job には持たせず、gh を 1 回呼ぶだけのこの job に閉じる。
   check-sync-pr:
