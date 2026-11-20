@@ -14,6 +14,7 @@ const spartaCity = {
     id: "sparta-city",
     seriesId: "sparta",
     timeRange: TIME_RANGE_OF_SERIES,
+    name: "スパルタ",
   },
 };
 
@@ -101,6 +102,19 @@ describe("parseLoci", () => {
   it("落とした理由を文脈付きで投げる", () => {
     expect(() => parseLoci(collectionOf(locusWith({ id: "" })))).toThrow(
       /loci/,
+    );
+  });
+
+  it("name を持たない事物を渡すと throw する", () => {
+    const { name: _name, ...withoutName } = spartaCity.properties;
+    const locus = { ...spartaCity, properties: withoutName };
+
+    expect(() => parseLoci(collectionOf(locus))).toThrow(/name/);
+  });
+
+  it("空白だけの name を持つ事物を渡すと throw する", () => {
+    expect(() => parseLoci(collectionOf(locusWith({ name: "  " })))).toThrow(
+      /name/,
     );
   });
 });

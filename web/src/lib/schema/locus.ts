@@ -58,6 +58,12 @@ export const locusPropertiesSchema = z.strictObject({
   seriesId: trimmedNonEmptyStringSchema,
 
   timeRange: locusTimeRangeSchema,
+
+  /**
+   * 画面に出す日本語の地名。
+   * `id` は地名を英語で書いたキーで画面に出す語ではないので、地点を文字で出すときはこの欄を読む。
+   */
+  name: trimmedNonEmptyStringSchema,
 });
 
 export const locusFeatureSchema = z.strictObject({

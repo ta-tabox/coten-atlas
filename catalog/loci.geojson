@@ -7,7 +7,8 @@
       "properties": {
         "id": "hagi",
         "seriesId": "yoshida-shoin",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "萩"
       }
     },
     {
@@ -16,7 +17,8 @@
       "properties": {
         "id": "sparta-city",
         "seriesId": "sparta",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "スパルタ"
       }
     },
     {
@@ -25,7 +27,8 @@
       "properties": {
         "id": "xianyang",
         "seriesId": "shin-no-shikotei",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "咸陽"
       }
     },
     {
@@ -34,7 +37,8 @@
       "properties": {
         "id": "chengdu",
         "seriesId": "shokatsu-komei",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "成都"
       }
     },
     {
@@ -43,7 +47,8 @@
       "properties": {
         "id": "berlin",
         "seriesId": "hitler",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ベルリン"
       }
     },
     {
@@ -52,7 +57,8 @@
       "properties": {
         "id": "paris",
         "seriesId": "france-kakumei",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "パリ"
       }
     },
     {
@@ -61,7 +67,8 @@
       "properties": {
         "id": "ahmedabad",
         "seriesId": "gandhi",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "アフマダーバード"
       }
     },
     {
@@ -70,7 +77,8 @@
       "properties": {
         "id": "pella",
         "seriesId": "alexandros",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ペラ"
       }
     },
     {
@@ -79,7 +87,8 @@
       "properties": {
         "id": "changan",
         "seriesId": "sanzohoshi-genjo",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "長安"
       }
     },
     {
@@ -88,7 +97,8 @@
       "properties": {
         "id": "shimonoseki",
         "seriesId": "takasugi-shinsaku",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "下関"
       }
     },
     {
@@ -97,7 +107,8 @@
       "properties": {
         "id": "st-louis",
         "seriesId": "america-kaitakushi",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "セントルイス"
       }
     },
     {
@@ -106,7 +117,8 @@
       "properties": {
         "id": "tuscumbia",
         "seriesId": "helen-keller-to-anne-sullivan",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "タスカンビア"
       }
     },
     {
@@ -115,7 +127,8 @@
       "properties": {
         "id": "avraga",
         "seriesId": "chinggis-khan",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "アウラガ"
       }
     },
     {
@@ -124,7 +137,8 @@
       "properties": {
         "id": "constantinople",
         "seriesId": "osman-teikoku",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "コンスタンティノープル"
       }
     },
     {
@@ -133,7 +147,8 @@
       "properties": {
         "id": "mount-hiei",
         "seriesId": "saicho-to-kukai",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "比叡山"
       }
     },
     {
@@ -142,7 +157,8 @@
       "properties": {
         "id": "forum-romanum",
         "seriesId": "julius-caesar",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "フォルム・ロマヌム"
       }
     },
     {
@@ -151,7 +167,8 @@
       "properties": {
         "id": "wittenberg",
         "seriesId": "shukyokaikaku",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ヴィッテンベルク"
       }
     },
     {
@@ -160,7 +177,8 @@
       "properties": {
         "id": "verdun",
         "seriesId": "daiichijisekaitaisen",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ヴェルダン"
       }
     },
     {
@@ -169,7 +187,8 @@
       "properties": {
         "id": "whitehall",
         "seriesId": "elizabeth-1",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ホワイトホール宮殿"
       }
     },
     {
@@ -178,7 +197,8 @@
       "properties": {
         "id": "azuchi",
         "seriesId": "oda-nobunaga",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "安土"
       }
     },
     {
@@ -187,7 +207,8 @@
       "properties": {
         "id": "luoyang",
         "seriesId": "bu-sokuten",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "洛陽"
       }
     },
     {
@@ -196,7 +217,8 @@
       "properties": {
         "id": "london",
         "seriesId": "marx-engels",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ロンドン"
       }
     },
     {
@@ -205,7 +227,8 @@
       "properties": {
         "id": "potsdam",
         "seriesId": "friedrich-daio",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ポツダム"
       }
     },
     {
@@ -214,7 +237,8 @@
       "properties": {
         "id": "port-arthur",
         "seriesId": "nichirosenso",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "旅順"
       }
     },
     {
@@ -223,7 +247,8 @@
       "properties": {
         "id": "alexandria",
         "seriesId": "cleopatra",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "アレクサンドリア"
       }
     },
     {
@@ -232,7 +257,8 @@
       "properties": {
         "id": "kamakura",
         "seriesId": "kamakurabushi",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "鎌倉"
       }
     },
     {
@@ -241,7 +267,8 @@
       "properties": {
         "id": "college-de-france",
         "seriesId": "levi-strauss",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "コレージュ・ド・フランス"
       }
     },
     {
@@ -250,7 +277,8 @@
       "properties": {
         "id": "wilhelmplatz",
         "seriesId": "goebbels",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ヴィルヘルム広場"
       }
     },
     {
@@ -259,7 +287,8 @@
       "properties": {
         "id": "jerusalem",
         "seriesId": "saladin-to-jujigun",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "エルサレム"
       }
     },
     {
@@ -268,7 +297,8 @@
       "properties": {
         "id": "dayton",
         "seriesId": "wrightkyodai",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "デイトン"
       }
     },
     {
@@ -277,7 +307,8 @@
       "properties": {
         "id": "carthage",
         "seriesId": "hannibal",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "カルタゴ"
       }
     },
     {
@@ -286,7 +317,8 @@
       "properties": {
         "id": "krakow",
         "seriesId": "schindler",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "クラクフ"
       }
     },
     {
@@ -295,7 +327,8 @@
       "properties": {
         "id": "heian-kyo",
         "seriesId": "sugawara-no-michizane",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "平安京"
       }
     },
     {
@@ -304,7 +337,8 @@
       "properties": {
         "id": "ankara",
         "seriesId": "kemal-ataturk",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "アンカラ"
       }
     },
     {
@@ -313,7 +347,8 @@
       "properties": {
         "id": "shinjuku",
         "seriesId": "yanase-takashi",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "新宿"
       }
     },
     {
@@ -322,7 +357,8 @@
       "properties": {
         "id": "ichijo-in",
         "seriesId": "murasaki-shikibu",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "一条院"
       }
     },
     {
@@ -331,7 +367,8 @@
       "properties": {
         "id": "orleans",
         "seriesId": "jeanne-darc",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "オルレアン"
       }
     },
     {
@@ -340,7 +377,8 @@
       "properties": {
         "id": "hetu-ala",
         "seriesId": "nurhaci",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ヘトゥアラ"
       }
     },
     {
@@ -349,7 +387,8 @@
       "properties": {
         "id": "osaka",
         "seriesId": "hideyoshi-ieyasu",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "大坂"
       }
     },
     {
@@ -358,7 +397,8 @@
       "properties": {
         "id": "arles",
         "seriesId": "gogh",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "アルル"
       }
     },
     {
@@ -367,7 +407,8 @@
       "properties": {
         "id": "agra",
         "seriesId": "mughal-teikoku",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "アーグラ"
       }
     },
     {
@@ -376,7 +417,8 @@
       "properties": {
         "id": "ku",
         "seriesId": "roshi-soshi",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "苦県"
       }
     },
     {
@@ -385,7 +427,8 @@
       "properties": {
         "id": "nara",
         "seriesId": "ganjin",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "奈良"
       }
     },
     {
@@ -394,7 +437,8 @@
       "properties": {
         "id": "tokyo",
         "seriesId": "ito-noe",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "東京"
       }
     },
     {
@@ -403,7 +447,8 @@
       "properties": {
         "id": "uraga",
         "seriesId": "perry-raiko",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "浦賀"
       }
     },
     {
@@ -412,7 +457,8 @@
       "properties": {
         "id": "pengcheng",
         "seriesId": "kou-to-ryuho",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "彭城"
       }
     },
     {
@@ -421,7 +467,8 @@
       "properties": {
         "id": "new-york",
         "seriesId": "nikola-tesla",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ニューヨーク"
       }
     },
     {
@@ -430,7 +477,8 @@
       "properties": {
         "id": "washington",
         "seriesId": "lincoln",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ワシントン"
       }
     },
     {
@@ -439,7 +487,8 @@
       "properties": {
         "id": "uruk",
         "seriesId": "gilgamesh",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ウルク"
       }
     },
     {
@@ -448,7 +497,8 @@
       "properties": {
         "id": "kagoshima",
         "seriesId": "saigo-takamori",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "鹿児島"
       }
     },
     {
@@ -457,7 +507,8 @@
       "properties": {
         "id": "geneva",
         "seriesId": "elizabeth-blackwell",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ジェニーヴァ"
       }
     },
     {
@@ -466,7 +517,8 @@
       "properties": {
         "id": "rome",
         "seriesId": "teisei-roma",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "ローマ"
       }
     },
     {
@@ -475,7 +527,8 @@
       "properties": {
         "id": "hakata",
         "seriesId": "mongol-teikoku-shurai",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "博多"
       }
     },
     {
@@ -484,7 +537,8 @@
       "properties": {
         "id": "tuileries",
         "seriesId": "france-kakumei-to-inboron",
-        "timeRange": "series"
+        "timeRange": "series",
+        "name": "テュイルリー宮殿"
       }
     }
   ]

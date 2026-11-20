@@ -15,6 +15,8 @@
  * - `--existing-issue-titles <ファイル>`（入力）: 既存の issue の題を並べた JSON で、題に `（season <N>）` を含む issue が在るシリーズ番号は書き出さない
  * - `--survey-issues-out <ファイル>`（出力）: 起票する issue の題と本文を書く JSON で、起票は `.github/workflows/sync.yml` が 1 件ごとに `gh issue create` で行う
  *
+ * `--report-out <ファイル>`（出力）を渡すと、前回の `episodes.json` との差（新しい回・割当が変わった回・消えた回）を、同期の PR の本文に載せる Markdown で書く。
+ *
  * 失敗は黙って捨てずに throw する。
  * 空の結果を正常な差分として書くと、フィードが壊れた日に `episodes.json` が消える。
  *
@@ -38,6 +40,7 @@ import { type Assignment, toEpisode } from "@/lib/feed/episode";
 import { parseFeed } from "@/lib/feed/parse";
 import type { FeedItem } from "@/lib/feed/schema";
 import { toSurveyIssue } from "@/lib/feed/survey-issue";
+import { formatSyncReport } from "@/lib/feed/sync-report";
 import {
   listUncreatedSeasons,
   listUnreportedSeasons,
@@ -326,7 +329,7 @@ function reportSummary(assignments: Assignment[], added: Assignment[]): void {
 
 /**
  * シーズン調査の issue を書き出すときの、入力と出力のファイルのパス。
- * `readSurveyIssueOptions` が作り、`writeSurveyIssues` へ渡す。
+ * `readSyncOptions` が作り、`writeSurveyIssues` へ渡す。
  */
 type SurveyIssueOptions = {
   existingIssueTitlesFile: string;
@@ -334,27 +337,37 @@ type SurveyIssueOptions = {
 };
 
 /**
- * コマンドの引数から、シーズン調査の issue を書き出すときのファイルのパスを読む。
- * 二つとも無ければ null で、片方だけなら、両方を渡すよう添えて throw する。
+ * コマンドの引数（`args`）から読んだ、書き出しの指定。
+ * `readSyncOptions` が作り、`main` が書き出しの要否を決めるのに使う。
+ * `surveyIssue` と `reportOutFile` は、渡されなければ null である。
  */
-function readSurveyIssueOptions(
-  args: readonly string[],
-): SurveyIssueOptions | null {
+type SyncOptions = {
+  surveyIssue: SurveyIssueOptions | null;
+  reportOutFile: string | null;
+};
+
+/**
+ * コマンドの引数（`args`）から、シーズン調査の issue と同期の差の Markdown を書き出すときのファイルのパスを読む。
+ * `--existing-issue-titles` と `--survey-issues-out` の片方だけなら、両方を渡すよう添えて throw する。
+ */
+function readSyncOptions(args: readonly string[]): SyncOptions {
   const { values } = parseArgs({
     args: [...args],
     options: {
       "existing-issue-titles": { type: "string" },
       "survey-issues-out": { type: "string" },
+      "report-out": { type: "string" },
     },
   });
   const existingIssueTitlesFile = values["existing-issue-titles"];
   const surveyIssuesOutFile = values["survey-issues-out"];
+  const reportOutFile = values["report-out"] ?? null;
 
   if (
     existingIssueTitlesFile === undefined &&
     surveyIssuesOutFile === undefined
   ) {
-    return null;
+    return { surveyIssue: null, reportOutFile };
   }
 
   if (
@@ -366,7 +379,10 @@ function readSurveyIssueOptions(
     );
   }
 
-  return { existingIssueTitlesFile, surveyIssuesOutFile };
+  return {
+    surveyIssue: { existingIssueTitlesFile, surveyIssuesOutFile },
+    reportOutFile,
+  };
 }
 
 /**
@@ -412,7 +428,7 @@ function writeSurveyIssues(
  * 取得から書き出しまでを通す。
  */
 async function main(): Promise<void> {
-  const surveyIssueOptions = readSurveyIssueOptions(process.argv.slice(2));
+  const options = readSyncOptions(process.argv.slice(2));
 
   assertCatalogDir();
 
@@ -452,8 +468,15 @@ async function main(): Promise<void> {
 
   reportSummary(assignments, added);
 
-  if (surveyIssueOptions !== null) {
-    writeSurveyIssues(assignments, surveyIssueOptions);
+  if (options.surveyIssue !== null) {
+    writeSurveyIssues(assignments, options.surveyIssue);
+  }
+
+  if (options.reportOutFile !== null) {
+    fs.writeFileSync(
+      options.reportOutFile,
+      formatSyncReport({ assignments, previous, series }),
+    );
   }
 }
 
