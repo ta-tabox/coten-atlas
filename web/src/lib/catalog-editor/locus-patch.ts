@@ -9,7 +9,6 @@
 import type { LocusCollection } from "@/lib/schema/locus";
 import type { LocusPatch } from "@/lib/schema/locus-patch";
 
-/** 座標を丸める小数の桁数。 */
 const COORDINATE_FRACTION_DIGITS = 3;
 
 /** `value` を小数第 `COORDINATE_FRACTION_DIGITS` 位で丸める。 */

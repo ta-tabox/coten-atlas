@@ -1,5 +1,5 @@
 /**
- * 配信フィードの season を回ごとに訂正する表のスキーマを置く。
+ * 配信フィードの season を回ごとに訂正する表（`catalog/season-corrections.json`）の zod スキーマと、検査の関数を置く。
  * 訂正した season を割当にどう使うかは持たず、`src/lib/feed/assign.ts` が持つ。
  *
  * 訂正表は人間が書く手動層で、`catalog/season-corrections.json` の形を持つ。
@@ -13,7 +13,6 @@ import * as z from "zod";
 import { duplicatesOf } from "@/lib/schema/duplicates";
 import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
-/** 訂正表の 1 行。 */
 export const seasonCorrectionSchema = z.strictObject({
   /**
    * 訂正する回の RSS の `<guid>`。
@@ -27,12 +26,11 @@ export const seasonCorrectionSchema = z.strictObject({
    */
   season: z.int().positive().nullable(),
 
-  /** なぜ訂正するかの 1 文。 */
   reason: trimmedNonEmptyStringSchema,
 });
 
 /**
- * 訂正表の全行。
+ * `catalog/season-corrections.json` の全体（訂正表の行の配列）の zod スキーマ。
  *
  * 同じ guid の行が二つあると、どちらの season で割り当てるかが決まらないので、`guid` の重複を拒否する。
  */
@@ -50,7 +48,7 @@ export type SeasonCorrection = z.infer<typeof seasonCorrectionSchema>;
 export type SeasonCorrectionList = z.infer<typeof seasonCorrectionListSchema>;
 
 /**
- * 訂正表の全行を検査して返す。
+ * `catalog/season-corrections.json` から読んだ値（`input`）を `seasonCorrectionListSchema` に通して返す。
  * 合わなければ、どの行のどこが合わないかを添えて throw する。
  */
 export function parseSeasonCorrections(input: unknown): SeasonCorrectionList {

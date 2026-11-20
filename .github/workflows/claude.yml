@@ -67,9 +67,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # L4 のスモークがヘッドレスの Chromium を立てる。
+      # L4 のスモークがヘッドレスの Chromium と WebKit を立てる。
       # 回すのは Playwright で、CLI は @playwright/test が持つ。
-      # バイナリは 356MB あるので、pnpm-lock.yaml が動くまでは取り直さない。
+      # バイナリは二つで 600MB を超えるので、pnpm-lock.yaml が動くまでは取り直さない。
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         with:
@@ -78,7 +78,7 @@ jobs:
 
       # キャッシュが当たればダウンロードは playwright 自身が飛ばす。
       # --with-deps の側は毎回要る（システムライブラリはキャッシュに載らない）。
-      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright install --with-deps chromium webkit
 
       # claude-code-action の native installer は ~/.local/bin が無いと
       # 「missing or broken」と警告しつつ実体を置かないまま success 扱いになり、

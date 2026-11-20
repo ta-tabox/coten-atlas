@@ -9,7 +9,7 @@
 import type { SeriesPanelSections } from "@/lib/map/series-panel";
 import type { SeriesList } from "@/lib/schema/series";
 
-/** 一覧パネルに並べるタグ 1 つと、そのタグを持つシリーズの数。 */
+/** `panelTagsOf` が作り、`SeriesPanelTagFilter` が並べる、タグ 1 つとそのタグを持つシリーズの数。 */
 export type PanelTag = {
   tag: string;
   seriesCount: number;
