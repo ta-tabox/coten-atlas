@@ -22,7 +22,7 @@ import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 const TITLE_ID = "series-detail-title";
 
 /** エピソードの一覧の代わりに表示する 1 行の className。 */
-const NOTE_CLASS = "mt-2 text-[0.9rem] text-zinc-500";
+const NOTE_CLASS = "mt-2 text-[0.9rem] text-ink-muted";
 
 type SeriesDetailCardProps = {
   /** 開いているシリーズ。 */
@@ -60,7 +60,7 @@ function EpisodeList({ state }: { state: EpisodesState }) {
       {state.episodes.map((episode) => (
         <li
           key={episode.guid}
-          className="flex items-center gap-2 rounded-md border border-zinc-200 py-1 pr-1 pl-3"
+          className="flex items-center gap-2 rounded-control border border-rule py-1 pr-1 pl-3"
         >
           <span title={episode.title} className="line-clamp-2 min-w-0 grow">
             {episode.title}
@@ -87,17 +87,17 @@ export default function SeriesDetailCard({
   return (
     <aside
       aria-labelledby={TITLE_ID}
-      className="flex max-h-[36rem] min-h-0 w-[22rem] max-w-full flex-col overflow-hidden rounded-lg bg-white/95 px-5 py-4 font-sans leading-[1.7] text-zinc-900 shadow-lg"
+      className="flex max-h-[36rem] min-h-0 w-[22rem] max-w-full flex-col overflow-hidden rounded-box border border-rule bg-paper px-5 py-4 font-body leading-[1.7] text-ink shadow-sm"
     >
-      <header className="flex items-start gap-3 border-b border-zinc-200 pb-3">
+      <header className="flex items-start gap-3 border-b border-rule pb-3">
         <div className="grow">
-          <h2 id={TITLE_ID} className="text-[1.15rem] font-bold">
+          <h2 id={TITLE_ID} className="font-heading text-[1.2rem] font-bold">
             {series.title}
           </h2>
 
           {/* timeRange が TIME_RANGE_UNTIMED のシリーズは年を持たないので、年代の行を出さない。 */}
           {series.timeRange !== TIME_RANGE_UNTIMED && (
-            <p className="mt-1 text-[0.85rem] text-zinc-500">
+            <p className="mt-1 text-[0.85rem] text-ink-muted">
               {formatTimeRange(series.timeRange)}
             </p>
           )}
@@ -107,7 +107,7 @@ export default function SeriesDetailCard({
           type="button"
           onClick={onClose}
           aria-label="詳細を閉じる"
-          className="-mr-1.5 flex-none rounded px-1.5 text-[1.1rem] text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"
+          className="-mr-1.5 flex-none rounded-control px-1.5 text-[1.1rem] text-ink-muted hover:bg-rule/40 hover:text-ink"
         >
           ×
         </button>
@@ -119,7 +119,7 @@ export default function SeriesDetailCard({
 
       <section className="mt-4 flex min-h-0 flex-col">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-[0.8rem] tracking-[0.04em] text-zinc-500">
+          <h3 className="font-heading text-[0.85rem] tracking-[0.04em] text-ink-muted">
             エピソード
           </h3>
           <YouTubeChannelLink />

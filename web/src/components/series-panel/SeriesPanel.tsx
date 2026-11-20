@@ -58,24 +58,25 @@ export default function SeriesPanel({
   const [isUnlocatedExpanded, setIsUnlocatedExpanded] = useState(true);
 
   // 地図の円（`SERIES_CIRCLE_LAYER` の `circle-color`）と同じ色で塗った丸で、地図に点があることを示す。
-  const onMapMarker = (
-    <span className="block size-2.5 rounded-full bg-[#1f5673]" />
-  );
+  const onMapMarker = <span className="block size-2.5 rounded-full bg-point" />;
 
   // 塗りの無い点線の輪で、地図に点を持たないことを示す。
   const unlocatedMarker = (
-    <span className="block size-2.5 rounded-full border border-dashed border-zinc-600" />
+    <span className="block size-2.5 rounded-full border border-dashed border-ink-muted" />
   );
 
   return (
-    <div className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/50 bg-white/45 font-sans text-zinc-900 shadow-lg shadow-black/5 backdrop-blur-md backdrop-saturate-150">
+    <div className="flex min-h-0 flex-col overflow-hidden rounded-box border border-rule bg-paper font-body text-ink shadow-sm">
       {isOpen ? (
         <aside
           aria-labelledby={titleId}
           className="flex min-h-0 w-[18rem] max-w-full flex-col py-3 leading-[1.6]"
         >
-          <header className="flex items-center gap-3 border-b border-zinc-900/10 px-4 pb-2">
-            <h2 id={titleId} className="grow text-[1rem] font-bold">
+          <header className="flex items-center gap-3 border-b border-rule px-4 pb-2">
+            <h2
+              id={titleId}
+              className="grow font-heading text-[1.05rem] font-bold"
+            >
               シリーズ一覧
             </h2>
 
@@ -84,7 +85,7 @@ export default function SeriesPanel({
               onClick={() => setIsOpen(false)}
               aria-expanded={true}
               aria-label="一覧を閉じる"
-              className="-mr-1.5 flex-none rounded px-1.5 text-[1.1rem] text-zinc-600 hover:bg-white/60 hover:text-zinc-900"
+              className="-mr-1.5 flex-none rounded-control px-1.5 text-[1.1rem] text-ink-muted hover:bg-rule/40 hover:text-ink"
             >
               ×
             </button>
@@ -137,7 +138,7 @@ export default function SeriesPanel({
           type="button"
           onClick={() => setIsOpen(true)}
           aria-expanded={false}
-          className="px-4 py-2 text-left text-[0.9rem] font-bold hover:bg-white/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-700"
+          className="px-4 py-2 text-left text-[0.9rem] font-bold hover:bg-rule/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point"
         >
           シリーズ一覧を開く
         </button>

@@ -19,7 +19,7 @@ export default function YouTubeChannelLink() {
       // noopener は開いたページに window.opener を渡さず、noreferrer は YouTube へ Referer ヘッダを送らない。
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-1.5 rounded-md px-1.5 py-1 text-[0.8rem] text-zinc-700 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+      className="flex items-center gap-1.5 rounded-control px-1.5 py-1 text-[0.8rem] text-ink hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
     >
       <YouTubeIcon className="h-5 w-5 flex-none" />
       <span>@cotenradio</span>

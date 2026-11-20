@@ -35,11 +35,11 @@ export default function SeriesPanelItem({
       type="button"
       onClick={() => onSelect(series.id)}
       aria-current={isSelected ? "true" : undefined}
-      className={`w-full rounded-md border-l-4 px-3 py-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${isSelected ? "border-l-orange-700 bg-orange-100/70 font-bold" : "border-l-transparent hover:bg-white/60"}`}
+      className={`w-full rounded-control border-l-4 px-3 py-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point ${isSelected ? "border-l-selected bg-selected/10 font-bold" : "border-l-transparent hover:bg-rule/40"}`}
     >
       <span className="block text-[0.9rem]">{series.title}</span>
       {series.timeRange !== TIME_RANGE_UNTIMED && (
-        <span className="block text-[0.75rem] font-normal text-zinc-600 tabular-nums">
+        <span className="block text-[0.75rem] font-normal text-ink-muted tabular-nums">
           {formatTimeRange(series.timeRange)}
         </span>
       )}

@@ -41,9 +41,9 @@ const SLIDER_ID = "era-slider";
  */
 const RANGE_CLASS = [
   "pointer-events-none absolute inset-0 m-0 h-full w-full appearance-none bg-transparent",
-  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-500",
+  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-point",
   "range-track:h-full range-track:bg-transparent",
-  "range-thumb:h-12 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-zinc-800",
+  "range-thumb:h-12 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-ink",
   // WebKit はつまみの上端をトラックの上端に揃え、Firefox は上下の中央に置く。
   // セルより高いつまみを WebKit でも上下に均等にはみ出させるので、WebKit のつまみだけを上へずらす。
   "[&::-webkit-slider-thumb]:-mt-1",
@@ -166,7 +166,7 @@ export default function EraSlider({
   }
 
   return (
-    <div className="rounded-xl border border-white/50 bg-white/45 px-4 pt-2.5 pb-1.5 font-sans text-zinc-800 shadow-lg shadow-black/5 backdrop-blur-md backdrop-saturate-150">
+    <div className="rounded-box border border-rule bg-paper px-4 pt-2.5 pb-1.5 font-body text-ink shadow-sm">
       {/* 画面にはスライダーの見出しを出さないが、スクリーンリーダーにはスライダーの名前として読ませる。 */}
       <label htmlFor={SLIDER_ID} className="sr-only">
         時代
@@ -175,7 +175,7 @@ export default function EraSlider({
       {/* スライダーの aria-valuetext が同じ範囲を読み上げるので、スクリーンリーダーには重ねて読ませない。 */}
       <p
         aria-hidden="true"
-        className="text-right text-[0.8rem] tracking-[0.02em] text-zinc-600 tabular-nums"
+        className="text-right text-[0.8rem] tracking-[0.02em] text-ink-muted tabular-nums"
       >
         {windowYears}
       </p>
@@ -190,11 +190,11 @@ export default function EraSlider({
         onPointerUp={stopDragging}
         onPointerCancel={stopDragging}
       >
-        <ol className="flex h-10 overflow-hidden rounded-md border border-zinc-900/10 bg-white/30">
+        <ol className="flex h-10 overflow-hidden rounded-control border border-rule">
           {eras.map((era) => (
             <li
               key={era.id}
-              className="grid flex-1 place-items-center border-l border-zinc-900/10 text-[0.75rem] whitespace-nowrap text-zinc-600 first:border-l-0"
+              className="grid flex-1 place-items-center border-l border-rule text-[0.75rem] whitespace-nowrap text-ink-muted first:border-l-0"
             >
               {era.label}
             </li>
@@ -207,7 +207,7 @@ export default function EraSlider({
         >
           <div
             data-testid="era-window-band"
-            className="absolute inset-y-0 border-x border-sky-900/50 bg-sky-900/10"
+            className="absolute inset-y-0 border-x border-point/50 bg-point/10"
             // 帯の位置と幅は position に応じて連続に変わるので、Tailwind のユーティリティでなく style で渡す。
             style={{
               left: `${windowPositions.start * 100}%`,
@@ -238,7 +238,7 @@ export default function EraSlider({
           <span
             key={year}
             data-testid="era-boundary-year"
-            className={`absolute top-0 text-[0.65rem] whitespace-nowrap text-zinc-500 tabular-nums ${boundaryAlignClassOf(index, boundaryYears.length - 1)}`}
+            className={`absolute top-0 text-[0.65rem] whitespace-nowrap text-ink-muted tabular-nums ${boundaryAlignClassOf(index, boundaryYears.length - 1)}`}
             style={{ left: `${(index / eras.length) * 100}%` }}
           >
             {formatYearWithoutUnit(year)}

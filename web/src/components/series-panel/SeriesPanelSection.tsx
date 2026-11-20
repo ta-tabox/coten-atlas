@@ -59,27 +59,30 @@ export default function SeriesPanelSection({
   return (
     <section
       aria-labelledby={headingId}
-      className="shrink-0 rounded-lg border border-white/60 bg-white/35 p-1"
+      className="shrink-0 rounded-box border border-rule p-1"
     >
-      <h3 id={headingId} className="text-[0.8rem] font-bold text-zinc-800">
+      <h3
+        id={headingId}
+        className="font-heading text-[0.85rem] font-bold text-ink"
+      >
         <button
           type="button"
           onClick={onToggle}
           aria-expanded={isExpanded}
           aria-controls={bodyId}
-          className="flex w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-left hover:bg-white/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+          className="flex w-full items-center gap-1.5 rounded-control px-1.5 py-1 text-left hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
         >
           <span aria-hidden="true" className="flex-none">
             {marker}
           </span>
           <span className="min-w-0">{heading}</span>
-          <span className="ml-auto flex-none text-[0.75rem] font-normal whitespace-nowrap text-zinc-600 tabular-nums">
+          <span className="ml-auto flex-none text-[0.75rem] font-normal whitespace-nowrap text-ink-muted tabular-nums">
             {seriesList.length}件
           </span>
           {/* 閉じている間は三角を右へ向け、開いているか閉じているかを形でも示す。 */}
           <span
             aria-hidden="true"
-            className={`flex-none text-[0.6rem] text-zinc-600 motion-safe:transition-transform ${isExpanded ? "" : "-rotate-90"}`}
+            className={`flex-none text-[0.6rem] text-ink-muted motion-safe:transition-transform ${isExpanded ? "" : "-rotate-90"}`}
           >
             ▼
           </span>
@@ -87,12 +90,12 @@ export default function SeriesPanelSection({
       </h3>
 
       <div id={bodyId} hidden={!isExpanded} className="pb-1">
-        <p className="px-2 text-[0.75rem] leading-[1.5] text-zinc-600">
+        <p className="px-2 text-[0.75rem] leading-[1.5] text-ink-muted">
           {note}
         </p>
 
         {seriesList.length === 0 ? (
-          <p className="mt-1.5 px-2 text-[0.85rem] text-zinc-600">
+          <p className="mt-1.5 px-2 text-[0.85rem] text-ink-muted">
             {emptyNote}
           </p>
         ) : (
