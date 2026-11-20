@@ -1,0 +1,201 @@
+name: Sync feed
+
+# 配信フィードを同期し、catalog/episodes.json が変わったら PR を開いて Check を起動し、catalog/series.json にシリーズが無い season のシーズン調査の issue を起票する。
+# episodes.json の中身と、起票する題と本文は web/ の pnpm sync が決め、このワークフローは書き出された結果をコミットと起票へ渡すだけにする。
+#
+# job を権限で三つに分ける。
+# 依存のコード（pnpm install の postinstall と pnpm sync）を走らせる sync は読み取りの権限だけを持ち、結果を artifact で渡す。
+# 書き込みの権限は、依存を走らせない publish（push・PR・起票）と check-sync-pr（Check の起動）だけが持つ。
+
+on:
+  schedule:
+    # 月曜と木曜の 12:17 UTC（21:17 JST）。
+    # 番組は月曜と木曜の 06:00 JST に配信するので、同じ日の夜に走らせて新しい回を拾う。
+    # 毎時 0 分は定期実行が集中して起動が遅れるので、分をずらす。
+    - cron: "17 12 * * 1,4"
+  # 手動の起動で、定期実行と同じ job を走らせる。
+  # 使うのは、マージ直後の動作確認・series.json へシリーズを足した直後の割当の更新・失敗した run の走らせ直しである。
+  # 起動できるのは書き込み権限を持つ人で、Actions タブの「Sync feed」の「Run workflow」か、gh workflow run sync.yml --ref main で起動する。
+  # main 以外のブランチを選ぶと、job sync の if で全 job が skipped になる。
+  workflow_dispatch:
+
+# 前の run が起票し終える前に次の run が既存の issue の題を読むと、同じ season を二度起票するので、run 全体を直列にする。
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+env:
+  # 同期の結果を載せるブランチ。
+  # run ごとに main から作り直して force push するので、開いた PR は 1 本のまま最新の同期の結果に置き換わる。
+  SYNC_BRANCH: sync/episodes
+
+jobs:
+  sync:
+    # 変化の判定は起動したブランチの episodes.json と比べ、PR は main へ開くので、main 以外から起動すると食い違った差分の PR が開く。
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      episodes-changed: ${{ steps.episodes.outputs.changed }}
+    permissions:
+      contents: read
+      issues: read
+
+    # アプリは web/ の中。uses: のアクションには working-directory が効かないので、run: のステップだけを web/ で回す。
+    # shell: bash を名指すと pipefail が付き、pnpm sync を tee へ繋いでも pnpm sync の失敗でステップが止まる。
+    defaults:
+      run:
+        working-directory: web
+        shell: bash
+
+    steps:
+      # この job は push しないので、トークンを .git/config に残さない。
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      # ランタイムの版はルートの mise.toml が持つ。
+      - uses: jdx/mise-action@v4
+
+      - run: pnpm install --frozen-lockfile
+
+      # 閉じた issue も渡す。
+      # 開いた issue だけと比べると、調査を終えて閉じた season へ同じ issue を二度起票する。
+      # --search は検索の索引を通り、直前の run が起票した issue が索引へ反映される前だと見落とすので、一覧から全件を取る。
+      # gh issue list は既定で 30 件しか返さないので、--limit で全件を取る。
+      # トークンはこのステップにだけ渡し、依存のコードを走らせる他のステップの環境に置かない。
+      - name: List existing issue titles
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh issue list --state all --limit 1000 \
+            --json title --jq '[.[].title]' > "$RUNNER_TEMP/issue-titles.json"
+
+      # 同期のサマリと警告は PR の本文に載せるので、ファイルにも残す。
+      - name: Sync feed
+        run: |
+          mkdir -p "$RUNNER_TEMP/sync-result"
+          pnpm sync --existing-issue-titles "$RUNNER_TEMP/issue-titles.json" --survey-issues-out "$RUNNER_TEMP/sync-result/survey-issues.json" \
+            2>&1 | tee "$RUNNER_TEMP/sync-result/sync-summary.txt"
+          cp ../catalog/episodes.json "$RUNNER_TEMP/sync-result/episodes.json"
+          jq -r '.[].title' "$RUNNER_TEMP/sync-result/survey-issues.json"
+
+      # syncedAt は同期のたびに変わるので、syncedAt を除いた中身で main と比べる。
+      - name: Detect episodes change
+        id: episodes
+        run: |
+          if diff <(git show HEAD:catalog/episodes.json | jq 'del(.syncedAt)') <(jq 'del(.syncedAt)' ../catalog/episodes.json) > /dev/null; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload sync result
+        uses: actions/upload-artifact@v4
+        with:
+          name: sync-result
+          path: ${{ runner.temp }}/sync-result/
+          retention-days: 7
+
+  # 依存のコードを走らせないので、書き込みの権限を持たせてよい。
+  # 使うのは git・gh・jq だけで、pnpm install も pnpm sync も呼ばない。
+  publish:
+    needs: sync
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # contents: write は同期のブランチへの push、pull-requests: write は PR の作成と閉鎖、issues: write は起票に要る。
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Download sync result
+        uses: actions/download-artifact@v4
+        with:
+          name: sync-result
+          path: ${{ runner.temp }}/sync-result
+
+      - name: Create survey issues
+        run: |
+          RESULT_DIR="$RUNNER_TEMP/sync-result"
+          count=$(jq length "$RESULT_DIR/survey-issues.json")
+          for index in $(seq 0 $((count - 1))); do
+            jq -r ".[$index].body" "$RESULT_DIR/survey-issues.json" > "$RUNNER_TEMP/survey-issue-body.md"
+            gh issue create \
+              --title "$(jq -r ".[$index].title" "$RESULT_DIR/survey-issues.json")" \
+              --body-file "$RUNNER_TEMP/survey-issue-body.md" \
+              --label tooling \
+              --label claude
+          done
+
+      - name: Open sync pull request
+        if: needs.sync.outputs.episodes-changed == 'true'
+        run: |
+          RESULT_DIR="$RUNNER_TEMP/sync-result"
+          cp "$RESULT_DIR/episodes.json" catalog/episodes.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$SYNC_BRANCH"
+          git add catalog/episodes.json
+          git commit -m "chore(catalog): 配信フィードの同期で episodes.json を更新する"
+          git push --force origin "$SYNC_BRANCH"
+
+          {
+            echo "定期実行の同期（\`.github/workflows/sync.yml\`）が \`catalog/episodes.json\` を更新した。"
+            echo "この PR は \`GITHUB_TOKEN\` で開いたので、\`check.yml\` は同期の run が \`workflow_dispatch\` で起動する。"
+            echo "Check の結果はこの PR の Checks 欄に出る。"
+            echo
+            echo "run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo
+            echo "## 同期のサマリ"
+            echo
+            echo '```'
+            cat "$RESULT_DIR/sync-summary.txt"
+            echo '```'
+          } > "$RUNNER_TEMP/sync-pr-body.md"
+
+          open_pr=$(gh pr list --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number')
+          if [ -z "$open_pr" ]; then
+            gh pr create --base main --head "$SYNC_BRANCH" \
+              --title "配信フィードの同期で episodes.json を更新する" \
+              --body-file "$RUNNER_TEMP/sync-pr-body.md"
+          else
+            gh pr edit "$open_pr" --body-file "$RUNNER_TEMP/sync-pr-body.md"
+          fi
+
+      # main がすでに同期の結果と同じ中身なら、開いたままの同期の PR は古い差分を持つので閉じる。
+      - name: Close stale sync pull request
+        if: needs.sync.outputs.episodes-changed != 'true'
+        run: |
+          open_pr=$(gh pr list --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number')
+          if [ -n "$open_pr" ]; then
+            gh pr close "$open_pr" --comment "main の episodes.json が最新の同期の結果と同じ中身（syncedAt を除く）になったので閉じる。run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          fi
+
+  # GITHUB_TOKEN で開いた PR や push では check.yml の pull_request が起動しないので、workflow_dispatch で同期のブランチに対して起動する。
+  # actions: write は他のワークフローの起動と run の削除もできる権限なので、gh を 1 回呼ぶだけのこの job に閉じる。
+  check-sync-pr:
+    needs: [sync, publish]
+    if: needs.sync.outputs.episodes-changed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Dispatch Check on the sync branch
+        run: gh workflow run check.yml --ref "$SYNC_BRANCH"

@@ -349,11 +349,14 @@ catalog/
   2. フィード全件の season を season-corrections.json・題名の先頭の `【NN-M】`・`itunes:season` の順に決め、series.json 全件の `season` から組んだ season → seriesId の索引と照合して seriesId を割り当てる
   3. 結果サマリを stdout へ
      未割当は「規則で確定」（season が決まらない回・番外編・訂正表で外した回）と「シリーズ未作成」に割って数える
-- 運用: 当面は手動で `pnpm sync` → サマリの「シリーズ未作成」を見て `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット
+  4. `--existing-issue-titles`（既存の issue の題の入力）と `--survey-issues-out`（書き出し先）を渡したときだけ、「シリーズ未作成」の season のうちシーズン調査の issue がまだ無いものについて、issue の題と本文を JSON のファイルへ書く
+- 運用: `.github/workflows/sync.yml` が配信日（月曜と木曜）の夜に `pnpm sync` を走らせる
+  `episodes.json` が `syncedAt` の外で変わったら、ブランチ `sync/episodes` から main への PR を開き、取り込むかは人間がマージで決める
+  同じ run で、シリーズ未作成の season ごとにシーズン調査の issue を起票する
+  起票された issue から `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット
   手を入れる先は手動層の `series.json`・`loci.geojson`・`season-corrections.json` だけで、`episodes.json` は毎回フィードから組み直すので編集しない
   例外は各回の `links` で、同期は前回の `episodes.json` の同じ guid の回から引き継ぐ
   未割当を溜める置き場も持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ
-  軌道に乗ったら GitHub Actions の cron で sync + PR 自動作成に昇格（S8 以降の任意課題）
 - 静的サイトなので、実行時に RSS を取得しない。同期は常にビルド前のデータ更新として行う
 
 ## 6. ディレクトリ構造
