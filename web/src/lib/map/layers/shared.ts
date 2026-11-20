@@ -33,9 +33,9 @@ export type SeriesLayerSpecification = Omit<CircleLayerSpecification, "source">;
  * 値は同じ名前のトークンと一致させ、一致は `tests/map-colors.test.ts` が確かめる。
  */
 export const MAP_COLORS = {
-  point: "#1f5673",
-  selected: "#c2410c",
-  contemporary: "#fb923c",
+  point: "#507db2",
+  selected: "#b91900",
+  contemporary: "#ec8a78",
 } as const;
 
 /** 事物を取得する source の id。 */

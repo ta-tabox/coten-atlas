@@ -11,24 +11,26 @@
 
 /* `--color-point`・`--color-selected`・`--color-contemporary` は地図の円と輪の色でもあり、`@/lib/map/layers/shared` の `MAP_COLORS` が同じ値を持つので、値を変えるときは両方を直す。 */
 @theme {
-  --color-paper: #f7f3ea;
-  --color-rule: #d8cfbd;
-  --color-ink: #2b2620;
-  --color-ink-muted: #675e51;
-  --color-point: #1f5673;
-  --color-selected: #c2410c;
-  --color-contemporary: #fb923c;
+  --color-paper: #ffffff;
+  --color-rule: #d5e4f7;
+  --color-ink: #474c51;
+  --color-ink-muted: #62676d;
+  --color-heading: #6e4e48;
+  --color-point: #507db2;
+  --color-selected: #b91900;
+  --color-contemporary: #ec8a78;
 
   --font-heading:
-    "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", serif;
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic,
+    "Noto Sans JP", sans-serif;
   --font-body:
     "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", YuGothic,
     "Noto Sans JP", sans-serif;
 
   --spacing: 0.25rem;
 
-  --radius-box: 0.25rem;
-  --radius-control: 0.125rem;
+  --radius-box: 1.25rem;
+  --radius-control: 0.875rem;
 }
 
 /* `range-thumb:` と `range-track:` は、`<input type="range">` のつまみとトラックへユーティリティを当てる。
