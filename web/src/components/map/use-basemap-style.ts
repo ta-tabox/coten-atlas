@@ -18,7 +18,7 @@ import { BASEMAP_STYLE_URL } from "@/lib/map/config";
  * 取得か書き換えに失敗したら throw せず `BASEMAP_STYLE_URL` を返し、`console.error` に理由を出力する。
  *
  * URL を返すと MapLibre が同じスタイルを取得し直して英語の地名のまま描くので、スタイルの取得の失敗で地図が消えない。
- * 応答の形は検査せず、`layers` が配列でなければ書き換えの throw で失敗として扱い、残りの検査は MapLibre の検証に任せる。
+ * 応答の形はスキーマで検査せず、MapLibre の検証に任せる。
  */
 async function fetchJapaneseLabelStyle(): Promise<StyleSpecification | string> {
   try {
