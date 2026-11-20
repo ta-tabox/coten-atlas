@@ -51,7 +51,7 @@ import { parseSeries, type SeriesList } from "@/lib/schema/series";
 
 /**
  * 公式 RSS の在り処。
- * Apple Podcasts の lookup API が返す `feedUrl` の値で、同期は lookup API を経由せずこの URL を直接叩く。
+ * Apple Podcasts の lookup API の応答の feedUrl の欄の値で、同期は lookup API を経由せずこの URL を直接叩く。
  */
 const FEED_URL = "https://anchor.fm/s/8c2088c/podcast/rss";
 
