@@ -13,7 +13,7 @@ UI に当てる規則だけを置き、なぜこの見た目かの決定と経�
   生の値はトークンの定義にだけ現れる
 - トークンの置き場は `web/src/app/globals.css` の `@theme` で、部品は Tailwind のユーティリティの名前（`bg-paper`・`text-ink-muted`・`font-heading`・`rounded-box`）で参照する
 - 足すときは、同じ役割の既存のトークンで表せないことを確かめてから、`@theme` に名前空間（`--color-*`・`--font-*`・`--radius-*`）を付けて 1 行足す
-  色の名前は色相でなく役割（地・罫線・文字・点・選択）で付ける
+  色の名前は色相でなく役割（地・罫線・文字・見出し・点・選択）で付ける
 - 地図の円と輪の色のトークン（`--color-point`・`--color-selected`・`--color-contemporary`）を変えるときは、`web/src/lib/map/layers/shared.ts` の `MAP_COLORS` も同じ値に直す
   一致は `web/tests/map-colors.test.ts` が見る
 
