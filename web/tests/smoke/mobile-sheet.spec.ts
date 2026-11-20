@@ -12,7 +12,10 @@ import { exportRoot, openExport, viewportOf } from "@scripts/smoke";
 /** 開いた段のシートの上端が、画面の高さの半分から外れてよい幅（px）。 */
 const OPEN_TOP_TOLERANCE_PX = 16;
 
-/** `locator` の矩形を返す。要素が画面に無ければ throw する。 */
+/**
+ * `locator` の矩形を返す。
+ * 要素が画面に無ければ throw する。
+ */
 async function rectOf(locator: Locator) {
   const box = await locator.boundingBox();
 
