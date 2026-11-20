@@ -33,19 +33,20 @@ const STEPS_PER_ERA = 100;
 const SLIDER_ID = "era-slider";
 
 /**
- * era のセルの列に重ねる `<input type="range">` の className。
- * トラックを透明にしてセルの列を見せ、つまみはセルより少し高い細い縦棒にする。
+ * era のセルの列の下端の帯に重ねる `<input type="range">` の className。
+ * トラックを透明にしてセルの列を見せ、つまみは帯より少し高い細い縦棒にする。
+ * セルの era 名はセルの上寄せに置くので、つまみを下端の帯に限ると era 名の文字に重ならない。
  *
  * `<input>` はポインタのイベントを受けず、ポインタの操作は `<input>` を包むトラックの要素が受ける。
  * `range-track:` と `range-thumb:` は、`globals.css` の `@custom-variant` が定義する、トラックとつまみの擬似要素へ当てるバリアントである。
  */
 const RANGE_CLASS = [
-  "pointer-events-none absolute inset-0 m-0 h-full w-full appearance-none bg-transparent",
+  "pointer-events-none absolute inset-x-0 bottom-0 m-0 h-3 w-full appearance-none bg-transparent",
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-point",
   "range-track:h-full range-track:bg-transparent",
-  "range-thumb:h-12 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-ink",
+  "range-thumb:h-5 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-ink",
   // WebKit はつまみの上端をトラックの上端に揃え、Firefox は上下の中央に置く。
-  // セルより高いつまみを WebKit でも上下に均等にはみ出させるので、WebKit のつまみだけを上へずらす。
+  // 帯より高いつまみを WebKit でも上下に均等にはみ出させるので、WebKit のつまみだけを上へずらす。
   "[&::-webkit-slider-thumb]:-mt-1",
 ].join(" ");
 
@@ -181,20 +182,20 @@ export default function EraSlider({
       </p>
 
       {/* ブラウザがトラックの上のタッチをスクロールや拡大に使うと pointercancel が届いて位置が止まるので、touch-none でタッチの既定の動作を止める。 */}
-      {/* つまみはセルの列より上下に 4px ずつはみ出して描かれ、`<input>` はポインタのイベントを受けないので、ポインタを受ける範囲を before 擬似要素で上下に 4px ずつ広げる。 */}
+      {/* つまみはセルの列の下端より 4px はみ出して描かれ、`<input>` はポインタのイベントを受けないので、ポインタを受ける範囲を before 擬似要素で下へ 4px 広げる。 */}
       <div
         data-testid="era-slider-track"
-        className="relative mt-1.5 cursor-ew-resize touch-none before:absolute before:inset-x-0 before:-inset-y-1"
+        className="relative mt-1.5 cursor-ew-resize touch-none before:absolute before:inset-x-0 before:top-0 before:-bottom-1"
         onPointerDown={startDragging}
         onPointerMove={continueDragging}
         onPointerUp={stopDragging}
         onPointerCancel={stopDragging}
       >
-        <ol className="flex h-10 overflow-hidden rounded-control border border-rule">
+        <ol className="flex h-11 overflow-hidden rounded-control border border-rule">
           {eras.map((era) => (
             <li
               key={era.id}
-              className="grid flex-1 place-items-center border-l border-rule text-[0.75rem] whitespace-nowrap text-ink-muted first:border-l-0"
+              className="flex flex-1 justify-center border-l pt-1 border-rule text-[0.75rem] whitespace-nowrap text-ink-muted first:border-l-0"
             >
               {era.label}
             </li>
