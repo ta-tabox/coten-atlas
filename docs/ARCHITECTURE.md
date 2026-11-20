@@ -351,6 +351,7 @@ catalog/
   3. 結果サマリを stdout へ
      未割当は「規則で確定」（season が決まらない回・番外編・訂正表で外した回）と「シリーズ未作成」に割って数える
   4. `--existing-issue-titles`（既存の issue の題の入力）と `--survey-issues-out`（書き出し先）を渡したときだけ、「シリーズ未作成」の season のうちシーズン調査の issue がまだ無いものについて、issue の題と本文を JSON のファイルへ書く
+  5. `--report-out`（書き出し先）を渡したときだけ、前回の episodes.json との差（新しい回・割当が変わった回・フィードから消えた回）を、題とシリーズ名の表の Markdown で書く
 - 運用: `.github/workflows/sync.yml` が配信日（月曜と木曜）の夜に `pnpm sync` を走らせる
   `episodes.json` が `syncedAt` の外で変わったら、ブランチ `sync/episodes` から main への PR を開き、取り込むかは人間がマージで決める
   同じ run で、シリーズ未作成の season ごとにシーズン調査の issue を起票する

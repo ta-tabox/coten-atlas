@@ -1,11 +1,11 @@
 name: Sync feed
 
-# 配信フィードを同期し、catalog/episodes.json が変わったら PR を開いて Check を起動し、catalog/series.json にシリーズが無い season のシーズン調査の issue を起票する。
+# 配信フィードを同期し、catalog/episodes.json が変わったら PR を開き、catalog/series.json にシリーズが無い season のシーズン調査の issue を起票する。
 # episodes.json の中身と、起票する題と本文は web/ の pnpm sync が決め、このワークフローは書き出された結果をコミットと起票へ渡すだけにする。
 #
-# job を権限で三つに分ける。
+# job を権限で二つに分ける。
 # 依存のコード（pnpm install の postinstall と pnpm sync）を走らせる sync は読み取りの権限だけを持ち、結果を artifact で渡す。
-# 書き込みの権限は、依存を走らせない publish（push・PR・起票）と check-sync-pr（Check の起動）だけが持つ。
+# 書き込みの権限は、依存を走らせない publish（push・PR・起票）だけが持つ。
 
 on:
   schedule:
@@ -74,11 +74,12 @@ jobs:
           gh issue list --state all --limit 1000 \
             --json title --jq '[.[].title]' > "$RUNNER_TEMP/issue-titles.json"
 
-      # 同期のサマリと警告は PR の本文に載せるので、ファイルにも残す。
+      # 同期の前後の差（report.md）と、同期のサマリと警告（sync-summary.txt）は PR の本文に載せるので、ファイルに残す。
       - name: Sync feed
         run: |
           mkdir -p "$RUNNER_TEMP/sync-result"
           pnpm sync --existing-issue-titles "$RUNNER_TEMP/issue-titles.json" --survey-issues-out "$RUNNER_TEMP/sync-result/survey-issues.json" \
+            --report-out "$RUNNER_TEMP/sync-result/report.md" \
             2>&1 | tee "$RUNNER_TEMP/sync-result/sync-summary.txt"
           cp ../catalog/episodes.json "$RUNNER_TEMP/sync-result/episodes.json"
           jq -r '.[].title' "$RUNNER_TEMP/sync-result/survey-issues.json"
@@ -152,18 +153,39 @@ jobs:
           git commit -m "chore(catalog): 配信フィードの同期で episodes.json を更新する"
           git push --force origin "$SYNC_BRANCH"
 
+          # 表の「シリーズ未作成（season N）」に出たシリーズ番号ごとに、題に（season N）を含む issue を探してリンクを載せる。
+          # この run で起票したかに依らず探すので、開いた PR の本文を次の run が書き直してもリンクが消えない。
+          gh issue list --state all --limit 1000 --json title,url > "$RUNNER_TEMP/all-issues.json"
+          seasons=$(grep -o 'シリーズ未作成（season [0-9]*）' "$RESULT_DIR/report.md" | grep -o '[0-9][0-9]*' | sort -un || true)
+          : > "$RUNNER_TEMP/survey-issue-links.md"
+          for season in $seasons; do
+            jq -r --arg label "（season $season）" \
+              '.[] | select(.title | contains($label)) | "- [\(.title)](\(.url))"' \
+              "$RUNNER_TEMP/all-issues.json" >> "$RUNNER_TEMP/survey-issue-links.md"
+          done
+
           {
             echo "定期実行の同期（\`.github/workflows/sync.yml\`）が \`catalog/episodes.json\` を更新した。"
-            echo "この PR は \`GITHUB_TOKEN\` で開いたので、\`check.yml\` は同期の run が \`workflow_dispatch\` で起動する。"
-            echo "Check の結果はこの PR の Checks 欄に出る。"
+            echo "この PR はボットが開いたので、\`check.yml\` などの run は承認待ちになる。"
+            echo "PR の画面の「Approve and run workflows」を押すと Check が走り、結果はこの PR の Checks 欄に出る。"
             echo
             echo "run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
             echo
-            echo "## 同期のサマリ"
+            cat "$RESULT_DIR/report.md"
+            if [ -s "$RUNNER_TEMP/survey-issue-links.md" ]; then
+              echo
+              echo "## シリーズ未作成のシリーズ番号のシーズン調査の issue"
+              echo
+              cat "$RUNNER_TEMP/survey-issue-links.md"
+            fi
+            echo
+            echo "<details><summary>同期のサマリと警告</summary>"
             echo
             echo '```'
             cat "$RESULT_DIR/sync-summary.txt"
             echo '```'
+            echo
+            echo "</details>"
           } > "$RUNNER_TEMP/sync-pr-body.md"
 
           open_pr=$(gh pr list --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number')
@@ -183,19 +205,3 @@ jobs:
           if [ -n "$open_pr" ]; then
             gh pr close "$open_pr" --comment "main の episodes.json が最新の同期の結果と同じ中身（syncedAt を除く）になったので閉じる。run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           fi
-
-  # GITHUB_TOKEN で開いた PR や push では check.yml の pull_request が起動しないので、workflow_dispatch で同期のブランチに対して起動する。
-  # actions: write は他のワークフローの起動と run の削除もできる権限なので、gh を 1 回呼ぶだけのこの job に閉じる。
-  check-sync-pr:
-    needs: [sync, publish]
-    if: needs.sync.outputs.episodes-changed == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      actions: write
-    env:
-      GH_TOKEN: ${{ github.token }}
-      GH_REPO: ${{ github.repository }}
-    steps:
-      - name: Dispatch Check on the sync branch
-        run: gh workflow run check.yml --ref "$SYNC_BRANCH"
