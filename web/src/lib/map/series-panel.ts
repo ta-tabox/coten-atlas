@@ -16,7 +16,7 @@ import {
   TIME_RANGE_UNTIMED,
 } from "@/lib/schema/series";
 
-/** 一覧パネルの二つの区画に並べるシリーズ。 */
+/** `seriesPanelSectionsOf` が作り、`SeriesPanel` が区画ごとに描く、一覧パネルの二つの区画のシリーズ。 */
 export type SeriesPanelSections = {
   /**
    * 現在窓と重なる事物を持つシリーズ。
@@ -31,7 +31,7 @@ export type SeriesPanelSections = {
 };
 
 /**
- * `one` の `timeRange` の `start` を返す。
+ * シリーズ（`series`）が扱う年代の始まりの年を、地図の区画を並べるキーとして返す。
  * `timeRange` が `TIME_RANGE_UNTIMED` なら throw する。
  *
  * スキーマは `TIME_RANGE_UNTIMED` を位置なしのシリーズにしか許さないので、地図に出ているシリーズで throw したらスキーマの検査を通っていない。

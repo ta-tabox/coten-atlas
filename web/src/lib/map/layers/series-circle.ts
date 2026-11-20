@@ -12,7 +12,6 @@ import {
 } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
 
-/** 円のレイヤの `circle-opacity` に置ける値の型。 */
 type CircleOpacity = NonNullable<
   SeriesLayerSpecification["paint"]
 >["circle-opacity"];

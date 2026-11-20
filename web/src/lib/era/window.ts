@@ -14,7 +14,7 @@ import { type EraSpacePosition, positionToYear } from "@/lib/era/scale";
 import type { SeriesTimeRange } from "@/lib/schema/series";
 
 /**
- * 現在窓の幅。
+ * スライダーの位置の周りに取る現在窓の幅を、era 空間の区間の数で表した値。
  * era 空間の 1 区間の幅を 1.0 とした割合で持つので、`eras` の区間を細かく割れば窓が跨る年数も細かくなる。
  */
 export const WINDOW_WIDTH_IN_ERAS = 0.5;

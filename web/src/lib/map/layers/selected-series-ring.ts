@@ -11,7 +11,7 @@ import {
 import type { MapLocusCollection } from "@/lib/map/loci";
 
 /**
- * 選択中のシリーズの事物を囲む輪のレイヤ。
+ * 選択中のシリーズの事物を囲む輪のレイヤの、`filter` を除いた定義。
  *
  * 塗りを持たず縁だけを描くので、`SERIES_CIRCLE_LAYER` の円の不透明度を変えずに上へ重ねられる。
  * 描く事物を絞る `filter` は `selectedSeriesRingLayerIn` が設定する。

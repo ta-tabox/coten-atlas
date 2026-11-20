@@ -28,7 +28,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-/** `parent` の位置の下で、`key` の子が占める位置を返す。 */
+/** `parent` の位置の下にある `key` の子の位置を、`parent` が根（空文字）なら `key` のまま、それ以外は `.` で繋いで返す。 */
 function childPathOf(parent: string, key: string): string {
   return parent === "" ? key : `${parent}.${key}`;
 }
@@ -91,12 +91,12 @@ function toCatalogText(
   return `${write(value, "", "")}\n`;
 }
 
-/** シリーズの全件を、`catalog/series.json` の書式の文字列にする。 */
+/** シリーズの全件を、1 件ごとと各件の欄ごとに改行し、欄の値は 1 行に収めた、`catalog/series.json` の書式の文字列にする。 */
 export function toSeriesJsonText(series: SeriesList): string {
   return toCatalogText(series, EXPANDED_PATHS.series);
 }
 
-/** 事物の全件を、`catalog/loci.geojson` の書式の文字列にする。 */
+/** 事物の全件を、`features` の 1 件ごとと、各件の欄・`properties` の欄ごとに改行した、`catalog/loci.geojson` の書式の文字列にする。 */
 export function toLociGeoJsonText(loci: LocusCollection): string {
   return toCatalogText(loci, EXPANDED_PATHS.loci);
 }

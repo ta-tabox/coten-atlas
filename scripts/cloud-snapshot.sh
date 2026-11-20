@@ -6,7 +6,7 @@
 # 揃えるもの。
 #   - mise（イメージ同梱の npm で `MISE_VERSION` の版を入れる）と、`mise.toml` の版の node と pnpm
 #   - 依存（`pnpm install --frozen-lockfile`）
-#   - smoke テストのブラウザ（`playwright install chromium`。版は web/pnpm-lock.yaml の `@playwright/test` が決める）
+#   - smoke テストのブラウザ（`playwright install --with-deps chromium webkit`。版は web/pnpm-lock.yaml の `@playwright/test` が決める）
 #
 # 欄の結果はファイルシステムのスナップショットとして残り、セッションごとには走らない。
 # セッションごとの準備は .claude/hooks/session-start.sh が呼ぶ scripts/cloud-session.sh と scripts/setup.sh が持つ。
@@ -59,8 +59,9 @@ install_dependencies() {
 }
 
 # 配信元（cdn.playwright.dev）は既定の許可ドメインに無いので、クラウド環境のネットワーク設定で足してある前提で取る。
-install_chromium() {
-  (cd "$ROOT/web" && pnpm exec playwright install chromium)
+# OS の依存は apt で入れるので、この欄が root で走ることを前提にする。
+install_browsers() {
+  (cd "$ROOT/web" && pnpm exec playwright install --with-deps chromium webkit)
 }
 
 main() {
@@ -70,7 +71,7 @@ main() {
   run_step mise install_mise
   run_step toolchain install_toolchain
   run_step dependencies install_dependencies
-  run_step chromium install_chromium
+  run_step browsers install_browsers
   echo "[cloud-snapshot] total: $((SECONDS - started))s" | tee -a "$LOG"
 }
 

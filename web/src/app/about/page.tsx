@@ -9,7 +9,7 @@
  * フッタが担うのは公式への導線とこのページへの到達で、表記の全文は持たない。
  *
  * 見出しの `font-bold` とリンクの色・下線は飾りではない。
- * Tailwind の preflight が `h1`〜`h6` の font-size / font-weight と `a` の color / text-decoration を inherit へ倒すので、書かないと素の文と同じ見た目になる。
+ * Tailwind の preflight が `h1`〜`h6` の font-size / font-weight と `a` の color / text-decoration を inherit にリセットするので、書かないと素の文と同じ見た目になる。
  */
 
 import type { Metadata } from "next";

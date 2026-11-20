@@ -22,7 +22,7 @@ import {
 } from "@/lib/schema/series";
 
 /**
- * 地図へ渡す事物 1 件の属性。
+ * `toMapLoci` が組み、地図の source の各 feature の `properties` に入る、事物 1 件の属性。
  * 鍵の 2 欄はそのまま運び、年の 2 欄は事物かシリーズの `timeRange` から写した値である。
  */
 export type MapLocusProperties = {
@@ -32,14 +32,13 @@ export type MapLocusProperties = {
   timeEnd: number;
 };
 
-/** 地図へ渡す事物 1 件。 */
 export type MapLocusFeature = {
   type: "Feature";
   geometry: Locus["geometry"];
   properties: MapLocusProperties;
 };
 
-/** 地図へ渡す事物の全件。 */
+/** `toMapLoci` が作り、`MapCanvas` から地図のレイヤと一覧パネルの区画分けへ渡す、事物の全件の GeoJSON。 */
 export type MapLocusCollection = {
   type: "FeatureCollection";
   features: MapLocusFeature[];
@@ -85,7 +84,7 @@ function toMapLocus(
 }
 
 /**
- * `loci` から `series` の代表点を探して返す。
+ * `loci` から、`id` が `series` の `anchor` と一致する代表点の事物を探して返す。
  * `series` が位置なしなら undefined を返す。
  *
  * 事物の `id` に `ANCHOR_UNLOCATED` は使えないので、位置なしのシリーズの `anchor` に一致する事物は無い。
@@ -98,7 +97,7 @@ export function findAnchorLocus(
 }
 
 /**
- * `loci` から、`seriesList` に含まれるシリーズの事物だけを残して返す。
+ * `loci` から、`seriesId` が `seriesList` のどれかの `id` と一致する事物だけを、`loci` の並び順のまま残して返す。
  *
  * タグで絞り込んだシリーズの点だけを地図に描くために、絞った後のシリーズを `seriesList` に渡して呼ぶ。
  */
@@ -116,7 +115,7 @@ export function lociForSeries(
   };
 }
 
-/** 事物の全件を、地図の source へ渡す形へ直す。 */
+/** 事物の全件（`loci`）の各件へ、`seriesList` の指すシリーズから年を写し、地図の GeoJSON source へ渡す形へ直す。 */
 export function toMapLoci(
   loci: LocusCollection,
   seriesList: SeriesList,
