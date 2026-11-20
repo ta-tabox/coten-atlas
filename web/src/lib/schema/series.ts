@@ -31,7 +31,7 @@ export const ANCHOR_UNLOCATED = "unlocated";
 export const TIME_RANGE_UNTIMED = "untimed";
 
 /**
- * `region` に置ける区画の取りうる値の並びで、`seriesRegionSchema` の元。
+ * `series.json` の `region` の欄に置ける区画の名前の並び。
  * 陸地を重ならないように割った 12 の区画と、区画を一つ選ぶと嘘になるシリーズが使う `地域なし` である。
  * 区画の境目は `.claude/skills/series-vocabulary/SKILL.md` の手順 6 が持つ。
  * 値を足すときは、この一覧と同じスキルの一覧を両方書き換え、足す理由を新しい ADR に書く。
@@ -53,8 +53,7 @@ export const SERIES_REGIONS = [
 ] as const;
 
 /**
- * `region` の欄を `SERIES_REGIONS` のどれかに限る zod スキーマ。
- * 関連シリーズ行が等値で照合するので、閉じた集合にする。
+ * 関連シリーズ行が等値で照合するので、`region` の欄を `SERIES_REGIONS` の閉じた集合に限る。
  */
 export const seriesRegionSchema = z.enum(SERIES_REGIONS);
 
