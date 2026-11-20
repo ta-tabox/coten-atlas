@@ -147,12 +147,6 @@ export const seriesSchema = z
     timeRange: z.union([seriesTimeRangeSchema, z.literal(TIME_RANGE_UNTIMED)]),
 
     /**
-     * 自前で書く要約。
-     * 番組の説明文を引用しない代わりに置いた欄なので、書かれるまでは空である。
-     */
-    summary: z.string(),
-
-    /**
      * そのシリーズが扱う地理の広がりを表す区画。
      * 代表点の在り処ではないので、`anchor` の値とは独立に決まる。
      * `tags` と並べて、近接の判定（関連シリーズ行）が読む。
