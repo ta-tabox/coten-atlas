@@ -109,7 +109,7 @@ export default function AnchorEditor({
         />
       </EditorMap>
       {/* 一覧は地図の左上に置き、高さを画面の下の結果の欄の上端までに収める。 */}
-      <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-10rem)] w-64 flex-col rounded-lg bg-white/85 p-2 shadow">
+      <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-10rem)] w-64 flex-col rounded-box border border-rule bg-paper p-2 font-body text-ink shadow-sm">
         <SeriesPicker
           seriesList={seriesList}
           selectedSeriesId={selectedSeriesId}
@@ -124,7 +124,7 @@ export default function AnchorEditor({
       <p
         role="status"
         data-save-status={status.kind}
-        className="absolute bottom-10 left-1/2 z-10 w-[min(40rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg bg-white/90 px-4 py-2 text-[0.85rem] whitespace-pre-line shadow"
+        className="absolute bottom-10 left-1/2 z-10 w-[min(40rem,calc(100vw-2rem))] -translate-x-1/2 rounded-box border border-rule bg-paper px-4 py-2 font-body text-[0.85rem] whitespace-pre-line text-ink shadow-sm"
       >
         {messageOf(status)}
       </p>

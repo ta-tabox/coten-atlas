@@ -11,6 +11,7 @@
 import type { MapMouseEvent } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import { Layer, Source, useMap } from "react-map-gl/maplibre";
+import { MAP_COLORS } from "@/lib/map/layers/shared";
 import type { LocusCollection } from "@/lib/schema/locus";
 import type { LocusPatch } from "@/lib/schema/locus-patch";
 
@@ -205,12 +206,11 @@ export default function AnchorDragLayer({
         type="circle"
         paint={{
           "circle-radius": 7,
-          // 選択中のシリーズの円は、一覧の選択中の行の左の太線（Tailwind の `orange-700`）と同じ色にする。
           "circle-color": [
             "case",
             ["==", ["get", "seriesId"], selectedSeriesId ?? ""],
-            "#c2410c",
-            "#1f5673",
+            MAP_COLORS.selected,
+            MAP_COLORS.point,
           ],
           "circle-stroke-width": 1.5,
           "circle-stroke-color": "#ffffff",
