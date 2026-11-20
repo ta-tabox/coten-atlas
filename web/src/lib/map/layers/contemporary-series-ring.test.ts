@@ -42,7 +42,6 @@ function seriesOf(id: string, timeRange: Series["timeRange"]): Series {
     season: 1,
     anchor: ANCHOR_UNLOCATED,
     timeRange,
-    summary: "",
     region: "ヨーロッパ",
     links: {},
     tags: ["概念史"],

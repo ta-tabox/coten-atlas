@@ -60,7 +60,6 @@ const SPARTA: Series = {
   season: 1,
   anchor: "sparta-city",
   timeRange: { start: -900, end: -200 },
-  summary: "",
   region: "ヨーロッパ",
   links: {},
   tags: ["古代ギリシア"],

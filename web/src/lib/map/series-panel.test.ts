@@ -22,7 +22,6 @@ type SeriesFixture = Pick<Series, "id" | "anchor" | "season" | "timeRange">;
 function seriesOf(fixture: SeriesFixture): Series {
   return {
     title: fixture.id,
-    summary: "",
     region: "ヨーロッパ",
     links: {},
     tags: ["概念史"],
