@@ -59,7 +59,7 @@ install_dependencies() {
 }
 
 # 配信元（cdn.playwright.dev）は既定の許可ドメインに無いので、クラウド環境のネットワーク設定で足してある前提で取る。
-# OS の依存は apt で入れるので、欄が root で走ることに寄りかかる。
+# OS の依存は apt で入れるので、この欄が root で走ることを前提にする。
 install_browsers() {
   (cd "$ROOT/web" && pnpm exec playwright install --with-deps chromium webkit)
 }
