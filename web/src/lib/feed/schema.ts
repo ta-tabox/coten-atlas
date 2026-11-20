@@ -90,7 +90,7 @@ const optionalDurationSecSchema = z
   });
 
 /**
- * `parse.ts` が均したフィードの 1 件を、型と制約の付いたエピソード 1 件（`FeedItem`）へ変える zod スキーマ。
+ * `parse.ts` が全欄を文字列か欠落へ正規化したフィードの 1 件を、型と制約の付いたエピソード 1 件（`FeedItem`）へ変える zod スキーマ。
  *
  * `season` は `itunes:season` で、752 件中 176 件（番外編・特別編・告知）が持たない。
  * `episodeNumber` と `durationSec` は読む画面が無いので episodes.json へ保存しない。
@@ -108,7 +108,7 @@ export const feedItemSchema = z.object({
 export type FeedItem = z.infer<typeof feedItemSchema>;
 
 /**
- * `parse.ts` が均したフィードの 1 件（`input`）を `feedItemSchema` に通し、`guid` の trim と `pubDate` の ISO 8601 への変換を済ませて返す。
+ * `parse.ts` が全欄を文字列か欠落へ正規化したフィードの 1 件（`input`）を `feedItemSchema` に通し、`guid` の trim と `pubDate` の ISO 8601 への変換を済ませて返す。
  * 合わなければ、渡された見出しと、合わない欄を全部添えて投げる。
  *
  * 見出しは呼ぶ側が組む。
