@@ -1,5 +1,5 @@
 /**
- * 公開の地図と管理画面の地図が MapLibre へ渡す、ベースマップの接続先・初期表示位置・worker の在り処の定数を置く。
+ * 公開の地図と管理画面の地図が MapLibre へ渡す、ベースマップの接続先・初期表示位置・worker の URL の定数を置く。
  *
  * 無償公開のタイルは API キーの要否も要求 attribution も提供元ごとに違うので、URL を差し替えるだけでは利用条件を満たせない。
  * OpenFreeMap を採った理由は docs/adr/20260823-openfreemap-positron.md が持つ。
