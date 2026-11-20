@@ -1,6 +1,102 @@
 {
-  "syncedAt": "2026-10-09T05:50:56.730Z",
+  "syncedAt": "2026-11-20T08:29:41.600Z",
   "episodes": [
+    {
+      "guid": "655b6a57-2635-4aad-baf0-00b0007a3e51",
+      "title": "【番外編＃150】深井龍之介に大量の質問を浴びせてみた。〜可愛げと偏屈のあいだ〜",
+      "pubDate": "2026-11-15T21:00:00.000Z",
+      "season": null,
+      "seriesId": null,
+      "links": {}
+    },
+    {
+      "guid": "ad2bd450-acb1-47d4-b657-64cb61d6a647",
+      "title": "【番外編＃149】女装してみた！何か見えた！アバターとしての新たな自分の余白",
+      "pubDate": "2026-11-11T21:00:00.000Z",
+      "season": null,
+      "seriesId": null,
+      "links": {}
+    },
+    {
+      "guid": "24635b66-5990-47a7-834c-77e7af05d21e",
+      "title": "【68-4】最後に笑うのは誰だ！ギロチンの刃先が指し示す革命の代償【COTEN RADIOショート フランス革命と陰謀論編4】",
+      "pubDate": "2026-11-08T21:00:00.000Z",
+      "season": 68,
+      "seriesId": "france-kakumei-to-inboron",
+      "links": {}
+    },
+    {
+      "guid": "7b2aac61-e48b-4b5b-a0a9-e93f628af2d9",
+      "title": "【告知】リアルイベント第2弾！NewsPicks x COTENによる、AI時代の知と社会を考えるイベント",
+      "pubDate": "2026-11-06T09:00:00.000Z",
+      "season": null,
+      "seriesId": null,
+      "links": {}
+    },
+    {
+      "guid": "d146bb10-ac19-460a-b912-ace8d94fa0a4",
+      "title": "【68-3】レッテルはこうして生まれる！革命が「敵」を必要とした理由【COTEN RADIOショート フランス革命と陰謀論編3】",
+      "pubDate": "2026-11-04T21:00:00.000Z",
+      "season": 68,
+      "seriesId": "france-kakumei-to-inboron",
+      "links": {}
+    },
+    {
+      "guid": "4e5a1da9-c7e3-4f51-ad63-cfab30a3fc9e",
+      "title": "【68-2】あれにもこれにも裏がある？陰謀論が生まれる人間の思考回路【COTEN RADIOショート フランス革命と陰謀論編2】",
+      "pubDate": "2026-11-01T21:00:00.000Z",
+      "season": 68,
+      "seriesId": "france-kakumei-to-inboron",
+      "links": {}
+    },
+    {
+      "guid": "9b5d363e-0523-4cff-868c-754df35f9d81",
+      "title": "【68-1】疑心暗鬼！フランス革命と陰謀論 〜噂が国を動かす瞬間〜【COTEN RADIOショート フランス革命と陰謀論編1】",
+      "pubDate": "2026-10-28T21:00:00.000Z",
+      "season": 68,
+      "seriesId": "france-kakumei-to-inboron",
+      "links": {}
+    },
+    {
+      "guid": "9ec17e78-445e-45a1-adb5-7b70215abd73",
+      "title": "【番外編＃148】効率重視か？ロマンか？こだわりの仕事道具に宿るスピリット",
+      "pubDate": "2026-10-25T21:00:00.000Z",
+      "season": null,
+      "seriesId": null,
+      "links": {}
+    },
+    {
+      "guid": "9ca30fb8-55a8-448c-863e-9401cf4ceb85",
+      "title": "【番外編＃147】しっくりくるまで！眼鏡と料理のトライアンドエラー",
+      "pubDate": "2026-10-21T21:00:00.000Z",
+      "season": null,
+      "seriesId": null,
+      "links": {}
+    },
+    {
+      "guid": "45c0e74f-dd00-4918-97e2-544ad4f51758",
+      "title": "【67-10】クビライあきらめない！日本侵攻の果てに待つ鎌倉幕府の変化【COTEN RADIO モンゴル帝国襲来編10】",
+      "pubDate": "2026-10-18T21:00:00.000Z",
+      "season": 67,
+      "seriesId": "mongol-teikoku-shurai",
+      "links": {}
+    },
+    {
+      "guid": "7ed0a00f-f16a-4156-b59e-daa4685b192f",
+      "title": "【67-9】備えあれば勝機あり！弘安の役で真価を見せるガッチガチな石壁【COTEN RADIO モンゴル帝国襲来編9】",
+      "pubDate": "2026-10-14T21:00:00.000Z",
+      "season": 67,
+      "seriesId": "mongol-teikoku-shurai",
+      "links": {}
+    },
+    {
+      "guid": "db716e17-e0d4-49d1-a6bd-8c936dc46fa9",
+      "title": "＜特別編＞あの日をたどろう！モンゴル襲来の最前線・元寇防塁へ",
+      "pubDate": "2026-10-11T21:00:00.000Z",
+      "season": 67,
+      "seriesId": "mongol-teikoku-shurai",
+      "links": {}
+    },
     {
       "guid": "19b6f609-f2fa-4e9e-b1f7-d06f531c1f1b",
       "title": "【67-8】勝った！勝ったけども！非常事態が変えた鎌倉幕府のフォルム【COTEN RADIO モンゴル帝国襲来編8】",
