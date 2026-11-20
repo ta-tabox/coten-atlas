@@ -18,13 +18,14 @@ paths:
 | `catalog/` のファイル | アプリのビルドと管理画面は `src/lib/catalog-dir.ts`（読みは `loadSeries`・`loadLoci`・`loadEras`、最後のコミットの版の読みは `loadCommittedLoci`、書きは `saveLoci`）、同期は `scripts/sync-feed.ts`（JSON の構文の検査は `scripts/json-file.ts`） | スキーマを通した `SeriesList`・`LocusCollection`・`EraList`・`EpisodeCollection`・`SeasonCorrectionList` |
 | RSS（ネットワーク） | `scripts/sync-feed.ts` の `fetchFeed` | XML の文字列。`src/lib/feed/parse.ts` の `parseFeed` が検査済みの `FeedItem` の配列にする |
 | 配信した `episodes.json`（ブラウザの fetch） | `src/lib/episodes.ts` の `fetchEpisodes` | `EpisodesResult`（`parseEpisodes` を通した `Episode` の配列か、取得の失敗） |
+| ベースマップのスタイル（ブラウザの fetch） | `src/components/map/use-basemap-style.ts` の `useBasemapStyle` | 地名を日本語にしたスタイルか、取得に失敗したときの `BASEMAP_STYLE_URL` |
 | 管理画面の保存の API（HTTP） | 受け手は `src/app/admin/api/loci/route.dev.ts`、送り手は `src/lib/admin-api.ts` の `patchLocus` | 受け手は `parseLocusPatch` を通した `LocusPatch`、送り手は `parseSaveResult` を通した保存しなかった理由の文の配列 |
 | MapLibre の DOM とイベント | 公開の地図は `src/components/map/MapCanvas.tsx`（source と layer は子の `src/components/map/SeriesLayers.tsx`）、管理画面の地図は `src/components/admin/map/**`（ベースマップは `EditorMap.tsx`、編集の機能ごとのレイヤはその子） | 公開の地図はクリックした事物の `seriesId`、管理画面の地図はドラッグして離した事物の `LocusPatch` |
 
 ## 境界の禁止則
 
-- `fetch` を呼ぶのは `src/lib/episodes.ts` の `fetchEpisodes`・`src/lib/admin-api.ts` の `patchLocus`・`scripts/sync-feed.ts` の `fetchFeed` だけにする
-  ベースマップのタイルは MapLibre が取得し、このリポジトリのコードは `src/lib/map/config.ts` の URL を渡すだけにする
+- `fetch` を呼ぶのは `src/lib/episodes.ts` の `fetchEpisodes`・`src/lib/admin-api.ts` の `patchLocus`・`src/components/map/use-basemap-style.ts` の `useBasemapStyle`・`scripts/sync-feed.ts` の `fetchFeed` だけにする
+  ベースマップのうちこのリポジトリのコードが取得するのはスタイルの JSON だけにし、タイル・グリフ・スプライトは MapLibre が取得する
 - `node:fs` を import してよいモジュールは biome が見る（`.claude/rules/languages/typescript.project.md`「機械が見ている分」）
   `"use client"` を付けたモジュールからは `node:fs` へ届かないので、`src/lib/catalog-dir.ts` を呼ぶのは Server Component と Route Handler（`src/app/page.tsx`・`src/app/admin/page.dev.tsx`・`src/app/admin/api/loci/route.dev.ts`）だけにする
 - `catalog/` のファイルは `import` で読まず、`node:fs` か、`public/` へ複製したものを `fetch` で読む
