@@ -12,6 +12,11 @@ on:
   # 人が起動するときは、Actions タブの「Check」の「Run workflow」か、gh workflow run check.yml --ref <ブランチ> を使い、起動できるのは書き込み権限を持つ人だけである。
   workflow_dispatch:
 
+# 検査は checkout・ランタイムとブラウザの取得・pnpm check だけで、リポジトリへ書き込まないので、トークンを読み取りに絞る。
+# 絞らないとトークンの権限はリポジトリの設定に依り、書き込みを許す設定のとき、依存のコードが書き込みの権限を持つ。
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
