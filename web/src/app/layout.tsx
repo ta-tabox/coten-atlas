@@ -12,7 +12,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "coten-atlas",
+  title: "COTEN RADIO MAP",
   description: "コテンラジオのシリーズを世界地図と時系列にマッピングする",
 };
 

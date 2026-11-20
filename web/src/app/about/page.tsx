@@ -19,7 +19,7 @@ import GitHubIcon from "@/components/icons/GitHubIcon";
 import { OFFICIAL_SITE_URL } from "@/lib/links/official-url";
 
 export const metadata: Metadata = {
-  title: "このサイトについて | coten-atlas",
+  title: "このサイトについて | COTEN RADIO MAP",
 };
 
 /** 出典と引用の範囲・ライセンスの全文を載せた、このサイトについてのページを描く。 */
