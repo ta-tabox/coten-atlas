@@ -126,8 +126,8 @@ const OKANE: Series = {
 const SERIES: SeriesList = [SPARTA, OKANE];
 
 /**
- * 4 区間の時代区分。
- * 19 世紀は 4 番目なので、その中央は era 空間の `INITIAL_POSITION` に当たる。
+ * 19 世紀の区間の中央が era 空間の `INITIAL_POSITION` に当たる時代区分。
+ * 19 世紀は末尾の区間なので、`INITIAL_POSITION` は区間を足したときに合わせて直す。
  */
 const ERAS: EraList = [
   { id: "prehistory", label: "先史", start: -10000, end: -800 },
