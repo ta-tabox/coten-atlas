@@ -253,7 +253,6 @@ function portOf(server: http.Server): number {
   return address.port;
 }
 
-/** `openExport` の開き方。 */
 type ExportOpening = { pagePath: string; beforeGoto?: () => void };
 
 /**
