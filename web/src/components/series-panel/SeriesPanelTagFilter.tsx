@@ -5,7 +5,7 @@
  *
  * 選んだタグを保持しない。
  * 選んだタグは props で受け取り、押したタグを足し引きした選択と解除は `onSelectedTagsChange` で返す。
- * 並べるタグを数えるのは `@/lib/map/tag-filter` で、置く場所は親が決める。
+ * 並べるタグを数えるのは `@/lib/map/tag-filter` である。
  */
 
 import { type PanelTag, toggledTagsOf } from "@/lib/map/tag-filter";
