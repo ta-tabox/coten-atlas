@@ -94,7 +94,7 @@ jobs:
       # public な器では artifact も同じ範囲へ公開されるため、保持期間を既定の 90 日から 2 日へ切る
       # （拒否を調べるのはレビューの直後なので、2 日で足りる）。
       - name: Upload Claude execution output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: claude-execution-output
@@ -149,7 +149,7 @@ jobs:
 
       # 上の job と同じ理由で、拒否の中身を読める artifact を短い保持期間で残す。
       - name: Upload Claude execution output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: claude-style-review-execution-output
