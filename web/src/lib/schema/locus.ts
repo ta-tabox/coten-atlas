@@ -28,7 +28,7 @@ export const TIME_RANGE_OF_SERIES = "series";
 
 /**
  * 事物を指す鍵。
- * 位置なしの印と同じ綴りを名乗ると、シリーズの `anchor` がその事物を指しているのか位置なしを宣言しているのかを読み分けられない。
+ * 位置なしを表す値と同じ名前を名乗ると、シリーズの `anchor` がその事物を指しているのか位置なしを宣言しているのかを読み分けられない。
  */
 const locusIdSchema = trimmedNonEmptyStringSchema.refine(
   (id) => id !== ANCHOR_UNLOCATED,
@@ -40,7 +40,7 @@ const locusIdSchema = trimmedNonEmptyStringSchema.refine(
 /**
  * 事物が扱う年代の範囲。
  * 年の閉区間か、シリーズの `timeRange` と同じことを表す `TIME_RANGE_OF_SERIES`。
- * 代表点はシリーズ全体を代表するので年を写さず、印の側を置く（この決まりは 2 つのファイルを並べないと見えないので、`references.ts` が見る）。
+ * 代表点はシリーズ全体を代表するので年を写さず、`TIME_RANGE_OF_SERIES` を置く（この決まりは 2 つのファイルを並べないと見えないので、`references.ts` が見る）。
  */
 const locusTimeRangeSchema = z.union([
   seriesTimeRangeSchema,
@@ -77,7 +77,7 @@ export const locusFeatureSchema = z.strictObject({
  * 事物の全件。
  * MapLibre へ渡す source の元になる GeoJSON FeatureCollection である。
  *
- * `id` の重複をここで落とす。
+ * `id` の重複をここで拒否する。
  * シリーズの `anchor` が指す先の鍵なので、重複すると引いた先が一つに定まらない。
  */
 export const locusCollectionSchema = z

@@ -141,7 +141,7 @@ function attributeOf(node: unknown, name: string): unknown {
 
 /**
  * オブジェクトとして読める値だけを通す。
- * パーサの返り値は形が保証されていないので、添字を引く前にここを通す。
+ * パーサの返り値は形が保証されていないので、添字で値を取り出す前にここを通す。
  */
 function recordOf(value: unknown): Record<string, unknown> | null {
   if (typeof value !== "object" || value === null || Array.isArray(value)) {

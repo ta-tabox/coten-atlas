@@ -33,8 +33,8 @@ export const CATALOG_VALIDATORS = new Map<string, (input: unknown) => unknown>([
 const CATALOG_EXTENSIONS = [".json", ".geojson"];
 
 /**
- * 渡したファイル名のうち、検査する口を持たないデータファイルを返す。
- * 対応表に載っているものと、データでない添え物は落とす。
+ * 渡したファイル名のうち、検査する関数を持たないデータファイルを返す。
+ * 対応表に載っているものと、データでない添え物は除く。
  */
 export function unvalidatedNames(fileNames: readonly string[]): string[] {
   return fileNames

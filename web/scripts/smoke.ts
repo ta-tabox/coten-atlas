@@ -8,7 +8,7 @@
  * **地図の絵が正しいかは見ない**。
  * それは人間の目視が持つ。
  * 外部（タイル・グリフ・スプライト）へは出さず、スタイルだけを合成のもので返す。
- * 実タイルを引くと、テストが外部の可用性で赤くなる（docs/HARNESS.md「6. 意図的にやらないこと」）。
+ * 実タイルを取得すると、テストが外部の可用性で赤くなる（docs/HARNESS.md「6. 意図的にやらないこと」）。
  *
  * 判定に canvas の寸法を入れているのは、CSS で高さが 0 になる失敗に効かせるため。
  * worker が 404 になる形は寸法では捕まらない（壊れていても viewport 大で立つ）ので、そちらは 4xx が見る。
@@ -167,7 +167,7 @@ function decodePathname(pathname: string): string | null {
  * `url` をデコードできないか、`BASE_PATH` の下に無いか、`root` の外を指すなら null を返す。
  *
  * **この関数の役目はパストラバーサルを止めること**。
- * `path.join` も `path.resolve` も `..` を正規化するだけで root の外へ出ることは防がないので、素通しにすると `/coten-atlas/../../../etc/hosts` が root の外のファイルを配信する。
+ * `path.join` も `path.resolve` も `..` を正規化するだけで root の外へ出ることは防がないので、検証なしで通すと `/coten-atlas/../../../etc/hosts` が root の外のファイルを配信する。
  */
 export function resolveWithinRoot(root: string, url: string): string | null {
   const decoded = decodePathname(url.split("?")[0]);
@@ -185,7 +185,7 @@ export function resolveWithinRoot(root: string, url: string): string | null {
   const rootDir = path.resolve(root);
   const relative = decoded.slice(BASE_PATH.length) || "/";
 
-  // 先頭へ `.` を足して相対パスに落とす。
+  // 先頭へ `.` を足して相対パスへ変換する。
   // `/etc/passwd` のような絶対パスをそのまま渡すと、path.resolve は rootDir を捨ててそちらを返す。
   const resolved = path.resolve(rootDir, `.${relative}`);
 

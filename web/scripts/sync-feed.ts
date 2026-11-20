@@ -15,7 +15,7 @@
  * - `--existing-issue-titles <ファイル>`（入力）: 既存の issue の題を並べた JSON で、題に `（season <N>）` を含む issue が在るシリーズ番号は書き出さない
  * - `--survey-issues-out <ファイル>`（出力）: 起票する issue の題と本文を書く JSON で、起票は `.github/workflows/sync.yml` が 1 件ごとに `gh issue create` で行う
  *
- * 失敗は黙って飲まずに落とす。
+ * 失敗は黙って捨てずに throw する。
  * 空の結果を正常な差分として書くと、フィードが壊れた日に `episodes.json` が消える。
  *
  * `pnpm check` の連鎖には入れない。
@@ -98,7 +98,7 @@ async function fetchFeed(url: string): Promise<string> {
 
 /**
  * 人間が書いたシリーズ一覧を読む。
- * 割当はこの中身から season の索引を組んで引くので、ここに無い season のエピソードはどれも未割当になる。
+ * 割当はこの中身から season の索引を組んで検索するので、ここに無い season のエピソードはどれも未割当になる。
  *
  * ファイルがまだ無い日は、失敗にせず空のシリーズ一覧として扱う。
  * シリーズを 1 件も書いていない段階でも同期が通ることが、人間がシリーズを書き始める入口になる。
