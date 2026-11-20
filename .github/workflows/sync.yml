@@ -1,11 +1,11 @@
 name: Sync feed
 
-# 配信フィードを同期し、catalog/episodes.json が変わったら PR を開いて Check を起動し、catalog/series.json にシリーズが無い season のシーズン調査の issue を起票する。
+# 配信フィードを同期し、catalog/episodes.json が変わったら PR を開き、catalog/series.json にシリーズが無い season のシーズン調査の issue を起票する。
 # episodes.json の中身と、起票する題と本文は web/ の pnpm sync が決め、このワークフローは書き出された結果をコミットと起票へ渡すだけにする。
 #
-# job を権限で三つに分ける。
+# job を権限で二つに分ける。
 # 依存のコード（pnpm install の postinstall と pnpm sync）を走らせる sync は読み取りの権限だけを持ち、結果を artifact で渡す。
-# 書き込みの権限は、依存を走らせない publish（push・PR・起票）と check-sync-pr（Check の起動）だけが持つ。
+# 書き込みの権限は、依存を走らせない publish（push・PR・起票）だけが持つ。
 
 on:
   schedule:
@@ -154,8 +154,8 @@ jobs:
 
           {
             echo "定期実行の同期（\`.github/workflows/sync.yml\`）が \`catalog/episodes.json\` を更新した。"
-            echo "この PR は \`GITHUB_TOKEN\` で開いたので、\`check.yml\` は同期の run が \`workflow_dispatch\` で起動する。"
-            echo "Check の結果はこの PR の Checks 欄に出る。"
+            echo "この PR はボットが開いたので、\`check.yml\` などの run は承認待ちになる。"
+            echo "PR の画面の「Approve and run workflows」を押すと Check が走り、結果はこの PR の Checks 欄に出る。"
             echo
             echo "run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
             echo
@@ -183,19 +183,3 @@ jobs:
           if [ -n "$open_pr" ]; then
             gh pr close "$open_pr" --comment "main の episodes.json が最新の同期の結果と同じ中身（syncedAt を除く）になったので閉じる。run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           fi
-
-  # GITHUB_TOKEN で開いた PR や push では check.yml の pull_request が起動しないので、workflow_dispatch で同期のブランチに対して起動する。
-  # actions: write は他のワークフローの起動と run の削除もできる権限なので、gh を 1 回呼ぶだけのこの job に閉じる。
-  check-sync-pr:
-    needs: [sync, publish]
-    if: needs.sync.outputs.episodes-changed == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      actions: write
-    env:
-      GH_TOKEN: ${{ github.token }}
-      GH_REPO: ${{ github.repository }}
-    steps:
-      - name: Dispatch Check on the sync branch
-        run: gh workflow run check.yml --ref "$SYNC_BRANCH"
