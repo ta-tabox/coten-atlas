@@ -30,7 +30,6 @@ const TAP_SLOP_PX = 6;
 type SeriesSheetProps = {
   stage: SheetStage;
   onStageChange: (stage: SheetStage) => void;
-  /** 見出しの行に出す文字。 */
   heading: string;
   children: ReactNode;
 };

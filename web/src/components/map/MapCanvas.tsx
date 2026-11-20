@@ -58,7 +58,6 @@ const PAN_DURATION_MS = 1200;
 const PADDING_DURATION_MS = 300;
 
 type MapCanvasProps = {
-  /** 地図へ渡す形に組んだ事物の全件。 */
   loci: MapLocusCollection;
   /**
    * シリーズの全件。
@@ -116,7 +115,10 @@ function initialEraPositionOf(eras: EraList): number {
   return (index + 0.5) / eras.length;
 }
 
-/** ベースマップの上に、`loci` の代表点・`seriesList` の一覧パネル・`eras` の era スライダー・選択した `series` の詳細カードを重ねて描く。 */
+/**
+ * ベースマップの上に、`loci` の代表点・`seriesList` の一覧・`eras` の era スライダー・選択したシリーズの詳細カードを重ねて描く。
+ * デスクトップの幅では一覧パネルと詳細カードを別々に置き、スマホの幅では一覧と詳細カードを 1 枚のシートに置いて era スライダーをその上端に載せる。
+ */
 export default function MapCanvas({
   loci,
   seriesList,
