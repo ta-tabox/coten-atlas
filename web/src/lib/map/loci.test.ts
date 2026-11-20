@@ -71,12 +71,14 @@ const SPARTA_CITY: Locus["properties"] = {
   id: "sparta-city",
   seriesId: "sparta",
   timeRange: TIME_RANGE_OF_SERIES,
+  name: "スパルタ",
 };
 
 const MECCA: Locus["properties"] = {
   id: "mecca",
   seriesId: "sekai-sandai-shukyo",
   timeRange: TIME_RANGE_OF_SERIES,
+  name: "メッカ",
 };
 
 describe("toMapLoci", () => {
@@ -105,6 +107,7 @@ describe("toMapLoci", () => {
       id: "sparta-siege",
       seriesId: "sparta",
       timeRange: { start: -431, end: -404 },
+      name: "スパルタ",
     };
 
     const { features } = toMapLoci(lociOf(siege), SERIES);
@@ -136,6 +139,7 @@ describe("toMapLoci", () => {
       id: "nowhere",
       seriesId: "missing-series",
       timeRange: TIME_RANGE_OF_SERIES,
+      name: "どこにも無い地点",
     };
 
     expect(() => toMapLoci(lociOf(orphan), SERIES)).toThrow("missing-series");
