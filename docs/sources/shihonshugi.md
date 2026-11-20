@@ -38,7 +38,7 @@
 `title: 資本主義` に指摘は出なかった。
 
 `id` の `shihonshugi` は「資本主義」を割らずに書いた。
-[コトバンク](https://kotobank.jp/word/資本主義)でデジタル大辞泉と精選版日本国語大辞典の両方に一語の見出し（しほん‐しゅぎ）があり、ADR-20260907-series-vocabulary の `id` の表が辞書に一語で載る語を割らないと決めているためである。
+[コトバンク](https://kotobank.jp/word/資本主義-75070)でデジタル大辞泉と精選版日本国語大辞典の両方に一語の見出し（しほん‐しゅぎ）があり、ADR-20260907-series-vocabulary の `id` の表が辞書に一語で載る語を割らないと決めているためである。
 
 ## 仮決定と論点
 
@@ -58,3 +58,5 @@
 | [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157)                                           | 各回の内容から決めた年と、`region` と `id` の判断               |
 | [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160)               | `timeRange` を `"untimed"` にした線                             |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明                        | 各回が扱う主題                                                  |
+
+コトバンクの URL は、裏どりが挙げた ID の無い URL が開けなかったので、同じ項の ID の付いた URL へ差し替えた。

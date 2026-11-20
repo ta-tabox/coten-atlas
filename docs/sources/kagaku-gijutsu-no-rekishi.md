@@ -34,7 +34,7 @@
 `title: 科学技術の歴史` に指摘は出なかった。
 
 `id` の `kagaku-gijutsu` は「科学技術」を「科学」と「技術」の境目で割った。
-[コトバンク](https://kotobank.jp/word/科学技術)で引ける辞書は日本大百科全書と改訂新版世界大百科事典だけで、デジタル大辞泉と精選版日本国語大辞典に一語の見出しが無かったためである。
+[コトバンク](https://kotobank.jp/word/科学技術-226620)で引ける辞書は日本大百科全書と改訂新版世界大百科事典だけで、デジタル大辞泉と精選版日本国語大辞典に一語の見出しが無かったためである。
 
 ## 仮決定と論点
 
@@ -55,3 +55,5 @@
 | [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157)                                           | 各回の内容と、`region` と `id` の判断                           |
 | [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160)               | `timeRange` を `"untimed"` にした線                             |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明                        | 各回が扱う主題                                                  |
+
+コトバンクの URL は、裏どりが挙げた ID の無い URL が開けなかったので、同じ項の ID の付いた URL へ差し替えた。

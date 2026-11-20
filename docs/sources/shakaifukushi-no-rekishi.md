@@ -39,7 +39,7 @@
 `title: 社会福祉の歴史` に指摘は出なかった。
 
 `id` の `shakaifukushi` は「社会福祉」を割らずに書いた。
-[コトバンク](https://kotobank.jp/word/社会福祉)でデジタル大辞泉と精選版日本国語大辞典の両方に一語の見出し（しゃかい‐ふくし）があり、ADR-20260907-series-vocabulary の `id` の表が辞書に一語で載る語を割らないと決めているためである。
+[コトバンク](https://kotobank.jp/word/社会福祉-75697)でデジタル大辞泉と精選版日本国語大辞典の両方に一語の見出し（しゃかい‐ふくし）があり、ADR-20260907-series-vocabulary の `id` の表が辞書に一語で載る語を割らないと決めているためである。
 
 ## 仮決定と論点
 
@@ -61,3 +61,5 @@
 | [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160)               | `timeRange` を `"untimed"` にした線                             |
 | [#212（見直し）](https://github.com/ta-tabox/coten-atlas/issues/212)                                          | 採用した仮決定を人間が見直す論点と案                            |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明                        | 各回が扱う主題                                                  |
+
+コトバンクの URL は、裏どりが挙げた ID の無い URL が開けなかったので、同じ項の ID の付いた URL へ差し替えた。
