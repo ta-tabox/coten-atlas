@@ -58,7 +58,7 @@ jobs:
 
       # mise・pnpm・Playwright のインストールを持たない（claude.yml と check.yml はどれも持つ）。
       # 歴史の誤りは pnpm check では赤くならず、permissions が contents: read なので直すこともできない。
-      # 回した結果が指摘の材料にならないので、Playwright のブラウザ 356MB を含むインストールがそのまま無駄になる。
+      # 回した結果が指摘の材料にならないので、Playwright のブラウザ 600MB 超を含むインストールがそのまま無駄になる。
 
       # claude-code-action の native installer は ~/.local/bin が無いと
       # 「missing or broken」と警告しつつ実体を置かないまま success 扱いになり、
