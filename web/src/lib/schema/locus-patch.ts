@@ -10,9 +10,8 @@ import * as z from "zod";
 import { pointSchema } from "@/lib/schema/geojson";
 import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
-/** 事物 1 件の欄の一部を書き換える要求。 */
+/** 管理画面のブラウザが `patchLocus` で送り、保存の API が受け取る、事物 1 件の書き換えの要求の zod スキーマ。 */
 export const locusPatchSchema = z.strictObject({
-  /** 書き換える事物の `id`。 */
   id: trimmedNonEmptyStringSchema,
 
   /** 書き換えた後の `[経度, 緯度]`。 */
@@ -22,7 +21,7 @@ export const locusPatchSchema = z.strictObject({
 export type LocusPatch = z.infer<typeof locusPatchSchema>;
 
 /**
- * 事物 1 件を書き換える要求を検査して返す。
+ * 保存の API が受け取った本文（`input`）を `locusPatchSchema` に通して返す。
  * 合わなければ、どこが合わないかを添えて throw する。
  */
 export function parseLocusPatch(input: unknown): LocusPatch {

@@ -20,7 +20,7 @@ import { duplicatesOf } from "@/lib/schema/duplicates";
 import { linksSchema } from "@/lib/schema/link";
 import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
-/** エピソード 1 件。 */
+/** `episodes.json` の要素 1 件を、同期が正規化した後の形で検査する zod スキーマ。 */
 export const episodeSchema = z
   .strictObject({
     /**
@@ -30,7 +30,7 @@ export const episodeSchema = z
     guid: trimmedNonEmptyStringSchema,
 
     /**
-     * 各回の題号。
+     * フィードの `<title>` を写した、各回の題。
      * 末尾の基本形は `【COTEN RADIO 宗教改革編2】` だが、`編` の欠落・回番号でなく前後編・開き括弧の欠落で崩れる。
      * 末尾からシリーズ名を抽出しない。
      */
@@ -65,7 +65,7 @@ export const episodeSchema = z
   });
 
 /**
- * エピソード全件。
+ * `episodes.json` の全体（エピソードの配列）を検査する zod スキーマ。
  *
  * `guid` の重複をここで拒否する。
  * 差分同期はこれを鍵に既存と突き合わせるので、重複すると同じ回が二度書かれたのか別の回なのかを見分けられない。
@@ -87,7 +87,7 @@ export type Episode = z.infer<typeof episodeSchema>;
 export type EpisodeCollection = z.infer<typeof episodeCollectionSchema>;
 
 /**
- * エピソード全件を検査して返す。
+ * `episodes.json` から読んだ値（`input`）を `episodeCollectionSchema` に通して返す。
  * 合わなければ、どの要素のどこが合わないかを添えて投げる。
  */
 export function parseEpisodes(input: unknown): EpisodeCollection {

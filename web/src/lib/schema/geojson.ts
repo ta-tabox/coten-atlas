@@ -1,5 +1,5 @@
 /**
- * GeoJSON の geometry の形。
+ * GeoJSON の geometry のうち Point・MultiPoint・LineString・Polygon・MultiPolygon の zod スキーマを置く。
  * 5 種を仕様（RFC 7946）から手で写したもの（ライブラリの型は引いていない）。
  *
  * 座標の順は GeoJSON の規定どおり `[経度, 緯度]` で、緯度が先の並びは検査で落ちる。
@@ -23,14 +23,14 @@ const latitudeSchema = z
   .max(90, { message: "緯度が -90..90 の外にある" });
 
 /**
- * 経度・緯度の対。
+ * `[経度, 緯度]` の順に度で持つ、座標 1 つ。
  * 経度が先なのは GeoJSON の規定で、入れ替えた座標は範囲の検査で落ちる。
  * ただし入れ替えても両方が範囲に収まる土地（緯度・経度とも ±90 の内側）はすり抜けるので、目視の代わりにはならない。
  */
 const positionSchema = z.tuple([longitudeSchema, latitudeSchema]);
 
 /**
- * 環が閉じているか。
+ * 環（`ring`）の最初と最後の座標が一致すれば true を返す。
  * Polygon は環の最初と最後の座標が一致することを要求する。
  * 手前の `min(4, { abort: true })` が短い環を止めるので、空の配列はここへ来ない。
  */
@@ -47,26 +47,23 @@ const ringSchema = z
   .min(4, { abort: true })
   .refine(isClosedRing, { message: "多角形の環が閉じていない" });
 
-/** 1 地点。 */
 export const pointSchema = z.strictObject({
   type: z.literal("Point"),
   coordinates: positionSchema,
 });
 
-/** 散らばった複数の地点。 */
 const multiPointSchema = z.strictObject({
   type: z.literal("MultiPoint"),
   coordinates: z.array(positionSchema).min(1),
 });
 
-/** 順に繋いだ経路。 */
 const lineStringSchema = z.strictObject({
   type: z.literal("LineString"),
   coordinates: z.array(positionSchema).min(2),
 });
 
 /**
- * 環で囲んだ面。
+ * 環の列で囲んだ面（GeoJSON の Polygon）。
  * 最初の環が外周で、2 つ目以降は穴を表す。
  */
 const polygonSchema = z.strictObject({
@@ -75,7 +72,7 @@ const polygonSchema = z.strictObject({
 });
 
 /**
- * 飛び地のある面。
+ * 面を複数並べて、飛び地を持てるようにした面（GeoJSON の MultiPolygon）。
  * 要素の一つずつが Polygon と同じ環の列で、外周と穴の並びも同じ。
  */
 const multiPolygonSchema = z.strictObject({
@@ -84,7 +81,7 @@ const multiPolygonSchema = z.strictObject({
 });
 
 /**
- * 図形の種類と座標の対。
+ * `type` を判別子にして、5 種の geometry のどれか 1 つを受ける zod スキーマ。
  * 5 種のうちどれを使うかは、置く対象の性質を知っている側が決める。
  */
 export const geometrySchema = z.discriminatedUnion("type", [

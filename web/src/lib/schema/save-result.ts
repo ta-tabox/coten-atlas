@@ -1,5 +1,5 @@
 /**
- * 管理画面の API が返す、保存の結果のスキーマを置く。
+ * 管理画面のブラウザが、保存の API の応答を検査する zod スキーマを置く。
  *
  * 入口は parseSaveResult。
  */
@@ -7,7 +7,7 @@
 import * as z from "zod";
 
 /**
- * 保存の結果。
+ * 保存の API（`route.dev.ts`）が返し、`patchLocus` が読む応答の本文。
  * `problems` は保存しなかった理由の文の配列で、保存したときは空である。
  */
 export const saveResultSchema = z.strictObject({

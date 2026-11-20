@@ -1,5 +1,5 @@
 /**
- * 時代区分（era）のスキーマ。
+ * 時代区分（era）の列を書く `catalog/eras.json` の zod スキーマと、検査の関数を置く。
  * スライダーが動く一次元の空間を、隙間なく並んだ区間の列として持つ。
  *
  * 年は西暦の整数で、負値が紀元前を指す。
@@ -25,13 +25,13 @@ import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 export const ERA_END_PRESENT = "present";
 
 /**
- * 区間の終わり。
+ * era 1 件の `end` に置ける値。
  * 西暦の整数か、まだ終わっていないことを表す値。
  */
 const eraEndSchema = z.union([z.int(), z.literal(ERA_END_PRESENT)]);
 
 /**
- * 時代区分 1 件。
+ * `catalog/eras.json` の要素 1 件の zod スキーマ。
  * 幅の検査が効くのは `end` が年のときだけで、終わっていない区間はどの年より後ろにも伸びうる。
  */
 export const eraSchema = z
@@ -60,7 +60,7 @@ export const eraSchema = z
   });
 
 /**
- * 時代区分の列。
+ * `catalog/eras.json` の全体（年の昇順に並べた era の列）の zod スキーマ。
  * 隣り合う区間が接していること、id が一意であること、終わっていない区間が末尾にしか無いことを見る。
  */
 export const eraListSchema = z
@@ -97,7 +97,7 @@ export type Era = z.infer<typeof eraSchema>;
 export type EraList = z.infer<typeof eraListSchema>;
 
 /**
- * 時代区分の列を検査して返す。
+ * `catalog/eras.json` から読んだ値（`input`）を `eraListSchema` に通して返す。
  * 合わなければ、どの要素のどこが合わないかを添えて投げる。
  */
 export function parseEras(input: unknown): EraList {
