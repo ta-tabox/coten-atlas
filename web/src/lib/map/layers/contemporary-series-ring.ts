@@ -16,7 +16,7 @@ import {
 } from "@/lib/schema/series";
 
 /**
- * 選択中のシリーズと年が重なるシリーズの事物を縁取るレイヤ。
+ * 選択中のシリーズと年が重なるシリーズの事物を縁取る輪のレイヤの、`filter` を除いた定義。
  *
  * 強調を `circle-opacity` でなく縁（`circle-stroke-*`）で表すので、現在窓から求めた円の濃さは変わらず、薄く残る円は薄いまま縁だけが付く。
  * 半径を `SERIES_CIRCLE_LAYER` の円と同じにして、円の輪郭をなぞる。
@@ -36,11 +36,11 @@ export const CONTEMPORARY_SERIES_RING_LAYER: SeriesLayerSpecification = {
 
 /**
  * `CONTEMPORARY_SERIES_RING_LAYER` に、`selectedSeries` と年が重なる他のシリーズの事物のうち `currentWindow` と重なるものだけを描く `filter` を設定したレイヤを返す。
+ * `selectedSeries` 自身の事物は `SELECTED_SERIES_RING_LAYER` が囲むので含めない。
  * `selectedSeries` が null か、`timeRange` が `TIME_RANGE_UNTIMED` なら、どの事物も描かない `filter` を設定する。
  *
  * 年の重なりは、`selectedSeries` の `timeRange` と事物の `timeStart` / `timeEnd` を、両端を含む閉区間どうしとして比べる。
  * 現在窓は重なりの判定に使わず、`selectedSeriesRingLayerIn` と同じ理由で描く事物を絞るためだけに使う。
- * `selectedSeries` 自身の事物は `SELECTED_SERIES_RING_LAYER` が囲むので含めない。
  */
 export function contemporarySeriesRingLayerIn({
   currentWindow,

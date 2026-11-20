@@ -16,7 +16,7 @@
  * 同期は `series.json` にまだ無い season の回へ null を書くので、シリーズを足す前には正しく起きる状態である。
  *
  * ここは fs を触らない純関数だけを持つ。
- * 現物へ掛けるのは `tests/catalog.test.ts` で、対象のファイルが揃うまで各検査は skip される。
+ * 現物に適用するのは `tests/catalog.test.ts` で、対象のファイルが揃うまで各検査は skip される。
  */
 
 import type { EpisodeCollection } from "@/lib/schema/episode";

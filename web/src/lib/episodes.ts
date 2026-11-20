@@ -3,8 +3,6 @@
  *
  * ビルド時に `catalog/` を `node:fs` で読む `@/lib/catalog-dir` とは別経路である。
  * `"use client"` を付けたコンポーネントは `node:fs` に到達しないので、エピソードだけを実行時の fetch にする（docs/ARCHITECTURE.md §3「配り方」）。
- *
- * 取得は `fetchEpisodes`、絞り込みは `episodesForSeries` が担当する。
  */
 
 import { BASE_PATH } from "@/lib/base-path";
@@ -27,7 +25,7 @@ export type EpisodesResult =
 export type EpisodesState = { kind: "loading" } | EpisodesResult;
 
 /**
- * 配信された `episodes.json` の URL。
+ * `fetchEpisodes` が取得する `episodes.json` の、`BASE_PATH` から始まる絶対パスの URL。
  *
  * `BASE_PATH` を付ける理由は `@/lib/base-path` が正。
  * `public/catalog/episodes.json` を作るのは `package.json` の `sync-catalog` で、`predev` と `prebuild` が実行する。
