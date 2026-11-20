@@ -13,6 +13,10 @@ on:
     # 番組は月曜と木曜の 06:00 JST に配信するので、同じ日の夜に走らせて新しい回を拾う。
     # 毎時 0 分は定期実行が集中して起動が遅れるので、分をずらす。
     - cron: "17 12 * * 1,4"
+  # 手動の起動で、定期実行と同じ job を走らせる。
+  # 使うのは、マージ直後の動作確認・series.json へシリーズを足した直後の割当の更新・失敗した run の走らせ直しである。
+  # 起動できるのは書き込み権限を持つ人で、Actions タブの「Sync feed」の「Run workflow」か、gh workflow run sync.yml --ref main で起動する。
+  # main 以外のブランチを選ぶと、job sync の if で全 job が skipped になる。
   workflow_dispatch:
 
 # 前の run が起票し終える前に次の run が既存の issue の題を読むと、同じ season を二度起票するので、run 全体を直列にする。
