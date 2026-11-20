@@ -74,11 +74,12 @@ jobs:
           gh issue list --state all --limit 1000 \
             --json title --jq '[.[].title]' > "$RUNNER_TEMP/issue-titles.json"
 
-      # 同期のサマリと警告は PR の本文に載せるので、ファイルにも残す。
+      # 同期の前後の差（report.md）と、同期のサマリと警告（sync-summary.txt）は PR の本文に載せるので、ファイルに残す。
       - name: Sync feed
         run: |
           mkdir -p "$RUNNER_TEMP/sync-result"
           pnpm sync --existing-issue-titles "$RUNNER_TEMP/issue-titles.json" --survey-issues-out "$RUNNER_TEMP/sync-result/survey-issues.json" \
+            --report-out "$RUNNER_TEMP/sync-result/report.md" \
             2>&1 | tee "$RUNNER_TEMP/sync-result/sync-summary.txt"
           cp ../catalog/episodes.json "$RUNNER_TEMP/sync-result/episodes.json"
           jq -r '.[].title' "$RUNNER_TEMP/sync-result/survey-issues.json"
@@ -152,6 +153,17 @@ jobs:
           git commit -m "chore(catalog): 配信フィードの同期で episodes.json を更新する"
           git push --force origin "$SYNC_BRANCH"
 
+          # 表の「シリーズ未作成（season N）」に出たシリーズ番号ごとに、題に（season N）を含む issue を探してリンクを載せる。
+          # この run で起票したかに依らず探すので、開いた PR の本文を次の run が書き直してもリンクが消えない。
+          gh issue list --state all --limit 1000 --json title,url > "$RUNNER_TEMP/all-issues.json"
+          seasons=$(grep -o 'シリーズ未作成（season [0-9]*）' "$RESULT_DIR/report.md" | grep -o '[0-9][0-9]*' | sort -un || true)
+          : > "$RUNNER_TEMP/survey-issue-links.md"
+          for season in $seasons; do
+            jq -r --arg label "（season $season）" \
+              '.[] | select(.title | contains($label)) | "- [\(.title)](\(.url))"' \
+              "$RUNNER_TEMP/all-issues.json" >> "$RUNNER_TEMP/survey-issue-links.md"
+          done
+
           {
             echo "定期実行の同期（\`.github/workflows/sync.yml\`）が \`catalog/episodes.json\` を更新した。"
             echo "この PR はボットが開いたので、\`check.yml\` などの run は承認待ちになる。"
@@ -159,11 +171,21 @@ jobs:
             echo
             echo "run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
             echo
-            echo "## 同期のサマリ"
+            cat "$RESULT_DIR/report.md"
+            if [ -s "$RUNNER_TEMP/survey-issue-links.md" ]; then
+              echo
+              echo "## シリーズ未作成のシリーズ番号のシーズン調査の issue"
+              echo
+              cat "$RUNNER_TEMP/survey-issue-links.md"
+            fi
+            echo
+            echo "<details><summary>同期のサマリと警告</summary>"
             echo
             echo '```'
             cat "$RESULT_DIR/sync-summary.txt"
             echo '```'
+            echo
+            echo "</details>"
           } > "$RUNNER_TEMP/sync-pr-body.md"
 
           open_pr=$(gh pr list --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number')
