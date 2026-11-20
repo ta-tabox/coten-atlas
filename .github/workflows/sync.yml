@@ -95,7 +95,7 @@ jobs:
           fi
 
       - name: Upload sync result
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sync-result
           path: ${{ runner.temp }}/sync-result/
@@ -123,7 +123,7 @@ jobs:
           fetch-depth: 1
 
       - name: Download sync result
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: sync-result
           path: ${{ runner.temp }}/sync-result
