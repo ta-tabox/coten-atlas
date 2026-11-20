@@ -26,6 +26,21 @@ export const INITIAL_VIEW_STATE = {
 } as const;
 
 /**
+ * デスクトップの幅で、一覧パネルの右端までの画面の左端からの距離（px）。
+ * 一覧パネルが開いている間、MapLibre の `padding.left` に渡し、点を描く範囲を一覧パネルの右側に限る。
+ *
+ * `MapCanvas` が一覧パネルを置く位置（`left-4`）と `SeriesPanel` の幅（18rem）と枠線（左右 1px ずつ）の和で、ルートの文字の大きさが 16px のときの値になる。
+ * 一致は `tests/smoke/panel-clearance.spec.ts` が見る。
+ */
+export const PANEL_RIGHT_EDGE_PX = 306;
+
+/**
+ * デスクトップの幅とみなす画面の条件（Tailwind の `md`）。
+ * この幅に満たない画面の一覧パネルの置き場は、地図の視野を動かさない。
+ */
+export const DESKTOP_MEDIA_QUERY = "(min-width: 48rem)";
+
+/**
  * 公開画面の地図で拡大できる最大のズーム。
  *
  * 事物の点は「どの場所の話か」を示す目印なので、建物の水準まで拡大させると、点が値の持つ確からしさ以上の位置を指すように読める。

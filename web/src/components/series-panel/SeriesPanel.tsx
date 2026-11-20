@@ -33,6 +33,12 @@ type SeriesPanelProps = {
   selectedTags: string[];
   /** タグが押されたときに押したタグを足し引きした配列を、絞り込みが解除されたときに空配列を渡して呼ぶ。 */
   onSelectedTagsChange: (tags: string[]) => void;
+  /**
+   * 一覧を開いているか。
+   * 地図の視野を一覧の幅だけずらす親が読むので、親が持つ。
+   */
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
 /**
@@ -46,13 +52,12 @@ export default function SeriesPanel({
   tags,
   selectedTags,
   onSelectedTagsChange,
+  isOpen,
+  onOpenChange,
 }: SeriesPanelProps) {
   const titleId = useId();
-  const [isOpen, setIsOpen] = useState(true);
 
   // パネル全体を閉じて開き直しても区画の開閉を残すので、区画ごとの開閉も SeriesPanelSection と SeriesPanelTagFilter でなくここに置く。
-  // タグの列は、開くと二つの区画を押し下げるので、閉じた状態で始める。
-  const [isTagFilterExpanded, setIsTagFilterExpanded] = useState(false);
   const [isOnMapExpanded, setIsOnMapExpanded] = useState(true);
   const [isUnlocatedExpanded, setIsUnlocatedExpanded] = useState(true);
 
@@ -81,7 +86,7 @@ export default function SeriesPanel({
 
             <button
               type="button"
-              onClick={() => setIsOpen(false)}
+              onClick={() => onOpenChange(false)}
               aria-expanded={true}
               aria-label="一覧を閉じる"
               className="-mr-1.5 flex-none rounded-control px-1.5 text-[1.1rem] text-ink-muted hover:bg-rule/40 hover:text-ink"
@@ -90,19 +95,19 @@ export default function SeriesPanel({
             </button>
           </header>
 
-          {/* overflow-y-auto だけを指定すると CSS が横の overflow も auto に変えて横スクロールバーが出るので、overflow-x-hidden を明示する。 */}
-          <div className="flex min-h-0 flex-col gap-3 overflow-x-hidden overflow-y-auto px-2 pt-3 pb-1">
+          <div className="shrink-0 border-b border-rule px-4 py-2">
             <SeriesPanelTagFilter
               tags={tags}
               selectedTags={selectedTags}
               onSelectedTagsChange={onSelectedTagsChange}
-              isExpanded={isTagFilterExpanded}
-              onToggle={() => setIsTagFilterExpanded(!isTagFilterExpanded)}
             />
+          </div>
+
+          {/* overflow-y-auto だけを指定すると CSS が横の overflow も auto に変えて横スクロールバーが出るので、overflow-x-hidden を明示する。 */}
+          <div className="flex min-h-0 flex-col gap-3 overflow-x-hidden overflow-y-auto px-2 pt-2 pb-1">
             <SeriesPanelSection
               heading="地図に出ているシリーズ"
               marker={onMapMarker}
-              note="スライダーが指す時代に重なるシリーズを、始まりの年の順に並べている。"
               seriesList={sections.onMap}
               emptyNote={
                 selectedTags.length === 0
@@ -117,7 +122,6 @@ export default function SeriesPanel({
             <SeriesPanelSection
               heading="場所や時代をまたぐシリーズ"
               marker={unlocatedMarker}
-              note="一つの場所や時代に収まらない主題を扱うシリーズ。スライダーの時代によらず、いつでもここから選べる。"
               seriesList={sections.unlocated}
               emptyNote={
                 selectedTags.length === 0
@@ -134,7 +138,7 @@ export default function SeriesPanel({
       ) : (
         <button
           type="button"
-          onClick={() => setIsOpen(true)}
+          onClick={() => onOpenChange(true)}
           aria-expanded={false}
           className="px-4 py-2 text-left text-[0.9rem] font-bold hover:bg-rule/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point"
         >

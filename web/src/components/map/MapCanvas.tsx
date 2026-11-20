@@ -13,6 +13,7 @@ import MapLibreMap from "react-map-gl/maplibre";
 import EraSlider from "@/components/era-slider/EraSlider";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
+import { useIsDesktop } from "@/components/map/use-is-desktop";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import {
@@ -24,6 +25,7 @@ import { currentWindow } from "@/lib/era/window";
 import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
+  PANEL_RIGHT_EDGE_PX,
   PUBLIC_MAP_MAX_ZOOM,
 } from "@/lib/map/config";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/layers/shared";
@@ -45,6 +47,9 @@ const INITIAL_ERA_ID = "ancient";
 
 /** 一覧パネルで選んだシリーズの代表点へ、地図の中心を移すのにかける時間（ミリ秒）。 */
 const PAN_DURATION_MS = 1200;
+
+/** 一覧パネルの開閉に合わせて地図の視野をずらすのにかける時間（ミリ秒）。 */
+const PADDING_DURATION_MS = 300;
 
 type MapCanvasProps = {
   /** 地図へ渡す形に組んだ事物の全件。 */
@@ -124,7 +129,26 @@ export default function MapCanvas({
     initialEraPositionOf(eras),
   );
   const [episodes, setEpisodes] = useState<EpisodesState>({ kind: "loading" });
+  const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const isDesktop = useIsDesktop();
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
+
+  // 一覧パネルに隠れる左の幅を地図の視野から除き、点が一覧パネルの右側に描かれるようにする。
+  const padding = {
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: isDesktop && isPanelOpen ? PANEL_RIGHT_EDGE_PX : 0,
+  };
+  const paddingLeft = padding.left;
+
+  // initialViewState は最初の描画にしか効かないので、開閉と幅の変化は easeTo で視野へ渡す。
+  useEffect(() => {
+    mapRef.current?.easeTo({
+      padding: { top: 0, bottom: 0, right: 0, left: paddingLeft },
+      duration: PADDING_DURATION_MS,
+    });
+  }, [paddingLeft]);
 
   // エピソードは詳細カードを開く前の、マウントした直後に取得する。
   // 詳細カードを開いてから取得を始めると、クリックのたびに 750 件を超える JSON の到着を待つ。
@@ -190,7 +214,7 @@ export default function MapCanvas({
       // attributionControl は渡さない。
       // OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
       mapStyle={mapStyle}
-      initialViewState={INITIAL_VIEW_STATE}
+      initialViewState={{ ...INITIAL_VIEW_STATE, padding }}
       maxZoom={PUBLIC_MAP_MAX_ZOOM}
       workerUrl={MAP_WORKER_URL}
       // MapLibreMap は container の `className` を受け取らないので、寸法だけは Tailwind のユーティリティでなく style で渡す。
@@ -217,6 +241,8 @@ export default function MapCanvas({
           tags={panelTagsOf(taggedSections, selectedTags)}
           selectedTags={selectedTags}
           onSelectedTagsChange={setSelectedTags}
+          isOpen={isPanelOpen}
+          onOpenChange={setIsPanelOpen}
         />
       </div>
       {/* era スライダーは地図の下部の中央に置く。 */}

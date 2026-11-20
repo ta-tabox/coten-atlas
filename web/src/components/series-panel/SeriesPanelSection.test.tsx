@@ -35,7 +35,6 @@ const ROUSHI: Series = {
 const PROPS: ComponentProps<typeof SeriesPanelSection> = {
   heading: "地図に出ているシリーズ",
   marker: <span />,
-  note: "スライダーが指す時代に重なるシリーズを並べている。",
   seriesList: [SPARTA, ROUSHI],
   emptyNote: "この時代に地図に出ているシリーズは無い。",
   selectedSeriesId: null,
@@ -50,10 +49,9 @@ function section(): HTMLElement {
 }
 
 describe("SeriesPanelSection", () => {
-  it("見出しの名前を持つ区画に、説明とシリーズを並べる", () => {
+  it("見出しの名前を持つ区画に、シリーズを並べる", () => {
     render(<SeriesPanelSection {...PROPS} />);
 
-    expect(within(section()).getByText(PROPS.note)).toBeVisible();
     expect(
       within(section()).getByRole("button", { name: /スパルタ/ }),
     ).toBeVisible();
@@ -97,13 +95,12 @@ describe("SeriesPanelSection", () => {
     ).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("閉じている間は説明とシリーズの列を隠し、見出しのボタンに aria-expanded=false を付ける", () => {
+  it("閉じている間はシリーズの列を隠し、見出しのボタンに aria-expanded=false を付ける", () => {
     render(<SeriesPanelSection {...PROPS} isExpanded={false} />);
 
     expect(
       screen.getByRole("button", { name: /地図に出ているシリーズ/ }),
     ).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByText(PROPS.note)).not.toBeVisible();
     expect(screen.queryByRole("button", { name: /スパルタ/ })).toBeNull();
   });
 

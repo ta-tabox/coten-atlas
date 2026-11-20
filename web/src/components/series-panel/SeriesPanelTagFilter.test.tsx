@@ -1,14 +1,14 @@
 /**
- * 検証するのは、props のタグ・絞り込みに使っているタグ・開閉から何が表示され、タグと解除と見出しのボタンの押下が何を返すかである。
+ * 検証するのは、props のタグと絞り込みに使っているタグから何が表示され、タグと解除のボタンの押下が何を返すかである。
  * どのタグをどの順に並べるかは `@/lib/map/tag-filter.test.ts` が検証する。
  */
 
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vitest";
 import SeriesPanelTagFilter from "@/components/series-panel/SeriesPanelTagFilter";
 
-/** 絞り込まずに、タグの列を開いた状態で描くときの props。 */
+/** 絞り込まずに描くときの props。 */
 const PROPS: ComponentProps<typeof SeriesPanelTagFilter> = {
   tags: [
     { tag: "戦争", seriesCount: 2 },
@@ -16,19 +16,17 @@ const PROPS: ComponentProps<typeof SeriesPanelTagFilter> = {
   ],
   selectedTags: [],
   onSelectedTagsChange: () => {},
-  isExpanded: true,
-  onToggle: () => {},
 };
 
 describe("SeriesPanelTagFilter", () => {
-  it("各タグを、そのタグを持つシリーズの数を添えたボタンにする", () => {
+  it("開閉のボタンを持たず、タグのボタンを tags の順に、タグの名前だけを名前にして並べる", () => {
     render(<SeriesPanelTagFilter {...PROPS} />);
 
-    const war = screen.getByRole("button", { name: /戦争/ });
-
-    expect(war).toBeVisible();
-    expect(within(war).getByText("2")).toBeVisible();
-    expect(screen.getByRole("button", { name: /人物/ })).toBeVisible();
+    expect(
+      screen.getAllByRole("button").map((button) => button.textContent),
+    ).toEqual(["戦争", "人物"]);
+    expect(screen.getByRole("button", { name: "戦争" })).toBeVisible();
+    expect(screen.queryByText("2")).toBeNull();
   });
 
   it("選んでいないタグを押すと、選んだタグの末尾へ足した配列を渡して onSelectedTagsChange を呼ぶ", () => {
@@ -96,33 +94,6 @@ describe("SeriesPanelTagFilter", () => {
     fireEvent.click(screen.getByRole("button", { name: "絞り込みを解除" }));
 
     expect(onSelectedTagsChange).toHaveBeenCalledExactlyOnceWith([]);
-  });
-
-  it("閉じている間はタグのボタンを隠し、解除のボタンは残す", () => {
-    render(
-      <SeriesPanelTagFilter
-        {...PROPS}
-        selectedTags={["戦争"]}
-        isExpanded={false}
-      />,
-    );
-
-    expect(
-      screen.getByRole("button", { name: "タグで絞り込む" }),
-    ).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByRole("button", { name: /人物/ })).toBeNull();
-    expect(
-      screen.getByRole("button", { name: "絞り込みを解除" }),
-    ).toBeVisible();
-  });
-
-  it("見出しを押すと onToggle を呼ぶ", () => {
-    const onToggle = vi.fn();
-
-    render(<SeriesPanelTagFilter {...PROPS} onToggle={onToggle} />);
-    fireEvent.click(screen.getByRole("button", { name: "タグで絞り込む" }));
-
-    expect(onToggle).toHaveBeenCalledOnce();
   });
 
   it("tags が空なら、並べるタグが無いことを文で言う", () => {
