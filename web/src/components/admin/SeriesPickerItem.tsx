@@ -40,24 +40,29 @@ export default function SeriesPickerItem({
   onReset,
 }: SeriesPickerItemProps) {
   return (
-    <div
-      className={`rounded-md border-l-4 ${isSelected ? "border-l-orange-700 bg-orange-100/70" : "border-l-transparent"}`}
-    >
+    <div className={isSelected ? "text-selected" : undefined}>
       <button
         type="button"
         onClick={() => onSelect(series.id)}
         aria-current={isSelected ? "true" : undefined}
-        className={`w-full rounded-md px-3 py-1 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${isSelected ? "font-bold" : "hover:bg-white/60"}`}
+        className={`relative w-full py-1.5 pr-1 pl-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point ${isSelected ? "font-bold" : "hover:bg-rule/40"}`}
       >
+        {/* 選択中の行に付ける赤い点は名前の左の余白に置き、名前と代表点の頭をそろえたままにする。 */}
+        {isSelected && (
+          <span
+            aria-hidden="true"
+            className="absolute top-[0.95rem] left-1 size-2 rounded-full bg-selected"
+          />
+        )}
         <span className="block text-[0.85rem]">{series.title}</span>
-        <span className="block text-[0.7rem] font-normal text-zinc-600">
+        <span className="block text-[0.7rem] font-normal text-ink-muted">
           {series.anchor === ANCHOR_UNLOCATED ? "位置なし" : series.anchor}
         </span>
       </button>
       {movedAnchor !== undefined && (
         <div
           data-moved-anchor={movedAnchor.id}
-          className="flex flex-col gap-1 px-3 pb-2 text-[0.7rem] text-zinc-700 tabular-nums"
+          className="flex flex-col gap-1 pr-1 pb-2 pl-4 text-[0.7rem] text-ink tabular-nums"
         >
           <dl className="grid grid-cols-[auto_1fr] gap-x-2">
             <dt>変更前</dt>
@@ -68,7 +73,7 @@ export default function SeriesPickerItem({
           <button
             type="button"
             onClick={() => onReset(movedAnchor)}
-            className="self-start rounded border border-zinc-400 bg-white px-2 py-0.5 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+            className="self-start rounded-full border border-rule bg-paper px-2.5 py-0.5 hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
           >
             元に戻す
           </button>

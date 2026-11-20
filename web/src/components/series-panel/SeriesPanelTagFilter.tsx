@@ -23,7 +23,6 @@ type SeriesPanelTagFilterProps = {
   onSelectedTagsChange: (tags: string[]) => void;
   /** タグの列を表示しているか。 */
   isExpanded: boolean;
-  /** 見出しが押されたときに呼ぶ。 */
   onToggle: () => void;
 };
 
@@ -46,21 +45,24 @@ export default function SeriesPanelTagFilter({
   return (
     <section
       aria-labelledby={headingId}
-      className="shrink-0 rounded-lg border border-white/60 bg-white/35 p-1"
+      className="shrink-0 rounded-box border border-rule p-1"
     >
-      <h3 id={headingId} className="text-[0.8rem] font-bold text-zinc-800">
+      <h3
+        id={headingId}
+        className="font-heading text-[0.85rem] font-bold text-heading"
+      >
         <button
           type="button"
           onClick={onToggle}
           aria-expanded={isExpanded}
           aria-controls={bodyId}
-          className="flex w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-left hover:bg-white/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+          className="flex w-full items-center gap-1.5 rounded-control px-1.5 py-1 text-left hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
         >
           <span className="min-w-0">タグで絞り込む</span>
           {/* 開いているか閉じているかを、色だけでなく形でも示す。 */}
           <span
             aria-hidden="true"
-            className={`ml-auto flex-none text-[0.6rem] text-zinc-600 motion-safe:transition-transform ${isExpanded ? "" : "-rotate-90"}`}
+            className={`ml-auto flex-none text-[0.6rem] text-ink-muted motion-safe:transition-transform ${isExpanded ? "" : "-rotate-90"}`}
           >
             ▼
           </span>
@@ -72,7 +74,7 @@ export default function SeriesPanelTagFilter({
           <button
             type="button"
             onClick={() => onSelectedTagsChange([])}
-            className="flex-none rounded border border-zinc-900/15 bg-white/60 px-1.5 text-[0.75rem] hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+            className="flex-none rounded-full border border-rule bg-paper px-2.5 text-[0.75rem] hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
           >
             絞り込みを解除
           </button>
@@ -81,7 +83,7 @@ export default function SeriesPanelTagFilter({
 
       <div id={bodyId} hidden={!isExpanded} className="pb-1">
         {tags.length === 0 ? (
-          <p className="px-2 text-[0.85rem] text-zinc-600">
+          <p className="px-2 text-[0.85rem] text-ink-muted">
             並べるタグは無い。
           </p>
         ) : (
@@ -98,11 +100,11 @@ export default function SeriesPanelTagFilter({
                       onSelectedTagsChange(toggledTagsOf(selectedTags, tag))
                     }
                     aria-pressed={isSelected}
-                    className={`rounded-full border px-2 py-0.5 text-[0.8rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 ${isSelected ? "border-zinc-800 bg-zinc-800 font-bold text-white" : "border-zinc-900/15 bg-white/50 hover:bg-white/80"}`}
+                    className={`rounded-full border px-2.5 py-0.5 text-[0.8rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point ${isSelected ? "border-point bg-point font-bold text-paper" : "border-rule bg-paper hover:bg-rule/40"}`}
                   >
                     {tag}
                     <span
-                      className={`ml-1 text-[0.7rem] font-normal tabular-nums ${isSelected ? "text-zinc-200" : "text-zinc-600"}`}
+                      className={`ml-1 text-[0.7rem] font-normal tabular-nums ${isSelected ? "text-paper/80" : "text-ink-muted"}`}
                     >
                       {seriesCount}
                     </span>
