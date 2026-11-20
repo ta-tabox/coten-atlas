@@ -55,7 +55,7 @@ paths:
 | 境界 | `src/lib/catalog-dir.*`・`src/lib/episodes.*`・`src/lib/admin-api.*`・`scripts/json-file.ts` | 境界の検証・設定の定数・純粋な計算 | `node:fs`・`git`・`fetch` による読み書きと、境界の検証の呼び出し |
 | 描画 | `src/components/**`（直下にはディレクトリだけを置き、フックは扱う機能のディレクトリに `use-*.ts` で置く） | 純粋な計算・境界の検証の型と定数・設定の定数・`src/lib/episodes.*`・`src/lib/admin-api.*`・同じ層 | React の部品とフック |
 | 配線 | `src/app/**`・`scripts/sync-feed.ts` | `src/app/**` は描画・`src/lib/catalog-dir.*`・純粋な計算・境界の検証、`scripts/sync-feed.ts` はフィードの二段・純粋な計算・境界の検証・`scripts/json-file.ts` | 受け取り・呼び出し・出力 |
-| 検査の機構 | `scripts/smoke.ts`・`scripts/lint-comments.ts` | `scripts/smoke.ts` は設定の定数、`scripts/lint-comments.ts` はこのリポジトリのモジュールを import しない | 配信物を開いて観測を集める `observe` と、観測から違反を出す `violationsOf`・コメントの禁止語の検査 |
+| 検査の機構 | `scripts/smoke.ts`・`scripts/lint-comments.ts` | `scripts/smoke.ts` は設定の定数、`scripts/lint-comments.ts` はこのリポジトリのモジュールを import しない | 配信物を開いたままにする `openExport`・配信物を開いて観測を集める `observe` と、観測から違反を出す `violationsOf`・コメントの禁止語の検査 |
 
 ## 一つしか無い状態の正
 
