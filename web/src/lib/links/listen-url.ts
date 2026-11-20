@@ -9,7 +9,7 @@ import type { Episode } from "@/lib/schema/episode";
 import type { Platform } from "@/lib/schema/link";
 
 /**
- * 配信基盤ごとの、番組全体のページの URL。
+ * 回ごとの URL を持たないエピソードに `listenUrlOf` が代わりに返す、配信基盤ごとの番組全体のページの URL。
  *
  * Apple Podcasts の id は lookup API の collection id である。
  */
@@ -19,7 +19,7 @@ export const SHOW_URLS: Record<Platform, string> = {
 };
 
 /**
- * エピソード（`episode`）を配信基盤（`platform`）で開く URL を返す。
+ * エピソード（`episode`）を配信基盤（`platform`）で開く回ごとの URL を、`episode.links` から返す。
  * その基盤の URL を `links` に持たなければ、`SHOW_URLS` の番組ページの URL を返す。
  */
 export function listenUrlOf(
