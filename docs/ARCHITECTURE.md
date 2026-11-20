@@ -27,7 +27,7 @@
 | 管理画面        | 手元でだけ動き、`catalog/` のファイルへ書く。公開サイトの成果物に含まれない                                                                                                 | [ADR-20260902-local-only-admin（手元でだけ動く管理画面）](adr/20260902-local-only-admin.md)                                                                                                                                                                                                 |
 | 配信リンク      | 回ごとは Spotify と Apple Podcasts、YouTube は公式チャンネルへのリンク 1 つ（RSS の `<link>` は使わない）                                                                   | [ADR-20261109-episode-links-and-youtube-channel（配信リンクと YouTube のチャンネル）](adr/20261109-episode-links-and-youtube-channel.md)                                                                                                                                                    |
 | デプロイ        | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`）                                                                                      | [ADR-20260823-github-pages（GitHub Pages での配信）](adr/20260823-github-pages.md)                                                                                                                                                                                                          |
-| 引用の範囲      | シリーズ名とエピソードタイトルのみ                                                                                                                                          | [ADR-20260823-quote-titles-only（引用は題号に限る）](adr/20260823-quote-titles-only.md)                                                                                                                                                                                                     |
+| 引用の範囲      | シリーズ名とエピソードタイトルのみ                                                                                                                                          | [ADR-20261112-quote-titles-only-without-summary（引用は題号に限る）](adr/20261112-quote-titles-only-without-summary.md)                                                                                                                                                                     |
 | 判定の口        | `pnpm check` の一本                                                                                                                                                         | [ADR-20260914-pnpm-check-current-form（判定を `pnpm check` の一本にする）](adr/20260914-pnpm-check-current-form.md)                                                                                                                                                                         |
 | ツールチェーン  | mise + pnpm + Biome                                                                                                                                                         | ADR を持たない。このリポジトリの外で決めた既定をそのまま踏襲する。`mise.toml` は `[tools]` のみでランタイム版管理に徹する                                                                                                                                                                   |
 | テスト          | Vitest（+ React Testing Library）／ ブラウザを立てる層は Playwright                                                                                                         | 単体側は ADR を持たない。踏襲元の既定が JS のテストランナーを固定していない。Vite 系の事実上の既定で Biome と衝突せず、静的サイトに追加ランタイムを持ち込まない。ブラウザ側を分ける理由は [ADR-20260829-playwright-runner（ブラウザを立てる検証の担当）](adr/20260829-playwright-runner.md) |
@@ -106,7 +106,6 @@ catalog/
     "title": "スパルタ",
     "anchor": "sparta-city", // 代表点の事物 id（loci.geojson の properties.id）
     "timeRange": { "start": -900, "end": -200 }, // 両端を含む閉区間。負値 = BC
-    "summary": "", // 自前の要約を入れる欄。番組の説明文は引用しないので当面は空
     "region": "ヨーロッパ",
     "season": 2, // 割当キー。itunes:season の値
     "links": {}, // シリーズ単位の配信ページは存在しないので、何を指すかは未決定
@@ -117,7 +116,6 @@ catalog/
     "title": "世界三大宗教",
     "anchor": "unlocated", // 位置なし。JSON に定数は無いので文字列をそのまま書き、コードは ANCHOR_UNLOCATED の名で読む。地図に出ず、一覧パネルの別区画に出る（§4）
     "timeRange": "untimed", // 時期なし。コードは TIME_RANGE_UNTIMED の名で読む。置けるのは種別が概念史だけの位置なしのシリーズに限る
-    "summary": "",
     "region": "地域なし",
     "season": 7,
     "links": {},
@@ -283,13 +281,13 @@ catalog/
   切り替えを出すかどうかは環境変数が決め、精緻な事物を持たないシリーズは代表点へフォールバックする
   代表点は `series.anchor` の参照で見分けるので、二つの集合は同じ `loci.geojson` から割れる
   実装は #111
-- オブジェクトクリック → 詳細カード（summary・年代・エピソード一覧・各回の Spotify と Apple Podcasts のボタン・YouTube の公式チャンネルへのリンク）
+- オブジェクトクリック → 詳細カード（年代・エピソード一覧・各回の Spotify と Apple Podcasts のボタン・YouTube の公式チャンネルへのリンク）
 - 状態管理は React の範囲で足りる想定（selection / era window / tag 絞り込み / panel 開閉のみ）
   外部ライブラリを足す前に本当に要るか問う
 - 地図の DOM の禁止則（MapLibre が出す DOM の範囲と、地図の上に載せる overlay の書き方）の正は `.claude/rules/layers.md`
 
 地図の画面のほかに、出典表記の置き場を二つ持つ。
-載せる文言の全文は `web/src/app/about/page.tsx` が持ち、何を載せるかを決めた理由は [ADR-20260823-quote-titles-only](adr/20260823-quote-titles-only.md) が持つ。
+載せる文言の全文は `web/src/app/about/page.tsx` が持ち、何を載せるかを決めた理由は [ADR-20261112-quote-titles-only-without-summary](adr/20261112-quote-titles-only-without-summary.md) が持つ。
 
 公開サイトの外に、手元でだけ立つ管理画面を持つ。
 シリーズを選んで地図の代表点をドラッグすると、座標が `loci.geojson` へ書かれる。

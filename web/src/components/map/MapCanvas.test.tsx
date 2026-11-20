@@ -1,6 +1,7 @@
 /**
  * MapLibre 本体は jsdom で描画できないので、`react-map-gl/maplibre` をモックに差し替える。
  * 検証するのは props の受け渡しであって、地図の描画ではない。
+ * ベースマップのスタイルの取得は、グローバルの `fetch` を差し替えて応答を決める。
  *
  * モックは children を描画しないので、子コンポーネントの有無は MapLibreMap が受け取った `children` とその子孫の要素で判定する。
  * モックは受け取った `ref` に `panTo` だけを持つ地図を入れるので、カメラの移動は `panTo` の呼び出しで判定する。
@@ -21,13 +22,14 @@ import type {
   MapProps,
   MapRef,
 } from "react-map-gl/maplibre";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import { currentWindow } from "@/lib/era/window";
+import { toJapaneseLabelStyle } from "@/lib/map/basemap-labels";
 import {
   BASEMAP_STYLE_URL,
   INITIAL_VIEW_STATE,
@@ -99,7 +101,6 @@ const SPARTA: Series = {
   title: "スパルタ",
   anchor: "sparta-city",
   timeRange: { start: -900, end: -200 },
-  summary: "",
   region: "ヨーロッパ",
   season: 2,
   links: {},
@@ -132,16 +133,45 @@ const ERAS: EraList = [
 
 const PRESENT_END = 2026;
 
-/** `eras` を時代区分に持つ MapCanvas を描画する。 */
-function renderMapCanvas(eras: EraList = ERAS): void {
-  render(
-    <MapCanvas
-      loci={LOCI}
-      seriesList={SERIES}
-      eras={eras}
-      presentEnd={PRESENT_END}
-    />,
+/** ベースマップのスタイルの取得が返す、国名のレイヤ 1 つだけを持つスタイル。 */
+const BASEMAP_STYLE = {
+  version: 8,
+  sources: {},
+  layers: [
+    {
+      id: "label_country_1",
+      type: "symbol",
+      source: "openmaptiles",
+      layout: {
+        "text-field": ["coalesce", ["get", "name_en"], ["get", "name"]],
+      },
+    },
+  ],
+};
+
+/** グローバルの `fetch` を、`response` を返すモックに差し替える。 */
+function stubFetch(response: Partial<Response>): void {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(() => Promise.resolve(response as Response)),
   );
+}
+
+/**
+ * `eras` を時代区分に持つ MapCanvas を描画し、ベースマップのスタイルの取得が終わるまで待つ。
+ * 取得が終わるまで MapCanvas は地図を描かないので、待たないと MapLibreMap のモックが呼ばれない。
+ */
+async function renderMapCanvas(eras: EraList = ERAS): Promise<void> {
+  await act(async () => {
+    render(
+      <MapCanvas
+        loci={LOCI}
+        seriesList={SERIES}
+        eras={eras}
+        presentEnd={PRESENT_END}
+      />,
+    );
+  });
 }
 
 /** 直近のレンダリングで MapLibreMap が受け取った props を返す。 */
@@ -234,41 +264,86 @@ describe("MapCanvas", () => {
   beforeEach(() => {
     map.mockClear();
     panTo.mockClear();
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
   });
 
-  it("OpenFreeMap のスタイルと初期表示位置を渡す", () => {
-    renderMapCanvas();
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("OpenFreeMap から取得したスタイルを、地名を日本語にしてから渡す", async () => {
+    await renderMapCanvas();
+
+    expect(fetch).toHaveBeenCalledWith(BASEMAP_STYLE_URL);
+    expect(lastProps().mapStyle).toEqual(toJapaneseLabelStyle(BASEMAP_STYLE));
+  });
+
+  it("スタイルの取得に失敗すると、書き換えないスタイルの URL を渡す", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    stubFetch({ ok: false, status: 503, statusText: "Service Unavailable" });
+
+    await renderMapCanvas();
 
     expect(lastProps().mapStyle).toBe(BASEMAP_STYLE_URL);
+  });
+
+  it("スタイルの取得が終わるまで地図を描かない", () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise(() => {})),
+    );
+
+    render(
+      <MapCanvas
+        loci={LOCI}
+        seriesList={SERIES}
+        eras={ERAS}
+        presentEnd={PRESENT_END}
+      />,
+    );
+
+    expect(map).not.toHaveBeenCalled();
+  });
+
+  it("初期表示位置を渡す", async () => {
+    await renderMapCanvas();
+
     expect(lastProps().initialViewState).toEqual(INITIAL_VIEW_STATE);
   });
 
-  it("worker の在り処を渡す", () => {
-    renderMapCanvas();
+  it("拡大の上限にズーム 10 を渡す", async () => {
+    await renderMapCanvas();
+
+    expect(lastProps().maxZoom).toBe(10);
+  });
+
+  it("worker の在り処を渡す", async () => {
+    await renderMapCanvas();
 
     expect(lastProps().workerUrl).toBe(MAP_WORKER_URL);
   });
 
-  it("シリーズのレイヤへ事物を渡して子に置く", () => {
-    renderMapCanvas();
+  it("シリーズのレイヤへ事物を渡して子に置く", async () => {
+    await renderMapCanvas();
 
     expect(childOfType(SeriesLayers)).toMatchObject({ props: { loci: LOCI } });
   });
 
-  it("attributionControl を無効にしない", () => {
-    renderMapCanvas();
+  it("attributionControl を無効にしない", async () => {
+    await renderMapCanvas();
 
     expect(lastProps().attributionControl).not.toBe(false);
   });
 
-  it("クリックを拾う相手を代表点のレイヤに限る", () => {
-    renderMapCanvas();
+  it("クリックを拾う相手を代表点のレイヤに限る", async () => {
+    await renderMapCanvas();
 
     expect(lastProps().interactiveLayerIds).toEqual([SERIES_CIRCLE_LAYER.id]);
   });
 
-  it("Locus に入ったときだけ cursor を pointer にする", () => {
-    renderMapCanvas();
+  it("Locus に入ったときだけ cursor を pointer にする", async () => {
+    await renderMapCanvas();
 
     expect(lastProps().cursor).not.toBe("pointer");
 
@@ -281,14 +356,14 @@ describe("MapCanvas", () => {
     expect(lastProps().cursor).not.toBe("pointer");
   });
 
-  it("選択が無いうちは詳細カードを置かない", () => {
-    renderMapCanvas();
+  it("選択が無いうちは詳細カードを置かない", async () => {
+    await renderMapCanvas();
 
     expect(childOfType(SeriesDetailCard)).toBeUndefined();
   });
 
-  it("事物のクリックで、その seriesId のシリーズを詳細カードへ渡す", () => {
-    renderMapCanvas();
+  it("事物のクリックで、その seriesId のシリーズを詳細カードへ渡す", async () => {
+    await renderMapCanvas();
 
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
 
@@ -297,8 +372,8 @@ describe("MapCanvas", () => {
     });
   });
 
-  it("事物の無い所のクリックで選択を外す", () => {
-    renderMapCanvas();
+  it("事物の無い所のクリックで選択を外す", async () => {
+    await renderMapCanvas();
 
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
     act(() => lastProps().onClick?.(mouseEventOnBlank()));
@@ -306,8 +381,8 @@ describe("MapCanvas", () => {
     expect(childOfType(SeriesDetailCard)).toBeUndefined();
   });
 
-  it("era スライダーは古代の区間の中央から始まる", () => {
-    renderMapCanvas();
+  it("era スライダーは古代の区間の中央から始まる", async () => {
+    await renderMapCanvas();
 
     expect(eraSliderProps()).toMatchObject({
       eras: ERAS,
@@ -316,8 +391,8 @@ describe("MapCanvas", () => {
     });
   });
 
-  it("スライダーの位置から求めた現在窓を、シリーズのレイヤへ渡す", () => {
-    renderMapCanvas();
+  it("スライダーの位置から求めた現在窓を、シリーズのレイヤへ渡す", async () => {
+    await renderMapCanvas();
 
     expect(childOfType(SeriesLayers)).toMatchObject({
       props: {
@@ -330,8 +405,8 @@ describe("MapCanvas", () => {
     });
   });
 
-  it("スライダーが動くと、シリーズのレイヤへ渡す現在窓が変わる", () => {
-    renderMapCanvas();
+  it("スライダーが動くと、シリーズのレイヤへ渡す現在窓が変わる", async () => {
+    await renderMapCanvas();
 
     act(() => eraSliderProps().onPositionChange(0.9));
 
@@ -347,15 +422,15 @@ describe("MapCanvas", () => {
     });
   });
 
-  it("時代区分に古代が無ければ throw する", () => {
+  it("時代区分に古代が無ければ throw する", async () => {
     // React は描画中の throw を console.error にも書くので、テストの出力に載せない。
     vi.spyOn(console, "error").mockImplementation(() => {});
 
-    expect(() => renderMapCanvas(ERAS.slice(2))).toThrow("ancient");
+    await expect(renderMapCanvas(ERAS.slice(2))).rejects.toThrow("ancient");
   });
 
-  it("スライダーの現在窓で分けた区画を、一覧パネルへ渡す", () => {
-    renderMapCanvas();
+  it("スライダーの現在窓で分けた区画を、一覧パネルへ渡す", async () => {
+    await renderMapCanvas();
 
     act(() => eraSliderProps().onPositionChange(0.9));
 
@@ -372,15 +447,15 @@ describe("MapCanvas", () => {
     );
   });
 
-  it("選択が無いうちは、一覧パネルとシリーズのレイヤへ null を渡す", () => {
-    renderMapCanvas();
+  it("選択が無いうちは、一覧パネルとシリーズのレイヤへ null を渡す", async () => {
+    await renderMapCanvas();
 
     expect(seriesPanelProps().selectedSeriesId).toBeNull();
     expect(seriesLayersProps().selectedSeries).toBeNull();
   });
 
-  it("事物のクリックで選んだシリーズの id を、一覧パネルとシリーズのレイヤへ渡す", () => {
-    renderMapCanvas();
+  it("事物のクリックで選んだシリーズの id を、一覧パネルとシリーズのレイヤへ渡す", async () => {
+    await renderMapCanvas();
 
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
 
@@ -388,8 +463,8 @@ describe("MapCanvas", () => {
     expect(seriesLayersProps().selectedSeries?.id).toBe("sparta");
   });
 
-  it("一覧パネルで選んだシリーズを、詳細カードへ渡し、シリーズのレイヤと一覧パネルへ同じ id で渡す", () => {
-    renderMapCanvas();
+  it("一覧パネルで選んだシリーズを、詳細カードへ渡し、シリーズのレイヤと一覧パネルへ同じ id で渡す", async () => {
+    await renderMapCanvas();
 
     act(() => seriesPanelProps().onSelect("sparta"));
 
@@ -400,8 +475,8 @@ describe("MapCanvas", () => {
     expect(seriesPanelProps().selectedSeriesId).toBe("sparta");
   });
 
-  it("一覧パネルで選んだ後に事物の無い所をクリックすると、一覧パネルの選択も外れる", () => {
-    renderMapCanvas();
+  it("一覧パネルで選んだ後に事物の無い所をクリックすると、一覧パネルの選択も外れる", async () => {
+    await renderMapCanvas();
 
     act(() => seriesPanelProps().onSelect("sparta"));
     act(() => lastProps().onClick?.(mouseEventOnBlank()));
@@ -409,8 +484,8 @@ describe("MapCanvas", () => {
     expect(seriesPanelProps().selectedSeriesId).toBeNull();
   });
 
-  it("詳細カードを閉じると、一覧パネルとシリーズのレイヤの選択も外れる", () => {
-    renderMapCanvas();
+  it("詳細カードを閉じると、一覧パネルとシリーズのレイヤの選択も外れる", async () => {
+    await renderMapCanvas();
 
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
     act(() =>
@@ -423,8 +498,8 @@ describe("MapCanvas", () => {
     expect(seriesLayersProps().selectedSeries).toBeNull();
   });
 
-  it("一覧パネルで代表点を持つシリーズを選ぶと、その代表点へ panTo する", () => {
-    renderMapCanvas();
+  it("一覧パネルで代表点を持つシリーズを選ぶと、その代表点へ panTo する", async () => {
+    await renderMapCanvas();
 
     act(() => seriesPanelProps().onSelect("sparta"));
 
@@ -434,8 +509,8 @@ describe("MapCanvas", () => {
     );
   });
 
-  it("一覧パネルで位置なしのシリーズを選んでも panTo しない", () => {
-    renderMapCanvas();
+  it("一覧パネルで位置なしのシリーズを選んでも panTo しない", async () => {
+    await renderMapCanvas();
 
     act(() => seriesPanelProps().onSelect("okane-no-rekishi"));
 
@@ -445,16 +520,16 @@ describe("MapCanvas", () => {
     expect(panTo).not.toHaveBeenCalled();
   });
 
-  it("事物のクリックで選んでも panTo しない", () => {
-    renderMapCanvas();
+  it("事物のクリックで選んでも panTo しない", async () => {
+    await renderMapCanvas();
 
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
 
     expect(panTo).not.toHaveBeenCalled();
   });
 
-  it("絞り込んでいなければ、区画のシリーズから数えたタグを一覧パネルへ渡す", () => {
-    renderMapCanvas();
+  it("絞り込んでいなければ、区画のシリーズから数えたタグを一覧パネルへ渡す", async () => {
+    await renderMapCanvas();
 
     expect(seriesPanelProps().tags).toEqual(
       panelTagsOf(
@@ -472,8 +547,8 @@ describe("MapCanvas", () => {
     );
   });
 
-  it("一覧パネルでタグを選ぶと、シリーズのレイヤへ渡す事物と一覧パネルの区画が、そのタグを持つシリーズに絞られる", () => {
-    renderMapCanvas();
+  it("一覧パネルでタグを選ぶと、シリーズのレイヤへ渡す事物と一覧パネルの区画が、そのタグを持つシリーズに絞られる", async () => {
+    await renderMapCanvas();
 
     act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
 
@@ -485,8 +560,8 @@ describe("MapCanvas", () => {
     });
   });
 
-  it("一覧パネルでタグを 2 つ選ぶと、両方を持つシリーズだけに絞られる", () => {
-    renderMapCanvas();
+  it("一覧パネルでタグを 2 つ選ぶと、両方を持つシリーズだけに絞られる", async () => {
+    await renderMapCanvas();
 
     act(() => seriesPanelProps().onSelectedTagsChange(["経済", "集団"]));
 
@@ -494,8 +569,8 @@ describe("MapCanvas", () => {
     expect(seriesPanelProps().sections).toEqual({ onMap: [], unlocated: [] });
   });
 
-  it("タグを選ぶと、一覧パネルへ渡すタグが、選んだタグと一緒に持たれているタグだけになる", () => {
-    renderMapCanvas();
+  it("タグを選ぶと、一覧パネルへ渡すタグが、選んだタグと一緒に持たれているタグだけになる", async () => {
+    await renderMapCanvas();
 
     act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
 
@@ -505,8 +580,8 @@ describe("MapCanvas", () => {
     ]);
   });
 
-  it("絞り込みを解除すると、シリーズのレイヤへ渡す事物と一覧パネルの区画が絞る前に戻る", () => {
-    renderMapCanvas();
+  it("絞り込みを解除すると、シリーズのレイヤへ渡す事物と一覧パネルの区画が絞る前に戻る", async () => {
+    await renderMapCanvas();
 
     act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
     act(() => seriesPanelProps().onSelectedTagsChange([]));
@@ -526,8 +601,8 @@ describe("MapCanvas", () => {
     );
   });
 
-  it("選択中のシリーズが絞り込みで一覧パネルと地図から消えても、選択は外れず詳細カードを開いたままにする", () => {
-    renderMapCanvas();
+  it("選択中のシリーズが絞り込みで一覧パネルと地図から消えても、選択は外れず詳細カードを開いたままにする", async () => {
+    await renderMapCanvas();
 
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
     act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
@@ -539,8 +614,8 @@ describe("MapCanvas", () => {
     });
   });
 
-  it("絞り込み中に選択を移しても、絞り込みは外れない", () => {
-    renderMapCanvas();
+  it("絞り込み中に選択を移しても、絞り込みは外れない", async () => {
+    await renderMapCanvas();
 
     act(() => seriesPanelProps().onSelectedTagsChange(["経済"]));
     act(() => seriesPanelProps().onSelect("okane-no-rekishi"));

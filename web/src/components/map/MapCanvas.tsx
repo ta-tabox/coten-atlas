@@ -12,6 +12,7 @@ import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import EraSlider from "@/components/era-slider/EraSlider";
 import SeriesLayers from "@/components/map/SeriesLayers";
+import { useBasemapStyle } from "@/components/map/use-basemap-style";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import {
@@ -21,9 +22,9 @@ import {
 } from "@/lib/episodes";
 import { currentWindow } from "@/lib/era/window";
 import {
-  BASEMAP_STYLE_URL,
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
+  PUBLIC_MAP_MAX_ZOOM,
 } from "@/lib/map/config";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/layers/shared";
 import {
@@ -112,6 +113,7 @@ export default function MapCanvas({
   presentEnd,
 }: MapCanvasProps) {
   const mapRef = useRef<MapRef>(null);
+  const mapStyle = useBasemapStyle();
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
 
   // 絞り込みに使うタグは、選択中のシリーズと別の state に持ち、どちらを変えてももう片方は変えない。
@@ -176,6 +178,10 @@ export default function MapCanvas({
     });
   }
 
+  if (mapStyle === null) {
+    return null;
+  }
+
   // react-map-gl は maplibre 本体を実行時に動的 import するので、プリレンダでは空のコンテナだけが出る。
   // MapLibreMap を next/dynamic の ssr: false で包まなくてよい。
   return (
@@ -183,8 +189,9 @@ export default function MapCanvas({
       ref={mapRef}
       // attributionControl は渡さない。
       // OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
-      mapStyle={BASEMAP_STYLE_URL}
+      mapStyle={mapStyle}
       initialViewState={INITIAL_VIEW_STATE}
+      maxZoom={PUBLIC_MAP_MAX_ZOOM}
       workerUrl={MAP_WORKER_URL}
       // MapLibreMap は container の `className` を受け取らないので、寸法だけは Tailwind のユーティリティでなく style で渡す。
       style={{ width: "100%", height: "100dvh" }}

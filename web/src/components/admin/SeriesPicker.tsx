@@ -36,7 +36,7 @@ export default function SeriesPicker({
   onReset,
 }: SeriesPickerProps) {
   return (
-    <ul className="flex flex-col gap-0.5 overflow-y-auto">
+    <ul className="flex flex-col divide-y divide-rule overflow-y-auto">
       {seriesList.map((series) => (
         <li key={series.id}>
           <SeriesPickerItem

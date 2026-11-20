@@ -12,7 +12,6 @@ const sparta = {
   title: "スパルタ",
   anchor: "sparta-city",
   timeRange: { start: -900, end: -200 },
-  summary: "",
   region: "ヨーロッパ",
   season: 2,
   links: {},
@@ -51,6 +50,10 @@ describe("seriesListSchema", () => {
     ]);
 
     expect(result.success).toBe(false);
+  });
+
+  it("summary を持つ 1 件を parseSeries が拒否する", () => {
+    expect(() => parseSeries([seriesWith({ summary: "" })])).toThrow();
   });
 
   it("id が重複した 2 件を落とす", () => {

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * era スライダーを表示する。
+ * 時代区分を等幅のセルに並べ、現在窓の位置を選ばせる era スライダーの部品を置く。
  *
  * 位置を保持しない。
  * 表示するのは props で受け取った `position` で、動かされた位置は `onPositionChange` で返す。
@@ -21,7 +21,7 @@ import { formatTimeRange, formatYearWithoutUnit } from "@/lib/format";
 import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
 
 /**
- * 1 つの era に割り当てるスライダーの目盛りの数。
+ * 矢印キー 1 回で動く幅を決める、era 1 つあたりの目盛りの数。
  * `<input type="range">` は整数の目盛りで値を持ち、矢印キー 1 回で 1 目盛り進む。
  */
 const STEPS_PER_ERA = 100;
@@ -33,19 +33,20 @@ const STEPS_PER_ERA = 100;
 const SLIDER_ID = "era-slider";
 
 /**
- * era のセルの列に重ねる `<input type="range">` の className。
- * トラックを透明にしてセルの列を見せ、つまみはセルより少し高い細い縦棒にする。
+ * era のセルの列の下端の帯に重ねる `<input type="range">` の className。
+ * トラックを透明にしてセルの列を見せ、つまみは帯より少し高い細い縦棒にする。
+ * セルの era 名はセルの上寄せに置くので、つまみを下端の帯に限ると era 名の文字に重ならない。
  *
  * `<input>` はポインタのイベントを受けず、ポインタの操作は `<input>` を包むトラックの要素が受ける。
  * `range-track:` と `range-thumb:` は、`globals.css` の `@custom-variant` が定義する、トラックとつまみの擬似要素へ当てるバリアントである。
  */
 const RANGE_CLASS = [
-  "pointer-events-none absolute inset-0 m-0 h-full w-full appearance-none bg-transparent",
-  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-500",
+  "pointer-events-none absolute inset-x-0 bottom-0 m-0 h-3 w-full appearance-none bg-transparent",
+  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-point",
   "range-track:h-full range-track:bg-transparent",
-  "range-thumb:h-12 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-zinc-800",
+  "range-thumb:h-5 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-point",
   // WebKit はつまみの上端をトラックの上端に揃え、Firefox は上下の中央に置く。
-  // セルより高いつまみを WebKit でも上下に均等にはみ出させるので、WebKit のつまみだけを上へずらす。
+  // 帯より高いつまみを WebKit でも上下に均等にはみ出させるので、WebKit のつまみだけを上へずらす。
   "[&::-webkit-slider-thumb]:-mt-1",
 ].join(" ");
 
@@ -108,7 +109,6 @@ export default function EraSlider({
   const boundaryYears = boundaryYearsOf(eras, presentEnd);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // トラックを押したまま動かしているポインタの pointerId。
   // 押していなければ null。
   const draggingPointerId = useRef<number | null>(null);
 
@@ -166,7 +166,7 @@ export default function EraSlider({
   }
 
   return (
-    <div className="rounded-xl border border-white/50 bg-white/45 px-4 pt-2.5 pb-1.5 font-sans text-zinc-800 shadow-lg shadow-black/5 backdrop-blur-md backdrop-saturate-150">
+    <div className="rounded-box border border-rule bg-paper px-4 pt-2.5 pb-1.5 font-body text-ink shadow-sm">
       {/* 画面にはスライダーの見出しを出さないが、スクリーンリーダーにはスライダーの名前として読ませる。 */}
       <label htmlFor={SLIDER_ID} className="sr-only">
         時代
@@ -175,26 +175,26 @@ export default function EraSlider({
       {/* スライダーの aria-valuetext が同じ範囲を読み上げるので、スクリーンリーダーには重ねて読ませない。 */}
       <p
         aria-hidden="true"
-        className="text-right text-[0.8rem] tracking-[0.02em] text-zinc-600 tabular-nums"
+        className="text-right text-[0.8rem] tracking-[0.02em] text-ink-muted tabular-nums"
       >
         {windowYears}
       </p>
 
       {/* ブラウザがトラックの上のタッチをスクロールや拡大に使うと pointercancel が届いて位置が止まるので、touch-none でタッチの既定の動作を止める。 */}
-      {/* つまみはセルの列より上下に 4px ずつはみ出して描かれ、`<input>` はポインタのイベントを受けないので、ポインタを受ける範囲を before 擬似要素で上下に 4px ずつ広げる。 */}
+      {/* つまみはセルの列の下端より 4px はみ出して描かれ、`<input>` はポインタのイベントを受けないので、ポインタを受ける範囲を before 擬似要素で下へ 4px 広げる。 */}
       <div
         data-testid="era-slider-track"
-        className="relative mt-1.5 cursor-ew-resize touch-none before:absolute before:inset-x-0 before:-inset-y-1"
+        className="relative mt-1.5 cursor-ew-resize touch-none before:absolute before:inset-x-0 before:top-0 before:-bottom-1"
         onPointerDown={startDragging}
         onPointerMove={continueDragging}
         onPointerUp={stopDragging}
         onPointerCancel={stopDragging}
       >
-        <ol className="flex h-10 overflow-hidden rounded-md border border-zinc-900/10 bg-white/30">
+        <ol className="flex h-11 overflow-hidden rounded-control border border-rule">
           {eras.map((era) => (
             <li
               key={era.id}
-              className="grid flex-1 place-items-center border-l border-zinc-900/10 text-[0.75rem] whitespace-nowrap text-zinc-600 first:border-l-0"
+              className="flex flex-1 justify-center border-l pt-1 border-rule text-[0.75rem] whitespace-nowrap text-ink-muted first:border-l-0"
             >
               {era.label}
             </li>
@@ -207,7 +207,7 @@ export default function EraSlider({
         >
           <div
             data-testid="era-window-band"
-            className="absolute inset-y-0 border-x border-sky-900/50 bg-sky-900/10"
+            className="absolute inset-y-0 border-x border-point/50 bg-point/10"
             // 帯の位置と幅は position に応じて連続に変わるので、Tailwind のユーティリティでなく style で渡す。
             style={{
               left: `${windowPositions.start * 100}%`,
@@ -238,7 +238,7 @@ export default function EraSlider({
           <span
             key={year}
             data-testid="era-boundary-year"
-            className={`absolute top-0 text-[0.65rem] whitespace-nowrap text-zinc-500 tabular-nums ${boundaryAlignClassOf(index, boundaryYears.length - 1)}`}
+            className={`absolute top-0 text-[0.65rem] whitespace-nowrap text-ink-muted tabular-nums ${boundaryAlignClassOf(index, boundaryYears.length - 1)}`}
             style={{ left: `${(index / eras.length) * 100}%` }}
           >
             {formatYearWithoutUnit(year)}

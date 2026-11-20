@@ -11,7 +11,6 @@ const MONGOL: Series = {
   title: "モンゴル帝国襲来",
   anchor: "mongol-shurai-anchor",
   timeRange: { start: 1206, end: 1294 },
-  summary: "",
   region: "中央ユーラシア",
   season: 67,
   links: {},
