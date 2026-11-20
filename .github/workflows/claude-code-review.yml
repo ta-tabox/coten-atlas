@@ -1,8 +1,5 @@
 name: Claude Code Review
 
-# 共有の雛形から写し、`<!-- FILL -->` の箇所を埋めたうえで、このリポジトリに合わせて調整している。
-# 調整は、同期のボットが開く PR（ブランチ sync/episodes）を除く絞りである。
-
 on:
   pull_request:
     # 毎 push で走ると増分のたびに同じ指摘が積むので、synchronize は入れない。
