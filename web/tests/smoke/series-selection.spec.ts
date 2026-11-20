@@ -31,13 +31,11 @@ test.afterEach(() => {
 });
 
 /**
- * 地図の canvas の画素のうち、最も多い色（地図の背景）と最も離れた色の画素を、背景から遠い順に見て、canvas が最前面にある最初の位置を返す。
- * 背景と違う色の画素が無いか、どれも一覧パネルや詳細カードの下にあれば null を返す。
- *
- * スクリーンショットは地図の上に重なる要素を隠して撮るので、画素の色は canvas の色だけになる。
- * 押す前には隠さないので、重なる要素の下の円は `elementFromPoint` で候補から除く。
+ * 地図の円が描かれていて、地図の canvas が最前面にある画面上の位置を返す。
+ * 円が描かれていないか、どの円も一覧パネルや詳細カードの下にあれば null を返す。
  */
 async function findCirclePoint(page: Page): Promise<Point | null> {
+  // 地図の上に重なる要素を隠して撮り、画素の色を canvas の色だけにする。
   const screenshot = await page.screenshot({
     style:
       ".maplibregl-map > :not(.maplibregl-canvas-container) { visibility: hidden !important; }",
@@ -92,6 +90,7 @@ async function findCirclePoint(page: Page): Promise<Point | null> {
       .filter((candidate) => candidate.distance > 0)
       .sort((a, b) => b.distance - a.distance);
 
+    // 押すときは重なる要素を隠さないので、その下の円は候補から除く。
     const mapCanvas = document.querySelector("canvas.maplibregl-canvas");
 
     for (const { pixel } of candidates) {
