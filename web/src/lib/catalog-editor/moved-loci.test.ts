@@ -9,7 +9,12 @@ function lociOf(...pairs: [string, [number, number]][]): LocusCollection {
     features: pairs.map(([id, coordinates]) => ({
       type: "Feature",
       geometry: { type: "Point", coordinates },
-      properties: { id, seriesId: id, timeRange: TIME_RANGE_OF_SERIES },
+      properties: {
+        id,
+        seriesId: id,
+        timeRange: TIME_RANGE_OF_SERIES,
+        name: id,
+      },
     })),
   };
 }

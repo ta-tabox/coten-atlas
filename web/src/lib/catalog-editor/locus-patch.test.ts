@@ -13,6 +13,7 @@ const loci: LocusCollection = {
         id: "hagi",
         seriesId: "yoshida-shoin",
         timeRange: TIME_RANGE_OF_SERIES,
+        name: "萩",
       },
     },
     {
@@ -22,6 +23,7 @@ const loci: LocusCollection = {
         id: "sparta-city",
         seriesId: "sparta",
         timeRange: TIME_RANGE_OF_SERIES,
+        name: "スパルタ",
       },
     },
   ],
