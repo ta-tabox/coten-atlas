@@ -18,10 +18,9 @@ import AboutPage from "@/app/about/page";
 const SHARED_HEADINGS = ["出典と引用の範囲", "ライセンス"];
 
 /**
- * README の `SHARED_HEADINGS` の節にある行を、Markdown の記法を外して返す。
+ * README の `SHARED_HEADINGS` の節にある行を、`/about` の文と先頭から比べられる形で返す。
  *
  * 節が無ければ空配列を返す。
- * リンクは前後の全角括弧ごと外すので、`/about` に無い「（理由は ADR へのリンク）」は文の途中で切れた形で残る。
  */
 function readmeLines(): string[] {
   const sections = readFileSync(README_PATH, "utf8").split(/^## /m);
