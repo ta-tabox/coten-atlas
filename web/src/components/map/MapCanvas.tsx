@@ -41,9 +41,10 @@ import type { Series, SeriesList } from "@/lib/schema/series";
 
 /**
  * 地図を開いたときに、era スライダーが指す era の id。
- * 古代を選んだ理由は docs/adr/20260911-era-fade-window-only.md が持つ。
+ * 地図に出るシリーズが最も多く重なる区間を選ぶ。
+ * 基準の理由は docs/adr/20260911-era-fade-window-only.md が持つ。
  */
-const INITIAL_ERA_ID = "ancient";
+const INITIAL_ERA_ID = "modern19";
 
 /** 一覧パネルで選んだシリーズの代表点へ、地図の中心を移すのにかける時間（ミリ秒）。 */
 const PAN_DURATION_MS = 1200;
