@@ -55,3 +55,10 @@
     @slot;
   }
 }
+
+/* スマホの幅では、地図の下端に era スライダーとシートを重ねる。
+   `--map-bottom-inset` はその高さで、MapLibre の右下の出典表記を重ねた要素の上へ持ち上げる。
+   変数が無い（デスクトップの幅）ときは 0 で、MapLibre の既定の位置のままになる。 */
+.maplibregl-ctrl-bottom-right {
+  bottom: var(--map-bottom-inset, 0px);
+}

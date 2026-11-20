@@ -26,8 +26,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
 import SeriesLayers from "@/components/map/SeriesLayers";
+import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
+import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
+import SeriesSheet from "@/components/series-sheet/SeriesSheet";
 import { currentWindow } from "@/lib/era/window";
 import { toJapaneseLabelStyle } from "@/lib/map/basemap-labels";
 import {
@@ -675,5 +678,81 @@ describe("MapCanvas", () => {
     act(() => seriesPanelProps().onSelect("okane-no-rekishi"));
 
     expect(seriesPanelProps().selectedTags).toEqual(["経済"]);
+  });
+});
+
+/** 地図の children にある SeriesSheet の props を返す。 */
+function seriesSheetProps(): ComponentProps<typeof SeriesSheet> {
+  return childPropsOf(SeriesSheet);
+}
+
+describe("MapCanvas（スマホの幅）", () => {
+  beforeEach(() => {
+    map.mockClear();
+    stubDesktop(false);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("一覧と詳細カードを 1 枚のシートに置き、一覧パネルと詳細カードの枠を置かない", async () => {
+    await renderMapCanvas();
+
+    expect(childOfType(SeriesSheet)).toBeDefined();
+    expect(childOfType(SeriesPanel)).toBeUndefined();
+    expect(childOfType(SeriesDetailCard)).toBeUndefined();
+  });
+
+  it("シートは初期で閉じた段にして、一覧の見出しを出す", async () => {
+    await renderMapCanvas();
+
+    expect(seriesSheetProps()).toMatchObject({
+      stage: "closed",
+      heading: "シリーズ一覧",
+    });
+  });
+
+  it("スマホの幅でも era スライダーを置く", async () => {
+    await renderMapCanvas();
+
+    expect(eraSliderProps().eras).toBe(ERAS);
+  });
+
+  it("地図の点を押すと、シートを開いた段にして詳細カードの中身を置く", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    expect(seriesSheetProps().stage).toBe("open");
+    expect(
+      findElementOfType(seriesSheetProps().children, SeriesDetailBody),
+    ).toBeDefined();
+    expect(
+      findElementOfType(seriesSheetProps().children, SeriesPanelBody),
+    ).toBeUndefined();
+  });
+
+  it("詳細カードを閉じると、シートは開いたまま一覧の中身へ戻る", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    act(() => childPropsOf(SeriesDetailBody).onClose());
+
+    expect(seriesSheetProps().stage).toBe("open");
+    expect(
+      findElementOfType(seriesSheetProps().children, SeriesPanelBody),
+    ).toBeDefined();
+  });
+
+  it("一覧でシリーズを選ぶと、シートを開いた段にする", async () => {
+    await renderMapCanvas();
+
+    act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
+
+    expect(seriesSheetProps().stage).toBe("open");
   });
 });

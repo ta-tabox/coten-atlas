@@ -12,8 +12,8 @@
  */
 
 import {
-  type PointerEvent as ReactPointerEvent,
   type ReactNode,
+  type PointerEvent as ReactPointerEvent,
   useId,
   useRef,
   useState,
@@ -53,6 +53,19 @@ function heightAt(state: DragState, clientY: number): number {
   const height = state.startHeight + (state.startY - clientY);
 
   return Math.min(state.openHeight, Math.max(state.closedHeight, height));
+}
+
+/**
+ * シートの `height` に渡す値を返す。
+ * ドラッグ中（`dragHeight` が数値）は指の位置の高さ、そうでなければ段の高さにする。
+ * 閉じた段は内容の高さ（見出しの行だけ）にする。
+ */
+function heightStyleOf(stage: SheetStage, dragHeight: number | null): string {
+  if (dragHeight !== null) {
+    return `${dragHeight}px`;
+  }
+
+  return stage === "open" ? `${SHEET_OPEN_RATIO * 100}dvh` : "auto";
 }
 
 /**
@@ -155,12 +168,7 @@ export default function SeriesSheet({
   }
 
   const isOpen = dragHeight !== null || stage === "open";
-  const height =
-    dragHeight !== null
-      ? `${dragHeight}px`
-      : stage === "open"
-        ? `${SHEET_OPEN_RATIO * 100}dvh`
-        : "auto";
+  const height = heightStyleOf(stage, dragHeight);
 
   return (
     <aside

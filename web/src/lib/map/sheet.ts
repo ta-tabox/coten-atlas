@@ -3,7 +3,10 @@
  * シートの描画と指の操作の受け取りは `@/components/series-sheet/SeriesSheet` が持つ。
  */
 
-/** シートの段。`closed` は見出しの一行だけを出し、`open` は画面の高さの半分まで開く。 */
+/**
+ * シートの段。
+ * `closed` は見出しの一行だけを出し、`open` は画面の高さの半分まで開く。
+ */
 export type SheetStage = "closed" | "open";
 
 /** `open` の段のシートの高さが画面の高さ（`dvh`）に占める割合。 */

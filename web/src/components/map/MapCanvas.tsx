@@ -12,10 +12,14 @@ import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import EraSlider from "@/components/era-slider/EraSlider";
 import SeriesLayers from "@/components/map/SeriesLayers";
+import { trackBottomInset } from "@/components/map/track-bottom-inset";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
 import { useIsDesktop } from "@/components/map/use-is-desktop";
+import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
+import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
+import SeriesSheet from "@/components/series-sheet/SeriesSheet";
 import {
   type EpisodesState,
   episodesForSeries,
@@ -35,6 +39,7 @@ import {
   type MapLocusCollection,
 } from "@/lib/map/loci";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
+import type { SheetStage } from "@/lib/map/sheet";
 import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
 import type { EraList } from "@/lib/schema/era";
 import type { Series, SeriesList } from "@/lib/schema/series";
@@ -131,6 +136,7 @@ export default function MapCanvas({
   );
   const [episodes, setEpisodes] = useState<EpisodesState>({ kind: "loading" });
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [sheetStage, setSheetStage] = useState<SheetStage>("closed");
   const isDesktop = useIsDesktop();
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
 
@@ -183,12 +189,24 @@ export default function MapCanvas({
   });
 
   /**
-   * 一覧パネルでクリックされた `seriesId` のシリーズを選択し、代表点を持つならその代表点へ地図の中心を移す。
+   * `seriesId` のシリーズを選び、選びを外すなら null を渡す。
+   * スマホの幅では、シリーズを選ぶとシートを開いた段にして詳細カードを見せる。
+   */
+  function select(seriesId: string | null): void {
+    setSelectedSeriesId(seriesId);
+
+    if (seriesId !== null && !isDesktop) {
+      setSheetStage("open");
+    }
+  }
+
+  /**
+   * 一覧でクリックされた `seriesId` のシリーズを選択し、代表点を持つならその代表点へ地図の中心を移す。
    *
-   * 地図のクリックで選んだ事物は既に画面に在るので、`panTo` を呼ぶのはパネルからの選択だけにする。
+   * 地図のクリックで選んだ事物は既に画面に在るので、`panTo` を呼ぶのは一覧からの選択だけにする。
    */
   function selectFromPanel(seriesId: string): void {
-    setSelectedSeriesId(seriesId);
+    select(seriesId);
 
     const clicked = seriesList.find((series) => series.id === seriesId);
     const anchor =
@@ -207,6 +225,15 @@ export default function MapCanvas({
     return null;
   }
 
+  const eraSlider = (
+    <EraSlider
+      eras={eras}
+      presentEnd={presentEnd}
+      position={eraPosition}
+      onPositionChange={setEraPosition}
+    />
+  );
+
   // react-map-gl は maplibre 本体を実行時に動的 import するので、プリレンダでは空のコンテナだけが出る。
   // MapLibreMap を next/dynamic の ssr: false で包まなくてよい。
   return (
@@ -221,7 +248,7 @@ export default function MapCanvas({
       // MapLibreMap は container の `className` を受け取らないので、寸法だけは Tailwind のユーティリティでなく style で渡す。
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
-      onClick={(event) => setSelectedSeriesId(selectedSeriesIdOf(event))}
+      onClick={(event) => select(selectedSeriesIdOf(event))}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
       cursor={isHoveringLocus ? "pointer" : undefined}
@@ -233,35 +260,70 @@ export default function MapCanvas({
         currentWindow={eraWindow}
         selectedSeries={selectedSeries}
       />
-      {/* 一覧パネルは地図の左上に置き、高さを画面の下に重なる era スライダーの上端までに収める。 */}
-      <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-12rem)] max-w-[calc(100vw-2rem)] flex-col">
-        <SeriesPanel
-          sections={taggedSections}
-          selectedSeriesId={selectedSeriesId}
-          onSelect={selectFromPanel}
-          tags={panelTagsOf(taggedSections, selectedTags)}
-          selectedTags={selectedTags}
-          onSelectedTagsChange={setSelectedTags}
-          isOpen={isPanelOpen}
-          onOpenChange={setIsPanelOpen}
-        />
-      </div>
-      {/* 包みは左端を left-1/2 で画面の中央に置くので、幅を包みに書かないと、包みの幅は画面の幅の半分を上限に縮む。 */}
-      <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2">
-        <EraSlider
-          eras={eras}
-          presentEnd={presentEnd}
-          position={eraPosition}
-          onPositionChange={setEraPosition}
-        />
-      </div>
-      {selectedSeries !== null && (
-        <div className="absolute top-4 right-4 z-10 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col">
-          <SeriesDetailCard
-            series={selectedSeries}
-            episodes={episodesOf(episodes, selectedSeries.id)}
-            onClose={() => setSelectedSeriesId(null)}
-          />
+      {isDesktop ? (
+        <>
+          {/* 一覧パネルは地図の左上に置き、高さを画面の下に重なる era スライダーの上端までに収める。 */}
+          <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-12rem)] max-w-[calc(100vw-2rem)] flex-col">
+            <SeriesPanel
+              sections={taggedSections}
+              selectedSeriesId={selectedSeriesId}
+              onSelect={selectFromPanel}
+              tags={panelTagsOf(taggedSections, selectedTags)}
+              selectedTags={selectedTags}
+              onSelectedTagsChange={setSelectedTags}
+              isOpen={isPanelOpen}
+              onOpenChange={setIsPanelOpen}
+            />
+          </div>
+          {/* 包みは左端を left-1/2 で画面の中央に置くので、幅を包みに書かないと、包みの幅は画面の幅の半分を上限に縮む。 */}
+          <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2">
+            {eraSlider}
+          </div>
+          {selectedSeries !== null && (
+            <div className="absolute top-4 right-4 z-10 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col">
+              <SeriesDetailCard
+                series={selectedSeries}
+                episodes={episodesOf(episodes, selectedSeries.id)}
+                onClose={() => setSelectedSeriesId(null)}
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        // era スライダーはシートの上端に載せ、シートと同じ要素に入れて一緒に上下させる。
+        <div
+          ref={trackBottomInset}
+          className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-2"
+        >
+          <div className="px-4">{eraSlider}</div>
+          <SeriesSheet
+            stage={sheetStage}
+            onStageChange={setSheetStage}
+            heading={
+              selectedSeries === null ? "シリーズ一覧" : "シリーズの詳細"
+            }
+          >
+            {selectedSeries === null ? (
+              <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">
+                <SeriesPanelBody
+                  sections={taggedSections}
+                  selectedSeriesId={selectedSeriesId}
+                  onSelect={selectFromPanel}
+                  tags={panelTagsOf(taggedSections, selectedTags)}
+                  selectedTags={selectedTags}
+                  onSelectedTagsChange={setSelectedTags}
+                />
+              </div>
+            ) : (
+              <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.7]">
+                <SeriesDetailBody
+                  series={selectedSeries}
+                  episodes={episodesOf(episodes, selectedSeries.id)}
+                  onClose={() => setSelectedSeriesId(null)}
+                />
+              </div>
+            )}
+          </SeriesSheet>
         </div>
       )}
     </MapLibreMap>
