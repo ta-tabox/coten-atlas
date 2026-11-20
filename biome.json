@@ -61,7 +61,7 @@
               },
               {
                 "group": ["maplibre-gl", "react-map-gl/maplibre"],
-                "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts・src/components/admin/map/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/**・src/components/admin/map/**・src/lib/map/layers/shared.ts だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
               }
             ]
           }
@@ -145,7 +145,7 @@
                   },
                   {
                     "group": ["maplibre-gl", "react-map-gl/maplibre"],
-                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts・src/components/admin/map/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/**・src/components/admin/map/**・src/lib/map/layers/shared.ts だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["@/app", "@/app/**"],
@@ -177,7 +177,7 @@
                   },
                   {
                     "group": ["maplibre-gl", "react-map-gl/maplibre"],
-                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/MapCanvas.tsx・src/components/map/SeriesLayers.tsx・src/lib/map/series-layer.ts・src/components/admin/map/** だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/**・src/components/admin/map/**・src/lib/map/layers/shared.ts だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   },
                   {
                     "group": ["@/app", "@/app/**"],
@@ -192,10 +192,9 @@
     },
     {
       "includes": [
-        "web/src/components/map/MapCanvas.*",
-        "web/src/components/map/SeriesLayers.*",
-        "web/src/lib/map/series-layer.*",
-        "web/src/components/admin/map/**"
+        "web/src/components/map/**",
+        "web/src/components/admin/map/**",
+        "web/src/lib/map/layers/shared.*"
       ],
       "linter": {
         "rules": {

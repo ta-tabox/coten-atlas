@@ -33,8 +33,8 @@ import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
 } from "@/lib/map/config";
+import { SERIES_CIRCLE_LAYER } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
-import { SERIES_CIRCLE_LAYER } from "@/lib/map/series-layer";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import { panelTagsOf } from "@/lib/map/tag-filter";
 import type { EraList } from "@/lib/schema/era";
@@ -137,7 +137,7 @@ function renderMapCanvas(eras: EraList = ERAS): void {
   render(
     <MapCanvas
       loci={LOCI}
-      series={SERIES}
+      seriesList={SERIES}
       eras={eras}
       presentEnd={PRESENT_END}
     />,
@@ -361,7 +361,7 @@ describe("MapCanvas", () => {
 
     expect(seriesPanelProps().sections).toEqual(
       seriesPanelSectionsOf({
-        series: SERIES,
+        seriesList: SERIES,
         loci: LOCI,
         currentWindow: currentWindow({
           position: 0.9,
@@ -459,7 +459,7 @@ describe("MapCanvas", () => {
     expect(seriesPanelProps().tags).toEqual(
       panelTagsOf(
         seriesPanelSectionsOf({
-          series: SERIES,
+          seriesList: SERIES,
           loci: LOCI,
           currentWindow: currentWindow({
             position: 0.5,
@@ -515,7 +515,7 @@ describe("MapCanvas", () => {
     expect(seriesLayersProps().loci).toEqual(LOCI);
     expect(seriesPanelProps().sections).toEqual(
       seriesPanelSectionsOf({
-        series: SERIES,
+        seriesList: SERIES,
         loci: LOCI,
         currentWindow: currentWindow({
           position: 0.5,

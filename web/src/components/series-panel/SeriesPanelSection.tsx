@@ -22,8 +22,8 @@ type SeriesPanelSectionProps = {
   /** 見出しの下に置く、区画に何が並ぶかの説明。 */
   note: string;
   /** 区画に並べるシリーズ。 */
-  series: Series[];
-  /** `series` が空のときに一覧の代わりに出す文。 */
+  seriesList: Series[];
+  /** `seriesList` が空のときに一覧の代わりに出す文。 */
   emptyNote: string;
   /**
    * 選択中のシリーズの id。
@@ -40,13 +40,13 @@ type SeriesPanelSectionProps = {
 
 /**
  * 見出しの下に、`isExpanded` が true のときだけ説明とシリーズの列を表示する。
- * `series` が空なら、シリーズの列の代わりに `emptyNote` を出す。
+ * `seriesList` が空なら、シリーズの列の代わりに `emptyNote` を出す。
  */
 export default function SeriesPanelSection({
   heading,
   marker,
   note,
-  series,
+  seriesList,
   emptyNote,
   selectedSeriesId,
   onSelect,
@@ -74,7 +74,7 @@ export default function SeriesPanelSection({
           </span>
           <span className="min-w-0">{heading}</span>
           <span className="ml-auto flex-none text-[0.75rem] font-normal whitespace-nowrap text-zinc-600 tabular-nums">
-            {series.length}件
+            {seriesList.length}件
           </span>
           {/* 閉じている間は三角を右へ向け、開いているか閉じているかを形でも示す。 */}
           <span
@@ -91,17 +91,17 @@ export default function SeriesPanelSection({
           {note}
         </p>
 
-        {series.length === 0 ? (
+        {seriesList.length === 0 ? (
           <p className="mt-1.5 px-2 text-[0.85rem] text-zinc-600">
             {emptyNote}
           </p>
         ) : (
           <ul className="mt-1.5 flex flex-col gap-0.5">
-            {series.map((one) => (
-              <li key={one.id}>
+            {seriesList.map((series) => (
+              <li key={series.id}>
                 <SeriesPanelItem
-                  series={one}
-                  isSelected={one.id === selectedSeriesId}
+                  series={series}
+                  isSelected={series.id === selectedSeriesId}
                   onSelect={onSelect}
                 />
               </li>
