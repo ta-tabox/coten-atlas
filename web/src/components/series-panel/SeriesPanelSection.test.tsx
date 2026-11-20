@@ -33,6 +33,7 @@ const ROUSHI: Series = {
 
 /** 区画を開いた状態で描くときの props。 */
 const PROPS: ComponentProps<typeof SeriesPanelSection> = {
+  sectionKey: "on-map",
   heading: "地図に出ているシリーズ",
   marker: <span />,
   seriesList: [SPARTA, ROUSHI],

@@ -67,7 +67,10 @@ export default function SeriesPanel({
   );
 
   return (
-    <div className="flex min-h-0 flex-col overflow-hidden rounded-box border border-rule bg-paper font-body text-ink shadow-sm">
+    <div
+      data-series-panel
+      className="flex min-h-0 flex-col overflow-hidden rounded-box border border-rule bg-paper font-body text-ink shadow-sm"
+    >
       {isOpen ? (
         <aside
           aria-labelledby={titleId}
@@ -103,6 +106,7 @@ export default function SeriesPanel({
           {/* overflow-y-auto だけを指定すると CSS が横の overflow も auto に変えて横スクロールバーが出るので、overflow-x-hidden を明示する。 */}
           <div className="flex min-h-0 flex-col gap-3 overflow-x-hidden overflow-y-auto px-2 pt-2 pb-1">
             <SeriesPanelSection
+              sectionKey="on-map"
               heading="地図に出ているシリーズ"
               marker={onMapMarker}
               seriesList={sections.onMap}
@@ -117,6 +121,7 @@ export default function SeriesPanel({
               onToggle={() => setIsOnMapExpanded(!isOnMapExpanded)}
             />
             <SeriesPanelSection
+              sectionKey="unlocated"
               heading="場所や時代をまたぐシリーズ"
               marker={unlocatedMarker}
               seriesList={sections.unlocated}

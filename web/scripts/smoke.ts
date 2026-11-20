@@ -350,7 +350,7 @@ export type Rect = {
  */
 export type PanelObservation = {
   /**
-   * 一覧パネルの枠線を含む外形（`aside` の親）の矩形。
+   * 一覧パネルの枠線を含む外形の矩形。
    * パネルが無ければ null。
    */
   panelRect: Rect | null;
@@ -369,11 +369,9 @@ export async function observePanel(
 
   try {
     return await page.evaluate(() => {
-      const aside = document.querySelector("aside");
-      const rect = aside?.parentElement?.getBoundingClientRect();
-      const section = Array.from(document.querySelectorAll("section")).find(
-        (element) => element.textContent?.includes("地図に出ているシリーズ"),
-      );
+      const rect = document
+        .querySelector("[data-series-panel]")
+        ?.getBoundingClientRect();
 
       return {
         panelRect: rect
@@ -385,7 +383,9 @@ export async function observePanel(
             }
           : null,
         onMapSeriesTitles: Array.from(
-          section?.querySelectorAll("li button > span:first-of-type") ?? [],
+          document.querySelectorAll(
+            '[data-section="on-map"] [data-series-title]',
+          ),
         ).map((title) => title.textContent ?? ""),
       };
     });

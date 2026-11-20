@@ -12,6 +12,8 @@ import SeriesPanelItem from "@/components/series-panel/SeriesPanelItem";
 import type { Series } from "@/lib/schema/series";
 
 type SeriesPanelSectionProps = {
+  /** 区画をテストが `data-section` で指すための名前。 */
+  sectionKey: string;
   /** 区画の名前と開閉のボタンの名前を兼ねる見出しの文字。 */
   heading: string;
   /** 見出しの頭に置く、区画の種類を示す記号。 */
@@ -31,6 +33,7 @@ type SeriesPanelSectionProps = {
  * `seriesList` が空なら、シリーズの列の代わりに `emptyNote` を出す。
  */
 export default function SeriesPanelSection({
+  sectionKey,
   heading,
   marker,
   seriesList,
@@ -46,6 +49,7 @@ export default function SeriesPanelSection({
   return (
     <section
       aria-labelledby={headingId}
+      data-section={sectionKey}
       className="shrink-0 rounded-box border border-rule p-1"
     >
       <h3
