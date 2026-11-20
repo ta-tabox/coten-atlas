@@ -19,7 +19,6 @@ const PLATFORM_NAMES: Record<Platform, string> = {
   "apple-podcasts": "Apple Podcasts",
 };
 
-/** 配信基盤ごとの、マークを描く部品。 */
 const PLATFORM_ICONS: Record<
   Platform,
   ComponentType<{ className?: string }>

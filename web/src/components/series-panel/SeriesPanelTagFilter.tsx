@@ -23,7 +23,6 @@ type SeriesPanelTagFilterProps = {
   onSelectedTagsChange: (tags: string[]) => void;
   /** タグの列を表示しているか。 */
   isExpanded: boolean;
-  /** 見出しが押されたときに呼ぶ。 */
   onToggle: () => void;
 };
 

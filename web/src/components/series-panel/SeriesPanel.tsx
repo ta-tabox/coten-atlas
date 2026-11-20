@@ -19,11 +19,10 @@ type SeriesPanelProps = {
   /** 地図に出ている区画と、位置なしの区画に並べるシリーズ。 */
   sections: SeriesPanelSections;
   /**
-   * 選択中のシリーズの id。
+   * 一覧のうち選択中の見た目で描く行のシリーズの id。
    * 選択が無ければ null。
    */
   selectedSeriesId: string | null;
-  /** シリーズが押されたときに、その id を渡して呼ぶ。 */
   onSelect: (seriesId: string) => void;
   /** タグの絞り込みに並べるタグと、そのタグを持つシリーズの数。 */
   tags: PanelTag[];
@@ -91,8 +90,7 @@ export default function SeriesPanel({
             </button>
           </header>
 
-          {/* overflow-x-hidden を明示する。 */}
-          {/* overflow-y-auto だけを指定すると、CSS が横の overflow も auto に変えて横スクロールバーが出る。 */}
+          {/* overflow-y-auto だけを指定すると CSS が横の overflow も auto に変えて横スクロールバーが出るので、overflow-x-hidden を明示する。 */}
           <div className="flex min-h-0 flex-col gap-3 overflow-x-hidden overflow-y-auto px-2 pt-3 pb-1">
             <SeriesPanelTagFilter
               tags={tags}

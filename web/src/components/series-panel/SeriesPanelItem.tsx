@@ -11,11 +11,8 @@ import { formatTimeRange } from "@/lib/format";
 import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 
 type SeriesPanelItemProps = {
-  /** 表示するシリーズ。 */
   series: Series;
-  /** `series` が選択中か。 */
   isSelected: boolean;
-  /** ボタンが押されたときに、`series` の id を渡して呼ぶ。 */
   onSelect: (seriesId: string) => void;
 };
 

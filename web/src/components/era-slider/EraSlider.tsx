@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * era スライダーを表示する。
+ * 時代区分を等幅のセルに並べ、現在窓の位置を選ばせる era スライダーの部品を置く。
  *
  * 位置を保持しない。
  * 表示するのは props で受け取った `position` で、動かされた位置は `onPositionChange` で返す。
@@ -21,7 +21,7 @@ import { formatTimeRange, formatYearWithoutUnit } from "@/lib/format";
 import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
 
 /**
- * 1 つの era に割り当てるスライダーの目盛りの数。
+ * 矢印キー 1 回で動く幅を決める、era 1 つあたりの目盛りの数。
  * `<input type="range">` は整数の目盛りで値を持ち、矢印キー 1 回で 1 目盛り進む。
  */
 const STEPS_PER_ERA = 100;
@@ -109,7 +109,6 @@ export default function EraSlider({
   const boundaryYears = boundaryYearsOf(eras, presentEnd);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // トラックを押したまま動かしているポインタの pointerId。
   // 押していなければ null。
   const draggingPointerId = useRef<number | null>(null);
 

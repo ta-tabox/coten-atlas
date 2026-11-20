@@ -12,29 +12,23 @@ import SeriesPanelItem from "@/components/series-panel/SeriesPanelItem";
 import type { Series } from "@/lib/schema/series";
 
 type SeriesPanelSectionProps = {
-  /**
-   * 区画の見出し。
-   * 区画の名前と、開閉のボタンの名前にもなる。
-   */
+  /** 区画の名前と開閉のボタンの名前を兼ねる見出しの文字。 */
   heading: string;
   /** 見出しの頭に置く、区画の種類を示す記号。 */
   marker: ReactNode;
   /** 見出しの下に置く、区画に何が並ぶかの説明。 */
   note: string;
-  /** 区画に並べるシリーズ。 */
   seriesList: Series[];
   /** `seriesList` が空のときに一覧の代わりに出す文。 */
   emptyNote: string;
   /**
-   * 選択中のシリーズの id。
+   * 区画のうち選択中の見た目で描く行のシリーズの id。
    * 選択が無ければ null。
    */
   selectedSeriesId: string | null;
-  /** シリーズが押されたときに、その id を渡して呼ぶ。 */
   onSelect: (seriesId: string) => void;
   /** 説明とシリーズの列を表示しているか。 */
   isExpanded: boolean;
-  /** 見出しが押されたときに呼ぶ。 */
   onToggle: () => void;
 };
 

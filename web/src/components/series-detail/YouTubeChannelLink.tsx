@@ -7,10 +7,9 @@
 
 import YouTubeIcon from "@/components/icons/YouTubeIcon";
 
-/** 番組の YouTube 公式チャンネルの URL。 */
 const CHANNEL_URL = "https://www.youtube.com/@cotenradio";
 
-/** 番組の YouTube 公式チャンネルを開くリンクを描く。 */
+/** 番組の YouTube 公式チャンネルを別タブで開くリンクを、マークとハンドル名の並びで描く。 */
 export default function YouTubeChannelLink() {
   return (
     <a

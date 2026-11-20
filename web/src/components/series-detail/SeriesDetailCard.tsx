@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * 選択された `Series` 1 件の詳細を表示するカード。
+ * 地図か一覧パネルで選ばれたシリーズ 1 件の年代・概要・エピソードの一覧を描く、詳細カードの部品を置く。
  *
  * 取得も絞り込みもしない。
  * 表示するのは props で受け取った `Series` と `EpisodesState` だけで、絞り込みは `@/lib/episodes`、年の整形は `@/lib/format` が担当する。
@@ -25,11 +25,9 @@ const TITLE_ID = "series-detail-title";
 const NOTE_CLASS = "mt-2 text-[0.9rem] text-ink-muted";
 
 type SeriesDetailCardProps = {
-  /** 開いているシリーズ。 */
   series: Series;
   /** `series` に割り当てられたエピソードと、その取得の状態。 */
   episodes: EpisodesState;
-  /** 閉じるボタンが押されたときに呼ぶ。 */
   onClose: () => void;
 };
 
@@ -53,8 +51,7 @@ function EpisodeList({ state }: { state: EpisodesState }) {
     return <p className={NOTE_CLASS}>配信一覧にこのシリーズの回がまだ無い。</p>;
   }
 
-  // overflow-x-hidden を明示する。
-  // overflow-y-auto だけを指定すると、CSS が横の overflow も auto に変えて横スクロールバーが出る。
+  // overflow-y-auto だけを指定すると CSS が横の overflow も auto に変えて横スクロールバーが出るので、overflow-x-hidden を明示する。
   return (
     <ol className="mt-2 flex flex-col gap-1.5 overflow-x-hidden overflow-y-auto pr-1.5 text-[0.9rem]">
       {state.episodes.map((episode) => (
@@ -73,7 +70,7 @@ function EpisodeList({ state }: { state: EpisodesState }) {
 }
 
 /**
- * シリーズの詳細カードを表示する。
+ * `series` の名前・年代・概要と、`episodes` の状態に応じたエピソードの区画を縦に並べて描く。
  * 縦のスクロールはエピソードの一覧だけに限る。
  * カードの高さは 36rem を上限にし、親の要素が縦の flex コンテナで高さの上限を持つなら、その上限まで縮む。
  *
