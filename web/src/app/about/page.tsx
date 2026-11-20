@@ -17,9 +17,10 @@ import Link from "next/link";
 import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
 import GitHubIcon from "@/components/icons/GitHubIcon";
 import { OFFICIAL_SITE_URL } from "@/lib/links/official-url";
+import { SITE_TITLE } from "@/lib/site/title";
 
 export const metadata: Metadata = {
-  title: "このサイトについて | COTEN RADIO MAP",
+  title: `このサイトについて | ${SITE_TITLE.name}`,
 };
 
 /** 出典と引用の範囲・ライセンスの全文を載せた、このサイトについてのページを描く。 */

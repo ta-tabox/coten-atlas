@@ -12,6 +12,7 @@
 import Link from "next/link";
 import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
 import { OFFICIAL_SITE_URL } from "@/lib/links/official-url";
+import { SITE_TITLE } from "@/lib/site/title";
 
 /** 帯を描く。 */
 export default function SiteHeader() {
@@ -22,10 +23,10 @@ export default function SiteHeader() {
     >
       <div className="flex-none">
         <h1 className="font-heading text-base leading-tight font-bold tracking-wide text-heading">
-          COTEN RADIO MAP
+          {SITE_TITLE.name}
         </h1>
         <p className="text-[0.5625rem] leading-tight tracking-[0.12em] text-ink-muted">
-          AN UNOFFICIAL FAN ATLAS
+          {SITE_TITLE.subtitle}
         </p>
       </div>
 
