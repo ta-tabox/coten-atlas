@@ -15,7 +15,6 @@ function series(id: string, season: number): Series {
     title: id,
     anchor: `${id}-anchor`,
     timeRange: { start: -27, end: 180 },
-    summary: "",
     region: "ヨーロッパ",
     season,
     links: {},

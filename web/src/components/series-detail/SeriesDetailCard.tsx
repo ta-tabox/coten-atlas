@@ -113,10 +113,6 @@ export default function SeriesDetailCard({
         </button>
       </header>
 
-      {series.summary !== "" && (
-        <p className="mt-3.5 text-[0.95rem]">{series.summary}</p>
-      )}
-
       <section className="mt-4 flex min-h-0 flex-col">
         <div className="flex items-center justify-between gap-2">
           <h3 className="text-[0.8rem] tracking-[0.04em] text-zinc-500">

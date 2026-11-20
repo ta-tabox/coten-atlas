@@ -34,7 +34,6 @@ function seriesListOf(
     title: id,
     anchor: anchor ?? `${id}-anchor`,
     timeRange: timeRange ?? { start: -900, end: -200 },
-    summary: "",
     region: "ヨーロッパ",
     season,
     links: {},

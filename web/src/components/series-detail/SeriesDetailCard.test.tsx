@@ -32,7 +32,6 @@ const SPARTA: Series = {
   title: "スパルタ",
   anchor: "sparta-city",
   timeRange: { start: -900, end: -200 },
-  summary: "軍事に全振りした都市国家の話。",
   region: "ヨーロッパ",
   season: 2,
   links: {},
@@ -50,7 +49,7 @@ const EPISODES: Episode[] = [
 ];
 
 describe("SeriesDetailCard", () => {
-  it("シリーズ名・整形した年代・要約を出す", () => {
+  it("シリーズ名と整形した年代を出す", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
@@ -61,7 +60,6 @@ describe("SeriesDetailCard", () => {
 
     expect(screen.getByRole("heading", { name: "スパルタ" })).toBeVisible();
     expect(screen.getByText("前900年〜前200年")).toBeVisible();
-    expect(screen.getByText(SPARTA.summary)).toBeVisible();
   });
 
   it("時期を持たないシリーズは年代の行を出さない", () => {

@@ -8,7 +8,7 @@
 
 ## 「典拠」と「出典」を呼び分ける
 
-このリポジトリの「出典」は、番組の題号と配信リンクを引用したときの帰属を指す（[ADR-20260823-quote-titles-only（引用は題号に限る）](../adr/20260823-quote-titles-only.md)。表記の全文は `/about`）。
+このリポジトリの「出典」は、番組の題号と配信リンクを引用したときの帰属を指す（[ADR-20261112-quote-titles-only-without-summary（引用は題号に限る）](../adr/20261112-quote-titles-only-without-summary.md)。表記の全文は `/about`）。
 史実の裏づけは帰属と別の事柄なので、「典拠」と呼ぶ。
 
 ## 置き方
