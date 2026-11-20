@@ -49,9 +49,9 @@ L4 のスモークが連鎖の末尾に居るのは、判定の対象が `next b
 ファイル名が担当を決めるので、置き場所よりファイル名を間違えないほうが効く。
 
 ブラウザのバイナリは `pnpm check` が取りに行かない。
-`pnpm check` は繰り返し打つ口なので、そのたびに 356MB のダウンロードの要否を確かめに行かせない。
+`pnpm check` は繰り返し打つエントリポイントなので、そのたびに 600MB を超えるダウンロードの要否を確かめに行かせない。
 入っていないと L4 だけが落ちる。
-入れるのは §3 の準備（`pnpm exec playwright install chromium`）である。
+入れるのは §3 の準備（`pnpm exec playwright install chromium webkit` と、WebKit の OS の依存の `pnpm exec playwright install-deps webkit`）である。
 
 - **赤のままコミットしない。** 回し方は「`pnpm check` → 緑ならコミット」
 - 口を増やさない。切り分けのために個別スクリプトを単体で叩くのは構わないが、
@@ -164,13 +164,14 @@ mise が無いときも `scripts/cloud-session.sh` は止まり、`/root/coten-a
 手元（リポジトリ本体と worktree）・リモート・CI は、次の同じものを揃えてから `pnpm check` を回す。
 手元の準備は何度走らせても同じ状態に落ち着き、人間はリポジトリのルートで `bash scripts/setup.sh` を叩けば同じものが揃う。
 
-| 揃えるもの                                 | 正                                              | 手元               | リモート                                        | CI            |
-| ------------------------------------------ | ----------------------------------------------- | ------------------ | ----------------------------------------------- | ------------- |
-| git のフックの向き先（相対の `.githooks`） | `.githooks/`                                    | `scripts/setup.sh` | `scripts/setup.sh`                              | 揃えない      |
-| ランタイム                                 | `mise.toml`                                     | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `mise-action` |
-| 依存                                       | `web/pnpm-lock.yaml`                            | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `check.yml`   |
-| pnpm の store の置き場                     | `web/pnpm-workspace.yaml` の `storeDir`         | pnpm が読む        | pnpm が読む                                     | pnpm が読む   |
-| smoke テストのブラウザ                     | `web/pnpm-lock.yaml` の `@playwright/test` の版 | `scripts/setup.sh` | `scripts/cloud-snapshot.sh`（§4）               | `check.yml`   |
+| 揃えるもの                                 | 正                                              | 手元                                  | リモート                                        | CI            |
+| ------------------------------------------ | ----------------------------------------------- | ------------------------------------- | ----------------------------------------------- | ------------- |
+| git のフックの向き先（相対の `.githooks`） | `.githooks/`                                    | `scripts/setup.sh`                    | `scripts/setup.sh`                              | 揃えない      |
+| ランタイム                                 | `mise.toml`                                     | `scripts/setup.sh`                    | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `mise-action` |
+| 依存                                       | `web/pnpm-lock.yaml`                            | `scripts/setup.sh`                    | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `check.yml`   |
+| pnpm の store の置き場                     | `web/pnpm-workspace.yaml` の `storeDir`         | pnpm が読む                           | pnpm が読む                                     | pnpm が読む   |
+| smoke テストのブラウザ（Chromium・WebKit） | `web/pnpm-lock.yaml` の `@playwright/test` の版 | `scripts/setup.sh`                    | `scripts/cloud-snapshot.sh`（§4）               | `check.yml`   |
+| WebKit の OS の依存                        | `web/pnpm-lock.yaml` の `@playwright/test` の版 | `scripts/setup.sh`（root のときだけ） | `scripts/cloud-snapshot.sh`・`scripts/setup.sh` | `check.yml`   |
 
 `core.hooksPath` を絶対パスにすると、worktree の `.githooks` を直しても本体の版が走る。
 worktree ごとの設定（`extensions.worktreeConfig`）に残った値は共有の設定より優先されるので、`scripts/setup.sh` は先にそれを消す。
