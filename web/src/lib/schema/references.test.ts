@@ -55,6 +55,7 @@ function lociOf(
         id,
         seriesId,
         timeRange: timeRange ?? TIME_RANGE_OF_SERIES,
+        name: id,
       },
     })),
   };
