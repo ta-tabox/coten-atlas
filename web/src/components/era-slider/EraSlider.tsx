@@ -44,7 +44,7 @@ const RANGE_CLASS = [
   "pointer-events-none absolute inset-x-0 bottom-0 m-0 h-3 w-full appearance-none bg-transparent",
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-point",
   "range-track:h-full range-track:bg-transparent",
-  "range-thumb:h-5 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-ink",
+  "range-thumb:h-5 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-point",
   // WebKit はつまみの上端をトラックの上端に揃え、Firefox は上下の中央に置く。
   // 帯より高いつまみを WebKit でも上下に均等にはみ出させるので、WebKit のつまみだけを上へずらす。
   "[&::-webkit-slider-thumb]:-mt-1",

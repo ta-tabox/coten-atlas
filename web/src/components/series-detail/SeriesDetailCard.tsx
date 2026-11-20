@@ -88,7 +88,10 @@ export default function SeriesDetailCard({
     >
       <header className="flex items-start gap-3 border-b border-rule pb-3">
         <div className="grow">
-          <h2 id={TITLE_ID} className="font-heading text-[1.2rem] font-bold">
+          <h2
+            id={TITLE_ID}
+            className="font-heading text-[1.2rem] font-bold text-heading"
+          >
             {series.title}
           </h2>
 

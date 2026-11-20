@@ -45,11 +45,11 @@ export default function SeriesPanelTagFilter({
   return (
     <section
       aria-labelledby={headingId}
-      className="shrink-0 rounded-box border border-rule p-1"
+      className="shrink-0 rounded-box bg-rule/30 p-1"
     >
       <h3
         id={headingId}
-        className="font-heading text-[0.85rem] font-bold text-ink"
+        className="font-heading text-[0.85rem] font-bold text-heading"
       >
         <button
           type="button"
@@ -74,7 +74,7 @@ export default function SeriesPanelTagFilter({
           <button
             type="button"
             onClick={() => onSelectedTagsChange([])}
-            className="flex-none rounded-control border border-rule bg-paper px-1.5 text-[0.75rem] hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
+            className="flex-none rounded-full border border-rule bg-paper px-2.5 text-[0.75rem] hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
           >
             絞り込みを解除
           </button>
@@ -100,7 +100,7 @@ export default function SeriesPanelTagFilter({
                       onSelectedTagsChange(toggledTagsOf(selectedTags, tag))
                     }
                     aria-pressed={isSelected}
-                    className={`rounded-control border px-2 py-0.5 text-[0.8rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point ${isSelected ? "border-ink bg-ink font-bold text-paper" : "border-rule bg-paper hover:bg-rule/40"}`}
+                    className={`rounded-full border px-2.5 py-0.5 text-[0.8rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point ${isSelected ? "border-point bg-point font-bold text-paper" : "border-rule bg-paper hover:bg-rule/40"}`}
                   >
                     {tag}
                     <span

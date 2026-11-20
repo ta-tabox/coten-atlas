@@ -53,11 +53,11 @@ export default function SeriesPanelSection({
   return (
     <section
       aria-labelledby={headingId}
-      className="shrink-0 rounded-box border border-rule p-1"
+      className="shrink-0 rounded-box bg-rule/30 p-1"
     >
       <h3
         id={headingId}
-        className="font-heading text-[0.85rem] font-bold text-ink"
+        className="font-heading text-[0.85rem] font-bold text-heading"
       >
         <button
           type="button"

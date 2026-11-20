@@ -74,7 +74,7 @@ export default function SeriesPanel({
           <header className="flex items-center gap-3 border-b border-rule px-4 pb-2">
             <h2
               id={titleId}
-              className="grow font-heading text-[1.05rem] font-bold"
+              className="grow font-heading text-[1.05rem] font-bold text-heading"
             >
               シリーズ一覧
             </h2>
