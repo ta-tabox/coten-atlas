@@ -60,6 +60,12 @@ export const locusPropertiesSchema = z.strictObject({
 
   /** この事物が扱う年代の範囲。 */
   timeRange: locusTimeRangeSchema,
+
+  /**
+   * 画面に出す日本語の地名。
+   * `id` は地名を英語で書いた鍵で画面に出す語ではないので、地点を文字で出すときはこの欄を読む。
+   */
+  name: trimmedNonEmptyStringSchema.optional(),
 });
 
 /** 事物 1 件。 */

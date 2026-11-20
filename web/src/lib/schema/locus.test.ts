@@ -103,4 +103,10 @@ describe("parseLoci", () => {
       /loci/,
     );
   });
+
+  it("空白だけの name を持つ事物を渡すと throw する", () => {
+    expect(() => parseLoci(collectionOf(locusWith({ name: "  " })))).toThrow(
+      /name/,
+    );
+  });
 });
