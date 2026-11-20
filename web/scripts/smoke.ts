@@ -217,8 +217,12 @@ function serveExport(root: string): Promise<http.Server> {
       return;
     }
 
+    // `about/` のように RSC のペイロードだけを持つディレクトリは、`index.html` が無ければ兄弟の `about.html` を返す。
+    // GitHub Pages が拡張子なしの URL を `.html` へ解決するのと同じ挙動にして、`next/link` の先読みを 404 にしない。
     if (fs.existsSync(file) && fs.statSync(file).isDirectory()) {
-      file = path.join(file, "index.html");
+      const index = path.join(file, "index.html");
+
+      file = fs.existsSync(index) ? index : `${file}.html`;
     }
 
     if (!fs.existsSync(file)) {
@@ -258,7 +262,7 @@ function portOf(server: http.Server): number {
  * 判定はしない。
  *
  * `pagePath` は BASE_PATH の下のパス。
- * この層のサーバはディレクトリにしか index.html を補わないので、トップ以外は拡張子まで書く。
+ * この層のサーバは拡張子なしのパスをディレクトリとしてしか解決しないので、トップ以外は拡張子まで書く。
  */
 export async function observe(
   page: Page,
