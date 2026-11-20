@@ -61,7 +61,7 @@ export const locusPropertiesSchema = z.strictObject({
 
   /**
    * 画面に出す日本語の地名。
-   * `id` は地名を英語で書いた鍵で画面に出す語ではないので、地点を文字で出すときはこの欄を読む。
+   * `id` は地名を英語で書いたキーで画面に出す語ではないので、地点を文字で出すときはこの欄を読む。
    */
   name: trimmedNonEmptyStringSchema,
 });
