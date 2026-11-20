@@ -40,14 +40,12 @@ export default function SeriesPickerItem({
   onReset,
 }: SeriesPickerItemProps) {
   return (
-    <div
-      className={`rounded-control ${isSelected ? "bg-selected/10 text-selected" : ""}`}
-    >
+    <div className={isSelected ? "text-selected" : undefined}>
       <button
         type="button"
         onClick={() => onSelect(series.id)}
         aria-current={isSelected ? "true" : undefined}
-        className={`w-full rounded-control px-3 py-1 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point ${isSelected ? "font-bold" : "hover:bg-rule/40"}`}
+        className={`w-full px-3 py-1.5 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point ${isSelected ? "font-bold" : "hover:bg-rule/40"}`}
       >
         <span className="block text-[0.85rem]">{series.title}</span>
         <span className="block text-[0.7rem] font-normal text-ink-muted">

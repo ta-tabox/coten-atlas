@@ -18,7 +18,7 @@ type SeriesPanelItemProps = {
 
 /**
  * `series` の名前と年代を、押すと `onSelect` を呼ぶボタンで表示する。
- * 選択中なら、地と文字の色に加えて太字で示す。
+ * 選択中なら、文字の色に加えて太字で示す。
  *
  * `timeRange` が `TIME_RANGE_UNTIMED` のシリーズは年を持たないので、年代の行を出さない。
  */
@@ -32,7 +32,7 @@ export default function SeriesPanelItem({
       type="button"
       onClick={() => onSelect(series.id)}
       aria-current={isSelected ? "true" : undefined}
-      className={`w-full rounded-control px-3 py-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point ${isSelected ? "bg-selected/10 font-bold text-selected" : "hover:bg-rule/40"}`}
+      className={`w-full px-3 py-2 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point ${isSelected ? "font-bold text-selected" : "hover:bg-rule/40"}`}
     >
       <span className="block text-[0.9rem]">{series.title}</span>
       {series.timeRange !== TIME_RANGE_UNTIMED && (
