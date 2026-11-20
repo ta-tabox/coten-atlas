@@ -6,6 +6,7 @@
 import type { CurrentWindow } from "@/lib/era/window";
 import {
   fadesOf,
+  MAP_COLORS,
   type SeriesLayerSpecification,
 } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
@@ -21,7 +22,7 @@ import {
  * 強調を `circle-opacity` でなく縁（`circle-stroke-*`）で表すので、現在窓から求めた円の濃さは変わらず、薄く残る円は薄いまま縁だけが付く。
  * 半径を `SERIES_CIRCLE_LAYER` の円と同じにして、円の輪郭をなぞる。
  * 描く事物を絞る `filter` は `contemporarySeriesRingLayerIn` が設定する。
- * 縁の色は、`SELECTED_SERIES_RING_LAYER` の縁と同じ色相で明るい Tailwind の `orange-400` にする。
+ * 縁の色は、`SELECTED_SERIES_RING_LAYER` の縁と同じ色相で明るい `MAP_COLORS.contemporary` にする。
  */
 export const CONTEMPORARY_SERIES_RING_LAYER: SeriesLayerSpecification = {
   id: "series-contemporary-ring",
@@ -30,7 +31,7 @@ export const CONTEMPORARY_SERIES_RING_LAYER: SeriesLayerSpecification = {
     "circle-radius": 6,
     "circle-opacity": 0,
     "circle-stroke-width": 2,
-    "circle-stroke-color": "#fb923c",
+    "circle-stroke-color": MAP_COLORS.contemporary,
   },
 };
 

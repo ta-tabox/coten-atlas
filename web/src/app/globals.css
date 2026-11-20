@@ -4,13 +4,32 @@
    body の margin を消す規則はここに要らない。
    Tailwind の preflight が担う。
 
-   色・余白・重なり順のトークンは、この下の `@theme` へ置く。
-   最初に使う画面が現れた時点で書き始める。
-   いま置くと、使う側が無いまま値だけが正になる。
-
+   色・字体・間隔・角丸のトークンは、この下の `@theme` へ置く。
    ユーティリティを擬似要素へ当てるためのバリアントも、この下の `@custom-variant` へ置く。 */
 
 @import "tailwindcss";
+
+/* `--color-point`・`--color-selected`・`--color-contemporary` は地図の円と輪の色でもあり、`@/lib/map/layers/shared` の `MAP_COLORS` が同じ値を持つので、値を変えるときは両方を直す。 */
+@theme {
+  --color-paper: #f7f3ea;
+  --color-rule: #d8cfbd;
+  --color-ink: #2b2620;
+  --color-ink-muted: #675e51;
+  --color-point: #1f5673;
+  --color-selected: #c2410c;
+  --color-contemporary: #fb923c;
+
+  --font-heading:
+    "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", serif;
+  --font-body:
+    "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", YuGothic,
+    "Noto Sans JP", sans-serif;
+
+  --spacing: 0.25rem;
+
+  --radius-box: 0.25rem;
+  --radius-control: 0.125rem;
+}
 
 /* `range-thumb:` と `range-track:` は、`<input type="range">` のつまみとトラックへユーティリティを当てる。
    擬似要素の名前はブラウザごとに違う。

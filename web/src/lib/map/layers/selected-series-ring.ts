@@ -6,6 +6,7 @@
 import type { CurrentWindow } from "@/lib/era/window";
 import {
   fadesOf,
+  MAP_COLORS,
   type SeriesLayerSpecification,
 } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
@@ -15,7 +16,6 @@ import type { MapLocusCollection } from "@/lib/map/loci";
  *
  * 塗りを持たず縁だけを描くので、`SERIES_CIRCLE_LAYER` の円の不透明度を変えずに上へ重ねられる。
  * 描く事物を絞る `filter` は `selectedSeriesRingLayerIn` が設定する。
- * 縁の色は、`SeriesPanel` が選択中のシリーズのボタンに付ける左の太線の色（Tailwind の `orange-700`）と同じ値にする。
  */
 export const SELECTED_SERIES_RING_LAYER: SeriesLayerSpecification = {
   id: "series-selected-ring",
@@ -24,7 +24,7 @@ export const SELECTED_SERIES_RING_LAYER: SeriesLayerSpecification = {
     "circle-radius": 10,
     "circle-opacity": 0,
     "circle-stroke-width": 3,
-    "circle-stroke-color": "#c2410c",
+    "circle-stroke-color": MAP_COLORS.selected,
   },
 };
 

@@ -9,8 +9,7 @@
  * 事物ごとの濃さは `@/lib/era/window` の関数で求めて式へ数値で埋め込み、同じ計算を MapLibre の式で書き直さない。
  * 書き直さない理由は docs/adr/20260911-era-fade-window-only.md が持つ。
  *
- * 色は MapLibre のスタイル式が読むので、Tailwind のトークンでなく生の値を置く。
- * 地図の中で閉じる指定であって、overlay の見た目とは別物である。
+ * MapLibre の paint は CSS 変数を読めないので、円と輪の色は `MAP_COLORS` に生の値で持つ。
  */
 
 import type { CircleLayerSpecification } from "react-map-gl/maplibre";
@@ -29,6 +28,16 @@ import type { MapLocusCollection } from "@/lib/map/loci";
  */
 export type SeriesLayerSpecification = Omit<CircleLayerSpecification, "source">;
 
+/**
+ * 地図の円と輪の色を、`globals.css` の `@theme` のトークン名から `--color-` を除いた名前をキーにして持つ表。
+ * 値は同じ名前のトークンと一致させ、一致は `tests/map-colors.test.ts` が確かめる。
+ */
+export const MAP_COLORS = {
+  point: "#1f5673",
+  selected: "#c2410c",
+  contemporary: "#fb923c",
+} as const;
+
 /** 事物を取得する source の id。 */
 export const SERIES_SOURCE_ID = "series-loci";
 
@@ -43,7 +52,7 @@ export const SERIES_CIRCLE_LAYER: SeriesLayerSpecification = {
   type: "circle",
   paint: {
     "circle-radius": 6,
-    "circle-color": "#1f5673",
+    "circle-color": MAP_COLORS.point,
   },
 };
 
