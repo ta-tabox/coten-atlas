@@ -1,14 +1,14 @@
 /**
- * コテンラジオの 1 シリーズのスキーマ。
+ * コテンラジオのシリーズを書く `catalog/series.json` の zod スキーマと、欄に置ける値の定数と、検査の関数を置く。
  * `catalog/series.json` の形を、実行時に検査できるかたちで持つ。
  *
  * 年は西暦の整数で、負値が紀元前を表す（0 年は暦に存在しないが、区別しても得るものが無いので許す）。
  * 地図へ置く図形は持たない。
  * 図形は事物の側にあり、`locus.ts` が持つ。
- * zod の既定は未知のキーを黙って捨て、手書きの書き間違いや規約外の欄の混入がどこにも映らないので、スキーマに無いキーは落とす。
+ * zod の既定は未知のキーを黙って捨て、手書きの書き間違いや規約外の欄の混入がどこにも映らないので、スキーマに無いキーは拒否する。
  *
  * 描画も RSS 同期もこの形だけを前提にしてよい。
- * 渡された値を検査するだけで `catalog/` の在り処は呼ぶ側が知るので、ファイルの読み込み口はここが持たない。
+ * 渡された値を検査するだけで `catalog/` のパスは呼ぶ側が知るので、ファイルを読み込む関数はここが持たない。
  * 入口は parseSeries。
  */
 
@@ -18,20 +18,20 @@ import { linksSchema } from "@/lib/schema/link";
 import { trimmedNonEmptyStringSchema } from "@/lib/schema/text";
 
 /**
- * 位置なしを表す `anchor` の値。
+ * シリーズが地図に代表点を持たないことを、`anchor` に置いて表す値。
  * 消費側がこの文字列を直に書かなくて済むよう、名前で配る。
  */
 export const ANCHOR_UNLOCATED = "unlocated";
 
 /**
- * 時期を持たないことを表す `timeRange` の値。
+ * シリーズが年代を持たないことを、`timeRange` に年の範囲の代わりに置いて表す値。
  * 置けるのは種別が `概念史` だけで位置なしのシリーズに限る。
  * 限る理由は docs/adr/20260910-untimed-concept-series.md が持つ。
  */
 export const TIME_RANGE_UNTIMED = "untimed";
 
 /**
- * `region` に置ける区画の一覧。
+ * `series.json` の `region` の欄に置ける区画の名前の並び。
  * 陸地を重ならないように割った 12 の区画と、区画を一つ選ぶと嘘になるシリーズが使う `地域なし` である。
  * 区画の境目は `.claude/skills/series-vocabulary/SKILL.md` の手順 6 が持つ。
  * 値を足すときは、この一覧と同じスキルの一覧を両方書き換え、足す理由を新しい ADR に書く。
@@ -53,8 +53,7 @@ export const SERIES_REGIONS = [
 ] as const;
 
 /**
- * `region` の値。
- * 関連シリーズ行が等値で照合するので、閉じた集合にする。
+ * 関連シリーズ行が等値で照合するので、`region` の欄を `SERIES_REGIONS` の閉じた集合に限る。
  */
 export const seriesRegionSchema = z.enum(SERIES_REGIONS);
 
@@ -86,7 +85,7 @@ const ERA_GRADE_TAGS = [
 ];
 
 /**
- * 1 シリーズが持てる `tags` の数の上限。
+ * 1 シリーズの `tags` の数の上限で、種別のタグも数に含める。
  * tag 絞り込みのパネルは現在窓のタグを全部並べるので、1 件あたりを絞らないと一覧が読めなくなる。
  */
 const MAX_TAGS = 4;
@@ -98,7 +97,7 @@ const MAX_TAGS = 4;
 const TITLE_PREFIXES = ["ショート", "ジンブンガク"];
 
 /**
- * シリーズが扱う年代の範囲。
+ * シリーズの `timeRange` に置く、`start` と `end` の年の組の zod スキーマ。
  * 負値は紀元前を指す。
  * start == end の 1 年の出来事を表せるよう、両端を含む閉区間とする。
  * era の区間は半開（end を含まない）なので、重なりを判定する側は端の扱いを混同しない。
@@ -118,7 +117,7 @@ export const seriesTimeRangeSchema = z
   });
 
 /**
- * シリーズ 1 件。
+ * `catalog/series.json` の要素 1 件の zod スキーマ。
  * 地図の描画・一覧パネル・詳細カード・RSS 同期の全部がここを読む。
  */
 export const seriesSchema = z
@@ -127,7 +126,7 @@ export const seriesSchema = z
     id: trimmedNonEmptyStringSchema,
 
     /**
-     * シリーズ名。
+     * シリーズの主題の名で、番組の題の「〇〇編」から「編」とコーナー名を除いた語。
      * 番組から引用してよいのは題号までなので、説明文をここへ入れない。
      */
     title: trimmedNonEmptyStringSchema,
@@ -141,7 +140,7 @@ export const seriesSchema = z
     anchor: trimmedNonEmptyStringSchema,
 
     /**
-     * シリーズが扱う年代の範囲か、時期を持たないことを表す `TIME_RANGE_UNTIMED`。
+     * era スライダーの現在窓と比べる、シリーズが扱う年代の範囲（時期を持たなければ `TIME_RANGE_UNTIMED`）。
      * era スライダーの現在窓との重なり率（0..1）をイージングに通した値が、表示 opacity になる。
      */
     timeRange: z.union([seriesTimeRangeSchema, z.literal(TIME_RANGE_UNTIMED)]),
@@ -160,7 +159,7 @@ export const seriesSchema = z
     season: z.int().positive(),
 
     /**
-     * 配信ページへの導線。
+     * シリーズ単位の配信ページの URL を、配信基盤ごとに持つ欄。
      * 配信側にシリーズ単位のページが無いので、指す先は未決定である（当面は空）。
      */
     links: linksSchema,
@@ -228,10 +227,10 @@ export const seriesSchema = z
   });
 
 /**
- * シリーズ全件。
+ * `catalog/series.json` の全体の zod スキーマ。
  * `eras.json` と同じ素の配列で、GeoJSON ではない。
  *
- * `id` と `season` の重複をここで落とす。
+ * `id` と `season` の重複をここで拒否する。
  * `id` はエピソードと事物が指す先の鍵で、`season` は同期が組む season → seriesId の索引の鍵なので、どちらも重複すると引いた先が一つに定まらない。
  */
 export const seriesListSchema = z
@@ -254,7 +253,7 @@ export type SeriesList = z.infer<typeof seriesListSchema>;
 export type SeriesTimeRange = z.infer<typeof seriesTimeRangeSchema>;
 
 /**
- * シリーズ全件を検査して返す。
+ * `catalog/series.json` から読んだ値（`input`）を `seriesListSchema` に通して返す。
  * 合わなければ、どの要素のどこが合わないかを添えて投げる。
  */
 export function parseSeries(input: unknown): SeriesList {

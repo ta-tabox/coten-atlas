@@ -4,8 +4,6 @@
  *
  * 題は `シーズン調査: <シリーズ名>編（season <N>）` の形にする。
  * skill `series-survey` の手順 1 は並行するセッションの宣言を題の `シーズン調査:` で探すので、接頭辞を変えると手順 1 が issue を見落とす。
- *
- * 入口は toSurveyIssue。
  */
 
 import {
@@ -19,7 +17,7 @@ import {
 const UNKNOWN_SERIES_NAME = "（シリーズ名は未確定）";
 
 /**
- * 起票する issue の題と本文。
+ * シーズン調査の issue 1 件として `gh issue create` へ渡す題と本文。
  * `toSurveyIssue` が作り、`scripts/sync-feed.ts` が JSON のファイルへ書く。
  */
 export type SurveyIssue = {

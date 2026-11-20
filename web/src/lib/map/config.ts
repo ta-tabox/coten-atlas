@@ -1,5 +1,5 @@
 /**
- * ベースマップの接続先・初期表示位置・worker の在り処。
+ * 公開の地図と管理画面の地図が MapLibre へ渡す、ベースマップの接続先・初期表示位置・worker の URL の定数を置く。
  *
  * 無償公開のタイルは API キーの要否も要求 attribution も提供元ごとに違うので、URL を差し替えるだけでは利用条件を満たせない。
  * OpenFreeMap を採った理由は docs/adr/20260823-openfreemap-positron.md が持つ。
@@ -16,7 +16,7 @@ export const BASEMAP_STYLE_URL =
   "https://tiles.openfreemap.org/styles/positron";
 
 /**
- * 地図を最初に描くときのカメラ位置。
+ * 地図を最初に描くときのカメラ位置（経度・緯度は度、ズームは MapLibre の段階）。
  * ユーラシアからアフリカまでが一望に入る値を選んである。
  */
 export const INITIAL_VIEW_STATE = {

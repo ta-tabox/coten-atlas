@@ -15,7 +15,7 @@ import { parseSeasonCorrections } from "@/lib/schema/season-correction";
 import { parseSeries } from "@/lib/schema/series";
 
 /**
- * ファイル名と、それを検査する入口の対応。
+ * `catalog/` のファイル名をキー、そのファイルを検査する `parse*` の関数を値にした対応表。
  * `episodes.json` は同期が初めて書くので、それまでは実在しない。
  */
 export const CATALOG_VALIDATORS = new Map<string, (input: unknown) => unknown>([
@@ -27,14 +27,14 @@ export const CATALOG_VALIDATORS = new Map<string, (input: unknown) => unknown>([
 ]);
 
 /**
- * 検査の対象と見なす拡張子。
+ * `unvalidatedNames` がデータファイルと見なす拡張子。
  * `LICENSE` のような添え物はデータではないので数えない。
  */
 const CATALOG_EXTENSIONS = [".json", ".geojson"];
 
 /**
- * 渡したファイル名のうち、検査する口を持たないデータファイルを返す。
- * 対応表に載っているものと、データでない添え物は落とす。
+ * 渡したファイル名のうち、検査する関数を持たないデータファイルを返す。
+ * 対応表に載っているものと、データでないファイル（`LICENSE` など）は除く。
  */
 export function unvalidatedNames(fileNames: readonly string[]): string[] {
   return fileNames

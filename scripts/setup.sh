@@ -7,7 +7,7 @@
 #   - git のフックの向き先（`.githooks`）
 #   - ランタイム（`mise install`）
 #   - 依存（`pnpm install`。store は web/pnpm-workspace.yaml の storeDir で本体と worktree が同じ場所を使う）
-#   - smoke テストのブラウザ（`playwright install chromium`）
+#   - smoke テストのブラウザ（`playwright install chromium webkit`）と、root で走るときは WebKit の OS の依存（`playwright install-deps webkit`）
 #
 # 版の正は mise.toml と web/pnpm-lock.yaml にあり、ここには書かない。
 # .claude/hooks/session-start.sh がどの実行環境でもこのスクリプトを呼び、クラウドでは scripts/cloud-session.sh の後に呼ぶ。
@@ -61,6 +61,13 @@ log "依存を入れる"
 # 版は web/pnpm-lock.yaml の @playwright/test が決める。
 # 入っていれば playwright 自身がダウンロードを飛ばす。
 log "smoke テストのブラウザを入れる"
-(cd web && pnpm exec playwright install chromium)
+(cd web && pnpm exec playwright install chromium webkit)
+
+# WebKit の OS の依存は apt で入れるので root が要る。
+# root でないと playwright は sudo を呼び、TTY を持たないフックからの起動ではパスワードを訊けずに止まるので、root のときだけ入れる。
+if [ "$(id -u)" -eq 0 ]; then
+  log "WebKit の OS の依存を入れる"
+  (cd web && pnpm exec playwright install-deps webkit)
+fi
 
 log "準備完了。web/ で pnpm check と pnpm dev が走る"

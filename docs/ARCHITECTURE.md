@@ -23,7 +23,7 @@
 | ベースマップ    | OpenFreeMap positron（代替は Carto Positron）                                                                                                                               | [ADR-20260823-openfreemap-positron（ベースマップの選択）](adr/20260823-openfreemap-positron.md)                                                                                                                                                                                             |
 | データ          | エピソード = RSS 自動 / シリーズ = 人間キュレーション の二層                                                                                                                | [ADR-20260904-two-layer-data-without-inbox（データの二層分離）](adr/20260904-two-layer-data-without-inbox.md)                                                                                                                                                                               |
 | 位置情報        | 二段階。第一段階は代表点 1 つか位置なしで、Point 以外の図形を持たない。第二段階（S9）で精緻な図形を足す。代表点は第二段階でも独立に持ち、どちらを描くかは利用者が切り替える | [ADR-20260902-two-phase-location（位置情報の二段階）](adr/20260902-two-phase-location.md)                                                                                                                                                                                                   |
-| シリーズと事物  | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ                                                                    | [ADR-20260902-series-and-loci（シリーズと事物の分離）](adr/20260902-series-and-loci.md)                                                                                                                                                                                                     |
+| シリーズと事物  | 1 対多。`series.json`（属性）と `loci.geojson`（事物）に分け、シリーズは代表点の参照か位置なしの印を持つ                                                                    | [ADR-20261113-locus-display-name（シリーズと事物を分け、事物は表示用の地名を持つ）](adr/20261113-locus-display-name.md)                                                                                                                                                                     |
 | 管理画面        | 手元でだけ動き、`catalog/` のファイルへ書く。公開サイトの成果物に含まれない                                                                                                 | [ADR-20260902-local-only-admin（手元でだけ動く管理画面）](adr/20260902-local-only-admin.md)                                                                                                                                                                                                 |
 | 配信リンク      | 回ごとは Spotify と Apple Podcasts、YouTube は公式チャンネルへのリンク 1 つ（RSS の `<link>` は使わない）                                                                   | [ADR-20261109-episode-links-and-youtube-channel（配信リンクと YouTube のチャンネル）](adr/20261109-episode-links-and-youtube-channel.md)                                                                                                                                                    |
 | デプロイ        | GitHub Pages（`https://ta-tabox.github.io/coten-atlas/`、`basePath` = `/coten-atlas`）                                                                                      | [ADR-20260823-github-pages（GitHub Pages での配信）](adr/20260823-github-pages.md)                                                                                                                                                                                                          |
@@ -137,7 +137,8 @@ catalog/
       "properties": {
         "id": "sparta-city", // 鍵。属性は series.json が持つ
         "seriesId": "sparta", // シリーズへの参照。1 対多はこの欄が担う
-        "timeRange": "series" // 「シリーズの timeRange と同じ」の意（コードでは TIME_RANGE_OF_SERIES）。代表点は必ずこれで、第二段階の事物は年の閉区間を書く
+        "timeRange": "series", // 「シリーズの timeRange と同じ」の意（コードでは TIME_RANGE_OF_SERIES）。代表点は必ずこれで、第二段階の事物は年の閉区間を書く
+        "name": "スパルタ" // 画面に出す日本語の地名。id と同じ地点・同じ時代の名
       }
     }
     // 位置なしのシリーズはここに現れない
@@ -348,6 +349,7 @@ catalog/
   3. 結果サマリを stdout へ
      未割当は「規則で確定」（season が決まらない回・番外編・訂正表で外した回）と「シリーズ未作成」に割って数える
   4. `--existing-issue-titles`（既存の issue の題の入力）と `--survey-issues-out`（書き出し先）を渡したときだけ、「シリーズ未作成」の season のうちシーズン調査の issue がまだ無いものについて、issue の題と本文を JSON のファイルへ書く
+  5. `--report-out`（書き出し先）を渡したときだけ、前回の episodes.json との差（新しい回・割当が変わった回・フィードから消えた回）を、題とシリーズ名の表の Markdown で書く
 - 運用: `.github/workflows/sync.yml` が配信日（月曜と木曜）の夜に `pnpm sync` を走らせる
   `episodes.json` が `syncedAt` の外で変わったら、ブランチ `sync/episodes` から main への PR を開き、取り込むかは人間がマージで決める
   同じ run で、シリーズ未作成の season ごとにシーズン調査の issue を起票する

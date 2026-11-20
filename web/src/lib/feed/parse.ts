@@ -8,8 +8,6 @@
  * `#text` と素の文字列の差、属性の在り処、要素の欠落を落とし込んで、全欄が文字列（か欠落）の記録へ均す。
  * 値を信用してよいかの判定は持たないので、このファイルは zod を引かない。
  * 何が必須で何をどう変換するかは `schema.ts` が持つ。
- *
- * 入口は parseFeed。
  */
 
 import { XMLParser } from "fast-xml-parser";
@@ -46,7 +44,7 @@ const parser = new XMLParser({
 });
 
 /**
- * RSS の XML を FeedItem の配列へ直す。
+ * 公式 RSS の XML の文字列（`xml`）の `item` を、1 件ずつ `parseFeedItem` の検査に通し、フィードの並び順の配列で返す。
  *
  * `item` が 1 件も無ければ投げる。
  * 空の配列を返すと、フィードが壊れた日に呼ぶ側が「全件消えた」を正常な差分として書き込む。
@@ -118,8 +116,7 @@ function labelOf(raw: RawFeedItem, index: number): string {
 }
 
 /**
- * 要素の中身を文字列で返す。
- * 空欄と、空白しか無い欄は欠落として扱う。
+ * 要素（`node`）の中身の文字列を返し、要素が無いか、中身が空か空白だけなら undefined を返す。
  *
  * 属性を持つ要素の中身はパーサが `#text` へ入れるので、素の文字列と両方を受ける。
  * 前後の空白は `feedItemSchema` が trim するので、ここでは取り除かない。
@@ -134,14 +131,14 @@ function textOf(node: unknown): string | undefined {
   return raw;
 }
 
-/** 要素の属性を取り出す。 */
+/** 要素（`node`）から、パーサが接頭辞 `@_` を付けたキー（`name`）の属性の値を返し、無ければ undefined を返す。 */
 function attributeOf(node: unknown, name: string): unknown {
   return recordOf(node)?.[name];
 }
 
 /**
- * オブジェクトとして読める値だけを通す。
- * パーサの返り値は形が保証されていないので、添字を引く前にここを通す。
+ * `value` が配列でないオブジェクトならそのまま返し、それ以外は null を返す。
+ * パーサの返り値は形が保証されていないので、添字で値を取り出す前にここを通す。
  */
 function recordOf(value: unknown): Record<string, unknown> | null {
   if (typeof value !== "object" || value === null || Array.isArray(value)) {
