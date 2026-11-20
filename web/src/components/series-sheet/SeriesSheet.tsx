@@ -8,7 +8,7 @@
  * 段は props で受け取り、見出しのタップとドラッグが決めた段を `onStageChange` で返す。
  * 見出しの行だけがタッチを受けるので、地図の上のパンとピンチは地図が受ける。
  *
- * 閉じた段では中身を `invisible` にし、見出しの下からはみ出した中身へフォーカスが移らないようにする。
+ * 閉じた段では中身の高さを 0 にして `invisible` にし、見出しの下からはみ出した中身へフォーカスが移らないようにする。
  */
 
 import {
@@ -211,7 +211,7 @@ export default function SeriesSheet({
       {/* touch-pan-y は、シートの上のピンチでページが拡大されないよう、縦のスクロール以外のタッチの動作を外す指定。 */}
       <div
         id={bodyId}
-        className={`flex min-h-0 flex-1 touch-pan-y flex-col overflow-hidden border-t border-rule ${isOpen ? "" : "invisible"}`}
+        className={`flex min-h-0 touch-pan-y flex-col overflow-hidden border-t border-rule ${isOpen ? "flex-1" : "invisible h-0"}`}
       >
         {children}
       </div>
