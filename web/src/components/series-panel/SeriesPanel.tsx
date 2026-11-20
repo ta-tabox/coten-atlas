@@ -18,13 +18,10 @@ import type { PanelTag } from "@/lib/map/tag-filter";
 type SeriesPanelProps = {
   /** 地図に出ている区画と、位置なしの区画に並べるシリーズ。 */
   sections: SeriesPanelSections;
-  /**
-   * 一覧のうち選択中の見た目で描く行のシリーズの id。
-   * 選択が無ければ null。
-   */
+  /** 選択が無ければ null。 */
   selectedSeriesId: string | null;
   onSelect: (seriesId: string) => void;
-  /** タグの絞り込みに並べるタグと、そのタグを持つシリーズの数。 */
+  /** 帯に並べる順は配列の順。 */
   tags: PanelTag[];
   /**
    * 絞り込みに使っているタグ。

@@ -19,13 +19,9 @@ type SeriesPanelSectionProps = {
   seriesList: Series[];
   /** `seriesList` が空のときに一覧の代わりに出す文。 */
   emptyNote: string;
-  /**
-   * 区画のうち選択中の見た目で描く行のシリーズの id。
-   * 選択が無ければ null。
-   */
+  /** 選択が無ければ null。 */
   selectedSeriesId: string | null;
   onSelect: (seriesId: string) => void;
-  /** シリーズの列を表示しているか。 */
   isExpanded: boolean;
   onToggle: () => void;
 };
