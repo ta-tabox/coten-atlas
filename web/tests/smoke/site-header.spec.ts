@@ -14,8 +14,7 @@ const VIEWPORTS = [
 ];
 
 /**
- * 帯と矩形を比べる相手の要素を返す。
- * 一覧パネルとシートの置き換えは、ここだけを直す。
+ * 帯と矩形を比べる相手の要素（一覧パネルと詳細カード）を返す。
  */
 function overlappingSurfaces(page: Page) {
   return {
