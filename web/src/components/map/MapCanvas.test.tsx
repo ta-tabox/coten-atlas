@@ -313,6 +313,12 @@ describe("MapCanvas", () => {
     expect(lastProps().initialViewState).toEqual(INITIAL_VIEW_STATE);
   });
 
+  it("拡大の上限にズーム 10 を渡す", async () => {
+    await renderMapCanvas();
+
+    expect(lastProps().maxZoom).toBe(10);
+  });
+
   it("worker の在り処を渡す", async () => {
     await renderMapCanvas();
 

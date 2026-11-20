@@ -21,7 +21,11 @@ import {
   fetchEpisodes,
 } from "@/lib/episodes";
 import { currentWindow } from "@/lib/era/window";
-import { INITIAL_VIEW_STATE, MAP_WORKER_URL } from "@/lib/map/config";
+import {
+  INITIAL_VIEW_STATE,
+  MAP_WORKER_URL,
+  PUBLIC_MAP_MAX_ZOOM,
+} from "@/lib/map/config";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/layers/shared";
 import {
   findAnchorLocus,
@@ -187,6 +191,7 @@ export default function MapCanvas({
       // OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
       mapStyle={mapStyle}
       initialViewState={INITIAL_VIEW_STATE}
+      maxZoom={PUBLIC_MAP_MAX_ZOOM}
       workerUrl={MAP_WORKER_URL}
       // MapLibreMap は container の `className` を受け取らないので、寸法だけは Tailwind のユーティリティでなく style で渡す。
       style={{ width: "100%", height: "100dvh" }}
