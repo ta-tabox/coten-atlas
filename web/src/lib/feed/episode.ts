@@ -10,7 +10,10 @@ import type { SeasonKey } from "@/lib/feed/assign";
 import type { FeedItem } from "@/lib/feed/schema";
 import type { Episode } from "@/lib/schema/episode";
 
-/** フィードの 1 件と、それに決まった season とシリーズ。 */
+/**
+ * フィードの 1 件の割当の結果。
+ * `scripts/sync-feed.ts` が `seasonKeyOf` と `seriesIdOf` の結果から組み、`toEpisode` と同期の警告へ渡す。
+ */
 export type Assignment = {
   item: FeedItem;
   key: SeasonKey;
@@ -18,7 +21,7 @@ export type Assignment = {
 };
 
 /**
- * 割当を済ませたフィードの 1 件（`assignment`）を、`episodes.json` の 1 件へ写す。
+ * 割当を済ませたフィードの 1 件（`assignment`）と前回の同期のエピソード（`previous`）から、`episodes.json` へ書く 1 件を作る。
  * `links` は前回の同期のエピソード（`previous`、guid が鍵）の同じ guid の回から引き継ぎ、前回に無い回は空のオブジェクトにする。
  *
  * `season` には `itunes:season` でなく割当に使った season を入れる。
