@@ -81,7 +81,7 @@ const multiPolygonSchema = z.strictObject({
 });
 
 /**
- * `type` を判別子にして、5 種の geometry のどれか 1 つを受ける zod スキーマ。
+ * `type` を判別子にして、このファイルの geometry のどれか 1 つを受ける zod スキーマ。
  * 5 種のうちどれを使うかは、置く対象の性質を知っている側が決める。
  */
 export const geometrySchema = z.discriminatedUnion("type", [
