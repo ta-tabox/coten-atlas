@@ -1,5 +1,5 @@
 /**
- * era スライダーの目盛りを扱う。
+ * era スライダーの目盛りの位置（era 空間）から西暦の年を求める純関数を置く。
  * 目盛りは era の列（`EraList`）の各区間を年の幅によらず等幅に並べた 0..1 の数直線（era 空間）で、区間の中は年を線形に割り振る。
  *
  * era 空間の位置・西暦の年・era の三つのうち、どれかから別のどれかを求める処理はこのモジュールに置く。
@@ -22,7 +22,6 @@ export type EraSpacePosition = {
   presentEnd: number;
 };
 
-/** 両端とも年で持つ区間。 */
 type EraYears = {
   start: number;
   end: number;
@@ -39,9 +38,9 @@ export function presentEndOf(presentDate: Date): number {
 }
 
 /**
- * `era` の区間を、両端とも年で持つ形にして返す。
+ * `era` の区間を、終わっていない era の右端を `presentEnd` で埋めて、両端とも年で持つ形にして返す。
  *
- * `era.end` が `ERA_END_PRESENT` なら `presentEnd` を右端に置き、`presentEnd` が `era.start` 以下なら throw する。
+ * `era.end` が `ERA_END_PRESENT` で、`presentEnd` が `era.start` 以下なら throw する。
  * 年で書かれた区間の幅は `eraListSchema` が検証するが、`presentEnd` はどの検証も通っていない。
  */
 function yearsOf(era: Era, presentEnd: number): EraYears {

@@ -22,20 +22,18 @@ import {
 import type { MapLocusCollection } from "@/lib/map/loci";
 
 /**
- * シリーズを描くレイヤ 1 枚の定義。
+ * シリーズを描くレイヤ 1 枚の、`source` を除いた MapLibre の circle レイヤの定義。
  * `source` は持たず、`@/components/map/layers/` の部品が `SERIES_SOURCE_ID` を `<Layer>` へ渡す。
  *
  * `@/lib/map/layers/` のうちこのファイル以外は `react-map-gl/maplibre` を import できないので、レイヤの型はこの別名で受け取る。
  */
 export type SeriesLayerSpecification = Omit<CircleLayerSpecification, "source">;
 
-/** 事物を取得する source の id。 */
 export const SERIES_SOURCE_ID = "series-loci";
 
 /**
- * 代表点を描く円のレイヤ。
+ * 事物を 1 件ずつ円で描くレイヤの、不透明度と `filter` を除いた定義。
  *
- * 不透明度を持たない。
  * 現在窓から求めた濃さを不透明度にしたレイヤは `@/lib/map/layers/series-circle` の `seriesCircleLayerIn` が返す。
  */
 export const SERIES_CIRCLE_LAYER: SeriesLayerSpecification = {

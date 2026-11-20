@@ -3,7 +3,7 @@
  * 見るのは `/about` を開けること——同一オリジンへの 4xx / 5xx と実行時エラーが無いこと——だけで、載っている文言は L2 の `src/app/about/page.test.tsx` が見る。
  *
  * 開く先は `about/index.html` ではなく `about.html`。
- * `trailingSlash` が既定（false）なので、export はページ 1 枚を拡張子付きのファイルで出し、`about/` の下には RSC のペイロードしか置かない。
+ * `next.config.ts` が trailingSlash を設定せず既定の false なので、export はページ 1 枚を拡張子付きのファイルで出し、`about/` の下には RSC のペイロードしか置かない。
  * 書き出されていなければ、その 404 が `failedRequests` に出る。
  *
  * canvas は見ないので `violationsOf` は通さない。

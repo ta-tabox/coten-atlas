@@ -4,7 +4,7 @@
  *
  * 外の形をここへ持ち込まない。
  * `#text` と素の文字列の差や属性の在り処は `parse.ts` が均し、ここは均した後の記録だけを見る。
- * 配信元が XML の綴りを変えたら直すのは `parse.ts`、こちらが変わるのは値の規則が変わったときである。
+ * 配信元が XML の要素名や属性名を変えたら直すのは `parse.ts`、こちらが変わるのは値の規則が変わったときである。
  *
  * 正規化を二つ引き受ける。
  * `guid` は先頭に空白を持つ回が 5 件あるので trim する（trim しないと同じ回が毎回「新規」に見える）。
@@ -17,7 +17,7 @@ import * as z from "zod";
 
 /**
  * 前後の空白を落として受ける、空でない文字列。
- * `catalog/` のスキーマは空白付きを直さず落とすが、こちらは配信元から来た値を正規化する側なので直して受ける。
+ * `catalog/` のスキーマは空白付きを直さず拒否するが、こちらは配信元から来た値を正規化する側なので直して受ける。
  */
 const trimmedTextSchema = z.string().trim().min(1);
 
@@ -41,7 +41,7 @@ const pubDateSchema = z.string().transform((text, ctx) => {
 
 /**
  * `itunes:season` や `itunes:episode` のように、欄ごと無いことがある正の整数。
- * 欄が無ければ null で、欄はあるのに正の整数でなければ落とす。
+ * 欄が無ければ null で、欄はあるのに正の整数でなければ拒否する。
  */
 const optionalPositiveIntSchema = z
   .string()
@@ -90,7 +90,7 @@ const optionalDurationSecSchema = z
   });
 
 /**
- * フィードのエピソード 1 件。
+ * `parse.ts` が全欄を文字列か欠落へ正規化したフィードの 1 件を、型と制約の付いたエピソード 1 件（`FeedItem`）へ変える zod スキーマ。
  *
  * `season` は `itunes:season` で、752 件中 176 件（番外編・特別編・告知）が持たない。
  * `episodeNumber` と `durationSec` は読む画面が無いので episodes.json へ保存しない。
@@ -108,7 +108,7 @@ export const feedItemSchema = z.object({
 export type FeedItem = z.infer<typeof feedItemSchema>;
 
 /**
- * フィードの 1 件を検査して返す。
+ * `parse.ts` が全欄を文字列か欠落へ正規化したフィードの 1 件（`input`）を `feedItemSchema` に通し、`guid` の trim と `pubDate` の ISO 8601 への変換を済ませて返す。
  * 合わなければ、渡された見出しと、合わない欄を全部添えて投げる。
  *
  * 見出しは呼ぶ側が組む。

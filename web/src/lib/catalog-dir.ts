@@ -26,7 +26,7 @@ import {
 import { parseSeries, type SeriesList } from "@/lib/schema/series";
 
 /**
- * 目録（`catalog/`）の置き場。
+ * 目録（`catalog/`）の絶対パスで、読み書きの関数が `dir` を省いたときの既定値。
  * リポジトリのルート直下で、`web/` の外にある。
  * 起点は cwd なので、`next build` も `vitest` も `web/` で回す（`package.json` の scripts が正）。
  *
@@ -40,7 +40,7 @@ function readCatalogFile(fileName: string, dir: string): unknown {
 }
 
 /**
- * 目録の置き場（`dir`）の直下の 1 本を `text` で置き換える。
+ * 目録の置き場（`dir`）の直下のファイル（`fileName`）を `text` で置き換え、無ければ作る。
  *
  * 書き込みの途中で落ちても壊れたファイルが残らないよう、一時ファイルへ書いてから rename する。
  * rename が atomic なのは同じファイルシステムの上だけなので、一時ファイルは書き込み先と同じディレクトリへ置く。
@@ -53,12 +53,12 @@ function writeCatalogFile(fileName: string, text: string, dir: string): void {
   fs.renameSync(temporary, file);
 }
 
-/** シリーズ全件を検査して返す。 */
+/** `series.json` のシリーズ全件を読み、`parseSeries` の検査に通して返す。 */
 export function loadSeries(dir = CATALOG_DIR): SeriesList {
   return parseSeries(readCatalogFile("series.json", dir));
 }
 
-/** 事物の全件を検査して返す。 */
+/** `loci.geojson` の事物の全件を読み、`parseLoci` の検査に通して返す。 */
 export function loadLoci(dir = CATALOG_DIR): LocusCollection {
   return parseLoci(readCatalogFile("loci.geojson", dir));
 }
@@ -78,7 +78,7 @@ export function loadCommittedLoci(): LocusCollection {
   return parseLoci(JSON.parse(text));
 }
 
-/** 時代区分の全件を検査して返す。 */
+/** `eras.json` の時代区分の全件を読み、`parseEras` の検査に通して返す。 */
 export function loadEras(): EraList {
   return parseEras(readCatalogFile("eras.json", CATALOG_DIR));
 }

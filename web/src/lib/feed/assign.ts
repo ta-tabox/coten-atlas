@@ -18,7 +18,7 @@ import type {
 import type { SeriesList } from "@/lib/schema/series";
 
 /**
- * 番外編の題名の書き出し。
+ * 割当から除く番外編の回を見分ける、題名の先頭の文字列。
  *
  * `itunes:season` に番外編の通し番号（115・116・117）が入っている回が 3 件あり、シリーズの season 番号と同じ空間に見える。
  * 番号では見分けが付かないので、題名のこの書き出しで除く。
@@ -80,7 +80,7 @@ export function seasonKeyOf(
 }
 
 /**
- * `season` を持つシリーズの id を `series` から返す。
+ * `seasonKeyOf` が決めた season（`season`）を `series` の各シリーズの `season` と照合し、一致したシリーズの id を返す。
  * `season` が null か、どのシリーズも `season` を持たなければ null で、呼ぶ側が未割当として扱う。
  */
 export function seriesIdOf(
@@ -117,14 +117,14 @@ export function listUncorrectedSeasonMismatches(
 }
 
 /**
- * フィードの 1 件 `item` が番外編の回なら true を返す。
+ * フィードの 1 件 `item` の題名が `BONUS_TITLE_PREFIX` で始まる番外編の回なら true を返す。
  */
 function isBonusEpisode(item: FeedItem): boolean {
   return item.title.startsWith(BONUS_TITLE_PREFIX);
 }
 
 /**
- * 訂正表 `corrections` から、`guid` の回を訂正する行を探して返す。
+ * 訂正表 `corrections` から、`guid` が一致する最初の行を探して返す。
  * 行が無ければ undefined。
  *
  * 行の `season` は null を取りうるので、行が無いことを null でなく undefined で返し、割り当てないと訂正した回と見分ける。
@@ -151,7 +151,7 @@ function titleSeasonOf(title: string): number | null {
 }
 
 /**
- * season からシリーズの id を検索する索引。
+ * シリーズの全件（`series`）から、season をキー、シリーズの id を値にした索引を作る。
  *
  * season がシリーズ間で一意であることは `seriesListSchema` が見ているので、ここで衝突を数え直さない。
  */
