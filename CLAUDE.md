@@ -60,7 +60,7 @@
 | `.githooks/` のフック | バイト一致 |
 | `.claude/hooks/guard-*.sh`・`web/tests/guard-hooks.test.ts` | バイト一致 |
 | `.claude/rules/design.md`・`layers.md` | 骨格をこのリポジトリが埋める |
-| `.claude/settings.json`・`.github/workflows/` の一部 | 雛形の埋める箇所と実行環境の差を除いて一致 |
+| `.claude/settings.json`・`.github/workflows/` の一部 | 雛形の埋める箇所・実行環境の差・`claude-code-review.yml` の同期の PR の除外を除いて一致 |
 
 `.claude/rules/*.project.md` と `.vocabulary/allow` は写しでなく、このリポジトリの固有分である。
 写しからの逸脱と追加はそこへ書き、写しの本文は書き換えない。

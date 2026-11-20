@@ -35,7 +35,6 @@ type SeriesFixture = Pick<
 function seriesOf(fixture: SeriesFixture): Series {
   return {
     title: fixture.id,
-    summary: "",
     region: "ヨーロッパ",
     links: {},
     ...fixture,

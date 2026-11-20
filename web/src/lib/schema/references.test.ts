@@ -34,7 +34,6 @@ function seriesListOf(
     title: id,
     anchor: anchor ?? `${id}-anchor`,
     timeRange: timeRange ?? { start: -900, end: -200 },
-    summary: "",
     region: "ヨーロッパ",
     season,
     links: {},
@@ -55,6 +54,7 @@ function lociOf(
         id,
         seriesId,
         timeRange: timeRange ?? TIME_RANGE_OF_SERIES,
+        name: id,
       },
     })),
   };

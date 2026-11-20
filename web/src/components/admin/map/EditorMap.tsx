@@ -10,11 +10,8 @@
 import { type ReactNode, useEffect, useRef } from "react";
 import type { MapRef } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
-import {
-  BASEMAP_STYLE_URL,
-  INITIAL_VIEW_STATE,
-  MAP_WORKER_URL,
-} from "@/lib/map/config";
+import { useBasemapStyle } from "@/components/map/use-basemap-style";
+import { INITIAL_VIEW_STATE, MAP_WORKER_URL } from "@/lib/map/config";
 
 /** 地図の中心を移すのにかける時間（ミリ秒）。 */
 const PAN_DURATION_MS = 800;
@@ -38,6 +35,7 @@ type EditorMapProps = {
 /** ベースマップを描き、`panTarget` が変わるたびにそこへ中心を移し、子のレイヤを重ねる。 */
 export default function EditorMap({ panTarget, children }: EditorMapProps) {
   const mapRef = useRef<MapRef>(null);
+  const mapStyle = useBasemapStyle();
 
   useEffect(() => {
     if (panTarget === null) {
@@ -49,6 +47,10 @@ export default function EditorMap({ panTarget, children }: EditorMapProps) {
     });
   }, [panTarget]);
 
+  if (mapStyle === null) {
+    return null;
+  }
+
   // attributionControl は渡さない。
   // OpenFreeMap は出典の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消える。
   // cursor も渡さない。
@@ -56,7 +58,7 @@ export default function EditorMap({ panTarget, children }: EditorMapProps) {
   return (
     <MapLibreMap
       ref={mapRef}
-      mapStyle={BASEMAP_STYLE_URL}
+      mapStyle={mapStyle}
       initialViewState={INITIAL_VIEW_STATE}
       workerUrl={MAP_WORKER_URL}
       // MapLibreMap は container の `className` を受け取らないので、寸法は style で渡す。
