@@ -1,7 +1,7 @@
 name: Claude Code Review
 
-# 共有の雛形からの写しで、`<!-- FILL -->` の箇所をこのリポジトリに合わせて埋めてある。
-# それ以外は複数のリポジトリで揃えている部分なので、変えるなら雛形の側を先に直す。
+# 共有の雛形から写し、`<!-- FILL -->` の箇所を埋めたうえで、このリポジトリに合わせて調整している。
+# 調整は、同期のボットが開く PR（ブランチ sync/episodes）を除く絞りである。
 
 on:
   pull_request:
@@ -21,8 +21,11 @@ jobs:
     # step でなく job に置く。
     # step だけを止めると job は成功で終わり、中身が空の成功と実際にレビューが走った成功を check 一覧で区別できなくなる。
     # 他のラベルを付けるたびにレビューが走ると同じ指摘が積むので、labeled はラベル claude-review のときだけ通す。
+    # 同期のボットが開く PR（ブランチ sync/episodes）は除く。
+    # 差分は生成した catalog/episodes.json だけで、claude-code-action はボットが起動した run を拒否して赤い ✗ を残す。
     if: |
       github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref != 'sync/episodes' &&
       (github.event.action != 'labeled' || github.event.label.name == 'claude-review')
 
     runs-on: ubuntu-latest
@@ -105,9 +108,10 @@ jobs:
   # この job はリポジトリの規約（.claude/rules/ と skill review-checklist の表）を差分へ当て、当たった行にだけインラインコメントを付ける。
   # プラグインのコマンドは手順が固定で、system prompt の追記が規約の側まで届く保証が無いので、job を分ける。
   claude-style-review:
-    # 絞りは上の job と同じ（同一リポジトリ由来の PR と、ラベル claude-review の labeled に限る。理由は上の job のコメント）。
+    # 絞りは上の job と同じ（同一リポジトリ由来の PR・同期の PR を除く・ラベル claude-review の labeled に限る。理由は上の job のコメント）。
     if: |
       github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref != 'sync/episodes' &&
       (github.event.action != 'labeled' || github.event.label.name == 'claude-review')
 
     runs-on: ubuntu-latest
