@@ -51,7 +51,10 @@ export default function SeriesPanelSection({
   const bodyId = useId();
 
   return (
-    <section aria-labelledby={headingId} className="shrink-0">
+    <section
+      aria-labelledby={headingId}
+      className="shrink-0 rounded-box border border-rule p-1"
+    >
       <h3
         id={headingId}
         className="font-heading text-[0.85rem] font-bold text-heading"
@@ -90,7 +93,7 @@ export default function SeriesPanelSection({
             {emptyNote}
           </p>
         ) : (
-          <ul className="mt-1.5 flex flex-col divide-y divide-rule">
+          <ul className="mx-2 mt-1.5 flex flex-col divide-y divide-rule">
             {seriesList.map((series) => (
               <li key={series.id}>
                 <SeriesPanelItem

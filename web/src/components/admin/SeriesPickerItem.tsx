@@ -45,8 +45,15 @@ export default function SeriesPickerItem({
         type="button"
         onClick={() => onSelect(series.id)}
         aria-current={isSelected ? "true" : undefined}
-        className={`w-full px-3 py-1.5 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point ${isSelected ? "font-bold" : "hover:bg-rule/40"}`}
+        className={`relative w-full py-1.5 pr-1 pl-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point ${isSelected ? "font-bold" : "hover:bg-rule/40"}`}
       >
+        {/* 選択中の行に付ける赤い点は名前の左の余白に置き、名前と代表点の頭をそろえたままにする。 */}
+        {isSelected && (
+          <span
+            aria-hidden="true"
+            className="absolute top-[0.95rem] left-1 size-2 rounded-full bg-selected"
+          />
+        )}
         <span className="block text-[0.85rem]">{series.title}</span>
         <span className="block text-[0.7rem] font-normal text-ink-muted">
           {series.anchor === ANCHOR_UNLOCATED ? "位置なし" : series.anchor}
@@ -55,7 +62,7 @@ export default function SeriesPickerItem({
       {movedAnchor !== undefined && (
         <div
           data-moved-anchor={movedAnchor.id}
-          className="flex flex-col gap-1 px-3 pb-2 text-[0.7rem] text-ink tabular-nums"
+          className="flex flex-col gap-1 pr-1 pb-2 pl-4 text-[0.7rem] text-ink tabular-nums"
         >
           <dl className="grid grid-cols-[auto_1fr] gap-x-2">
             <dt>変更前</dt>

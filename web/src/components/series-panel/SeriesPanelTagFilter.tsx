@@ -45,7 +45,7 @@ export default function SeriesPanelTagFilter({
   return (
     <section
       aria-labelledby={headingId}
-      className="shrink-0 border-b border-rule pb-2"
+      className="shrink-0 rounded-box border border-rule p-1"
     >
       <h3
         id={headingId}
