@@ -31,7 +31,7 @@ export type SeriesPanelSections = {
 };
 
 /**
- * シリーズ（`series`）が扱う年代の始まりの年を、地図の区画を並べる鍵として返す。
+ * シリーズ（`series`）が扱う年代の始まりの年を、地図の区画を並べるキーとして返す。
  * `timeRange` が `TIME_RANGE_UNTIMED` なら throw する。
  *
  * スキーマは `TIME_RANGE_UNTIMED` を位置なしのシリーズにしか許さないので、地図に出ているシリーズで throw したらスキーマの検査を通っていない。

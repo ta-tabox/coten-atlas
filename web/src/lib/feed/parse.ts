@@ -131,7 +131,7 @@ function textOf(node: unknown): string | undefined {
   return raw;
 }
 
-/** 要素（`node`）から、パーサが接頭辞 `@_` を付けた鍵（`name`）の属性の値を返し、無ければ undefined を返す。 */
+/** 要素（`node`）から、パーサが接頭辞 `@_` を付けたキー（`name`）の属性の値を返し、無ければ undefined を返す。 */
 function attributeOf(node: unknown, name: string): unknown {
   return recordOf(node)?.[name];
 }

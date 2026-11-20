@@ -151,7 +151,7 @@ function titleSeasonOf(title: string): number | null {
 }
 
 /**
- * シリーズの全件（`series`）から、season を鍵、シリーズの id を値にした索引を作る。
+ * シリーズの全件（`series`）から、season をキー、シリーズの id を値にした索引を作る。
  *
  * season がシリーズ間で一意であることは `seriesListSchema` が見ているので、ここで衝突を数え直さない。
  */
