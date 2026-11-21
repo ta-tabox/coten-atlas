@@ -92,13 +92,15 @@
 
 /* 出典表記は、利用条件で常に全文が見える必要があるので、ⓘ のボタンに隠さず一行で出す。
    地図の絵を隠さないよう、背景は持たず、小さく控えめな色にする。
-   文字が地図の線や文字に紛れないよう、背景色の縁取りだけを付ける。 */
+   文字が地図の線や文字に紛れないよう、背景色の縁取りだけを付ける。
+   行の高さと下の余白は、画面の下端で下の字がかからないための値である。 */
 .maplibregl-ctrl.maplibregl-ctrl-attrib {
   margin-top: 0.25rem;
+  padding: 0 0.5rem 0.25rem;
   background: transparent;
   color: var(--color-ink-muted);
   font-size: 0.625rem;
-  line-height: 1.2;
+  line-height: 1.4;
   white-space: nowrap;
   text-shadow:
     0 0 2px var(--color-paper),
