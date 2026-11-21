@@ -159,11 +159,7 @@
       }
     },
     {
-      "includes": [
-        "web/src/lib/catalog-dir.*",
-        "web/scripts/**",
-        "web/tests/**"
-      ],
+      "includes": ["web/src/lib/catalog-dir.*", "web/scripts/**"],
       "linter": {
         "rules": {
           "style": {
@@ -182,6 +178,30 @@
                   {
                     "group": ["@/app", "@/app/**"],
                     "message": "依存は src/app から src/lib への一方向なので、src/lib から src/app を import しない（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["web/tests/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["./**", "../**", "!./**/*.css", "!../**/*.css"],
+                    "message": "import は @ 起点の絶対パスで書く（.claude/rules/languages/typescript.md「import」節）"
+                  },
+                  {
+                    "group": ["maplibre-gl", "react-map-gl/maplibre"],
+                    "message": "maplibre-gl・react-map-gl/maplibre を import してよいのは src/components/map/**・src/components/admin/map/**・src/lib/map/layers/shared.ts だけ（.claude/rules/languages/typescript.project.md「機械が見ている分」）"
                   }
                 ]
               }
