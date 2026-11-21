@@ -7,7 +7,7 @@
  * 画面の複数の部品が読む状態はこのコンポーネントが持ち、子へは props で渡す。
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import EraSlider from "@/components/era-slider/EraSlider";
@@ -39,7 +39,11 @@ import {
   type MapLocusCollection,
 } from "@/lib/map/loci";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
-import type { SheetStage } from "@/lib/map/sheet";
+import {
+  SHEET_FULL_RATIO,
+  SHEET_LIST_RATIO,
+  type SheetStage,
+} from "@/lib/map/sheet";
 import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
 import type { EraList } from "@/lib/schema/era";
 import type { Series, SeriesList } from "@/lib/schema/series";
@@ -138,26 +142,74 @@ export default function MapCanvas({
   );
   const [episodes, setEpisodes] = useState<EpisodesState>({ kind: "loading" });
   const [isPanelOpen, setIsPanelOpen] = useState(true);
-  const [sheetStage, setSheetStage] = useState<SheetStage>("closed");
+  const [sheetStage, setSheetStage] = useState<SheetStage>("era");
+  const [isEraSliderShown, setIsEraSliderShown] = useState(true);
+  const bottomStackRef = useRef<HTMLDivElement | null>(null);
   const isDesktop = useIsDesktop();
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
 
-  // 一覧パネルに隠れる左の幅を地図の視野から除き、点が一覧パネルの右側に描かれるようにする。
-  const padding = {
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: isDesktop && isPanelOpen ? PANEL_RIGHT_EDGE_PX : 0,
-  };
-  const paddingLeft = padding.left;
+  // 一覧パネルに隠れる左の幅と、シートに隠れる下の高さを地図の視野から除き、点が隠れない領域に描かれるようにする。
+  const paddingLeft = isDesktop && isPanelOpen ? PANEL_RIGHT_EDGE_PX : 0;
+  const initialPadding = { top: 0, bottom: 0, right: 0, left: paddingLeft };
 
-  // initialViewState は最初の描画にしか効かないので、開閉と幅の変化は easeTo で視野へ渡す。
-  useEffect(() => {
+  // 視野へ最後に渡した余白。
+  // 選択の移動が余白を渡した後に、同じ余白だけの移動が重なって選択の移動を打ち切るのを避ける。
+  const appliedPadding = useRef({ left: paddingLeft, bottom: 0 });
+
+  /**
+   * シートが `stage` の段のときに、シートが地図の下から覆う高さ（px）を返す。
+   * `list` と `full` の段の高さは画面の高さに対する割合で決まり、`closed` と `era` の段の高さは中身に合わせるので、描いたシートから測る。
+   */
+  function sheetHeightAt(stage: SheetStage): number {
+    if (stage === "list") {
+      return window.innerHeight * SHEET_LIST_RATIO;
+    }
+
+    if (stage === "full") {
+      return window.innerHeight * SHEET_FULL_RATIO;
+    }
+
+    return bottomStackRef.current?.offsetHeight ?? 0;
+  }
+
+  /** 現在の幅と段に合う余白が、最後に視野へ渡した余白と違えば、`duration` ミリ秒かけて視野へ渡す。 */
+  function syncPadding(duration: number): void {
+    const next = {
+      left: paddingLeft,
+      bottom: isDesktop ? 0 : sheetHeightAt(sheetStage),
+    };
+
+    if (
+      next.left === appliedPadding.current.left &&
+      next.bottom === appliedPadding.current.bottom
+    ) {
+      return;
+    }
+
+    appliedPadding.current = next;
     mapRef.current?.easeTo({
-      padding: { top: 0, bottom: 0, right: 0, left: paddingLeft },
-      duration: PADDING_DURATION_MS,
+      padding: { top: 0, right: 0, ...next },
+      duration,
     });
-  }, [paddingLeft]);
+  }
+
+  // initialViewState は最初の描画にしか効かないので、一覧パネルの開閉・シートの段・幅の変化は easeTo で視野へ渡す。
+  // biome-ignore lint/correctness/useExhaustiveDependencies: syncPadding は毎回作り直す関数で、余白を決める値を依存に並べる。
+  useEffect(() => {
+    syncPadding(PADDING_DURATION_MS);
+  }, [paddingLeft, isDesktop, sheetStage]);
+
+  // 下端の要素の高さを出典表記の位置へ写し、ref から高さを読めるようにする。
+  const attachBottomStack = useCallback((element: HTMLDivElement | null) => {
+    bottomStackRef.current = element;
+
+    const stopTracking = trackBottomInset(element);
+
+    return () => {
+      bottomStackRef.current = null;
+      stopTracking?.();
+    };
+  }, []);
 
   // エピソードは詳細カードを開く前の、マウントした直後に取得する。
   // 詳細カードを開いてから取得を始めると、クリックのたびに 750 件を超える JSON の到着を待つ。
@@ -192,22 +244,25 @@ export default function MapCanvas({
 
   /**
    * `seriesId` のシリーズを選び、選びを外すなら null を渡す。
-   * スマホの幅では、シリーズを選ぶとシートを開いた段にして詳細カードを見せる。
+   * スマホの幅では、シリーズを選ぶとシートを `list` の段にして詳細カードを見せる。
+   * `full` の段で選んだときも `list` の段へ縮み、地図が見える領域を広げる。
    */
   function select(seriesId: string | null): void {
     setSelectedSeriesId(seriesId);
 
     if (seriesId !== null && !isDesktop) {
-      setSheetStage("open");
+      setSheetStage("list");
     }
   }
 
   /**
-   * 一覧でクリックされた `seriesId` のシリーズを選択し、代表点を持つならその代表点へ地図の中心を移す。
+   * `seriesId` のシリーズを選択し、代表点を持つならその代表点へ地図の中心を移す。
+   * スマホの幅では、`list` の段のシートに隠れない領域の中央へ移す。
    *
-   * 地図のクリックで選んだ事物は既に画面に在るので、`panTo` を呼ぶのは一覧からの選択だけにする。
+   * デスクトップの幅の地図のクリックで選んだ事物は既に画面に在るので、デスクトップの幅で呼ぶのは一覧からの選択だけにする。
+   * スマホの幅では、選択でシートが高くなって事物を覆うので、地図のクリックでも呼ぶ。
    */
-  function selectFromPanel(seriesId: string): void {
+  function selectAndPan(seriesId: string): void {
     select(seriesId);
 
     const clicked = seriesList.find((series) => series.id === seriesId);
@@ -218,9 +273,38 @@ export default function MapCanvas({
       return;
     }
 
-    mapRef.current?.panTo(anchor.geometry.coordinates, {
+    if (isDesktop) {
+      mapRef.current?.panTo(anchor.geometry.coordinates, {
+        duration: PAN_DURATION_MS,
+      });
+
+      return;
+    }
+
+    const bottom = sheetHeightAt("list");
+
+    appliedPadding.current = { left: paddingLeft, bottom };
+    mapRef.current?.easeTo({
+      center: anchor.geometry.coordinates,
+      padding: { top: 0, right: 0, left: paddingLeft, bottom },
       duration: PAN_DURATION_MS,
     });
+  }
+
+  /**
+   * 地図のクリックが事物に当たったときは、その事物のシリーズを選ぶ。
+   * デスクトップの幅では地図を動かさず、スマホの幅ではシートに隠れない位置へ動かす。
+   */
+  function selectFromMap(event: MapLayerMouseEvent): void {
+    const seriesId = selectedSeriesIdOf(event);
+
+    if (seriesId !== null && !isDesktop) {
+      selectAndPan(seriesId);
+
+      return;
+    }
+
+    select(seriesId);
   }
 
   if (mapStyle === null) {
@@ -244,13 +328,14 @@ export default function MapCanvas({
       // attributionControl は渡さない。
       // OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
       mapStyle={mapStyle}
-      initialViewState={{ ...INITIAL_VIEW_STATE, padding }}
+      initialViewState={{ ...INITIAL_VIEW_STATE, padding: initialPadding }}
       maxZoom={PUBLIC_MAP_MAX_ZOOM}
       workerUrl={MAP_WORKER_URL}
       // MapLibreMap は container の `className` を受け取らないので、寸法だけは Tailwind のユーティリティでなく style で渡す。
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
-      onClick={(event) => select(selectedSeriesIdOf(event))}
+      onClick={selectFromMap}
+      onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
       cursor={isHoveringLocus ? "pointer" : undefined}
@@ -269,7 +354,7 @@ export default function MapCanvas({
             <SeriesPanel
               sections={taggedSections}
               selectedSeriesId={selectedSeriesId}
-              onSelect={selectFromPanel}
+              onSelect={selectAndPan}
               tags={panelTagsOf(taggedSections, selectedTags)}
               selectedTags={selectedTags}
               onSelectedTagsChange={setSelectedTags}
@@ -292,25 +377,27 @@ export default function MapCanvas({
           )}
         </>
       ) : (
-        // era スライダーはシートの上端に載せ、シートと同じ要素に入れて一緒に上下させる。
+        // era スライダーはシートの中に置く。
         <div
-          ref={trackBottomInset}
-          className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-2"
+          ref={attachBottomStack}
+          className="absolute inset-x-0 bottom-0 z-10"
         >
-          <div className="px-4">{eraSlider}</div>
           <SeriesSheet
             stage={sheetStage}
             onStageChange={setSheetStage}
             heading={
               selectedSeries === null ? "シリーズ一覧" : "シリーズの詳細"
             }
+            eraSlider={eraSlider}
+            isEraSliderShown={isEraSliderShown}
+            onEraSliderShownChange={setIsEraSliderShown}
           >
             {selectedSeries === null ? (
               <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">
                 <SeriesPanelBody
                   sections={taggedSections}
                   selectedSeriesId={selectedSeriesId}
-                  onSelect={selectFromPanel}
+                  onSelect={selectAndPan}
                   tags={panelTagsOf(taggedSections, selectedTags)}
                   selectedTags={selectedTags}
                   onSelectedTagsChange={setSelectedTags}
