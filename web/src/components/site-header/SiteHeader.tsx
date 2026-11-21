@@ -20,9 +20,9 @@ export default function SiteHeader() {
   return (
     <header
       data-site-header
-      className="flex h-header items-center justify-between gap-2 border-b border-rule bg-paper px-3 font-body text-ink sm:px-5"
+      className="flex h-header items-center justify-between gap-2 border-b border-rule bg-paper px-3 pt-2 font-body text-ink sm:px-5"
     >
-      <div className="flex-none translate-y-1">
+      <div className="flex-none">
         <h1 className="font-heading text-base leading-tight font-bold tracking-normal text-heading sm:text-lg sm:tracking-wide">
           <Link
             href="/"
