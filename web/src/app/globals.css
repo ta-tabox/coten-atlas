@@ -17,6 +17,7 @@
   --color-ink-muted: #62676d;
   --color-heading: #6e4e48;
   --color-point: #507db2;
+  --color-link: #507db2;
   --color-selected: #b91900;
   --color-contemporary: #ec8a78;
 
@@ -32,6 +33,31 @@
 
   --radius-box: 1.25rem;
   --radius-control: 0.875rem;
+}
+
+/* `header-link` は、ヘッダーのリンクの見た目を当てる。
+   下線は普段は幅 0 で、ホバーとキーボードのフォーカスで左から右へ伸びる。
+   `text-decoration` の下線は伸び方を動かせないので、背景の線の幅を動かす。 */
+@utility header-link {
+  padding-bottom: 0.125rem;
+  color: var(--color-link);
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 0% 1px;
+  transition:
+    color 0.4s ease,
+    background-size 0.4s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-ink);
+    background-size: 100% 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 /* `range-thumb:` と `range-track:` は、`<input type="range">` のつまみとトラックへユーティリティを当てる。

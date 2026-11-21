@@ -25,6 +25,14 @@ describe("SiteHeader", () => {
     );
   });
 
+  it("サイト名は、このサイトのトップへのリンクになる", () => {
+    render(<SiteHeader />);
+
+    expect(
+      screen.getByRole("link", { name: "COTEN RADIO MAP" }),
+    ).toHaveAttribute("href", "/");
+  });
+
   it("サイト名を見出しに、非公式の副題をそのすぐ下に出す", () => {
     render(<SiteHeader />);
 

@@ -57,7 +57,7 @@ for (const viewport of VIEWPORTS) {
       await expect(page.getByText("AN UNOFFICIAL FAN ATLAS")).toBeVisible();
     });
 
-    test("ヘッダーが横に溢れず、一覧パネルと詳細カードに重ならない", async ({
+    test("ヘッダーが右の余白へ食い込まず、一覧パネルと詳細カードに重ならない", async ({
       page,
     }) => {
       await observe(page, exportRoot());
@@ -65,11 +65,23 @@ for (const viewport of VIEWPORTS) {
       const header = page.locator("[data-site-header]");
       const { seriesPanel, detailCard } = overlappingSurfaces(page);
 
-      const overflow = await header.evaluate(
-        (element) => element.scrollWidth - element.clientWidth,
-      );
+      // 子が余白へ食い込んでも scrollWidth は増えないので、右端の子と右の余白の端を比べる。
+      const intrusion = await header.evaluate((element) => {
+        const rightEdge = element.getBoundingClientRect().right;
+        const padding = Number.parseFloat(
+          getComputedStyle(element).paddingRight,
+        );
+        const lastRight = Math.max(
+          ...Array.from(
+            element.children,
+            (child) => child.getBoundingClientRect().right,
+          ),
+        );
 
-      expect(overflow).toBeLessThanOrEqual(0);
+        return lastRight - (rightEdge - padding);
+      });
+
+      expect(intrusion).toBeLessThanOrEqual(0);
 
       await seriesPanel.locator("li button:visible").first().click();
       await expect(detailCard).toBeVisible();
