@@ -15,7 +15,7 @@
  *
  * ここが持つのは機構だけで、判定を回すのは `tests/smoke/` の spec である。
  * ブラウザの寿命も viewport も Playwright の project が持つので、この層は渡された page を使うだけにする。
- * 入口は observe（配信物を開いて観測を集める）と violationsOf（観測から違反を出す純関数）と listAdminPaths（管理画面の混入を探す）。
+ * 入口は openExport（配信物を開いたままにする）と observe（配信物を開いて観測を集める）と violationsOf（観測から違反を出す純関数）と listAdminPaths（管理画面の混入を探す）。
  */
 
 import fs from "node:fs";
@@ -254,17 +254,17 @@ function portOf(server: http.Server): number {
 }
 
 /**
- * ページを開いて観測を集める。
- * 判定はしない。
+ * `root`（`out/` の実体）を BASE_PATH の下へ配信し、`page` で `pagePath` を開いて、配信しているサーバを返す。
+ * サーバは呼び手が閉じるまで動き続ける。
  *
  * `pagePath` は BASE_PATH の下のパス。
  * この層のサーバはディレクトリにしか index.html を補わないので、トップ以外は拡張子まで書く。
  */
-export async function observe(
+export async function openExport(
   page: Page,
   root: string,
   pagePath = "/",
-): Promise<PageObservation> {
+): Promise<http.Server> {
   const server = await serveExport(root);
 
   try {
@@ -280,29 +280,52 @@ export async function observe(
         : route.abort(),
     );
 
-    const failedRequests: string[] = [];
-    const consoleErrors: string[] = [];
-
-    page.on("response", (response) => {
-      if (response.status() >= 400) {
-        failedRequests.push(
-          `${response.status()} ${new URL(response.url()).pathname}`,
-        );
-      }
-    });
-    page.on("console", (message) => {
-      if (message.type() === "error") {
-        consoleErrors.push(message.text());
-      }
-    });
-
     await page.goto(
       `http://localhost:${portOf(server)}${BASE_PATH}${pagePath}`,
       {
         waitUntil: "networkidle",
       },
     );
+  } catch (cause) {
+    // 開けなかったサーバを閉じずに投げると、呼び手は閉じる相手を受け取れない。
+    server.close();
+    throw cause;
+  }
 
+  return server;
+}
+
+/**
+ * ページを開いて観測を集める。
+ * 判定はしない。
+ *
+ * `pagePath` の書き方は `openExport` が正。
+ */
+export async function observe(
+  page: Page,
+  root: string,
+  pagePath = "/",
+): Promise<PageObservation> {
+  const failedRequests: string[] = [];
+  const consoleErrors: string[] = [];
+
+  // ページを開く前に購読しないと、最初の HTML と JS の応答を取りこぼす。
+  page.on("response", (response) => {
+    if (response.status() >= 400) {
+      failedRequests.push(
+        `${response.status()} ${new URL(response.url()).pathname}`,
+      );
+    }
+  });
+  page.on("console", (message) => {
+    if (message.type() === "error") {
+      consoleErrors.push(message.text());
+    }
+  });
+
+  const server = await openExport(page, root, pagePath);
+
+  try {
     const canvasSize = await page.evaluate(() => {
       const canvas = document.querySelector("canvas.maplibregl-canvas");
 
