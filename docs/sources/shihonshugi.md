@@ -58,5 +58,3 @@
 | [#157 の PR 本文](https://github.com/ta-tabox/coten-atlas/pull/157)                                           | 各回の内容から決めた年と、`region` と `id` の判断               |
 | [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160)               | `timeRange` を `"untimed"` にした線                             |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明                        | 各回が扱う主題                                                  |
-
-コトバンクの URL は、裏どりが挙げた ID の無い URL が開けなかったので、同じ項の ID の付いた URL へ差し替えた。

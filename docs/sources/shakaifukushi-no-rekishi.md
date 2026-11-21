@@ -61,5 +61,3 @@
 | [#160（ADR-20260910-untimed-concept-series）](https://github.com/ta-tabox/coten-atlas/pull/160)               | `timeRange` を `"untimed"` にした線                             |
 | [#212（見直し）](https://github.com/ta-tabox/coten-atlas/issues/212)                                          | 採用した仮決定を人間が見直す論点と案                            |
 | 配信フィード（`https://anchor.fm/s/8c2088c/podcast/rss`、2026-09-10 取得）の各回の説明                        | 各回が扱う主題                                                  |
-
-コトバンクの URL は、裏どりが挙げた ID の無い URL が開けなかったので、同じ項の ID の付いた URL へ差し替えた。
