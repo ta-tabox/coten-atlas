@@ -11,7 +11,7 @@
 
 import ListenLinks from "@/components/series-detail/ListenLinks";
 import YouTubeChannelLink from "@/components/series-detail/YouTubeChannelLink";
-import type { EpisodesState } from "@/lib/episodes";
+import { EPISODES_KIND, type EpisodesState } from "@/lib/episodes";
 import { formatTimeRange } from "@/lib/format";
 import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 
@@ -32,11 +32,11 @@ const NOTE_CLASS = "mt-2 text-[0.9rem] text-ink-muted";
  * 題号は最長 80 字あるので `line-clamp-2` で 2 行に切り、全文は `title` 属性に残す。
  */
 function EpisodeList({ state }: { state: EpisodesState }) {
-  if (state.kind === "loading") {
+  if (state.kind === EPISODES_KIND.loading) {
     return <p className={NOTE_CLASS}>エピソードを読み込んでいる。</p>;
   }
 
-  if (state.kind === "error") {
+  if (state.kind === EPISODES_KIND.error) {
     return <p className={NOTE_CLASS}>エピソードの一覧を取れなかった。</p>;
   }
 

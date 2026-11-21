@@ -21,6 +21,7 @@ import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
 import SeriesSheet from "@/components/series-sheet/SeriesSheet";
 import {
+  EPISODES_KIND,
   type EpisodesState,
   episodesForSeries,
   fetchEpisodes,
@@ -42,6 +43,7 @@ import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import {
   SHEET_FULL_RATIO,
   SHEET_LIST_RATIO,
+  SHEET_STAGE,
   type SheetStage,
 } from "@/lib/map/sheet";
 import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
@@ -93,12 +95,12 @@ function selectedSeriesIdOf(event: MapLayerMouseEvent): string | null {
  * 絞り込めるのは `loaded` になった後だけである。
  */
 function episodesOf(state: EpisodesState, seriesId: string): EpisodesState {
-  if (state.kind !== "loaded") {
+  if (state.kind !== EPISODES_KIND.loaded) {
     return state;
   }
 
   return {
-    kind: "loaded",
+    kind: EPISODES_KIND.loaded,
     episodes: episodesForSeries(state.episodes, seriesId),
   };
 }
@@ -140,9 +142,11 @@ export default function MapCanvas({
   const [eraPosition, setEraPosition] = useState(() =>
     initialEraPositionOf(eras),
   );
-  const [episodes, setEpisodes] = useState<EpisodesState>({ kind: "loading" });
+  const [episodes, setEpisodes] = useState<EpisodesState>({
+    kind: EPISODES_KIND.loading,
+  });
   const [isPanelOpen, setIsPanelOpen] = useState(true);
-  const [sheetStage, setSheetStage] = useState<SheetStage>("era");
+  const [sheetStage, setSheetStage] = useState<SheetStage>(SHEET_STAGE.era);
   const [isEraSliderShown, setIsEraSliderShown] = useState(true);
   const bottomStackRef = useRef<HTMLDivElement | null>(null);
   const isDesktop = useIsDesktop();
@@ -161,11 +165,11 @@ export default function MapCanvas({
    * `list` と `full` の段の高さは画面の高さに対する割合で決まり、`closed` と `era` の段の高さは中身に合わせるので、描いたシートから測る。
    */
   function sheetHeightAt(stage: SheetStage): number {
-    if (stage === "list") {
+    if (stage === SHEET_STAGE.list) {
       return window.innerHeight * SHEET_LIST_RATIO;
     }
 
-    if (stage === "full") {
+    if (stage === SHEET_STAGE.full) {
       return window.innerHeight * SHEET_FULL_RATIO;
     }
 
@@ -251,7 +255,7 @@ export default function MapCanvas({
     setSelectedSeriesId(seriesId);
 
     if (seriesId !== null && !isDesktop) {
-      setSheetStage("list");
+      setSheetStage(SHEET_STAGE.list);
     }
   }
 
@@ -281,7 +285,7 @@ export default function MapCanvas({
       return;
     }
 
-    const bottom = sheetHeightAt("list");
+    const bottom = sheetHeightAt(SHEET_STAGE.list);
 
     appliedPadding.current = { left: paddingLeft, bottom };
     mapRef.current?.easeTo({

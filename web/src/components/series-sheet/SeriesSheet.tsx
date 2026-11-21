@@ -23,6 +23,7 @@ import {
   nextSheetStage,
   SHEET_FULL_RATIO,
   SHEET_LIST_RATIO,
+  SHEET_STAGE,
   type SheetStage,
   stepSheetStage,
 } from "@/lib/map/sheet";
@@ -61,11 +62,11 @@ type PressState = {
  * `closed` と `era` の段は、中身の高さに合わせる。
  */
 function heightStyleOf(stage: SheetStage): string {
-  if (stage === "list") {
+  if (stage === SHEET_STAGE.list) {
     return `${SHEET_LIST_RATIO * 100}dvh`;
   }
 
-  return stage === "full" ? `${SHEET_FULL_RATIO * 100}dvh` : "auto";
+  return stage === SHEET_STAGE.full ? `${SHEET_FULL_RATIO * 100}dvh` : "auto";
 }
 
 /**
@@ -84,8 +85,10 @@ export default function SeriesSheet({
   const bodyId = useId();
   const press = useRef<PressState | null>(null);
 
-  const isListShown = stage === "list" || stage === "full";
-  const isEraShown = stage === "era" || (stage === "list" && isEraSliderShown);
+  const isListShown = stage === SHEET_STAGE.list || stage === SHEET_STAGE.full;
+  const isEraShown =
+    stage === SHEET_STAGE.era ||
+    (stage === SHEET_STAGE.list && isEraSliderShown);
 
   /** 主ボタン・指・ペンで取っ手の行を押したら、そのポインタを追い始める。 */
   function startPress(event: ReactPointerEvent<HTMLDivElement>) {
@@ -164,7 +167,7 @@ export default function SeriesSheet({
         {/* ポインタの操作は上の行が受けるので、ボタンの click はキーボードと読み上げの操作（`detail` が 0）だけを段の移動に使う。 */}
         <button
           type="button"
-          aria-expanded={stage !== "closed"}
+          aria-expanded={stage !== SHEET_STAGE.closed}
           aria-controls={bodyId}
           onClick={(event) => {
             if (event.detail === 0) {
@@ -178,7 +181,7 @@ export default function SeriesSheet({
         </button>
 
         {/* 押しても行のスワイプとタップを始めないよう、ポインタの押下を行へ伝えない。 */}
-        {stage === "list" && !isEraSliderShown && (
+        {stage === SHEET_STAGE.list && !isEraSliderShown && (
           <button
             type="button"
             onPointerDown={(event) => event.stopPropagation()}
@@ -196,7 +199,7 @@ export default function SeriesSheet({
         <div className="px-4 pb-3">{eraSlider}</div>
 
         {/* era スライダーの年の範囲の文字は右寄せなので、空いている左上へ置く。 */}
-        {stage === "list" && isEraSliderShown && (
+        {stage === SHEET_STAGE.list && isEraSliderShown && (
           <button
             type="button"
             aria-label="時代スライダーを閉じる"

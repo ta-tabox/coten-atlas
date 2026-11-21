@@ -78,7 +78,8 @@ vi.mock("react-map-gl/maplibre", () => ({ default: map }));
 
 // fetchEpisodes の Promise を解決させない。
 // 解決すると act の外で setEpisodes が走り、props の受け渡しだけを検証するテストが取得の完了待ちになる。
-vi.mock("@/lib/episodes", () => ({
+vi.mock("@/lib/episodes", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/episodes")>()),
   fetchEpisodes: () => new Promise(() => {}),
   episodesForSeries: () => [],
 }));

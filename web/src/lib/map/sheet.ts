@@ -4,12 +4,25 @@
  */
 
 /**
- * シートの段を、低い順に並べたもの。
+ * シートの段の名前。
  * `closed` は取っ手だけ、`era` は取っ手と era スライダー、`list` は一覧か詳細カードを画面の高さの半分、`full` は同じ中身を画面の高さの 9 割で出す。
  */
-export const SHEET_STAGES = ["closed", "era", "list", "full"] as const;
+export const SHEET_STAGE = {
+  closed: "closed",
+  era: "era",
+  list: "list",
+  full: "full",
+} as const;
 
-export type SheetStage = (typeof SHEET_STAGES)[number];
+export type SheetStage = (typeof SHEET_STAGE)[keyof typeof SHEET_STAGE];
+
+/** シートの段を低い順に並べたもの。タップとスワイプが移る順を決める。 */
+export const SHEET_STAGES: readonly SheetStage[] = [
+  SHEET_STAGE.closed,
+  SHEET_STAGE.era,
+  SHEET_STAGE.list,
+  SHEET_STAGE.full,
+];
 
 /** `list` の段のシートの高さが、画面の高さ（`dvh`）に占める割合。 */
 export const SHEET_LIST_RATIO = 0.5;

@@ -8,6 +8,13 @@
 import { BASE_PATH } from "@/lib/base-path";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
 
+/** エピソードの取得の状態（`EpisodesState` の `kind`）の名前。 */
+export const EPISODES_KIND = {
+  loading: "loading",
+  loaded: "loaded",
+  error: "error",
+} as const;
+
 /**
  * `fetchEpisodes` が返す取得の結果。
  *
@@ -15,14 +22,16 @@ import { type Episode, parseEpisodes } from "@/lib/schema/episode";
  * 空配列にすると、割り当てられたエピソードが 0 件のシリーズと取得の失敗が同じ値になり、`SeriesDetailCard` が二つを書き分けられない。
  */
 export type EpisodesResult =
-  | { kind: "loaded"; episodes: Episode[] }
-  | { kind: "error" };
+  | { kind: typeof EPISODES_KIND.loaded; episodes: Episode[] }
+  | { kind: typeof EPISODES_KIND.error };
 
 /**
  * `SeriesDetailCard` が受け取るエピソードの状態。
  * `fetchEpisodes` が返るまでが `loading` で、返った後は `EpisodesResult` のどちらかになる。
  */
-export type EpisodesState = { kind: "loading" } | EpisodesResult;
+export type EpisodesState =
+  | { kind: typeof EPISODES_KIND.loading }
+  | EpisodesResult;
 
 /**
  * `fetchEpisodes` が取得する `episodes.json` の、`BASE_PATH` から始まる絶対パスの URL。
@@ -48,13 +57,13 @@ export async function fetchEpisodes(): Promise<EpisodesResult> {
     }
 
     return {
-      kind: "loaded",
+      kind: EPISODES_KIND.loaded,
       episodes: parseEpisodes(await response.json()).episodes,
     };
   } catch (cause) {
     console.error(`エピソードの取得に失敗した: ${EPISODES_URL}`, cause);
 
-    return { kind: "error" };
+    return { kind: EPISODES_KIND.error };
   }
 }
 
