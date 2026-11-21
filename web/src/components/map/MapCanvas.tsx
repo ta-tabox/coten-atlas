@@ -40,12 +40,7 @@ import {
   type MapLocusCollection,
 } from "@/lib/map/loci";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
-import {
-  SHEET_FULL_RATIO,
-  SHEET_LIST_RATIO,
-  SHEET_STAGE,
-  type SheetStage,
-} from "@/lib/map/sheet";
+import { listHeightPx, SHEET_STAGE, type SheetStage } from "@/lib/map/sheet";
 import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
 import type { EraList } from "@/lib/schema/era";
 import type { Series, SeriesList } from "@/lib/schema/series";
@@ -157,27 +152,11 @@ export default function MapCanvas({
   // 選択の移動が余白を渡した後に、同じ余白だけの移動が重なって選択の移動を打ち切るのを避ける。
   const appliedPadding = useRef({ left: paddingLeft, bottom: 0 });
 
-  /**
-   * シートが `stage` の段のときに、シートが地図の下から覆う高さ（px）を返す。
-   * `list` と `full` の段の高さは画面の高さに対する割合で決まり、`closed` と `era` の段の高さは、シートが段の変更ごとに渡す値（`sheetTargetHeight`）を使う。
-   */
-  function sheetHeightAt(stage: SheetStage): number {
-    if (stage === SHEET_STAGE.list) {
-      return window.innerHeight * SHEET_LIST_RATIO;
-    }
-
-    if (stage === SHEET_STAGE.full) {
-      return window.innerHeight * SHEET_FULL_RATIO;
-    }
-
-    return sheetTargetHeight.current;
-  }
-
   /** 現在の幅と段に合う余白が、最後に視野へ渡した余白と違えば、`duration` ミリ秒かけて視野へ渡す。 */
   function syncPadding(duration: number): void {
     const next = {
       left: paddingLeft,
-      bottom: isDesktop ? 0 : sheetHeightAt(sheetStage),
+      bottom: isDesktop ? 0 : sheetTargetHeight.current,
     };
 
     if (
@@ -270,7 +249,7 @@ export default function MapCanvas({
       return;
     }
 
-    const bottom = sheetHeightAt(SHEET_STAGE.list);
+    const bottom = listHeightPx(window.innerHeight);
 
     appliedPadding.current = { left: paddingLeft, bottom };
     mapRef.current?.easeTo({
@@ -296,19 +275,6 @@ export default function MapCanvas({
     select(seriesId);
   }
 
-  /**
-   * 地図の読み込みが終わったら、視野の余白を合わせ、出典表記を閉じた状態にする。
-   * 出典表記は、MapLibre が幅の狭い地図で、利用者が地図を動かすまで開いたまま出すので、最初から閉じる。
-   * 閉じても、出典表記のボタンは残る。
-   */
-  function handleLoad(): void {
-    syncPadding(0);
-    mapRef.current
-      ?.getContainer()
-      .querySelector(".maplibregl-ctrl-attrib")
-      ?.classList.remove("maplibregl-compact-show");
-  }
-
   if (mapStyle === null) {
     return null;
   }
@@ -327,8 +293,10 @@ export default function MapCanvas({
   return (
     <MapLibreMap
       ref={mapRef}
-      // attributionControl は渡さない。
-      // OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと既定の AttributionControl ごと表示が消えて規約違反になる。
+      // attributionControl に false を渡さない。
+      // OpenFreeMap は `OpenFreeMap © OpenMapTiles Data from OpenStreetMap` の表示を利用条件にしており、false を渡すと AttributionControl ごと表示が消えて規約違反になる。
+      // compact を false にして、幅の狭い地図でも、ⓘ のボタンに隠さず全文を常に出す。
+      attributionControl={{ compact: false }}
       mapStyle={mapStyle}
       initialViewState={{ ...INITIAL_VIEW_STATE, padding: initialPadding }}
       maxZoom={PUBLIC_MAP_MAX_ZOOM}
@@ -337,7 +305,7 @@ export default function MapCanvas({
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={selectFromMap}
-      onLoad={handleLoad}
+      onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
       cursor={isHoveringLocus ? "pointer" : undefined}

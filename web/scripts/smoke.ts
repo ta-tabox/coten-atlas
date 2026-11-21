@@ -84,7 +84,7 @@ const FIXTURE_STYLE = {
     attribution: {
       type: "geojson",
       data: { type: "FeatureCollection", features: [] },
-      attribution: "smoke-fixture © attribution",
+      attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap",
     },
   },
   layers: [

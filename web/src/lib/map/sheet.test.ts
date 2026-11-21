@@ -3,7 +3,12 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { nextSheetStage, stepSheetStage } from "@/lib/map/sheet";
+import {
+  fullHeightPx,
+  listHeightPx,
+  nextSheetStage,
+  stepSheetStage,
+} from "@/lib/map/sheet";
 
 describe("stepSheetStage", () => {
   it("上へスワイプすると、1 つ高い段を返す", () => {
@@ -30,5 +35,21 @@ describe("nextSheetStage", () => {
     expect(nextSheetStage("era")).toBe("list");
     expect(nextSheetStage("list")).toBe("full");
     expect(nextSheetStage("full")).toBe("closed");
+  });
+});
+
+describe("listHeightPx", () => {
+  it("画面の高さの半分を返す", () => {
+    expect(listHeightPx(800)).toBe(400);
+  });
+});
+
+describe("fullHeightPx", () => {
+  it("画面の高さから、ルートの文字の大きさ 16px の 5.5 倍を引いた高さを返す", () => {
+    expect(fullHeightPx(800, 16)).toBe(712);
+  });
+
+  it("ルートの文字の大きさが変わると、引く高さも比例して変わる", () => {
+    expect(fullHeightPx(800, 20)).toBe(690);
   });
 });

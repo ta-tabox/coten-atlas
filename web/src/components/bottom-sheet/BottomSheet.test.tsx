@@ -250,11 +250,11 @@ describe("BottomSheet の目標の高さ", () => {
     expect(onTargetHeightChange).toHaveBeenLastCalledWith(400);
   });
 
-  it("full の段では、画面の高さの 9 割を渡す", () => {
+  it("full の段では、画面の高さから上端に残す高さを引いた高さを渡す", () => {
     vi.stubGlobal("innerHeight", 800);
 
     const { onTargetHeightChange } = renderSheet("full");
 
-    expect(onTargetHeightChange).toHaveBeenLastCalledWith(720);
+    expect(onTargetHeightChange).toHaveBeenLastCalledWith(712);
   });
 });

@@ -135,11 +135,12 @@ test("取っ手を押すと一覧の項目が出て、シートの上端が画�
   });
 });
 
-test("どの段でも、出典表記は画面の上端にあり、シートと重ならない", async ({
+test("どの段でも、出典表記はヘッダーの下にあり、シートと重ならない", async ({
   page,
 }) => {
-  await withSheetPage(page, async ({ size, sheet }) => {
+  await withSheetPage(page, async ({ sheet }) => {
     const attribution = page.locator(".maplibregl-ctrl-attrib");
+    const header = await rectOf(page.locator("[data-site-header]"));
 
     for (const stage of ["era", "list", "full"]) {
       await expect(sheet).toHaveAttribute("data-stage", stage);
@@ -147,9 +148,10 @@ test("どの段でも、出典表記は画面の上端にあり、シートと�
       const attributionRect = await rectOf(attribution);
       const sheetRect = await rectOf(sheet);
 
-      expect(attributionRect.y, `${stage} の出典表記の上端`).toBeLessThan(
-        size.height / 4,
-      );
+      expect(
+        attributionRect.y,
+        `${stage} の出典表記の上端`,
+      ).toBeGreaterThanOrEqual(header.y + header.height);
       expect(
         attributionRect.y + attributionRect.height,
         `${stage} の出典表記の下端`,
@@ -175,10 +177,10 @@ test("list の段で、閉じるボタンが era スライダーを隠し、「�
   });
 });
 
-test("取っ手をもう一度押すと全面の段になり、シートの上端が画面の高さの 1 割の付近に来て、era スライダーは隠れる", async ({
+test("取っ手をもう一度押すと全面の段になり、シートの上端がヘッダーと出典表記の下に来て、era スライダーは隠れる", async ({
   page,
 }) => {
-  await withSheetPage(page, async ({ size, sheet }) => {
+  await withSheetPage(page, async ({ sheet }) => {
     await tapHandle(page);
     await tapHandle(page);
     await expect(sheet).toHaveAttribute("data-stage", "full");
@@ -186,7 +188,7 @@ test("取っ手をもう一度押すと全面の段になり、シートの上�
     const fullSheet = await rectOf(sheet);
 
     expect(
-      Math.abs(fullSheet.y - size.height * 0.1),
+      Math.abs(fullSheet.y - 5.5 * 16),
       `シートの上端 ${fullSheet.y}`,
     ).toBeLessThanOrEqual(TOP_TOLERANCE_PX);
     await expect(page.getByTestId("era-slider")).toBeHidden();
@@ -263,13 +265,27 @@ test("シートの高さは段が変わると動く", async ({ page }) => {
   });
 });
 
-test("出典表記は、初期で閉じていて、ボタンだけが出ている", async ({ page }) => {
-  await withSheetPage(page, async () => {
+test("出典表記は、ボタンに隠さず全文を一行で出し、背景を持たない", async ({
+  page,
+}) => {
+  await withSheetPage(page, async ({ size }) => {
     const attribution = page.locator(".maplibregl-ctrl-attrib");
 
-    await expect(attribution).not.toHaveClass(/maplibregl-compact-show/);
+    await expect(attribution).toContainText("OpenFreeMap");
     await expect(
       attribution.locator(".maplibregl-ctrl-attrib-button"),
-    ).toBeVisible();
+    ).toBeHidden();
+
+    const rect = await rectOf(attribution);
+    const background = await attribution.evaluate(
+      (element) => getComputedStyle(element).backgroundColor,
+    );
+
+    // 一行なら高さは文字 1 行分に収まり、2 行に折り返すとその倍になる。
+    expect(rect.height, "出典表記の高さ").toBeLessThan(24);
+    expect(rect.x + rect.width, "出典表記の右端").toBeLessThanOrEqual(
+      size.width,
+    );
+    expect(background).toBe("rgba(0, 0, 0, 0)");
   });
 });

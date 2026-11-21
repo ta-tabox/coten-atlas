@@ -30,8 +30,27 @@ export const SHEET_STAGES: readonly SheetStage[] = [
 /** `list` の段のシートの高さが、画面の高さ（`dvh`）に占める割合。 */
 export const SHEET_LIST_RATIO = 0.5;
 
-/** `full` の段のシートの高さが、画面の高さ（`dvh`）に占める割合。 */
-export const SHEET_FULL_RATIO = 0.9;
+/**
+ * `full` の段で、画面の上端に残す高さ（rem）。
+ * 上端のヘッダー（`--spacing-header`）と、その下に出る出典表記が、シートに隠れない高さにする。
+ */
+export const SHEET_FULL_TOP_REM = 5.5;
+
+/** `list` の段のシートの高さ（px）を、画面の高さ（`viewportHeight`、px）から求めて返す。 */
+export function listHeightPx(viewportHeight: number): number {
+  return viewportHeight * SHEET_LIST_RATIO;
+}
+
+/**
+ * `full` の段のシートの高さ（px）を、画面の高さ（`viewportHeight`、px）とルート要素の文字の大きさ（`rootFontSizePx`、px）から求めて返す。
+ * 画面の高さから `SHEET_FULL_TOP_REM` を引いた高さで、画面が低くてもヘッダーの下まで届く。
+ */
+export function fullHeightPx(
+  viewportHeight: number,
+  rootFontSizePx: number,
+): number {
+  return viewportHeight - SHEET_FULL_TOP_REM * rootFontSizePx;
+}
 
 /**
  * 見出しをタップしたときに移る段を返す。

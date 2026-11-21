@@ -57,9 +57,6 @@ type MockMapProps = MapProps & { ref?: Ref<MapRef> };
 /** MapLibreMap のモックが `ref` に入れる地図の `panTo`。 */
 const panTo = vi.hoisted(() => vi.fn());
 
-/** MapLibreMap のモックが `ref` に入れる地図の `getContainer` が返す、出典表記を持つコンテナ。 */
-const container = vi.hoisted(() => document.createElement("div"));
-
 /** MapLibreMap のモックが `ref` に入れる地図の `easeTo`。 */
 const easeTo = vi.hoisted(() => vi.fn());
 
@@ -70,11 +67,7 @@ const easeTo = vi.hoisted(() => vi.fn());
 const map = vi.hoisted(() =>
   vi.fn<(props: MockMapProps) => null>((props) => {
     if (typeof props.ref === "object" && props.ref !== null) {
-      props.ref.current = {
-        panTo,
-        easeTo,
-        getContainer: () => container,
-      } as unknown as MapRef;
+      props.ref.current = { panTo, easeTo } as unknown as MapRef;
     }
 
     return null;
@@ -401,19 +394,10 @@ describe("MapCanvas", () => {
     expect(lastProps().attributionControl).not.toBe(false);
   });
 
-  it("地図の読み込みが終わったら、開いたままの出典表記を閉じる", async () => {
-    container.innerHTML =
-      '<details class="maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show"></details>';
+  it("出典表記を、幅の狭い地図でもボタンに隠さず全文で出す", async () => {
     await renderMapCanvas();
 
-    act(() => lastProps().onLoad?.({} as never));
-
-    expect(container.querySelector(".maplibregl-ctrl-attrib")).not.toHaveClass(
-      "maplibregl-compact-show",
-    );
-    expect(container.querySelector(".maplibregl-ctrl-attrib")).toHaveClass(
-      "maplibregl-compact",
-    );
+    expect(lastProps().attributionControl).toEqual({ compact: false });
   });
 
   it("クリックを拾う相手を代表点のレイヤに限る", async () => {
@@ -784,6 +768,14 @@ describe("MapCanvas（スマホの幅）", () => {
   });
 });
 
+/**
+ * シートが `list` の段の高さを報告したことにする。
+ * 地図の部品のモックはシートを描かないので、シートが段の変更ごとに渡す高さを、ここで渡す。
+ */
+function reportListHeight(): void {
+  bottomSheetProps().onTargetHeightChange(400);
+}
+
 describe("MapCanvas（スマホの幅の選択と段）", () => {
   beforeEach(() => {
     map.mockClear();
@@ -810,6 +802,7 @@ describe("MapCanvas（スマホの幅の選択と段）", () => {
 
   it("一覧でシリーズを選ぶと、代表点を list の段のシートに隠れない領域の中央へ移す", async () => {
     await renderMapCanvas();
+    reportListHeight();
 
     act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
 
@@ -824,6 +817,7 @@ describe("MapCanvas（スマホの幅の選択と段）", () => {
 
   it("地図の点を押すと、代表点を list の段のシートに隠れない領域の中央へ移す", async () => {
     await renderMapCanvas();
+    reportListHeight();
 
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
 
@@ -837,6 +831,7 @@ describe("MapCanvas（スマホの幅の選択と段）", () => {
 
   it("選択で list の段へ移った後に、余白だけの移動で選択の移動を打ち切らない", async () => {
     await renderMapCanvas();
+    reportListHeight();
 
     act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
 

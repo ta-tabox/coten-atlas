@@ -90,11 +90,29 @@
   }
 }
 
-/* スマホの幅では、地図の下端をシートが覆うので、MapLibre の出典表記を地図の上端へ移す。
-   出典表記は OpenFreeMap の利用条件で常に見える必要があり、シートの下へ隠せない。 */
+/* 出典表記は、利用条件で常に全文が見える必要があるので、ⓘ のボタンに隠さず一行で出す。
+   地図の絵を隠さないよう、背景は持たず、小さく控えめな色にする。
+   文字が地図の線や文字に紛れないよう、背景色の縁取りだけを付ける。 */
+.maplibregl-ctrl.maplibregl-ctrl-attrib {
+  margin-top: 0.25rem;
+  background: transparent;
+  color: var(--color-ink-muted);
+  font-size: 0.625rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-shadow:
+    0 0 2px var(--color-paper),
+    0 0 2px var(--color-paper);
+}
+
+.maplibregl-ctrl-attrib a {
+  color: inherit;
+}
+
+/* スマホの幅では、地図の下端をシートが覆うので、出典表記を地図の上端のヘッダーの下へ移す。 */
 @media (width < 48rem) {
   .maplibregl-ctrl-bottom-right {
-    top: 0;
+    top: var(--spacing-header);
     bottom: auto;
   }
 }

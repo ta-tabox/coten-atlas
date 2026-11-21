@@ -26,8 +26,10 @@ import {
   useState,
 } from "react";
 import {
+  fullHeightPx,
+  listHeightPx,
   nextSheetStage,
-  SHEET_FULL_RATIO,
+  SHEET_FULL_TOP_REM,
   SHEET_LIST_RATIO,
   SHEET_STAGE,
   type SheetStage,
@@ -73,15 +75,18 @@ type MeasuredHeights = { closed: number; era: number };
 
 /**
  * `stage` の段のシートの高さ（px）を返す。
- * `list` と `full` の段は画面の高さに対する割合から求める。
+ * `list` と `full` の段は画面の高さから求める。
  */
 function targetHeightOf(stage: SheetStage, measured: MeasuredHeights): number {
   if (stage === SHEET_STAGE.list) {
-    return window.innerHeight * SHEET_LIST_RATIO;
+    return listHeightPx(window.innerHeight);
   }
 
   if (stage === SHEET_STAGE.full) {
-    return window.innerHeight * SHEET_FULL_RATIO;
+    return fullHeightPx(
+      window.innerHeight,
+      Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
+    );
   }
 
   return stage === SHEET_STAGE.era ? measured.era : measured.closed;
@@ -97,7 +102,7 @@ function heightStyleOf(stage: SheetStage, measured: MeasuredHeights): string {
   }
 
   if (stage === SHEET_STAGE.full) {
-    return `${SHEET_FULL_RATIO * 100}dvh`;
+    return `calc(100dvh - ${SHEET_FULL_TOP_REM}rem)`;
   }
 
   return `${targetHeightOf(stage, measured)}px`;

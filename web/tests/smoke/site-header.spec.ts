@@ -26,7 +26,10 @@ function overlappingSurfaces(page: Page) {
   };
 }
 
-/** シートの高さが動き終わるのを待つ時間（ms）。`BottomSheet` の transition の長さより長くする。 */
+/**
+ * シートの高さが動き終わるのを待つ時間（ms）。
+ * `BottomSheet` の transition の長さより長くする。
+ */
 const SHEET_SETTLE_MS = 500;
 
 /**
