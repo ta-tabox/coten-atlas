@@ -253,6 +253,42 @@ function portOf(server: http.Server): number {
   return address.port;
 }
 
+type ExportOpening = { pagePath: string; beforeGoto?: () => void };
+
+/**
+ * `root` を配信して `pagePath` を開き、配信サーバを返す。
+ * 外部への通信はここで止まる。
+ * スタイルだけフィクスチャで応答し、タイル・グリフ・スプライトは中断する。
+ * 返したサーバは呼び出し側が閉じる。
+ *
+ * `beforeGoto` はページを開く前に呼ぶ。
+ * リスナーは開く前に付けないと最初のリクエストを取りこぼす。
+ */
+async function openExport(
+  page: Page,
+  root: string,
+  { pagePath, beforeGoto = () => {} }: ExportOpening,
+): Promise<http.Server> {
+  const server = await serveExport(root);
+
+  await page.route(TILE_SERVER_PATTERN, (route) =>
+    route.request().url().includes("/styles/")
+      ? route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(FIXTURE_STYLE),
+        })
+      : route.abort(),
+  );
+  beforeGoto();
+
+  await page.goto(`http://localhost:${portOf(server)}${BASE_PATH}${pagePath}`, {
+    waitUntil: "networkidle",
+  });
+
+  return server;
+}
+
 /**
  * ページを開いて観測を集める。
  * 判定はしない。
@@ -265,24 +301,10 @@ export async function observe(
   root: string,
   pagePath = "/",
 ): Promise<PageObservation> {
-  const server = await serveExport(root);
+  const failedRequests: string[] = [];
+  const consoleErrors: string[] = [];
 
-  try {
-    // 外部への通信はここで止まる。
-    // スタイルだけフィクスチャで応答し、タイル・グリフ・スプライトは中断する。
-    await page.route(TILE_SERVER_PATTERN, (route) =>
-      route.request().url().includes("/styles/")
-        ? route.fulfill({
-            status: 200,
-            contentType: "application/json",
-            body: JSON.stringify(FIXTURE_STYLE),
-          })
-        : route.abort(),
-    );
-
-    const failedRequests: string[] = [];
-    const consoleErrors: string[] = [];
-
+  const beforeGoto = () => {
     page.on("response", (response) => {
       if (response.status() >= 400) {
         failedRequests.push(
@@ -295,14 +317,10 @@ export async function observe(
         consoleErrors.push(message.text());
       }
     });
+  };
+  const server = await openExport(page, root, { pagePath, beforeGoto });
 
-    await page.goto(
-      `http://localhost:${portOf(server)}${BASE_PATH}${pagePath}`,
-      {
-        waitUntil: "networkidle",
-      },
-    );
-
+  try {
     const canvasSize = await page.evaluate(() => {
       const canvas = document.querySelector("canvas.maplibregl-canvas");
 
@@ -315,6 +333,105 @@ export async function observe(
   } finally {
     server.close();
   }
+}
+
+/** 画面上の矩形（CSS ピクセル）。 */
+export type Rect = {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+};
+
+/**
+ * 初期表示の一覧パネルと、地図に出ているシリーズの区画に並ぶシリーズの名前。
+ *
+ * 名前の並びは、地図に点が描かれているシリーズと一致する。
+ */
+export type PanelObservation = {
+  /**
+   * 一覧パネルの枠線を含む外形の矩形。
+   * パネルが無ければ null。
+   */
+  panelRect: Rect | null;
+  onMapSeriesTitles: string[];
+};
+
+/**
+ * ページを開いて、初期表示の一覧パネルの矩形と、地図に出ているシリーズの名前を集める。
+ * 判定はしない。
+ */
+export async function observePanel(
+  page: Page,
+  root: string,
+): Promise<PanelObservation> {
+  const server = await openExport(page, root, { pagePath: "/" });
+
+  try {
+    return await page.evaluate(() => {
+      const rect = document
+        .querySelector("[data-series-panel]")
+        ?.getBoundingClientRect();
+
+      return {
+        panelRect: rect
+          ? {
+              left: rect.left,
+              top: rect.top,
+              right: rect.right,
+              bottom: rect.bottom,
+            }
+          : null,
+        onMapSeriesTitles: Array.from(
+          document.querySelectorAll(
+            '[data-section="on-map"] [data-series-title]',
+          ),
+        ).map((title) => title.textContent ?? ""),
+      };
+    });
+  } finally {
+    server.close();
+  }
+}
+
+/** 経度・緯度（度）の点を、`view` の視野で描いた画面上の座標（CSS ピクセル、左上が原点）。 */
+export type ScreenPoint = { x: number; y: number };
+
+/**
+ * `view` の中心と `padding` を持つ `size` の地図に、`point` が描かれる画面上の座標を返す。
+ * Web メルカトルで、MapLibre の既定の 512px のタイルを使う。
+ *
+ * 中心は `padding` を除いた領域の中央に描かれる。
+ */
+export function screenPointOf(
+  point: { longitude: number; latitude: number },
+  view: {
+    longitude: number;
+    latitude: number;
+    zoom: number;
+    paddingLeft: number;
+  },
+  size: Viewport,
+): ScreenPoint {
+  const worldSize = 512 * 2 ** view.zoom;
+  const mercator = (longitude: number, latitude: number) => {
+    const radians = (latitude * Math.PI) / 180;
+
+    return {
+      x: ((longitude + 180) / 360) * worldSize,
+      y:
+        ((1 - Math.log(Math.tan(radians) + 1 / Math.cos(radians)) / Math.PI) /
+          2) *
+        worldSize,
+    };
+  };
+  const center = mercator(view.longitude, view.latitude);
+  const target = mercator(point.longitude, point.latitude);
+
+  return {
+    x: (view.paddingLeft + size.width) / 2 + target.x - center.x,
+    y: size.height / 2 + target.y - center.y,
+  };
 }
 
 /**
