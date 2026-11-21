@@ -15,6 +15,7 @@ import SeriesLayers from "@/components/map/SeriesLayers";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
+import SiteHeader from "@/components/site-header/SiteHeader";
 import {
   type EpisodesState,
   episodesForSeries,
@@ -105,7 +106,7 @@ function initialEraPositionOf(eras: EraList): number {
   return (index + 0.5) / eras.length;
 }
 
-/** ベースマップの上に、`loci` の代表点・`seriesList` の一覧パネル・`eras` の era スライダー・選択した `series` の詳細カードを重ねて描く。 */
+/** ベースマップの上に、上端のヘッダー・`loci` の代表点・`seriesList` の一覧パネル・`eras` の era スライダー・選択した `series` の詳細カードを重ねて描く。 */
 export default function MapCanvas({
   loci,
   seriesList,
@@ -208,8 +209,13 @@ export default function MapCanvas({
         currentWindow={eraWindow}
         selectedSeries={selectedSeries}
       />
-      {/* 一覧パネルは地図の左上に置き、高さを画面の下に重なる era スライダーの上端までに収める。 */}
-      <div className="absolute top-4 left-4 z-10 flex max-h-[calc(100dvh-12rem)] max-w-[calc(100vw-2rem)] flex-col">
+      {/* ヘッダーは地図の上端の全幅に置く。一覧パネルと詳細カードはヘッダーの下から並べる。 */}
+      {/* パネルとカードの上端と最大の高さは、ヘッダーの高さのトークン `--spacing-header` を参照する。 */}
+      <div className="absolute inset-x-0 top-0 z-20">
+        <SiteHeader />
+      </div>
+      {/* 一覧パネルはヘッダーの下の左に置き、高さを画面の下に重なる era スライダーの上端までに収める。 */}
+      <div className="absolute top-header left-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-header)-12rem)] max-w-[calc(100vw-2rem)] flex-col">
         <SeriesPanel
           sections={taggedSections}
           selectedSeriesId={selectedSeriesId}
@@ -229,9 +235,9 @@ export default function MapCanvas({
           onPositionChange={setEraPosition}
         />
       </div>
-      {/* 詳細カードは地図の右上に置き、高さを画面の高さから上下の余白を引いた値までに収める。 */}
+      {/* 詳細カードはヘッダーの下の右に置き、高さを画面の高さからヘッダーと上下の余白を引いた値までに収める。 */}
       {selectedSeries !== null && (
-        <div className="absolute top-4 right-4 z-10 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col">
+        <div className="absolute top-header right-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-header)-2rem)] max-w-[calc(100vw-2rem)] flex-col">
           <SeriesDetailCard
             series={selectedSeries}
             episodes={episodesOf(episodes, selectedSeries.id)}
