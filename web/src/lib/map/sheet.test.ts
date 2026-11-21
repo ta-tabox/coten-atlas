@@ -1,40 +1,26 @@
 /**
- * 検証するのは、離した位置の高さに最も近い段が選ばれることと、タップが段を 1 つずつ上げて一周することである。
+ * 検証するのは、スワイプが隣の段へ移ることと、端の段で動かないこと、タップが段を 1 つずつ上げて一周することである。
  */
 
 import { describe, expect, it } from "vitest";
-import { nextSheetStage, sheetStageOf } from "@/lib/map/sheet";
+import { nextSheetStage, stepSheetStage } from "@/lib/map/sheet";
 
-const STAGE_HEIGHTS = { closed: 48, era: 160, list: 400, full: 720 };
-
-/** `releasedHeight` で離したときに選ばれる段を返す。 */
-function stageAt(releasedHeight: number) {
-  return sheetStageOf({ releasedHeight, stageHeights: STAGE_HEIGHTS });
-}
-
-describe("sheetStageOf", () => {
-  it("段の高さちょうどで離すと、その段を返す", () => {
-    expect(stageAt(48)).toBe("closed");
-    expect(stageAt(160)).toBe("era");
-    expect(stageAt(400)).toBe("list");
-    expect(stageAt(720)).toBe("full");
+describe("stepSheetStage", () => {
+  it("上へスワイプすると、1 つ高い段を返す", () => {
+    expect(stepSheetStage("closed", "up")).toBe("era");
+    expect(stepSheetStage("era", "up")).toBe("list");
+    expect(stepSheetStage("list", "up")).toBe("full");
   });
 
-  it("2 つの段の中点より低い位置で離すと、低い方の段を返す", () => {
-    expect(stageAt(103)).toBe("closed");
-    expect(stageAt(279)).toBe("era");
-    expect(stageAt(559)).toBe("list");
+  it("下へスワイプすると、1 つ低い段を返す", () => {
+    expect(stepSheetStage("full", "down")).toBe("list");
+    expect(stepSheetStage("list", "down")).toBe("era");
+    expect(stepSheetStage("era", "down")).toBe("closed");
   });
 
-  it("2 つの段の中点ちょうどで離すと、高い方の段を返す", () => {
-    expect(stageAt(104)).toBe("era");
-    expect(stageAt(280)).toBe("list");
-    expect(stageAt(560)).toBe("full");
-  });
-
-  it("一番低い段より下、一番高い段より上で離しても、端の段を返す", () => {
-    expect(stageAt(0)).toBe("closed");
-    expect(stageAt(900)).toBe("full");
+  it("一番高い段で上へ、一番低い段で下へスワイプしても、同じ段を返す", () => {
+    expect(stepSheetStage("full", "up")).toBe("full");
+    expect(stepSheetStage("closed", "down")).toBe("closed");
   });
 });
 

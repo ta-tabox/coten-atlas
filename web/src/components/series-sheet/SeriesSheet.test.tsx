@@ -1,56 +1,20 @@
 /**
- * 検証するのは、段ごとに出る領域と、見出しのタップ・キーボード・ドラッグが段の変更として返ること、era スライダーの出し入れである。
- * jsdom はレイアウトを持たないので、高さは `offsetHeight`・`clientHeight`・`innerHeight` を差し替えて決める。
+ * 検証するのは、段ごとに出る領域と、取っ手のタップ・キーボード・スワイプが段の変更として返ること、era スライダーの出し入れである。
  */
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import SeriesSheet from "@/components/series-sheet/SeriesSheet";
 import type { SheetStage } from "@/lib/map/sheet";
 
-/** `innerHeight` が 800 のときの、段ごとのシートの高さ。 */
-const STAGE_HEIGHTS: Record<SheetStage, number> = {
-  closed: 48,
-  era: 160,
-  list: 400,
-  full: 720,
-};
-
-/** 見出しの行の高さ。 */
-const HEADING_HEIGHT = 48;
-
-/** 見出しの行を押す指の初期値。 */
+/** 取っ手の行を押す指の初期値。 */
 function pointerAt(clientY: number) {
   return { pointerId: 1, isPrimary: true, button: 0, clientY };
 }
 
-/**
- * 差し替えた高さを返す。
- * シートは段で変わり、見出しの行は一定で、era スライダーの中身は `era` の段との差になる。
- */
-function heightOf(element: HTMLElement): number {
-  if (element.dataset.stage !== undefined) {
-    return STAGE_HEIGHTS[element.dataset.stage as SheetStage];
-  }
-
-  return element.dataset.testid === "series-sheet-heading"
-    ? HEADING_HEIGHT
-    : STAGE_HEIGHTS.era - STAGE_HEIGHTS.closed;
-}
-
 beforeEach(() => {
+  // jsdom は setPointerCapture を実装していないので、何もしない関数を置く。
   Element.prototype.setPointerCapture = () => {};
-  vi.spyOn(HTMLElement.prototype, "offsetHeight", "get").mockImplementation(
-    function (this: HTMLElement) {
-      return heightOf(this);
-    },
-  );
-  vi.spyOn(HTMLElement.prototype, "clientHeight", "get").mockImplementation(
-    function (this: HTMLElement) {
-      return heightOf(this);
-    },
-  );
-  vi.stubGlobal("innerHeight", 800);
 });
 
 /** `stage` の段のシートを描き、段の変更と era スライダーの出し入れを受ける関数を返す。 */
@@ -74,7 +38,7 @@ function renderSheet(stage: SheetStage, isEraSliderShown = true) {
   return { onStageChange, onEraSliderShownChange };
 }
 
-/** 見出しの行を返す。 */
+/** 取っ手の行を返す。 */
 function headingRow(): HTMLElement {
   return screen.getByTestId("series-sheet-heading");
 }
@@ -138,38 +102,59 @@ describe("SeriesSheet の段ごとの表示", () => {
 });
 
 describe("SeriesSheet の era スライダーの出し入れ", () => {
-  it("list の段では、時代のボタンを出し、押すと出し入れを逆にして返す", () => {
+  it("list の段で era スライダーを出しているとき、閉じるボタンを押すと、出さない設定を返す", () => {
     const { onEraSliderShownChange } = renderSheet("list", true);
 
-    fireEvent.click(screen.getByRole("button", { name: "時代" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "時代スライダーを閉じる" }),
+    );
 
     expect(onEraSliderShownChange).toHaveBeenCalledExactlyOnceWith(false);
   });
 
-  it("時代のボタンを押しても、見出しのタップとして段を移さない", () => {
-    const { onStageChange } = renderSheet("list");
+  it("list の段で era スライダーを出していないとき、「時代を変える」ボタンを押すと、出す設定を返す", () => {
+    const { onEraSliderShownChange } = renderSheet("list", false);
 
-    fireEvent.pointerDown(
-      screen.getByRole("button", { name: "時代" }),
-      pointerAt(40),
-    );
-    fireEvent.pointerUp(
-      screen.getByRole("button", { name: "時代" }),
-      pointerAt(40),
-    );
+    fireEvent.click(screen.getByRole("button", { name: "時代を変える" }));
+
+    expect(onEraSliderShownChange).toHaveBeenCalledExactlyOnceWith(true);
+  });
+
+  it("era スライダーを出しているときは「時代を変える」ボタンを出さず、出していないときは閉じるボタンを出さない", () => {
+    renderSheet("list", true);
+
+    expect(screen.queryByRole("button", { name: "時代を変える" })).toBeNull();
+
+    cleanup();
+    renderSheet("list", false);
+
+    expect(
+      screen.queryByRole("button", { name: "時代スライダーを閉じる" }),
+    ).toBeNull();
+  });
+
+  it("「時代を変える」ボタンを押しても、取っ手のタップとして段を移さない", () => {
+    const { onStageChange } = renderSheet("list", false);
+    const button = screen.getByRole("button", { name: "時代を変える" });
+
+    fireEvent.pointerDown(button, pointerAt(40));
+    fireEvent.pointerUp(button, pointerAt(40));
 
     expect(onStageChange).not.toHaveBeenCalled();
   });
 
-  it("list 以外の段では、時代のボタンを出さない", () => {
-    renderSheet("era");
+  it("list 以外の段では、どちらのボタンも出さない", () => {
+    renderSheet("era", false);
 
-    expect(screen.queryByRole("button", { name: "時代" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "時代を変える" })).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "時代スライダーを閉じる" }),
+    ).toBeNull();
   });
 });
 
-describe("SeriesSheet の見出しの操作", () => {
-  it("見出しをタップすると、次の段を返す", () => {
+describe("SeriesSheet の取っ手の操作", () => {
+  it("取っ手をタップすると、次の段を返す", () => {
     const { onStageChange } = renderSheet("closed");
 
     fireEvent.pointerDown(headingRow(), pointerAt(780));
@@ -178,7 +163,7 @@ describe("SeriesSheet の見出しの操作", () => {
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("era");
   });
 
-  it("full の段で見出しをタップすると、closed を返す", () => {
+  it("full の段で取っ手をタップすると、closed を返す", () => {
     const { onStageChange } = renderSheet("full");
 
     fireEvent.pointerDown(headingRow(), pointerAt(100));
@@ -187,7 +172,7 @@ describe("SeriesSheet の見出しの操作", () => {
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("closed");
   });
 
-  it("キーボードで見出しのボタンを押すと、次の段を返す", () => {
+  it("キーボードで取っ手のボタンを押すと、次の段を返す", () => {
     const { onStageChange } = renderSheet("era");
 
     fireEvent.click(screen.getByRole("button", { name: "一覧" }));
@@ -205,42 +190,51 @@ describe("SeriesSheet の見出しの操作", () => {
     expect(onStageChange).not.toHaveBeenCalled();
   });
 
-  it("list の段から下へ closed の高さまでドラッグして離すと、closed を返す", () => {
-    const { onStageChange } = renderSheet("list");
-
-    fireEvent.pointerDown(headingRow(), pointerAt(400));
-    fireEvent.pointerMove(headingRow(), pointerAt(790));
-    fireEvent.pointerUp(headingRow(), pointerAt(790));
-
-    expect(onStageChange).toHaveBeenCalledExactlyOnceWith("closed");
-  });
-
-  it("era の段から、list に近い高さまで上へドラッグして離すと、list を返す", () => {
+  it("取っ手を上へ短くスワイプすると、動いた距離によらず 1 つ高い段を返す", () => {
     const { onStageChange } = renderSheet("era");
 
-    fireEvent.pointerDown(headingRow(), pointerAt(640));
-    fireEvent.pointerMove(headingRow(), pointerAt(420));
-    fireEvent.pointerUp(headingRow(), pointerAt(420));
+    fireEvent.pointerDown(headingRow(), pointerAt(600));
+    fireEvent.pointerMove(headingRow(), pointerAt(570));
 
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("list");
   });
 
-  it("closed の段から画面の上端近くまでドラッグして離すと、full を返す", () => {
-    const { onStageChange } = renderSheet("closed");
+  it("取っ手を下へ短くスワイプすると、1 つ低い段を返す", () => {
+    const { onStageChange } = renderSheet("list");
 
-    fireEvent.pointerDown(headingRow(), pointerAt(780));
-    fireEvent.pointerMove(headingRow(), pointerAt(100));
-    fireEvent.pointerUp(headingRow(), pointerAt(100));
+    fireEvent.pointerDown(headingRow(), pointerAt(400));
+    fireEvent.pointerMove(headingRow(), pointerAt(430));
 
-    expect(onStageChange).toHaveBeenCalledExactlyOnceWith("full");
+    expect(onStageChange).toHaveBeenCalledExactlyOnceWith("era");
   });
 
-  it("ドラッグしている間は、指の位置に最も近い段の中身を出す", () => {
-    renderSheet("closed");
+  it("スワイプのしきい値に届かない移動では、段を移さない", () => {
+    const { onStageChange } = renderSheet("era");
 
-    fireEvent.pointerDown(headingRow(), pointerAt(780));
-    fireEvent.pointerMove(headingRow(), pointerAt(420));
+    fireEvent.pointerDown(headingRow(), pointerAt(600));
+    fireEvent.pointerMove(headingRow(), pointerAt(590));
+    fireEvent.pointerUp(headingRow(), pointerAt(590));
 
-    expect(isBodyHidden()).toBe(false);
+    expect(onStageChange).not.toHaveBeenCalledWith("closed");
+    expect(onStageChange).not.toHaveBeenCalledWith("list");
+  });
+
+  it("スワイプで段を移した後に指を離しても、タップとして段をもう 1 つ進めない", () => {
+    const { onStageChange } = renderSheet("era");
+
+    fireEvent.pointerDown(headingRow(), pointerAt(600));
+    fireEvent.pointerMove(headingRow(), pointerAt(560));
+    fireEvent.pointerUp(headingRow(), pointerAt(560));
+
+    expect(onStageChange).toHaveBeenCalledExactlyOnceWith("list");
+  });
+
+  it("一番高い段で上へスワイプしても、同じ段を返す", () => {
+    const { onStageChange } = renderSheet("full");
+
+    fireEvent.pointerDown(headingRow(), pointerAt(100));
+    fireEvent.pointerMove(headingRow(), pointerAt(60));
+
+    expect(onStageChange).toHaveBeenCalledExactlyOnceWith("full");
   });
 });

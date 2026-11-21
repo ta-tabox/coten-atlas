@@ -2,14 +2,15 @@
 
 /**
  * スマホの幅で、era スライダーと一覧・詳細カードを画面の下から引き出す 1 枚のシートの枠を描く。
- * 枠は見出しの行・era スライダーを入れる領域・`children` を入れるスクロールの領域で構成する。
+ * 枠は取っ手の行・era スライダーを入れる領域・`children` を入れるスクロールの領域で構成する。
  *
  * 段（`SheetStage`）と era スライダーを出すかは保持しない。
- * どちらも props で受け取り、見出しのタップとドラッグが決めた段を `onStageChange`、era スライダーの出し入れを `onEraSliderShownChange` で返す。
- * 見出しの行だけがタッチを受けるので、地図の上のパンとピンチは地図が受ける。
+ * どちらも props で受け取り、取っ手のタップとスワイプが決めた段を `onStageChange`、era スライダーの出し入れを `onEraSliderShownChange` で返す。
+ * 取っ手の行だけがタッチを受けるので、地図の上のパンとピンチは地図が受ける。
  *
- * 出さない領域は、見出しの下に隠れた中身へフォーカスが移らないよう、高さを 0 にして見えなくする。
- * era スライダーの領域は隠している間も描いておくので、`era` の段の高さをドラッグの開始時に測れる。
+ * スワイプは、指が `SWIPE_THRESHOLD_PX` を超えて動いた時点で、動いた向きの隣の段へ移す。
+ * 開きたい高さまで指を運ばなくても、短い移動で次の段へ届く。
+ * 出さない領域は、取っ手の下に隠れた中身へフォーカスが移らないよう、高さを 0 にして見えなくする。
  */
 
 import {
@@ -17,24 +18,27 @@ import {
   type PointerEvent as ReactPointerEvent,
   useId,
   useRef,
-  useState,
 } from "react";
 import {
   nextSheetStage,
   SHEET_FULL_RATIO,
   SHEET_LIST_RATIO,
   type SheetStage,
-  sheetStageOf,
+  stepSheetStage,
 } from "@/lib/map/sheet";
 
-/** 指がこの距離（px）より動かなければ、ドラッグでなくタップとして扱う。 */
+/** 指がこの距離（px）以上動いたら、スワイプとして扱い、段を移す。 */
+const SWIPE_THRESHOLD_PX = 24;
+
+/** 指がこの距離（px）を超えて動いたら、離してもタップとして扱わない。 */
 const TAP_SLOP_PX = 6;
 
 type SeriesSheetProps = {
   stage: SheetStage;
   onStageChange: (stage: SheetStage) => void;
+  /** 画面には出さず、シートの名前として読み上げに使う。 */
   heading: string;
-  /** `era` の段と、`list` の段で出す設定のときに、見出しの下へ出す era スライダー。 */
+  /** `era` の段と、`list` の段で出す設定のときに、取っ手の下へ出す era スライダー。 */
   eraSlider: ReactNode;
   /**
    * `list` の段で era スライダーを出すか。
@@ -45,41 +49,18 @@ type SeriesSheetProps = {
   children: ReactNode;
 };
 
-/** 押してから離すまでの間に、ドラッグの計算が使う値。 */
-type DragState = {
+/** 押してから、タップかスワイプかが決まるまでの間に覚えておく値。 */
+type PressState = {
   pointerId: number;
   startY: number;
-  startHeight: number;
-  stageHeights: Record<SheetStage, number>;
-  isDragging: boolean;
+  hasMoved: boolean;
 };
-
-/** ドラッグしている間のシートの高さと、その高さに最も近い段。 */
-type DragPosition = { height: number; stage: SheetStage };
-
-/**
- * `state` の最も低い段と最も高い段の範囲に収めた、指が `clientY` にあるときのシートの高さを返す。
- * 指を上へ動かすほどシートは高くなる。
- */
-function heightAt(state: DragState, clientY: number): number {
-  const height = state.startHeight + (state.startY - clientY);
-
-  return Math.min(
-    state.stageHeights.full,
-    Math.max(state.stageHeights.closed, height),
-  );
-}
 
 /**
  * シートの `height` に渡す値を返す。
- * ドラッグ中（`dragHeight` が数値）は指の位置の高さ、そうでなければ段の高さにする。
  * `closed` と `era` の段は、中身の高さに合わせる。
  */
-function heightStyleOf(stage: SheetStage, dragHeight: number | null): string {
-  if (dragHeight !== null) {
-    return `${dragHeight}px`;
-  }
-
+function heightStyleOf(stage: SheetStage): string {
   if (stage === "list") {
     return `${SHEET_LIST_RATIO * 100}dvh`;
   }
@@ -88,8 +69,8 @@ function heightStyleOf(stage: SheetStage, dragHeight: number | null): string {
 }
 
 /**
- * 見出しの行・era スライダー・中身の領域を縦に並べたシートを描く。
- * 見出しをドラッグしている間は、指の位置に合わせた高さにし、中身は指の位置に最も近い段のものを出す。
+ * 取っ手の行・era スライダー・中身の領域を縦に並べたシートを描く。
+ * 取っ手のタップで次の段へ、上下のスワイプで隣の段へ移す。
  */
 export default function SeriesSheet({
   stage,
@@ -101,127 +82,84 @@ export default function SeriesSheet({
   children,
 }: SeriesSheetProps) {
   const bodyId = useId();
-  const sheetRef = useRef<HTMLElement>(null);
-  const headingRowRef = useRef<HTMLDivElement>(null);
-  const eraContentRef = useRef<HTMLDivElement>(null);
-  const drag = useRef<DragState | null>(null);
-  const [dragPosition, setDragPosition] = useState<DragPosition | null>(null);
+  const press = useRef<PressState | null>(null);
 
-  const shownStage = dragPosition === null ? stage : dragPosition.stage;
-  const isListShown = shownStage === "list" || shownStage === "full";
-  const isEraShown =
-    shownStage === "era" || (shownStage === "list" && isEraSliderShown);
+  const isListShown = stage === "list" || stage === "full";
+  const isEraShown = stage === "era" || (stage === "list" && isEraSliderShown);
 
-  /**
-   * 主ボタン・指・ペンで見出しの行を押したら、そのポインタを追い始める。
-   * 各段の高さは、この時点の画面の高さと、見出しの行・era スライダーの高さから求める。
-   */
-  function startDragging(event: ReactPointerEvent<HTMLDivElement>) {
-    const sheet = sheetRef.current;
-    const headingRow = headingRowRef.current;
-    const eraContent = eraContentRef.current;
-
-    if (
-      sheet === null ||
-      headingRow === null ||
-      eraContent === null ||
-      !event.isPrimary ||
-      event.button !== 0
-    ) {
+  /** 主ボタン・指・ペンで取っ手の行を押したら、そのポインタを追い始める。 */
+  function startPress(event: ReactPointerEvent<HTMLDivElement>) {
+    if (!event.isPrimary || event.button !== 0) {
       return;
     }
 
     event.currentTarget.setPointerCapture(event.pointerId);
-
-    // シートの枠線の太さ（外形と内側の差）を、見出しの行の高さへ足して閉じた段の高さにする。
-    const closedHeight =
-      headingRow.offsetHeight + sheet.offsetHeight - sheet.clientHeight;
-
-    drag.current = {
+    press.current = {
       pointerId: event.pointerId,
       startY: event.clientY,
-      startHeight: sheet.offsetHeight,
-      stageHeights: {
-        closed: closedHeight,
-        era: closedHeight + eraContent.offsetHeight,
-        list: window.innerHeight * SHEET_LIST_RATIO,
-        full: window.innerHeight * SHEET_FULL_RATIO,
-      },
-      isDragging: false,
+      hasMoved: false,
     };
   }
 
-  /** 押しているポインタが動いたら、`TAP_SLOP_PX` を超えた時点からシートの高さを指に合わせる。 */
-  function continueDragging(event: ReactPointerEvent<HTMLDivElement>) {
-    const state = drag.current;
+  /**
+   * 押しているポインタが `SWIPE_THRESHOLD_PX` 以上動いたら、動いた向きの隣の段へ移し、そのポインタを追うのをやめる。
+   * 追うのをやめるので、離したときにタップとして扱わず、同じ操作で段が 2 つ進まない。
+   */
+  function continuePress(event: ReactPointerEvent<HTMLDivElement>) {
+    const state = press.current;
 
     if (state === null || event.pointerId !== state.pointerId) {
       return;
     }
 
-    if (Math.abs(state.startY - event.clientY) > TAP_SLOP_PX) {
-      state.isDragging = true;
+    const moved = state.startY - event.clientY;
+
+    if (Math.abs(moved) > TAP_SLOP_PX) {
+      state.hasMoved = true;
     }
 
-    if (state.isDragging) {
-      const height = heightAt(state, event.clientY);
-
-      setDragPosition({
-        height,
-        stage: sheetStageOf({
-          releasedHeight: height,
-          stageHeights: state.stageHeights,
-        }),
-      });
+    if (Math.abs(moved) < SWIPE_THRESHOLD_PX) {
+      return;
     }
+
+    press.current = null;
+    onStageChange(stepSheetStage(stage, moved > 0 ? "up" : "down"));
   }
 
   /**
-   * 押しているポインタが離れるか打ち切られたら、追うのをやめて段を決める。
-   * 動いていなければタップとして次の段へ移し、動いていれば離した高さに近い段へ移す。
+   * 押しているポインタが、`TAP_SLOP_PX` を超えて動かずに離れたらタップとして次の段へ移す。
+   * 動いてから離れたときと、打ち切られたときは、何もしない。
    */
-  function finishDragging(event: ReactPointerEvent<HTMLDivElement>) {
-    const state = drag.current;
+  function finishPress(event: ReactPointerEvent<HTMLDivElement>) {
+    const state = press.current;
 
     if (state === null || event.pointerId !== state.pointerId) {
       return;
     }
 
-    drag.current = null;
-    setDragPosition(null);
+    press.current = null;
 
-    if (!state.isDragging) {
+    if (event.type === "pointerup" && !state.hasMoved) {
       onStageChange(nextSheetStage(stage));
-
-      return;
     }
-
-    onStageChange(
-      sheetStageOf({
-        releasedHeight: heightAt(state, event.clientY),
-        stageHeights: state.stageHeights,
-      }),
-    );
   }
 
   return (
     <aside
-      ref={sheetRef}
       aria-label={heading}
       data-testid="series-sheet"
       data-stage={stage}
-      style={{ height: heightStyleOf(stage, dragPosition?.height ?? null) }}
+      style={{ height: heightStyleOf(stage) }}
       className="flex min-h-0 flex-col overflow-hidden rounded-t-box border border-b-0 border-rule bg-paper font-body text-ink shadow-sm"
     >
-      {/* touch-none は、見出しの行の上のタッチをブラウザのスクロールと拡大へ渡さず、ドラッグとして受けるための指定。 */}
+      {/* touch-none は、取っ手の行の上のタッチをブラウザのスクロールと拡大へ渡さず、スワイプとして受けるための指定。 */}
       <div
-        ref={headingRowRef}
         data-testid="series-sheet-heading"
         className="relative flex-none touch-none"
-        onPointerDown={startDragging}
-        onPointerMove={continueDragging}
-        onPointerUp={finishDragging}
-        onPointerCancel={finishDragging}
+        onPointerDown={startPress}
+        onPointerMove={continuePress}
+        onPointerUp={finishPress}
+        onPointerCancel={finishPress}
       >
         {/* ポインタの操作は上の行が受けるので、ボタンの click はキーボードと読み上げの操作（`detail` が 0）だけを段の移動に使う。 */}
         <button
@@ -233,34 +171,41 @@ export default function SeriesSheet({
               onStageChange(nextSheetStage(stage));
             }
           }}
-          className="flex w-full flex-col items-center gap-1.5 px-4 pt-2 pb-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point"
+          className="flex min-h-11 w-full items-center justify-center px-4 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point"
         >
           <span aria-hidden="true" className="h-1 w-10 rounded-full bg-rule" />
-          <span className="font-heading text-[1.05rem] font-bold text-heading">
-            {heading}
-          </span>
+          <span className="sr-only">{heading}</span>
         </button>
 
-        {/* 押しても行のドラッグとタップを始めないよう、ポインタの押下を行へ伝えない。 */}
-        {shownStage === "list" && (
+        {/* 押しても行のスワイプとタップを始めないよう、ポインタの押下を行へ伝えない。 */}
+        {stage === "list" && !isEraSliderShown && (
           <button
             type="button"
-            aria-pressed={isEraSliderShown}
             onPointerDown={(event) => event.stopPropagation()}
-            onClick={() => onEraSliderShownChange(!isEraSliderShown)}
-            className={`absolute top-2 right-3 rounded-full border border-rule px-3 py-1 text-[0.8rem] focus-visible:outline-2 focus-visible:outline-point ${isEraSliderShown ? "bg-rule/60 text-ink" : "text-ink-muted"}`}
+            onClick={() => onEraSliderShownChange(true)}
+            className="absolute top-1.5 right-3 rounded-full border border-rule px-3 py-1.5 text-[0.8rem] text-ink hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-point"
           >
-            時代
+            時代を変える
           </button>
         )}
       </div>
 
       <div
-        className={isEraShown ? "flex-none" : "invisible h-0 overflow-hidden"}
+        className={`relative ${isEraShown ? "flex-none" : "invisible h-0 overflow-hidden"}`}
       >
-        <div ref={eraContentRef} className="px-4 pt-1 pb-3">
-          {eraSlider}
-        </div>
+        <div className="px-4 pb-3">{eraSlider}</div>
+
+        {/* era スライダーの年の範囲の文字は右寄せなので、空いている左上へ置く。 */}
+        {stage === "list" && isEraSliderShown && (
+          <button
+            type="button"
+            aria-label="時代スライダーを閉じる"
+            onClick={() => onEraSliderShownChange(false)}
+            className="absolute top-2 left-7 rounded-control px-1.5 text-[1.1rem] text-ink-muted hover:bg-rule/40 hover:text-ink focus-visible:outline-2 focus-visible:outline-point"
+          >
+            ×
+          </button>
+        )}
       </div>
 
       {/* touch-pan-y は、シートの上のピンチでページが拡大されないよう、縦のスクロール以外のタッチの動作を外す指定。 */}

@@ -62,6 +62,21 @@ async function tapHeading(page: Page) {
   await page.getByTestId("series-sheet-heading").click();
 }
 
+/**
+ * 取っ手の行の中央から縦に `distance`（px、正で下）だけマウスで動かして離す。
+ * 動かす距離は、段を移すしきい値より少しだけ大きくする。
+ */
+async function swipeHeading(page: Page, distance: number) {
+  const heading = await rectOf(page.getByTestId("series-sheet-heading"));
+  const x = heading.x + heading.width / 2;
+  const y = heading.y + heading.height / 2;
+
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x, y + distance, { steps: 4 });
+  await page.mouse.up();
+}
+
 test("初期表示で、シートに見出しと era スライダーだけが出て、一覧の項目は画面に出ていない", async ({
   page,
 }) => {
@@ -89,7 +104,7 @@ test("era の段で、era スライダーはシートの中にあり、出典表
   });
 });
 
-test("見出しを押すと一覧の項目が出て、シートの上端が画面の高さの半分の付近に来る", async ({
+test("取っ手を押すと一覧の項目が出て、シートの上端が画面の高さの半分の付近に来る", async ({
   page,
 }) => {
   await withSheetPage(page, async ({ size, sheet, listItem }) => {
@@ -110,22 +125,22 @@ test("見出しを押すと一覧の項目が出て、シートの上端が画�
   });
 });
 
-test("list の段で、時代のボタンが era スライダーを隠し、もう一度押すと戻す", async ({
+test("list の段で、閉じるボタンが era スライダーを隠し、「時代を変える」ボタンが戻す", async ({
   page,
 }) => {
   await withSheetPage(page, async () => {
     await tapHeading(page);
     await expect(page.getByTestId("era-slider")).toBeVisible();
 
-    await page.getByRole("button", { name: "時代", exact: true }).click();
+    await page.getByRole("button", { name: "時代スライダーを閉じる" }).click();
     await expect(page.getByTestId("era-slider")).toBeHidden();
 
-    await page.getByRole("button", { name: "時代", exact: true }).click();
+    await page.getByRole("button", { name: "時代を変える" }).click();
     await expect(page.getByTestId("era-slider")).toBeVisible();
   });
 });
 
-test("見出しをもう一度押すと全面の段になり、シートの上端が画面の高さの 1 割の付近に来て、era スライダーは隠れる", async ({
+test("取っ手をもう一度押すと全面の段になり、シートの上端が画面の高さの 1 割の付近に来て、era スライダーは隠れる", async ({
   page,
 }) => {
   await withSheetPage(page, async ({ size, sheet }) => {
@@ -143,21 +158,17 @@ test("見出しをもう一度押すと全面の段になり、シートの上�
   });
 });
 
-test("見出しを下へドラッグして離すと、閉じた段になり、era スライダーも隠れる", async ({
+test("取っ手を短く下へスワイプすると隣の段へ移り、上へスワイプすると戻る", async ({
   page,
 }) => {
   await withSheetPage(page, async ({ sheet }) => {
-    const heading = await rectOf(page.getByTestId("series-sheet-heading"));
-    const x = heading.x + heading.width / 2;
-    const y = heading.y + heading.height / 2;
-
-    await page.mouse.move(x, y);
-    await page.mouse.down();
-    await page.mouse.move(x, y + 80, { steps: 5 });
-    await page.mouse.up();
-
+    await swipeHeading(page, 40);
     await expect(sheet).toHaveAttribute("data-stage", "closed");
     await expect(page.getByTestId("era-slider")).toBeHidden();
+
+    await swipeHeading(page, -40);
+    await expect(sheet).toHaveAttribute("data-stage", "era");
+    await expect(page.getByTestId("era-slider")).toBeVisible();
   });
 });
 

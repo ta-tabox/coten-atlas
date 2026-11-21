@@ -5,7 +5,7 @@
 
 /**
  * シートの段を、低い順に並べたもの。
- * `closed` は見出しだけ、`era` は見出しと era スライダー、`list` は一覧か詳細カードを画面の高さの半分、`full` は同じ中身を画面の高さの 9 割で出す。
+ * `closed` は取っ手だけ、`era` は取っ手と era スライダー、`list` は一覧か詳細カードを画面の高さの半分、`full` は同じ中身を画面の高さの 9 割で出す。
  */
 export const SHEET_STAGES = ["closed", "era", "list", "full"] as const;
 
@@ -30,22 +30,16 @@ export function nextSheetStage(stage: SheetStage): SheetStage {
 }
 
 /**
- * ドラッグを離した時点のシートの高さ（`releasedHeight`）に最も近い高さの段を返す。
- * 2 つの段の中点ちょうどは、高い方の段にする。
+ * `stage` から、スワイプの向き（`direction`）の隣の段を返す。
+ * 一番低い段で下へ、一番高い段で上へスワイプしたときは、同じ段を返す。
  *
- * 近い段へ移すので、指を離した位置が段の間のどこでも、シートは必ずどれかの段で止まる。
+ * スワイプは指の移動の距離でなく向きで段を決めるので、短い移動でも次の段へ届く。
  */
-export function sheetStageOf({
-  releasedHeight,
-  stageHeights,
-}: {
-  releasedHeight: number;
-  stageHeights: Record<SheetStage, number>;
-}): SheetStage {
-  return SHEET_STAGES.reduce((nearest, stage) => {
-    const distance = Math.abs(stageHeights[stage] - releasedHeight);
-    const nearestDistance = Math.abs(stageHeights[nearest] - releasedHeight);
+export function stepSheetStage(
+  stage: SheetStage,
+  direction: "up" | "down",
+): SheetStage {
+  const index = SHEET_STAGES.indexOf(stage) + (direction === "up" ? 1 : -1);
 
-    return distance <= nearestDistance ? stage : nearest;
-  });
+  return SHEET_STAGES[Math.min(SHEET_STAGES.length - 1, Math.max(0, index))];
 }
