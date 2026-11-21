@@ -49,7 +49,7 @@ describe("fullHeightPx", () => {
     expect(fullHeightPx(800, 16)).toBe(712);
   });
 
-  it("ルートの文字の大きさが変わると、差し引く高さも比例して変わる", () => {
+  it("ルートの文字の大きさが変わると、上端に残す高さも比例して変わる", () => {
     expect(fullHeightPx(800, 20)).toBe(690);
   });
 });
