@@ -1,5 +1,5 @@
 /**
- * 画面上端のヘッダーが、どの幅でも一覧パネルと詳細カードに重ならず、狭い幅では一文だけを省くことを見る。
+ * 画面上端のヘッダーが、どの幅でも、サイト名と副題が見え、一覧パネルと詳細カードに重ならないことを見る。
  *
  * 幅は project の viewport に頼らず `VIEWPORTS` の二つを spec が指す。
  * スマホの条件は `smoke-iphone`・`smoke-android` の project が持つので、ブラウザを増やさず `smoke-desktop` の上で viewport だけを切り替える。
@@ -9,8 +9,8 @@ import { expect, type Page, test } from "@playwright/test";
 import { exportRoot, observe } from "@scripts/smoke";
 
 const VIEWPORTS = [
-  { name: "デスクトップ", width: 1440, height: 900, showsSentence: true },
-  { name: "スマホ", width: 390, height: 844, showsSentence: false },
+  { name: "デスクトップ", width: 1440, height: 900 },
+  { name: "スマホ", width: 390, height: 844 },
 ];
 
 /**
@@ -18,7 +18,9 @@ const VIEWPORTS = [
  */
 function overlappingSurfaces(page: Page) {
   return {
-    seriesPanel: page.getByRole("complementary", { name: "シリーズ一覧" }),
+    seriesPanel: page.getByRole("complementary", {
+      name: "コテンラジオのシリーズ",
+    }),
     detailCard: page.locator("aside:has(#series-detail-title)"),
   };
 }
@@ -48,16 +50,11 @@ for (const viewport of VIEWPORTS) {
   test.describe(`${viewport.name}（${viewport.width}×${viewport.height}）`, () => {
     test.use({ viewport: { width: viewport.width, height: viewport.height } });
 
-    test("サイト名と副題が見え、一文は幅に応じて出し入れされる", async ({
-      page,
-    }) => {
+    test("サイト名と副題が見える", async ({ page }) => {
       await observe(page, exportRoot());
 
       await expect(page.getByText("COTEN RADIO MAP")).toBeVisible();
       await expect(page.getByText("AN UNOFFICIAL FAN ATLAS")).toBeVisible();
-      await expect(
-        page.getByText("世界地図と年表の上に並べたサイト"),
-      ).toBeVisible({ visible: viewport.showsSentence });
     });
 
     test("ヘッダーが横に溢れず、一覧パネルと詳細カードに重ならない", async ({

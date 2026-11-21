@@ -1,10 +1,10 @@
 /**
  * 画面上端のヘッダーを置く。
- * サイト名と非公式の副題の表題・何のサイトかの一文・番組公式と `/about` へのリンクを載せ、出典表記の全文は持たず `/about` が持つ。
+ * サイト名と非公式の副題の表題・番組公式と `/about` へのリンクを載せ、出典表記の全文は持たず `/about` が持つ。
  *
  * 副題 `AN UNOFFICIAL FAN ATLAS` を、どの幅でも名前と対で出す。
  * 番組名を含む名前は番組公式のサービスと取り違えられうるので、副題を省くと非公式であることが画面から消える。
- * 狭い幅で省いてよいのは一文だけで、名前・副題・二つのリンクは一行に収める。
+ * 名前・副題・二つのリンクは、狭い幅でも省かず一行に収める。
  *
  * 高さは `--spacing-header` で、ヘッダーの下へ寄せる部品が同じトークンを参照する。
  */
@@ -29,10 +29,6 @@ export default function SiteHeader() {
           {SITE_TITLE.subtitle}
         </p>
       </div>
-
-      <p className="hidden min-w-0 text-[0.8rem] lg:block">
-        歴史を語るポッドキャスト「コテンラジオ」のシリーズを、世界地図と年表の上に並べたサイト
-      </p>
 
       <nav className="flex flex-none items-center gap-3 text-xs sm:text-sm">
         <a

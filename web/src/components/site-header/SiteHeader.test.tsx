@@ -1,6 +1,6 @@
 /**
  * ヘッダーに載る文言とリンクの先を固定する。
- * 幅による一文の出し入れは CSS の担当なので、見るのは Playwright のスモーク（`tests/smoke/site-header.spec.ts`）である。
+ * 幅ごとの収まりは CSS の担当なので、見るのは Playwright のスモーク（`tests/smoke/site-header.spec.ts`）である。
  */
 
 import { render, screen } from "@testing-library/react";
@@ -33,15 +33,5 @@ describe("SiteHeader", () => {
     expect(heading.nextElementSibling).toHaveTextContent(
       "AN UNOFFICIAL FAN ATLAS",
     );
-  });
-
-  it("何のサイトかの一文を出す", () => {
-    render(<SiteHeader />);
-
-    expect(
-      screen.getByText(
-        "歴史を語るポッドキャスト「コテンラジオ」のシリーズを、世界地図と年表の上に並べたサイト",
-      ),
-    ).toBeInTheDocument();
   });
 });
