@@ -81,7 +81,7 @@ export default function SeriesPanel({
               id={titleId}
               className="grow font-heading text-[1.05rem] font-bold text-heading"
             >
-              シリーズ一覧
+              コテンラジオのシリーズ
             </h2>
 
             <button

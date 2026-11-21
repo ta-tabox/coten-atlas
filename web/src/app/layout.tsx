@@ -10,9 +10,10 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { SITE_TITLE } from "@/lib/site/title";
 
 export const metadata: Metadata = {
-  title: "coten-atlas",
+  title: SITE_TITLE.name,
   description: "コテンラジオのシリーズを世界地図と時系列にマッピングする",
 };
 
