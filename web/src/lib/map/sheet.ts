@@ -16,7 +16,10 @@ export const SHEET_STAGE = {
 
 export type SheetStage = (typeof SHEET_STAGE)[keyof typeof SHEET_STAGE];
 
-/** シートの段を低い順に並べたもの。タップとスワイプが移る順を決める。 */
+/**
+ * シートの段を低い順に並べたもの。
+ * タップとスワイプが移る順を決める。
+ */
 export const SHEET_STAGES: readonly SheetStage[] = [
   SHEET_STAGE.closed,
   SHEET_STAGE.era,
