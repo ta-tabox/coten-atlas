@@ -339,7 +339,7 @@ catalog/
   - `<link>` は Spotify for Creators のエピソードページで、同期は読まない
   - `enclosure` は `anchor.fm` の再生 URL（cloudfront の mp3 を包む）
     音声を再生する画面が無いので episodes.json へは保存しない
-  - シリーズ番号は `itunes:season`。1〜66 が欠番なく並ぶが、752 件中 176 件（番外編・特別編・告知）はこれを持たない
+  - シリーズ番号は `itunes:season`。番外編・特別編・告知の回はこれを持たない
   - 番外編を除いて `itunes:season` を持つ回の題名は `【NN-M】`（`NN` はシリーズの番号、`M` はシリーズ内の回の番号）で始まる
     `NN` と `itunes:season` が食い違う回と、題名が `【NN-M】` で始まるのに `itunes:season` を持たない回がある
   - シリーズ内の回は `itunes:episode`。消費する画面が無いので episodes.json へは保存しない
