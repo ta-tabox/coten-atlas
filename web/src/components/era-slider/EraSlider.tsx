@@ -166,7 +166,10 @@ export default function EraSlider({
   }
 
   return (
-    <div className="rounded-box border border-rule bg-paper px-4 pt-2.5 pb-1.5 font-body text-ink shadow-sm">
+    <div
+      data-testid="era-slider"
+      className="rounded-box border border-rule bg-paper px-4 pt-2.5 pb-1.5 font-body text-ink shadow-sm"
+    >
       {/* 画面にはスライダーの見出しを出さないが、スクリーンリーダーにはスライダーの名前として読ませる。 */}
       <label htmlFor={SLIDER_ID} className="sr-only">
         時代

@@ -26,8 +26,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
 import SeriesLayers from "@/components/map/SeriesLayers";
+import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
+import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
+import SeriesSheet from "@/components/series-sheet/SeriesSheet";
 import { currentWindow } from "@/lib/era/window";
 import { toJapaneseLabelStyle } from "@/lib/map/basemap-labels";
 import {
@@ -675,5 +678,145 @@ describe("MapCanvas", () => {
     act(() => seriesPanelProps().onSelect("okane-no-rekishi"));
 
     expect(seriesPanelProps().selectedTags).toEqual(["経済"]);
+  });
+});
+
+/** 地図の children にある SeriesSheet の props を返す。 */
+function seriesSheetProps(): ComponentProps<typeof SeriesSheet> {
+  return childPropsOf(SeriesSheet);
+}
+
+describe("MapCanvas（スマホの幅）", () => {
+  beforeEach(() => {
+    map.mockClear();
+    stubDesktop(false);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("一覧と詳細カードを 1 枚のシートに置き、一覧パネルと詳細カードの枠を置かない", async () => {
+    await renderMapCanvas();
+
+    expect(childOfType(SeriesSheet)).toBeDefined();
+    expect(childOfType(SeriesPanel)).toBeUndefined();
+    expect(childOfType(SeriesDetailCard)).toBeUndefined();
+  });
+
+  it("シートは初期で era の段にして、一覧の見出しを出す", async () => {
+    await renderMapCanvas();
+
+    expect(seriesSheetProps()).toMatchObject({
+      stage: "era",
+      heading: "シリーズ一覧",
+    });
+  });
+
+  it("スマホの幅では、era スライダーをシートへ渡し、初期で出す設定にする", async () => {
+    await renderMapCanvas();
+
+    expect(seriesSheetProps().isEraSliderShown).toBe(true);
+    expect(
+      (seriesSheetProps().eraSlider as ReactElement<{ eras: EraList }>).props
+        .eras,
+    ).toBe(ERAS);
+  });
+
+  it("地図の点を押すと、シートを list の段にして詳細カードの中身を置く", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    expect(seriesSheetProps().stage).toBe("list");
+    expect(
+      findElementOfType(seriesSheetProps().children, SeriesDetailBody),
+    ).toBeDefined();
+    expect(
+      findElementOfType(seriesSheetProps().children, SeriesPanelBody),
+    ).toBeUndefined();
+  });
+
+  it("詳細カードを閉じると、シートの段は変えず一覧の中身へ戻る", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    act(() => childPropsOf(SeriesDetailBody).onClose());
+
+    expect(seriesSheetProps().stage).toBe("list");
+    expect(
+      findElementOfType(seriesSheetProps().children, SeriesPanelBody),
+    ).toBeDefined();
+  });
+
+  it("一覧でシリーズを選ぶと、シートを list の段にする", async () => {
+    await renderMapCanvas();
+
+    act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
+
+    expect(seriesSheetProps().stage).toBe("list");
+  });
+});
+
+describe("MapCanvas（スマホの幅の選択と段）", () => {
+  beforeEach(() => {
+    map.mockClear();
+    panTo.mockClear();
+    easeTo.mockClear();
+    stubDesktop(false);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+    vi.stubGlobal("innerHeight", 800);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("full の段で一覧からシリーズを選ぶと、list の段へ縮む", async () => {
+    await renderMapCanvas();
+
+    act(() => seriesSheetProps().onStageChange("full"));
+    act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
+
+    expect(seriesSheetProps().stage).toBe("list");
+  });
+
+  it("一覧でシリーズを選ぶと、代表点を list の段のシートに隠れない領域の中央へ移す", async () => {
+    await renderMapCanvas();
+
+    act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        center: SPARTA_COORDINATES,
+        padding: expect.objectContaining({ bottom: 400 }),
+      }),
+    );
+    expect(panTo).not.toHaveBeenCalled();
+  });
+
+  it("地図の点を押すと、代表点を list の段のシートに隠れない領域の中央へ移す", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        center: SPARTA_COORDINATES,
+        padding: expect.objectContaining({ bottom: 400 }),
+      }),
+    );
+  });
+
+  it("選択で list の段へ移った後に、余白だけの移動で選択の移動を打ち切らない", async () => {
+    await renderMapCanvas();
+
+    act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
+
+    expect(easeTo).toHaveBeenCalledTimes(1);
   });
 });
