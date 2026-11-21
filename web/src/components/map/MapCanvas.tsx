@@ -140,7 +140,7 @@ export default function MapCanvas({
   const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [sheetStage, setSheetStage] = useState<SheetStage>(SHEET_STAGE.era);
   const [isEraSliderShown, setIsEraSliderShown] = useState(true);
-  const sheetTargetHeight = useRef(0);
+  const [sheetTargetHeight, setSheetTargetHeight] = useState(0);
   const isDesktop = useIsDesktop();
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
 
@@ -156,7 +156,7 @@ export default function MapCanvas({
   function syncPadding(duration: number): void {
     const next = {
       left: paddingLeft,
-      bottom: isDesktop ? 0 : sheetTargetHeight.current,
+      bottom: isDesktop ? 0 : sheetTargetHeight,
     };
 
     if (
@@ -177,7 +177,7 @@ export default function MapCanvas({
   // biome-ignore lint/correctness/useExhaustiveDependencies: syncPadding は毎回作り直す関数で、余白を決める値を依存に並べる。
   useEffect(() => {
     syncPadding(PADDING_DURATION_MS);
-  }, [paddingLeft, isDesktop, sheetStage]);
+  }, [paddingLeft, isDesktop, sheetTargetHeight]);
 
   // エピソードは詳細カードを開く前の、マウントした直後に取得する。
   // 詳細カードを開いてから取得を始めると、クリックのたびに 750 件を超える JSON の到着を待つ。
@@ -361,9 +361,7 @@ export default function MapCanvas({
             eraSlider={eraSlider}
             isEraSliderShown={isEraSliderShown}
             onEraSliderShownChange={setIsEraSliderShown}
-            onTargetHeightChange={(height) => {
-              sheetTargetHeight.current = height;
-            }}
+            onTargetHeightChange={setSheetTargetHeight}
           >
             {selectedSeries === null ? (
               <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">

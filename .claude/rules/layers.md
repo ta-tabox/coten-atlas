@@ -64,10 +64,13 @@ paths:
 
 | 状態 | 持つ部品 | 書く部品 | 読む部品 |
 |---|---|---|---|
-| 選択中のシリーズ（`selectedSeriesId`） | `src/components/map/MapCanvas.tsx` | `MapCanvas`・`SeriesPanel`・`SeriesDetailCard` | `SeriesLayers`・`SeriesPanel`・`SeriesDetailCard` |
-| era スライダーの位置（`eraPosition`） | `src/components/map/MapCanvas.tsx` | `EraSlider` | `EraSlider`・`SeriesLayers`・`SeriesPanel` |
-| タグの絞り込みに使うタグ（`selectedTags`） | `src/components/map/MapCanvas.tsx` | `SeriesPanel` | `SeriesLayers`・`SeriesPanel` |
-| エピソードの取得の状態（`EpisodesState`） | `src/components/map/MapCanvas.tsx` | `MapCanvas` | `SeriesDetailCard` |
+| 選択中のシリーズ（`selectedSeriesId`） | `src/components/map/MapCanvas.tsx` | `MapCanvas`・`SeriesPanelBody`・`SeriesDetailBody`・`SeriesDetailCard` | `SeriesLayers`・`SeriesPanelBody`・`SeriesDetailBody`・`SeriesDetailCard` |
+| era スライダーの位置（`eraPosition`） | `src/components/map/MapCanvas.tsx` | `EraSlider` | `EraSlider`・`SeriesLayers`・`SeriesPanelBody` |
+| タグの絞り込みに使うタグ（`selectedTags`） | `src/components/map/MapCanvas.tsx` | `SeriesPanelBody` | `SeriesLayers`・`SeriesPanelBody` |
+| エピソードの取得の状態（`EpisodesState`） | `src/components/map/MapCanvas.tsx` | `MapCanvas` | `SeriesDetailBody` |
+| シートの段（`sheetStage`） | `src/components/map/MapCanvas.tsx` | `MapCanvas`・`BottomSheet` | `BottomSheet` |
+| シートで era スライダーを出すか（`isEraSliderShown`） | `src/components/map/MapCanvas.tsx` | `BottomSheet` | `BottomSheet` |
+| シートの目標の高さ（`sheetTargetHeight`） | `src/components/map/MapCanvas.tsx` | `BottomSheet` | `MapCanvas` |
 
 ## プロジェクト固有（育てる欄）
 - （このプロジェクトで決めた逸脱・追加をここに追記する。理由を一行添える）

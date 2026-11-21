@@ -773,7 +773,10 @@ describe("MapCanvas（スマホの幅）", () => {
  * 地図の部品のモックはシートを描かないので、シートが段の変更ごとに渡す高さを、ここで渡す。
  */
 function reportListHeight(): void {
-  bottomSheetProps().onTargetHeightChange(400);
+  act(() => bottomSheetProps().onTargetHeightChange(400));
+
+  // 高さを報告した余白の同期は、選択の移動の検査の対象でないので、呼び出しの記録から外す。
+  easeTo.mockClear();
 }
 
 describe("MapCanvas（スマホの幅の選択と段）", () => {
@@ -836,5 +839,39 @@ describe("MapCanvas（スマホの幅の選択と段）", () => {
     act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
 
     expect(easeTo).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("MapCanvas（スマホの幅の余白の追随）", () => {
+  beforeEach(() => {
+    map.mockClear();
+    easeTo.mockClear();
+    stubDesktop(false);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("シートの目標の高さが変わると、段が同じままでも、下端の余白をその高さに合わせる", async () => {
+    await renderMapCanvas();
+
+    act(() => bottomSheetProps().onTargetHeightChange(300));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        padding: expect.objectContaining({ bottom: 300 }),
+      }),
+    );
+
+    act(() => bottomSheetProps().onTargetHeightChange(250));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        padding: expect.objectContaining({ bottom: 250 }),
+      }),
+    );
   });
 });
