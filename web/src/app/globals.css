@@ -56,9 +56,50 @@
   }
 }
 
-/* スマホの幅では、地図の下端に era スライダーとシートを重ねる。
-   `--map-bottom-inset` はその高さで、MapLibre の右下の出典表記を重ねた要素の上へ持ち上げる。
-   変数が無い（デスクトップの幅）ときは 0 で、MapLibre の既定の位置のままになる。 */
-.maplibregl-ctrl-bottom-right {
-  bottom: var(--map-bottom-inset, 0px);
+/* スマホの幅では、地図の下端をシートが覆うので、MapLibre の出典表記を地図の上端へ移す。
+   出典表記は OpenFreeMap の利用条件で常に見える必要があり、シートの下へ隠せない。 */
+@media (width < 48rem) {
+  .maplibregl-ctrl-bottom-right {
+    top: 0;
+    bottom: auto;
+  }
+}
+
+/* シートの領域は、隠れるときに、シートの高さが動き終わってから見えなくする。
+   先に見えなくすると、縮むシートの中が空になる。
+   300ms は `BottomSheet` の高さの transition の長さと揃える。 */
+[data-sheet-region] {
+  visibility: hidden;
+  transition: visibility 0s linear 300ms;
+}
+
+[data-sheet-region][data-open="true"] {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* era スライダーの領域は、中身の高さまで開き、閉じると高さ 0 まで畳む。 */
+[data-sheet-era] {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows 300ms ease-out,
+    visibility 0s linear 300ms;
+}
+
+[data-sheet-era][data-expanded="true"] {
+  grid-template-rows: 1fr;
+}
+
+[data-sheet-era][data-open="true"] {
+  transition:
+    grid-template-rows 300ms ease-out,
+    visibility 0s linear 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sheet-region],
+  [data-sheet-era] {
+    transition: none;
+  }
 }

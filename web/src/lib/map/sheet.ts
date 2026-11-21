@@ -1,6 +1,6 @@
 /**
  * スマホの幅のシートが取る 4 つの段と、段の移り方を決める計算を置く。
- * シートの描画と指の操作の受け取りは `@/components/series-sheet/SeriesSheet` が持つ。
+ * シートの描画と指の操作の受け取りは `@/components/bottom-sheet/BottomSheet` が持つ。
  */
 
 /**

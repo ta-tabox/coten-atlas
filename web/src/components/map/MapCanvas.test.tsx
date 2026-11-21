@@ -23,6 +23,7 @@ import type {
   MapRef,
 } from "react-map-gl/maplibre";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import BottomSheet from "@/components/bottom-sheet/BottomSheet";
 import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
 import SeriesLayers from "@/components/map/SeriesLayers";
@@ -30,7 +31,6 @@ import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
-import SeriesSheet from "@/components/series-sheet/SeriesSheet";
 import { currentWindow } from "@/lib/era/window";
 import { toJapaneseLabelStyle } from "@/lib/map/basemap-labels";
 import {
@@ -57,6 +57,9 @@ type MockMapProps = MapProps & { ref?: Ref<MapRef> };
 /** MapLibreMap のモックが `ref` に入れる地図の `panTo`。 */
 const panTo = vi.hoisted(() => vi.fn());
 
+/** MapLibreMap のモックが `ref` に入れる地図の `getContainer` が返す、出典表記を持つコンテナ。 */
+const container = vi.hoisted(() => document.createElement("div"));
+
 /** MapLibreMap のモックが `ref` に入れる地図の `easeTo`。 */
 const easeTo = vi.hoisted(() => vi.fn());
 
@@ -67,7 +70,11 @@ const easeTo = vi.hoisted(() => vi.fn());
 const map = vi.hoisted(() =>
   vi.fn<(props: MockMapProps) => null>((props) => {
     if (typeof props.ref === "object" && props.ref !== null) {
-      props.ref.current = { panTo, easeTo } as unknown as MapRef;
+      props.ref.current = {
+        panTo,
+        easeTo,
+        getContainer: () => container,
+      } as unknown as MapRef;
     }
 
     return null;
@@ -394,6 +401,21 @@ describe("MapCanvas", () => {
     expect(lastProps().attributionControl).not.toBe(false);
   });
 
+  it("地図の読み込みが終わったら、開いたままの出典表記を閉じる", async () => {
+    container.innerHTML =
+      '<details class="maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show"></details>';
+    await renderMapCanvas();
+
+    act(() => lastProps().onLoad?.({} as never));
+
+    expect(container.querySelector(".maplibregl-ctrl-attrib")).not.toHaveClass(
+      "maplibregl-compact-show",
+    );
+    expect(container.querySelector(".maplibregl-ctrl-attrib")).toHaveClass(
+      "maplibregl-compact",
+    );
+  });
+
   it("クリックを拾う相手を代表点のレイヤに限る", async () => {
     await renderMapCanvas();
 
@@ -682,9 +704,9 @@ describe("MapCanvas", () => {
   });
 });
 
-/** 地図の children にある SeriesSheet の props を返す。 */
-function seriesSheetProps(): ComponentProps<typeof SeriesSheet> {
-  return childPropsOf(SeriesSheet);
+/** 地図の children にある BottomSheet の props を返す。 */
+function bottomSheetProps(): ComponentProps<typeof BottomSheet> {
+  return childPropsOf(BottomSheet);
 }
 
 describe("MapCanvas（スマホの幅）", () => {
@@ -702,7 +724,7 @@ describe("MapCanvas（スマホの幅）", () => {
   it("一覧と詳細カードを 1 枚のシートに置き、一覧パネルと詳細カードの枠を置かない", async () => {
     await renderMapCanvas();
 
-    expect(childOfType(SeriesSheet)).toBeDefined();
+    expect(childOfType(BottomSheet)).toBeDefined();
     expect(childOfType(SeriesPanel)).toBeUndefined();
     expect(childOfType(SeriesDetailCard)).toBeUndefined();
   });
@@ -710,18 +732,18 @@ describe("MapCanvas（スマホの幅）", () => {
   it("シートは初期で era の段にして、一覧の見出しを出す", async () => {
     await renderMapCanvas();
 
-    expect(seriesSheetProps()).toMatchObject({
+    expect(bottomSheetProps()).toMatchObject({
       stage: "era",
-      heading: "シリーズ一覧",
+      label: "シリーズ一覧",
     });
   });
 
   it("スマホの幅では、era スライダーをシートへ渡し、初期で出す設定にする", async () => {
     await renderMapCanvas();
 
-    expect(seriesSheetProps().isEraSliderShown).toBe(true);
+    expect(bottomSheetProps().isEraSliderShown).toBe(true);
     expect(
-      (seriesSheetProps().eraSlider as ReactElement<{ eras: EraList }>).props
+      (bottomSheetProps().eraSlider as ReactElement<{ eras: EraList }>).props
         .eras,
     ).toBe(ERAS);
   });
@@ -731,12 +753,12 @@ describe("MapCanvas（スマホの幅）", () => {
 
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
 
-    expect(seriesSheetProps().stage).toBe("list");
+    expect(bottomSheetProps().stage).toBe("list");
     expect(
-      findElementOfType(seriesSheetProps().children, SeriesDetailBody),
+      findElementOfType(bottomSheetProps().children, SeriesDetailBody),
     ).toBeDefined();
     expect(
-      findElementOfType(seriesSheetProps().children, SeriesPanelBody),
+      findElementOfType(bottomSheetProps().children, SeriesPanelBody),
     ).toBeUndefined();
   });
 
@@ -747,9 +769,9 @@ describe("MapCanvas（スマホの幅）", () => {
 
     act(() => childPropsOf(SeriesDetailBody).onClose());
 
-    expect(seriesSheetProps().stage).toBe("list");
+    expect(bottomSheetProps().stage).toBe("list");
     expect(
-      findElementOfType(seriesSheetProps().children, SeriesPanelBody),
+      findElementOfType(bottomSheetProps().children, SeriesPanelBody),
     ).toBeDefined();
   });
 
@@ -758,7 +780,7 @@ describe("MapCanvas（スマホの幅）", () => {
 
     act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
 
-    expect(seriesSheetProps().stage).toBe("list");
+    expect(bottomSheetProps().stage).toBe("list");
   });
 });
 
@@ -780,10 +802,10 @@ describe("MapCanvas（スマホの幅の選択と段）", () => {
   it("full の段で一覧からシリーズを選ぶと、list の段へ縮む", async () => {
     await renderMapCanvas();
 
-    act(() => seriesSheetProps().onStageChange("full"));
+    act(() => bottomSheetProps().onStageChange("full"));
     act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
 
-    expect(seriesSheetProps().stage).toBe("list");
+    expect(bottomSheetProps().stage).toBe("list");
   });
 
   it("一覧でシリーズを選ぶと、代表点を list の段のシートに隠れない領域の中央へ移す", async () => {

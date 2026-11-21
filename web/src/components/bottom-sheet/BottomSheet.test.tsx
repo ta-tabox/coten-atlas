@@ -4,7 +4,7 @@
 
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import SeriesSheet from "@/components/series-sheet/SeriesSheet";
+import BottomSheet from "@/components/bottom-sheet/BottomSheet";
 import type { SheetStage } from "@/lib/map/sheet";
 
 /** 取っ手の行を押す指の初期値。 */
@@ -21,50 +21,52 @@ beforeEach(() => {
 function renderSheet(stage: SheetStage, isEraSliderShown = true) {
   const onStageChange = vi.fn();
   const onEraSliderShownChange = vi.fn();
+  const onTargetHeightChange = vi.fn();
 
   render(
-    <SeriesSheet
+    <BottomSheet
       stage={stage}
       onStageChange={onStageChange}
-      heading="一覧"
+      label="一覧"
       eraSlider={<p>スライダー</p>}
       isEraSliderShown={isEraSliderShown}
       onEraSliderShownChange={onEraSliderShownChange}
+      onTargetHeightChange={onTargetHeightChange}
     >
       <p>中身</p>
-    </SeriesSheet>,
+    </BottomSheet>,
   );
 
-  return { onStageChange, onEraSliderShownChange };
+  return { onStageChange, onEraSliderShownChange, onTargetHeightChange };
 }
 
 /** 取っ手の行を返す。 */
-function headingRow(): HTMLElement {
-  return screen.getByTestId("series-sheet-heading");
+function handleRow(): HTMLElement {
+  return screen.getByTestId("bottom-sheet-handle");
 }
 
-/** jsdom は Tailwind の CSS を読まないので、領域を隠すクラスが付いているかで出ているかを見る。 */
-function isHidden(text: string, levels: number): boolean {
-  let element = screen.getByText(text) as HTMLElement | null;
-
-  for (let level = 0; level < levels; level += 1) {
-    element = element?.parentElement ?? null;
-  }
-
-  return element?.classList.contains("invisible") ?? false;
+/**
+ * `text` を持つ要素を入れたシートの領域が、隠れる設定（`data-open` が false）かを返す。
+ * jsdom は CSS を読まないので、見えるかでなく、領域の設定で見る。
+ */
+function isRegionHidden(text: string): boolean {
+  return (
+    screen.getByText(text).closest<HTMLElement>("[data-sheet-region]")?.dataset
+      .open === "false"
+  );
 }
 
-/** era スライダーを入れた領域が隠れているか。 */
+/** era スライダーを入れた領域が隠れる設定か。 */
 function isEraHidden(): boolean {
-  return isHidden("スライダー", 2);
+  return isRegionHidden("スライダー");
 }
 
-/** 一覧か詳細カードを入れた領域が隠れているか。 */
+/** 一覧か詳細カードを入れた領域が隠れる設定か。 */
 function isBodyHidden(): boolean {
-  return isHidden("中身", 1);
+  return isRegionHidden("中身");
 }
 
-describe("SeriesSheet の段ごとの表示", () => {
+describe("BottomSheet の段ごとの表示", () => {
   it("closed の段では、era スライダーも中身も隠す", () => {
     renderSheet("closed");
 
@@ -101,7 +103,7 @@ describe("SeriesSheet の段ごとの表示", () => {
   });
 });
 
-describe("SeriesSheet の era スライダーの出し入れ", () => {
+describe("BottomSheet の era スライダーの出し入れ", () => {
   it("list の段で era スライダーを出しているとき、閉じるボタンを押すと、出さない設定を返す", () => {
     const { onEraSliderShownChange } = renderSheet("list", true);
 
@@ -153,12 +155,12 @@ describe("SeriesSheet の era スライダーの出し入れ", () => {
   });
 });
 
-describe("SeriesSheet の取っ手の操作", () => {
+describe("BottomSheet の取っ手の操作", () => {
   it("取っ手をタップすると、次の段を返す", () => {
     const { onStageChange } = renderSheet("closed");
 
-    fireEvent.pointerDown(headingRow(), pointerAt(780));
-    fireEvent.pointerUp(headingRow(), pointerAt(780));
+    fireEvent.pointerDown(handleRow(), pointerAt(780));
+    fireEvent.pointerUp(handleRow(), pointerAt(780));
 
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("era");
   });
@@ -166,8 +168,8 @@ describe("SeriesSheet の取っ手の操作", () => {
   it("full の段で取っ手をタップすると、closed を返す", () => {
     const { onStageChange } = renderSheet("full");
 
-    fireEvent.pointerDown(headingRow(), pointerAt(100));
-    fireEvent.pointerUp(headingRow(), pointerAt(100));
+    fireEvent.pointerDown(handleRow(), pointerAt(100));
+    fireEvent.pointerUp(handleRow(), pointerAt(100));
 
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("closed");
   });
@@ -193,8 +195,8 @@ describe("SeriesSheet の取っ手の操作", () => {
   it("取っ手を上へ短くスワイプすると、動いた距離によらず 1 つ高い段を返す", () => {
     const { onStageChange } = renderSheet("era");
 
-    fireEvent.pointerDown(headingRow(), pointerAt(600));
-    fireEvent.pointerMove(headingRow(), pointerAt(570));
+    fireEvent.pointerDown(handleRow(), pointerAt(600));
+    fireEvent.pointerMove(handleRow(), pointerAt(540));
 
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("list");
   });
@@ -202,8 +204,8 @@ describe("SeriesSheet の取っ手の操作", () => {
   it("取っ手を下へ短くスワイプすると、1 つ低い段を返す", () => {
     const { onStageChange } = renderSheet("list");
 
-    fireEvent.pointerDown(headingRow(), pointerAt(400));
-    fireEvent.pointerMove(headingRow(), pointerAt(430));
+    fireEvent.pointerDown(handleRow(), pointerAt(400));
+    fireEvent.pointerMove(handleRow(), pointerAt(460));
 
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("era");
   });
@@ -211,9 +213,9 @@ describe("SeriesSheet の取っ手の操作", () => {
   it("スワイプのしきい値に届かない移動では、段を移さない", () => {
     const { onStageChange } = renderSheet("era");
 
-    fireEvent.pointerDown(headingRow(), pointerAt(600));
-    fireEvent.pointerMove(headingRow(), pointerAt(590));
-    fireEvent.pointerUp(headingRow(), pointerAt(590));
+    fireEvent.pointerDown(handleRow(), pointerAt(600));
+    fireEvent.pointerMove(handleRow(), pointerAt(570));
+    fireEvent.pointerUp(handleRow(), pointerAt(570));
 
     expect(onStageChange).not.toHaveBeenCalledWith("closed");
     expect(onStageChange).not.toHaveBeenCalledWith("list");
@@ -222,9 +224,9 @@ describe("SeriesSheet の取っ手の操作", () => {
   it("スワイプで段を移した後に指を離しても、タップとして段をもう 1 つ進めない", () => {
     const { onStageChange } = renderSheet("era");
 
-    fireEvent.pointerDown(headingRow(), pointerAt(600));
-    fireEvent.pointerMove(headingRow(), pointerAt(560));
-    fireEvent.pointerUp(headingRow(), pointerAt(560));
+    fireEvent.pointerDown(handleRow(), pointerAt(600));
+    fireEvent.pointerMove(handleRow(), pointerAt(530));
+    fireEvent.pointerUp(handleRow(), pointerAt(530));
 
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("list");
   });
@@ -232,9 +234,27 @@ describe("SeriesSheet の取っ手の操作", () => {
   it("一番高い段で上へスワイプしても、同じ段を返す", () => {
     const { onStageChange } = renderSheet("full");
 
-    fireEvent.pointerDown(headingRow(), pointerAt(100));
-    fireEvent.pointerMove(headingRow(), pointerAt(60));
+    fireEvent.pointerDown(handleRow(), pointerAt(100));
+    fireEvent.pointerMove(handleRow(), pointerAt(40));
 
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("full");
+  });
+});
+
+describe("BottomSheet の目標の高さ", () => {
+  it("list の段では、画面の高さの半分を渡す", () => {
+    vi.stubGlobal("innerHeight", 800);
+
+    const { onTargetHeightChange } = renderSheet("list");
+
+    expect(onTargetHeightChange).toHaveBeenLastCalledWith(400);
+  });
+
+  it("full の段では、画面の高さの 9 割を渡す", () => {
+    vi.stubGlobal("innerHeight", 800);
+
+    const { onTargetHeightChange } = renderSheet("full");
+
+    expect(onTargetHeightChange).toHaveBeenLastCalledWith(720);
   });
 });

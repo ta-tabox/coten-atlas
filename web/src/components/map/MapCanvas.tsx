@@ -7,19 +7,18 @@
  * 画面の複数の部品が読む状態はこのコンポーネントが持ち、子へは props で渡す。
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
+import BottomSheet from "@/components/bottom-sheet/BottomSheet";
 import EraSlider from "@/components/era-slider/EraSlider";
 import SeriesLayers from "@/components/map/SeriesLayers";
-import { trackBottomInset } from "@/components/map/track-bottom-inset";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
 import { useIsDesktop } from "@/components/map/use-is-desktop";
 import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
-import SeriesSheet from "@/components/series-sheet/SeriesSheet";
 import {
   EPISODES_KIND,
   type EpisodesState,
@@ -121,10 +120,7 @@ function initialEraPositionOf(eras: EraList): number {
   return (index + 0.5) / eras.length;
 }
 
-/**
- * ベースマップの上に、`loci` の代表点・`seriesList` の一覧・`eras` の era スライダー・選択したシリーズの詳細カードを重ねて描く。
- * デスクトップの幅では一覧パネルと詳細カードを別々に置き、スマホの幅では一覧と詳細カードを 1 枚のシートに置いて era スライダーをその上端に載せる。
- */
+/** ベースマップの上に、`loci` の代表点・`seriesList` の一覧・`eras` の era スライダー・選択したシリーズの詳細カードを重ねて描く。 */
 export default function MapCanvas({
   loci,
   seriesList,
@@ -148,7 +144,7 @@ export default function MapCanvas({
   const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [sheetStage, setSheetStage] = useState<SheetStage>(SHEET_STAGE.era);
   const [isEraSliderShown, setIsEraSliderShown] = useState(true);
-  const bottomStackRef = useRef<HTMLDivElement | null>(null);
+  const sheetTargetHeight = useRef(0);
   const isDesktop = useIsDesktop();
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
 
@@ -162,7 +158,7 @@ export default function MapCanvas({
 
   /**
    * シートが `stage` の段のときに、シートが地図の下から覆う高さ（px）を返す。
-   * `list` と `full` の段の高さは画面の高さに対する割合で決まり、`closed` と `era` の段の高さは中身に合わせるので、描いたシートから測る。
+   * `list` と `full` の段の高さは画面の高さに対する割合で決まり、`closed` と `era` の段の高さは、シートが段の変更ごとに渡す値（`sheetTargetHeight`）を使う。
    */
   function sheetHeightAt(stage: SheetStage): number {
     if (stage === SHEET_STAGE.list) {
@@ -173,7 +169,7 @@ export default function MapCanvas({
       return window.innerHeight * SHEET_FULL_RATIO;
     }
 
-    return bottomStackRef.current?.offsetHeight ?? 0;
+    return sheetTargetHeight.current;
   }
 
   /** 現在の幅と段に合う余白が、最後に視野へ渡した余白と違えば、`duration` ミリ秒かけて視野へ渡す。 */
@@ -202,18 +198,6 @@ export default function MapCanvas({
   useEffect(() => {
     syncPadding(PADDING_DURATION_MS);
   }, [paddingLeft, isDesktop, sheetStage]);
-
-  // 下端の要素の高さを出典表記の位置へ写し、ref から高さを読めるようにする。
-  const attachBottomStack = useCallback((element: HTMLDivElement | null) => {
-    bottomStackRef.current = element;
-
-    const stopTracking = trackBottomInset(element);
-
-    return () => {
-      bottomStackRef.current = null;
-      stopTracking?.();
-    };
-  }, []);
 
   // エピソードは詳細カードを開く前の、マウントした直後に取得する。
   // 詳細カードを開いてから取得を始めると、クリックのたびに 750 件を超える JSON の到着を待つ。
@@ -311,6 +295,19 @@ export default function MapCanvas({
     select(seriesId);
   }
 
+  /**
+   * 地図の読み込みが終わったら、視野の余白を合わせ、出典表記を閉じた状態にする。
+   * 出典表記は、MapLibre が幅の狭い地図で、利用者が地図を動かすまで開いたまま出すので、最初から閉じる。
+   * 閉じても、出典表記のボタンは残る。
+   */
+  function handleLoad(): void {
+    syncPadding(0);
+    mapRef.current
+      ?.getContainer()
+      .querySelector(".maplibregl-ctrl-attrib")
+      ?.classList.remove("maplibregl-compact-show");
+  }
+
   if (mapStyle === null) {
     return null;
   }
@@ -339,7 +336,7 @@ export default function MapCanvas({
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={selectFromMap}
-      onLoad={() => syncPadding(0)}
+      onLoad={handleLoad}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
       cursor={isHoveringLocus ? "pointer" : undefined}
@@ -382,19 +379,17 @@ export default function MapCanvas({
         </>
       ) : (
         // era スライダーはシートの中に置く。
-        <div
-          ref={attachBottomStack}
-          className="absolute inset-x-0 bottom-0 z-10"
-        >
-          <SeriesSheet
+        <div className="absolute inset-x-0 bottom-0 z-10">
+          <BottomSheet
             stage={sheetStage}
             onStageChange={setSheetStage}
-            heading={
-              selectedSeries === null ? "シリーズ一覧" : "シリーズの詳細"
-            }
+            label={selectedSeries === null ? "シリーズ一覧" : "シリーズの詳細"}
             eraSlider={eraSlider}
             isEraSliderShown={isEraSliderShown}
             onEraSliderShownChange={setIsEraSliderShown}
+            onTargetHeightChange={(height) => {
+              sheetTargetHeight.current = height;
+            }}
           >
             {selectedSeries === null ? (
               <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">
@@ -416,7 +411,7 @@ export default function MapCanvas({
                 />
               </div>
             )}
-          </SeriesSheet>
+          </BottomSheet>
         </div>
       )}
     </MapLibreMap>

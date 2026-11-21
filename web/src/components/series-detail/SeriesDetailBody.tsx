@@ -1,7 +1,8 @@
 "use client";
 
 /**
- * 地図か一覧で選ばれたシリーズ 1 件の年代・概要・エピソードの一覧を、枠を持たずに描く。
+ * 選ばれたシリーズ 1 件の名前・年代・エピソードの一覧の中身だけを描く。
+ * 外枠は持たない。
  *
  * 取得も絞り込みもしない。
  * 表示するのは props で受け取った `Series` と `EpisodesState` だけで、絞り込みは `@/lib/episodes`、年の整形は `@/lib/format` が担当する。
@@ -44,6 +45,8 @@ function EpisodeList({ state }: { state: EpisodesState }) {
     return <p className={NOTE_CLASS}>配信一覧にこのシリーズの回がまだ無い。</p>;
   }
 
+  // 縦のスクロールはこの一覧だけに限る。
+  // 全体をスクロールさせると、エピソードの多いシリーズでシリーズ名と年代が画面の外に出る。
   // overflow-y-auto だけを指定すると CSS が横の overflow も auto に変えて横スクロールバーが出るので、overflow-x-hidden を明示する。
   return (
     <ol className="mt-2 flex flex-col gap-1.5 overflow-x-hidden overflow-y-auto overscroll-contain pr-1.5 text-[0.9rem]">
@@ -69,12 +72,7 @@ type SeriesDetailBodyProps = {
   onClose: () => void;
 };
 
-/**
- * `series` の名前・年代と、`episodes` の状態に応じたエピソードの区画を縦に並べて描く。
- * 縦のスクロールはエピソードの一覧だけに限る。
- *
- * 全体をスクロールさせると、エピソードの多いシリーズでシリーズ名と年代が画面の外に出る。
- */
+/** `series` の名前・年代の見出しと、`episodes` の状態に応じたエピソードの区画を縦に並べて描く。 */
 export default function SeriesDetailBody({
   series,
   episodes,

@@ -13,17 +13,35 @@ import { exportRoot, openExport, viewportOf } from "@scripts/smoke";
 const TOP_TOLERANCE_PX = 16;
 
 /**
- * `locator` の矩形を返す。
- * 要素が画面に無ければ throw する。
+ * `locator` の矩形を、動きが止まるまで待ってから返す。
+ * シートは段が変わると高さが動くので、動いている途中の矩形では位置を比べられない。
+ * 要素が画面に無いか、動きが止まらなければ throw する。
  */
 async function rectOf(locator: Locator) {
-  const box = await locator.boundingBox();
+  let previous = await locator.boundingBox();
 
-  if (box === null) {
-    throw new Error("矩形を取れない");
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    await locator.page().waitForTimeout(100);
+
+    const current = await locator.boundingBox();
+
+    if (current === null || previous === null) {
+      throw new Error("矩形を取れない");
+    }
+
+    if (
+      current.x === previous.x &&
+      current.y === previous.y &&
+      current.width === previous.width &&
+      current.height === previous.height
+    ) {
+      return current;
+    }
+
+    previous = current;
   }
 
-  return box;
+  throw new Error("矩形が 3 秒たっても止まらない");
 }
 
 /**
@@ -45,7 +63,7 @@ async function withSheetPage(
   const server = await openExport(page, exportRoot(), { pagePath: "/" });
 
   try {
-    const sheet = page.getByTestId("series-sheet");
+    const sheet = page.getByTestId("bottom-sheet");
     const listItem = sheet
       .getByRole("region", { name: /地図に出ているシリーズ/ })
       .locator("li button")
@@ -58,16 +76,16 @@ async function withSheetPage(
 }
 
 /** 見出しの行の中央を押して離す。 */
-async function tapHeading(page: Page) {
-  await page.getByTestId("series-sheet-heading").click();
+async function tapHandle(page: Page) {
+  await page.getByTestId("bottom-sheet-handle").click();
 }
 
 /**
  * 取っ手の行の中央から縦に `distance`（px、正で下）だけマウスで動かして離す。
  * 動かす距離は、段を移すしきい値より少しだけ大きくする。
  */
-async function swipeHeading(page: Page, distance: number) {
-  const heading = await rectOf(page.getByTestId("series-sheet-heading"));
+async function swipeHandle(page: Page, distance: number) {
+  const heading = await rectOf(page.getByTestId("bottom-sheet-handle"));
   const x = heading.x + heading.width / 2;
   const y = heading.y + heading.height / 2;
 
@@ -81,26 +99,22 @@ test("初期表示で、シートに見出しと era スライダーだけが出
   page,
 }) => {
   await withSheetPage(page, async ({ sheet, listItem }) => {
-    await expect(page.getByTestId("series-sheet-heading")).toBeVisible();
+    await expect(page.getByTestId("bottom-sheet-handle")).toBeVisible();
     await expect(sheet).toHaveAttribute("data-stage", "era");
     await expect(page.getByTestId("era-slider")).toBeVisible();
     await expect(listItem).toBeHidden();
   });
 });
 
-test("era の段で、era スライダーはシートの中にあり、出典表記はシートの上にある", async ({
-  page,
-}) => {
+test("era の段で、era スライダーはシートの中にある", async ({ page }) => {
   await withSheetPage(page, async ({ sheet }) => {
     const sheetRect = await rectOf(sheet);
     const slider = await rectOf(page.getByTestId("era-slider"));
-    const attribution = await rectOf(page.locator(".maplibregl-ctrl-attrib"));
 
     expect(slider.y).toBeGreaterThanOrEqual(sheetRect.y);
     expect(slider.y + slider.height).toBeLessThanOrEqual(
       sheetRect.y + sheetRect.height,
     );
-    expect(attribution.y + attribution.height).toBeLessThanOrEqual(sheetRect.y);
   });
 });
 
@@ -108,7 +122,7 @@ test("取っ手を押すと一覧の項目が出て、シートの上端が画�
   page,
 }) => {
   await withSheetPage(page, async ({ size, sheet, listItem }) => {
-    await tapHeading(page);
+    await tapHandle(page);
     await expect(sheet).toHaveAttribute("data-stage", "list");
     await expect(listItem).toBeVisible();
 
@@ -118,10 +132,31 @@ test("取っ手を押すと一覧の項目が出て、シートの上端が画�
       Math.abs(listSheet.y - size.height / 2),
       `シートの上端 ${listSheet.y}`,
     ).toBeLessThanOrEqual(TOP_TOLERANCE_PX);
+  });
+});
 
-    const attribution = await rectOf(page.locator(".maplibregl-ctrl-attrib"));
+test("どの段でも、出典表記は画面の上端にあり、シートと重ならない", async ({
+  page,
+}) => {
+  await withSheetPage(page, async ({ size, sheet }) => {
+    const attribution = page.locator(".maplibregl-ctrl-attrib");
 
-    expect(attribution.y + attribution.height).toBeLessThanOrEqual(listSheet.y);
+    for (const stage of ["era", "list", "full"]) {
+      await expect(sheet).toHaveAttribute("data-stage", stage);
+
+      const attributionRect = await rectOf(attribution);
+      const sheetRect = await rectOf(sheet);
+
+      expect(attributionRect.y, `${stage} の出典表記の上端`).toBeLessThan(
+        size.height / 4,
+      );
+      expect(
+        attributionRect.y + attributionRect.height,
+        `${stage} の出典表記の下端`,
+      ).toBeLessThanOrEqual(sheetRect.y);
+
+      await tapHandle(page);
+    }
   });
 });
 
@@ -129,7 +164,7 @@ test("list の段で、閉じるボタンが era スライダーを隠し、「�
   page,
 }) => {
   await withSheetPage(page, async () => {
-    await tapHeading(page);
+    await tapHandle(page);
     await expect(page.getByTestId("era-slider")).toBeVisible();
 
     await page.getByRole("button", { name: "時代スライダーを閉じる" }).click();
@@ -144,8 +179,8 @@ test("取っ手をもう一度押すと全面の段になり、シートの上�
   page,
 }) => {
   await withSheetPage(page, async ({ size, sheet }) => {
-    await tapHeading(page);
-    await tapHeading(page);
+    await tapHandle(page);
+    await tapHandle(page);
     await expect(sheet).toHaveAttribute("data-stage", "full");
 
     const fullSheet = await rectOf(sheet);
@@ -162,11 +197,11 @@ test("取っ手を短く下へスワイプすると隣の段へ移り、上へ�
   page,
 }) => {
   await withSheetPage(page, async ({ sheet }) => {
-    await swipeHeading(page, 40);
+    await swipeHandle(page, 70);
     await expect(sheet).toHaveAttribute("data-stage", "closed");
     await expect(page.getByTestId("era-slider")).toBeHidden();
 
-    await swipeHeading(page, -40);
+    await swipeHandle(page, -70);
     await expect(sheet).toHaveAttribute("data-stage", "era");
     await expect(page.getByTestId("era-slider")).toBeVisible();
   });
@@ -176,7 +211,7 @@ test("一覧から 1 件選ぶと、list の段で詳細カードがシートに
   page,
 }) => {
   await withSheetPage(page, async ({ sheet, listItem }) => {
-    await tapHeading(page);
+    await tapHandle(page);
     await listItem.click();
 
     await expect(sheet).toHaveAttribute("data-stage", "list");
@@ -191,8 +226,8 @@ test("一覧から 1 件選ぶと、list の段で詳細カードがシートに
 
 test("全面の段で一覧から選ぶと、list の段へ縮む", async ({ page }) => {
   await withSheetPage(page, async ({ sheet, listItem }) => {
-    await tapHeading(page);
-    await tapHeading(page);
+    await tapHandle(page);
+    await tapHandle(page);
     await listItem.click();
 
     await expect(sheet).toHaveAttribute("data-stage", "list");
@@ -204,10 +239,37 @@ test("全面の段で一覧から選ぶと、list の段へ縮む", async ({ pag
 
 test("詳細カードを閉じると、シートは一覧へ戻る", async ({ page }) => {
   await withSheetPage(page, async ({ sheet, listItem }) => {
-    await tapHeading(page);
+    await tapHandle(page);
     await listItem.click();
     await sheet.getByRole("button", { name: "詳細を閉じる" }).click();
 
     await expect(listItem).toBeVisible();
+  });
+});
+
+test("シートの高さは段が変わると動く", async ({ page }) => {
+  await withSheetPage(page, async ({ sheet }) => {
+    const transition = await sheet.evaluate((element) => {
+      const style = getComputedStyle(element);
+
+      return {
+        property: style.transitionProperty,
+        duration: style.transitionDuration,
+      };
+    });
+
+    expect(transition.property).toContain("height");
+    expect(transition.duration).toBe("0.3s");
+  });
+});
+
+test("出典表記は、初期で閉じていて、ボタンだけが出ている", async ({ page }) => {
+  await withSheetPage(page, async () => {
+    const attribution = page.locator(".maplibregl-ctrl-attrib");
+
+    await expect(attribution).not.toHaveClass(/maplibregl-compact-show/);
+    await expect(
+      attribution.locator(".maplibregl-ctrl-attrib-button"),
+    ).toBeVisible();
   });
 });
