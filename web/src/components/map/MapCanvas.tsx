@@ -210,6 +210,7 @@ export default function MapCanvas({
         selectedSeries={selectedSeries}
       />
       {/* ヘッダーは地図の上端の全幅に置く。一覧パネルと詳細カードはヘッダーの下から並べる。 */}
+      {/* パネルとカードの上端と最大の高さは、ヘッダーの高さのトークン `--spacing-header` を参照する。 */}
       <div className="absolute inset-x-0 top-0 z-20">
         <SiteHeader />
       </div>

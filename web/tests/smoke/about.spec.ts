@@ -1,6 +1,6 @@
 /**
  * 相手は `next build` が吐いた `out/` の実物なので、`pnpm build` の後でしか回せない。
- * 見るのは `/about` を開けること——同一オリジンへの 4xx / 5xx と実行時エラーが無いこと——だけで、載っている文言は L2 の `src/app/about/page.test.tsx` が見る。
+ * 見るのは `/about` を開けること——同一オリジンへの 4xx / 5xx と実行時エラーが無いこと——だけで、載っている文言は単体テスト（`src/app/about/page.test.tsx`）が見る。
  *
  * 開く先は `about/`。
  * `next.config.ts` が trailingSlash を有効にして、export はページを `about/index.html` で出すので、この層の配信がディレクトリの `index.html` を返す規則だけで開ける。

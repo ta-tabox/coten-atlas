@@ -3,7 +3,7 @@
  * 載せる点とライセンスの範囲を決めた理由は docs/adr/20261112-quote-titles-only-without-summary.md と docs/adr/20260827-license.md が持つ。
  * どの語を削除すると表記が成り立たなくなるかを、観点ごとに 1 本ずつ置く。
  *
- * 見るのは文言だけで、`out/about/index.html` として書き出され、開けるかどうかは L4 の `tests/smoke/about.spec.ts` が見る。
+ * 見るのは文言だけで、`out/about/index.html` として書き出され、開けるかどうかは Playwright のスモーク（`tests/smoke/about.spec.ts`）が見る。
  */
 
 import { render, screen } from "@testing-library/react";
