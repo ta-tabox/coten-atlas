@@ -93,7 +93,7 @@ describe("SeriesPanel", () => {
 
   it("パネルの見出しで、並べているのがコテンラジオのシリーズだと言う", () => {
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}

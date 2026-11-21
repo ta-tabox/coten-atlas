@@ -84,7 +84,10 @@ for (const viewport of VIEWPORTS) {
 
       expect(intrusion).toBeLessThanOrEqual(0);
 
-      await seriesPanel.locator("li button:visible").first().click();
+      await seriesPanel
+        .locator('[data-section="on-map"] li button:visible')
+        .first()
+        .click();
       await expect(detailCard).toBeVisible();
 
       const headerBottom =
