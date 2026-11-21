@@ -1,5 +1,5 @@
 /**
- * 画面上端のヘッダーが、どの幅でも、サイト名と副題が見え、一覧パネルと詳細カードに重ならないことを見る。
+ * 画面上端のヘッダーが、どの幅でも、サイト名と副題が見え、一覧パネルと詳細カードとシートに重ならないことを見る。
  *
  * 幅は project の viewport に頼らず `VIEWPORTS` の二つを spec が指す。
  * スマホの条件は `smoke-iphone`・`smoke-android` の project が持つので、ブラウザを増やさず `smoke-desktop` の上で viewport だけを切り替える。
@@ -15,7 +15,7 @@ const VIEWPORTS = [
 ];
 
 /**
- * ヘッダーと矩形を比べる相手の要素（一覧パネルと詳細カード）を返す。
+ * ヘッダーと矩形を比べる相手の要素（デスクトップの幅の一覧パネルと詳細カード）を返す。
  */
 function overlappingSurfaces(page: Page) {
   return {
@@ -25,6 +25,9 @@ function overlappingSurfaces(page: Page) {
     detailCard: page.locator("aside:has(#series-detail-title)"),
   };
 }
+
+/** シートの高さが動き終わるのを待つ時間（ms）。`BottomSheet` の transition の長さより長くする。 */
+const SHEET_SETTLE_MS = 500;
 
 /**
  * 要素の矩形を返す。
@@ -58,7 +61,7 @@ for (const viewport of VIEWPORTS) {
       await expect(page.getByText("AN UNOFFICIAL FAN ATLAS")).toBeVisible();
     });
 
-    test("ヘッダーが右の余白へ食い込まず、一覧パネルと詳細カードに重ならない", async ({
+    test("ヘッダーが右の余白へ食い込まず、一覧パネル・詳細カード・シートに重ならない", async ({
       page,
     }) => {
       await observe(page, exportRoot());
@@ -84,11 +87,34 @@ for (const viewport of VIEWPORTS) {
 
       expect(intrusion).toBeLessThanOrEqual(0);
 
-      await seriesPanel.locator("li button:visible").first().click();
-      await expect(detailCard).toBeVisible();
+      const headerRect = await rectOf(header);
+      const headerBottom = headerRect.y + headerRect.height;
 
-      const headerBottom =
-        (await rectOf(header)).y + (await rectOf(header)).height;
+      // スマホの幅では、一覧と詳細カードが 1 枚のシートに入るので、どの段でもシートの上端をヘッダーと比べる。
+      if (viewport.width < 768) {
+        const sheet = page.getByTestId("bottom-sheet");
+
+        for (const stage of ["era", "list", "full"]) {
+          await expect(sheet).toHaveAttribute("data-stage", stage);
+          await page.waitForTimeout(SHEET_SETTLE_MS);
+
+          expect(
+            (await rectOf(sheet)).y,
+            `${stage} の段`,
+          ).toBeGreaterThanOrEqual(headerBottom);
+
+          await page.getByTestId("bottom-sheet-handle").click();
+        }
+
+        return;
+      }
+
+      await seriesPanel
+        .getByRole("region", { name: /地図に出ているシリーズ/ })
+        .locator("li button")
+        .first()
+        .click();
+      await expect(detailCard).toBeVisible();
 
       expect((await rectOf(seriesPanel)).y).toBeGreaterThanOrEqual(
         headerBottom,
