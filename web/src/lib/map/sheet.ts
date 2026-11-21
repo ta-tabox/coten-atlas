@@ -43,7 +43,7 @@ export function listHeightPx(viewportHeight: number): number {
 
 /**
  * `full` の段のシートの高さ（px）を、画面の高さ（`viewportHeight`、px）とルート要素の文字の大きさ（`rootFontSizePx`、px）から求めて返す。
- * 画面の高さから `SHEET_FULL_TOP_REM` を引いた高さで、画面が低くてもヘッダーの下まで届く。
+ * 画面の高さから `SHEET_FULL_TOP_REM` を差し引いた高さで、画面が低くてもヘッダーの下まで届く。
  */
 export function fullHeightPx(
   viewportHeight: number,
