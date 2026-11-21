@@ -280,7 +280,8 @@ export default function BottomSheet({
         )}
       </div>
 
-      {/* `full` の段と、`list` の段で隠す設定のときは、領域の高さを 0 へ畳む。`closed` の段は畳まず、シートの高さが隠す。 */}
+      {/* `full` の段と、`list` の段で隠す設定のときは、領域の高さを 0 にする。
+          `closed` の段は 0 にせず、シートの高さが隠す。 */}
       <div
         data-sheet-region
         data-sheet-era

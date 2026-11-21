@@ -78,7 +78,7 @@
   transition-delay: 0s;
 }
 
-/* era スライダーの領域は、中身の高さまで開き、閉じると高さ 0 まで畳む。 */
+/* era スライダーの領域は、中身の高さまで開き、閉じると高さを 0 にする。 */
 [data-sheet-era] {
   display: grid;
   grid-template-rows: 0fr;
