@@ -7,6 +7,7 @@
  * 段（`SheetStage`）と era スライダーを出すかは保持しない。
  * どちらも props で受け取り、取っ手のタップとスワイプが決めた段を `onStageChange`、era スライダーの出し入れを `onEraSliderShownChange` で返す。
  * 取っ手の行だけがタッチを受けるので、地図の上のパンとピンチは地図が受ける。
+ * `list` と `full` の段では、取っ手の行の右端の閉じるボタンが、段をいくつ上げていても `era` の段へ一度で戻す。
  *
  * スワイプは、指が `SWIPE_THRESHOLD_PX` を超えて動いた時点で、動いた向きの隣の段へ移す。
  * 開きたい高さまで指を運ばなくても、短い移動で次の段へ届く。
@@ -272,16 +273,41 @@ export default function BottomSheet({
           <span className="sr-only">{label}</span>
         </button>
 
-        {/* 押しても行のスワイプとタップを始めないよう、ポインタの押下を行へ伝えない。 */}
-        {stage === SHEET_STAGE.list && !isEraSliderShown && (
-          <button
-            type="button"
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={() => onEraSliderShownChange(true)}
-            className="absolute top-1.5 right-3 rounded-full border border-rule px-3 py-1.5 text-[0.8rem] text-ink hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-point"
-          >
-            時代を変える
-          </button>
+        {/* 右端のボタンは、押しても行のスワイプとタップを始めないよう、ポインタの押下を行へ伝えない。 */}
+        {isListShown && (
+          <div className="absolute inset-y-0 right-3 flex items-center gap-2">
+            {stage === SHEET_STAGE.list && !isEraSliderShown && (
+              <button
+                type="button"
+                onPointerDown={(event) => event.stopPropagation()}
+                onClick={() => onEraSliderShownChange(true)}
+                className="rounded-full border border-rule px-3 py-1.5 text-[0.8rem] text-ink hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-point"
+              >
+                時代を変える
+              </button>
+            )}
+
+            {/* 下向きの山形は、シートを下へ戻すことを示す。era スライダーの × と取り違えない形にする。 */}
+            <button
+              type="button"
+              aria-label="一覧を閉じる"
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={() => onStageChange(SHEET_STAGE.era)}
+              className="flex size-9 items-center justify-center rounded-full text-ink-muted hover:bg-rule/40 hover:text-ink focus-visible:outline-2 focus-visible:outline-point"
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="size-5 fill-none stroke-current stroke-2"
+              >
+                <path
+                  d="M6 9l6 6 6-6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
         )}
       </div>
 

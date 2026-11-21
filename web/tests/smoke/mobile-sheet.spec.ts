@@ -289,3 +289,18 @@ test("出典表記は、ボタンに隠さず全文を一行で出し、背景�
     expect(background).toBe("rgba(0, 0, 0, 0)");
   });
 });
+
+test("全面の段で、閉じるボタンを押すと、段を飛ばして era の段へ戻る", async ({
+  page,
+}) => {
+  await withSheetPage(page, async ({ sheet }) => {
+    await tapHandle(page);
+    await tapHandle(page);
+    await expect(sheet).toHaveAttribute("data-stage", "full");
+
+    await page.getByRole("button", { name: "一覧を閉じる" }).click();
+
+    await expect(sheet).toHaveAttribute("data-stage", "era");
+    await expect(page.getByTestId("era-slider")).toBeVisible();
+  });
+});

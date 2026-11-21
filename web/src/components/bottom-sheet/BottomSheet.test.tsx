@@ -258,3 +258,42 @@ describe("BottomSheet の目標の高さ", () => {
     expect(onTargetHeightChange).toHaveBeenLastCalledWith(712);
   });
 });
+
+describe("BottomSheet の閉じるボタン", () => {
+  it("list の段で押すと、era の段を返す", () => {
+    const { onStageChange } = renderSheet("list");
+
+    fireEvent.click(screen.getByRole("button", { name: "一覧を閉じる" }));
+
+    expect(onStageChange).toHaveBeenCalledExactlyOnceWith("era");
+  });
+
+  it("full の段で押すと、段を飛ばして era の段を返す", () => {
+    const { onStageChange } = renderSheet("full");
+
+    fireEvent.click(screen.getByRole("button", { name: "一覧を閉じる" }));
+
+    expect(onStageChange).toHaveBeenCalledExactlyOnceWith("era");
+  });
+
+  it("closed と era の段では出さない", () => {
+    renderSheet("closed");
+
+    expect(screen.queryByRole("button", { name: "一覧を閉じる" })).toBeNull();
+
+    cleanup();
+    renderSheet("era");
+
+    expect(screen.queryByRole("button", { name: "一覧を閉じる" })).toBeNull();
+  });
+
+  it("押しても、取っ手のタップとして段を進めない", () => {
+    const { onStageChange } = renderSheet("list");
+    const button = screen.getByRole("button", { name: "一覧を閉じる" });
+
+    fireEvent.pointerDown(button, pointerAt(40));
+    fireEvent.pointerUp(button, pointerAt(40));
+
+    expect(onStageChange).not.toHaveBeenCalled();
+  });
+});
