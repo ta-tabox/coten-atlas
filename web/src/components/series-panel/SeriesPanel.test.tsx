@@ -91,6 +91,21 @@ describe("SeriesPanel", () => {
     expect(within(onMapSection()).queryByText("お金の歴史")).toBeNull();
   });
 
+  it("パネルの見出しで、並べているのがコテンラジオのシリーズだと言う", () => {
+    render(
+      <OpenableSeriesPanel
+        sections={SECTIONS}
+        selectedSeriesId={null}
+        {...TAG_FILTER_PROPS}
+        onSelect={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByRole("complementary", { name: "コテンラジオのシリーズ" }),
+    ).toBeVisible();
+  });
+
   it("シリーズを押すと、その id を渡して onSelect を呼ぶ", () => {
     const onSelect = vi.fn();
 
