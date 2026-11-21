@@ -11,6 +11,7 @@ import { exportRoot, observe } from "@scripts/smoke";
 const VIEWPORTS = [
   { name: "デスクトップ", width: 1440, height: 900 },
   { name: "スマホ", width: 390, height: 844 },
+  { name: "最小幅", width: 360, height: 640 },
 ];
 
 /**
