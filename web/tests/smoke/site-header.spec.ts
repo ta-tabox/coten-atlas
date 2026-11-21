@@ -1,5 +1,5 @@
 /**
- * 画面上端の帯が、どの幅でも一覧パネルと詳細カードに重ならず、狭い幅では一文だけを省くことを見る。
+ * 画面上端のヘッダーが、どの幅でも一覧パネルと詳細カードに重ならず、狭い幅では一文だけを省くことを見る。
  *
  * 幅は project の viewport に頼らず `VIEWPORTS` の二つを spec が指す。
  * スマホの条件は `smoke-iphone`・`smoke-android` の project が持つので、ブラウザを増やさず `smoke-desktop` の上で viewport だけを切り替える。
@@ -14,7 +14,7 @@ const VIEWPORTS = [
 ];
 
 /**
- * 帯と矩形を比べる相手の要素（一覧パネルと詳細カード）を返す。
+ * ヘッダーと矩形を比べる相手の要素（一覧パネルと詳細カード）を返す。
  */
 function overlappingSurfaces(page: Page) {
   return {
@@ -60,7 +60,7 @@ for (const viewport of VIEWPORTS) {
       ).toBeVisible({ visible: viewport.showsSentence });
     });
 
-    test("帯が横に溢れず、一覧パネルと詳細カードに重ならない", async ({
+    test("ヘッダーが横に溢れず、一覧パネルと詳細カードに重ならない", async ({
       page,
     }) => {
       await observe(page, exportRoot());
@@ -77,11 +77,13 @@ for (const viewport of VIEWPORTS) {
       await seriesPanel.locator("li button:visible").first().click();
       await expect(detailCard).toBeVisible();
 
-      const bandBottom =
+      const headerBottom =
         (await rectOf(header)).y + (await rectOf(header)).height;
 
-      expect((await rectOf(seriesPanel)).y).toBeGreaterThanOrEqual(bandBottom);
-      expect((await rectOf(detailCard)).y).toBeGreaterThanOrEqual(bandBottom);
+      expect((await rectOf(seriesPanel)).y).toBeGreaterThanOrEqual(
+        headerBottom,
+      );
+      expect((await rectOf(detailCard)).y).toBeGreaterThanOrEqual(headerBottom);
     });
   });
 }

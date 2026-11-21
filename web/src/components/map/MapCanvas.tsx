@@ -106,7 +106,7 @@ function initialEraPositionOf(eras: EraList): number {
   return (index + 0.5) / eras.length;
 }
 
-/** ベースマップの上に、上端の帯・`loci` の代表点・`seriesList` の一覧パネル・`eras` の era スライダー・選択した `series` の詳細カードを重ねて描く。 */
+/** ベースマップの上に、上端のヘッダー・`loci` の代表点・`seriesList` の一覧パネル・`eras` の era スライダー・選択した `series` の詳細カードを重ねて描く。 */
 export default function MapCanvas({
   loci,
   seriesList,
@@ -209,12 +209,12 @@ export default function MapCanvas({
         currentWindow={eraWindow}
         selectedSeries={selectedSeries}
       />
-      {/* 上端の帯は地図の全幅に置く。一覧パネルと詳細カードは帯の下から並べる。 */}
+      {/* ヘッダーは地図の上端の全幅に置く。一覧パネルと詳細カードはヘッダーの下から並べる。 */}
       <div className="absolute inset-x-0 top-0 z-20">
         <SiteHeader />
       </div>
-      {/* 一覧パネルは帯の下の左に置き、高さを画面の下に重なる era スライダーの上端までに収める。 */}
-      <div className="absolute top-band left-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-band)-12rem)] max-w-[calc(100vw-2rem)] flex-col">
+      {/* 一覧パネルはヘッダーの下の左に置き、高さを画面の下に重なる era スライダーの上端までに収める。 */}
+      <div className="absolute top-header left-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-header)-12rem)] max-w-[calc(100vw-2rem)] flex-col">
         <SeriesPanel
           sections={taggedSections}
           selectedSeriesId={selectedSeriesId}
@@ -234,9 +234,9 @@ export default function MapCanvas({
           onPositionChange={setEraPosition}
         />
       </div>
-      {/* 詳細カードは帯の下の右に置き、高さを画面の高さから帯と上下の余白を引いた値までに収める。 */}
+      {/* 詳細カードはヘッダーの下の右に置き、高さを画面の高さからヘッダーと上下の余白を引いた値までに収める。 */}
       {selectedSeries !== null && (
-        <div className="absolute top-band right-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-band)-2rem)] max-w-[calc(100vw-2rem)] flex-col">
+        <div className="absolute top-header right-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-header)-2rem)] max-w-[calc(100vw-2rem)] flex-col">
           <SeriesDetailCard
             series={selectedSeries}
             episodes={episodesOf(episodes, selectedSeries.id)}
