@@ -39,7 +39,7 @@
 `title: 民主主義の歴史` に指摘は出なかった。
 
 `id` の `minshushugi` は「民主主義」を割らずに書いた。
-[コトバンク](https://kotobank.jp/word/民主主義)でデジタル大辞泉と精選版日本国語大辞典の両方に一語の見出し（みんしゅ‐しゅぎ）があり、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の `id` の表が、二つの辞書のどちらかに一語で載る語を割らないと決めているためである。
+[コトバンク](https://kotobank.jp/word/民主主義-140069)でデジタル大辞泉と精選版日本国語大辞典の両方に一語の見出し（みんしゅ‐しゅぎ）があり、[ADR-20260911-series-vocabulary-tiebreaks（候補が割れたときの語彙の選び方）](../adr/20260911-series-vocabulary-tiebreaks.md) の `id` の表が、二つの辞書のどちらかに一語で載る語を割らないと決めているためである。
 
 ## 仮決定と論点
 
