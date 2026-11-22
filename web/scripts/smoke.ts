@@ -15,7 +15,7 @@
  *
  * ここが持つのは機構だけで、判定を回すのは `tests/smoke/` の spec である。
  * ブラウザの寿命も viewport も Playwright の project が持つので、この層は渡された page を使うだけにする。
- * 入口は observe（配信物を開いて観測を集める）と violationsOf（観測から違反を出す純関数）と listAdminPaths（管理画面の混入を探す）。
+ * 入口は observe（配信物を開いて観測を集める）・openExport（配信物を開いて、操作は spec へ任せる）と violationsOf（観測から違反を出す純関数）と listAdminPaths（管理画面の混入を探す）。
  */
 
 import fs from "node:fs";
@@ -78,13 +78,22 @@ const CONTENT_TYPES: Record<string, string> = {
 const FIXTURE_STYLE = {
   version: 8,
   name: "smoke-fixture",
-  sources: {},
+  // 出典表記は、レイヤが使うソースの `attribution` から出る。
+  // 空の GeoJSON を使う円のレイヤを 1 枚置いて、外部へ出さずに出典表記を地図に出す。
+  sources: {
+    attribution: {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: [] },
+      attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap",
+    },
+  },
   layers: [
     {
       id: "background",
       type: "background",
       paint: { "background-color": "#8aa" },
     },
+    { id: "attribution-user", type: "circle", source: "attribution" },
   ],
 };
 
@@ -264,7 +273,7 @@ type ExportOpening = { pagePath: string; beforeGoto?: () => void };
  * `beforeGoto` はページを開く前に呼ぶ。
  * リスナーは開く前に付けないと最初のリクエストを取りこぼす。
  */
-async function openExport(
+export async function openExport(
   page: Page,
   root: string,
   { pagePath, beforeGoto = () => {} }: ExportOpening,

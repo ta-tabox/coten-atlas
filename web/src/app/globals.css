@@ -89,3 +89,71 @@
     @slot;
   }
 }
+
+/* 出典表記は、利用条件で常に全文が見える必要があるので、ⓘ のボタンに隠さず一行で出す。
+   地図の絵を隠さないよう、背景は持たず、小さく控えめな色にする。
+   文字が地図の線や文字に紛れないよう、背景色の縁取りだけを付ける。
+   行の高さと下の余白は、画面の下端で下の字がかからないための値である。 */
+.maplibregl-ctrl.maplibregl-ctrl-attrib {
+  margin-top: 0.25rem;
+  padding: 0 0.5rem 0.25rem;
+  background: transparent;
+  color: var(--color-ink-muted);
+  font-size: 0.625rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-shadow:
+    0 0 2px var(--color-paper),
+    0 0 2px var(--color-paper);
+}
+
+.maplibregl-ctrl-attrib a {
+  color: inherit;
+}
+
+/* スマホの幅では、地図の下端をシートが覆うので、出典表記を地図の上端のヘッダーの下へ移す。 */
+@media (width < 48rem) {
+  .maplibregl-ctrl-bottom-right {
+    top: var(--spacing-header);
+    bottom: auto;
+  }
+}
+
+/* シートの領域は、隠れるときに、シートの高さが動き終わってから見えなくする。
+   先に見えなくすると、縮むシートの中が空になる。
+   300ms は `BottomSheet` の高さの transition の長さと揃える。 */
+[data-sheet-region] {
+  visibility: hidden;
+  transition: visibility 0s linear 300ms;
+}
+
+[data-sheet-region][data-open="true"] {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* era スライダーの領域は、中身の高さまで開き、閉じると高さを 0 にする。 */
+[data-sheet-era] {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows 300ms ease-out,
+    visibility 0s linear 300ms;
+}
+
+[data-sheet-era][data-expanded="true"] {
+  grid-template-rows: 1fr;
+}
+
+[data-sheet-era][data-open="true"] {
+  transition:
+    grid-template-rows 300ms ease-out,
+    visibility 0s linear 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sheet-region],
+  [data-sheet-era] {
+    transition: none;
+  }
+}
