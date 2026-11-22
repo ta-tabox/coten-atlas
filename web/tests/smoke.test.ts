@@ -14,16 +14,17 @@ import {
   listAdminPaths,
   type PageObservation,
   resolveWithinRoot,
+  screenPointOf,
   violationsOf,
 } from "@scripts/smoke.ts";
 
 /** smoke の project が使う viewport（playwright.config.ts）。 */
-const VIEWPORT = { width: 1280, height: 800 };
+const VIEWPORT = { width: 1440, height: 900 };
 
 const HEALTHY: PageObservation = {
   failedRequests: [],
   consoleErrors: [],
-  canvasSize: { width: 1280, height: 800 },
+  canvasSize: { width: 1440, height: 900 },
 };
 
 describe("violationsOf", () => {
@@ -164,5 +165,36 @@ describe("listAdminPaths", () => {
     fs.writeFileSync(path.join(root, "admin.txt"), "");
 
     expect(listAdminPaths(root)).toEqual(["admin", "admin.txt"]);
+  });
+});
+
+describe("screenPointOf", () => {
+  const VIEW = { longitude: 20, latitude: 30, zoom: 1.6 };
+
+  it("視野の中心の点を、padding を除いた領域の中央に描く", () => {
+    const point = screenPointOf(
+      { longitude: 20, latitude: 30 },
+      { ...VIEW, paddingLeft: 306 },
+      VIEWPORT,
+    );
+
+    expect(point.x).toBeCloseTo((306 + 1440) / 2);
+    expect(point.y).toBeCloseTo(450);
+  });
+
+  it("経度が東の点を右に、緯度が北の点を上に描く", () => {
+    const center = screenPointOf(
+      { longitude: 20, latitude: 30 },
+      { ...VIEW, paddingLeft: 0 },
+      VIEWPORT,
+    );
+    const northEast = screenPointOf(
+      { longitude: 30, latitude: 40 },
+      { ...VIEW, paddingLeft: 0 },
+      VIEWPORT,
+    );
+
+    expect(northEast.x).toBeGreaterThan(center.x);
+    expect(northEast.y).toBeLessThan(center.y);
   });
 });

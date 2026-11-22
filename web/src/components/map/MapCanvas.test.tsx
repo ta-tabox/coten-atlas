@@ -4,7 +4,7 @@
  * ベースマップのスタイルの取得は、グローバルの `fetch` を差し替えて応答を決める。
  *
  * モックは children を描画しないので、子コンポーネントの有無は MapLibreMap が受け取った `children` とその子孫の要素で判定する。
- * モックは受け取った `ref` に `panTo` だけを持つ地図を入れるので、カメラの移動は `panTo` の呼び出しで判定する。
+ * モックは受け取った `ref` に `panTo` と `easeTo` を持つ地図を入れるので、カメラの移動は `panTo`、視野のずらしは `easeTo` の呼び出しで判定する。
  */
 
 import { act, render } from "@testing-library/react";
@@ -25,6 +25,7 @@ import type {
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
+import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
@@ -53,14 +54,17 @@ type MockMapProps = MapProps & { ref?: Ref<MapRef> };
 /** MapLibreMap のモックが `ref` に入れる地図の `panTo`。 */
 const panTo = vi.hoisted(() => vi.fn());
 
+/** MapLibreMap のモックが `ref` に入れる地図の `easeTo`。 */
+const easeTo = vi.hoisted(() => vi.fn());
+
 /**
  * `react-map-gl/maplibre` の既定の export と差し替えるモック関数。
- * 受け取った props を記録し、`ref` がオブジェクトなら `panTo` だけを持つ地図を入れて、null を返す。
+ * 受け取った props を記録し、`ref` がオブジェクトなら `panTo` と `easeTo` を持つ地図を入れて、null を返す。
  */
 const map = vi.hoisted(() =>
   vi.fn<(props: MockMapProps) => null>((props) => {
     if (typeof props.ref === "object" && props.ref !== null) {
-      props.ref.current = { panTo } as unknown as MapRef;
+      props.ref.current = { panTo, easeTo } as unknown as MapRef;
     }
 
     return null;
@@ -154,6 +158,18 @@ function stubFetch(response: Partial<Response>): void {
   vi.stubGlobal(
     "fetch",
     vi.fn(() => Promise.resolve(response as Response)),
+  );
+}
+
+/** グローバルの `matchMedia` を、デスクトップの幅の条件に当たるかが `matches` のモックに差し替える。 */
+function stubDesktop(matches: boolean): void {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({
+      matches,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    })),
   );
 }
 
@@ -264,6 +280,8 @@ describe("MapCanvas", () => {
   beforeEach(() => {
     map.mockClear();
     panTo.mockClear();
+    easeTo.mockClear();
+    stubDesktop(true);
     stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
   });
 
@@ -306,10 +324,43 @@ describe("MapCanvas", () => {
     expect(map).not.toHaveBeenCalled();
   });
 
-  it("初期表示位置を渡す", async () => {
+  it("デスクトップの幅で一覧パネルが開いていれば、初期の視野の左の padding に一覧パネルの右端までの幅を渡す", async () => {
     await renderMapCanvas();
 
-    expect(lastProps().initialViewState).toEqual(INITIAL_VIEW_STATE);
+    expect(lastProps().initialViewState).toEqual({
+      ...INITIAL_VIEW_STATE,
+      padding: { top: 0, bottom: 0, right: 0, left: PANEL_RIGHT_EDGE_PX },
+    });
+  });
+
+  it("デスクトップの幅でなければ、初期の視野の左の padding を 0 にする", async () => {
+    stubDesktop(false);
+    await renderMapCanvas();
+
+    expect(lastProps().initialViewState).toEqual({
+      ...INITIAL_VIEW_STATE,
+      padding: { top: 0, bottom: 0, right: 0, left: 0 },
+    });
+  });
+
+  it("一覧パネルを閉じると左の padding を 0 へ、開き直すと一覧パネルの右端までの幅へ戻す", async () => {
+    await renderMapCanvas();
+
+    act(() => seriesPanelProps().onOpenChange(false));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        padding: expect.objectContaining({ left: 0 }),
+      }),
+    );
+
+    act(() => seriesPanelProps().onOpenChange(true));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        padding: expect.objectContaining({ left: PANEL_RIGHT_EDGE_PX }),
+      }),
+    );
   });
 
   it("拡大の上限にズーム 10 を渡す", async () => {

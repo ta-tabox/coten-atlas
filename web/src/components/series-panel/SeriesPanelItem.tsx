@@ -41,7 +41,9 @@ export default function SeriesPanelItem({
           className="absolute top-[1.05rem] left-1 size-2 rounded-full bg-selected"
         />
       )}
-      <span className="block text-[0.9rem]">{series.title}</span>
+      <span data-series-title className="block text-[0.9rem]">
+        {series.title}
+      </span>
       {series.timeRange !== TIME_RANGE_UNTIMED && (
         <span className="block text-[0.75rem] font-normal text-ink-muted tabular-nums">
           {formatTimeRange(series.timeRange)}

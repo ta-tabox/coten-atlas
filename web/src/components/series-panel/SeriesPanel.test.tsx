@@ -4,7 +4,7 @@
  */
 
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import type { ComponentProps } from "react";
+import { type ComponentProps, useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import type { SeriesPanelSections } from "@/lib/map/series-panel";
@@ -62,10 +62,19 @@ function unlocatedSection(): HTMLElement {
   return screen.getByRole("region", { name: /場所や時代をまたぐシリーズ/ });
 }
 
+/** 開閉を親の代わりに持って `SeriesPanel` を描く。 */
+function OpenableSeriesPanel(
+  props: Omit<ComponentProps<typeof SeriesPanel>, "isOpen" | "onOpenChange">,
+) {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return <SeriesPanel {...props} isOpen={isOpen} onOpenChange={setIsOpen} />;
+}
+
 describe("SeriesPanel", () => {
   it("地図に出ているシリーズと位置なしのシリーズを、別々の区画に並べる", () => {
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
@@ -84,7 +93,7 @@ describe("SeriesPanel", () => {
 
   it("パネルの見出しで、並べているのがコテンラジオのシリーズだと言う", () => {
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
@@ -101,7 +110,7 @@ describe("SeriesPanel", () => {
     const onSelect = vi.fn();
 
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
@@ -115,7 +124,7 @@ describe("SeriesPanel", () => {
 
   it("地図に出ているシリーズが無ければ、その区画に無いことを文で言う", () => {
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={{ onMap: [], unlocated: [OKANE] }}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
@@ -132,7 +141,7 @@ describe("SeriesPanel", () => {
 
   it("絞り込み中に地図に出ているシリーズが無ければ、選んだタグを持つシリーズがその区画に無いことを文で言う", () => {
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={{ onMap: [], unlocated: [OKANE] }}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
@@ -152,7 +161,7 @@ describe("SeriesPanel", () => {
     const onSelectedTagsChange = vi.fn();
 
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
@@ -160,7 +169,6 @@ describe("SeriesPanel", () => {
         onSelect={vi.fn()}
       />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "タグで絞り込む" }));
     fireEvent.click(screen.getByRole("button", { name: /経済/ }));
 
     expect(onSelectedTagsChange).toHaveBeenCalledExactlyOnceWith(["経済"]);
@@ -168,7 +176,7 @@ describe("SeriesPanel", () => {
 
   it("区画の見出しを押すとその区画のシリーズだけを隠し、もう一度押すと戻す", () => {
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
@@ -191,7 +199,7 @@ describe("SeriesPanel", () => {
 
   it("パネル全体を閉じて開き直しても、閉じた区画は閉じたまま残る", () => {
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
@@ -209,9 +217,9 @@ describe("SeriesPanel", () => {
     expect(screen.getByRole("button", { name: /スパルタ/ })).toBeVisible();
   });
 
-  it("タグの絞り込みは、タグの列を閉じた状態で始まる", () => {
+  it("初期表示で、タグのボタンを一覧の上の一行に並べる", () => {
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
@@ -220,14 +228,16 @@ describe("SeriesPanel", () => {
     );
 
     expect(
-      screen.getByRole("button", { name: "タグで絞り込む" }),
-    ).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByRole("button", { name: /経済/ })).toBeNull();
+      within(screen.getByRole("list", { name: "タグで絞り込む" })).getAllByRole(
+        "button",
+      ),
+    ).toHaveLength(3);
+    expect(screen.queryByRole("button", { name: "タグで絞り込む" })).toBeNull();
   });
 
-  it("パネル全体を閉じて開き直しても、開いたタグの絞り込みは開いたまま残る", () => {
+  it("区画の説明文を描かない", () => {
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
@@ -235,16 +245,12 @@ describe("SeriesPanel", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "タグで絞り込む" }));
-    fireEvent.click(screen.getByRole("button", { name: "一覧を閉じる" }));
-    fireEvent.click(screen.getByRole("button", { name: "シリーズ一覧を開く" }));
-
-    expect(screen.getByRole("button", { name: /経済/ })).toBeVisible();
+    expect(screen.queryByText(/スライダーが指す時代/)).toBeNull();
   });
 
   it("閉じるボタンで一覧を隠し、開くボタンで一覧を戻す", () => {
     render(
-      <SeriesPanel
+      <OpenableSeriesPanel
         sections={SECTIONS}
         selectedSeriesId={null}
         {...TAG_FILTER_PROPS}
