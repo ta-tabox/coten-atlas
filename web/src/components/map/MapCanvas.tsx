@@ -12,6 +12,7 @@ import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import BottomSheet from "@/components/bottom-sheet/BottomSheet";
 import EraSlider from "@/components/era-slider/EraSlider";
+import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
 import { useIsDesktop } from "@/components/map/use-is-desktop";
@@ -30,7 +31,6 @@ import { currentWindow } from "@/lib/era/window";
 import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
-  PANEL_RIGHT_EDGE_PX,
   PUBLIC_MAP_MAX_ZOOM,
 } from "@/lib/map/config";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/layers/shared";

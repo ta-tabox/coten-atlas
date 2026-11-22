@@ -19,7 +19,7 @@ type SeriesPanelProps = {
   /** 選択が無ければ null。 */
   selectedSeriesId: string | null;
   onSelect: (seriesId: string) => void;
-  /** 帯に並べる順は配列の順。 */
+  /** タグのボタンを並べる順は配列の順。 */
   tags: PanelTag[];
   /**
    * 絞り込みに使っているタグ。
