@@ -126,14 +126,17 @@ const OKANE: Series = {
 const SERIES: SeriesList = [SPARTA, OKANE];
 
 /**
- * 3 区間の時代区分。
- * 古代は 2 番目なので、その中央は era 空間の 0.5 に当たる。
+ * 19 世紀の区間の中央が era 空間の `INITIAL_POSITION` に当たる時代区分。
+ * 19 世紀は末尾の区間なので、`INITIAL_POSITION` は区間を足したときに合わせて直す。
  */
 const ERAS: EraList = [
   { id: "prehistory", label: "先史", start: -10000, end: -800 },
   { id: "ancient", label: "古代", start: -800, end: 550 },
-  { id: "medieval", label: "中世", start: 550, end: 1450 },
+  { id: "medieval", label: "中世", start: 550, end: 1800 },
+  { id: "modern19", label: "19世紀", start: 1800, end: 1900 },
 ];
+
+const INITIAL_POSITION = 0.875;
 
 const PRESENT_END = 2026;
 
@@ -432,13 +435,13 @@ describe("MapCanvas", () => {
     expect(childOfType(SeriesDetailCard)).toBeUndefined();
   });
 
-  it("era スライダーは古代の区間の中央から始まる", async () => {
+  it("era スライダーは 19 世紀の区間の中央から始まる", async () => {
     await renderMapCanvas();
 
     expect(eraSliderProps()).toMatchObject({
       eras: ERAS,
       presentEnd: PRESENT_END,
-      position: 0.5,
+      position: INITIAL_POSITION,
     });
   });
 
@@ -448,7 +451,7 @@ describe("MapCanvas", () => {
     expect(childOfType(SeriesLayers)).toMatchObject({
       props: {
         currentWindow: currentWindow({
-          position: 0.5,
+          position: INITIAL_POSITION,
           eras: ERAS,
           presentEnd: PRESENT_END,
         }),
@@ -473,11 +476,11 @@ describe("MapCanvas", () => {
     });
   });
 
-  it("時代区分に古代が無ければ throw する", async () => {
+  it("時代区分に 19 世紀が無ければ throw する", async () => {
     // React は描画中の throw を console.error にも書くので、テストの出力に載せない。
     vi.spyOn(console, "error").mockImplementation(() => {});
 
-    await expect(renderMapCanvas(ERAS.slice(2))).rejects.toThrow("ancient");
+    await expect(renderMapCanvas(ERAS.slice(0, 3))).rejects.toThrow("modern19");
   });
 
   it("スライダーの現在窓で分けた区画を、一覧パネルへ渡す", async () => {
@@ -588,7 +591,7 @@ describe("MapCanvas", () => {
           seriesList: SERIES,
           loci: LOCI,
           currentWindow: currentWindow({
-            position: 0.5,
+            position: INITIAL_POSITION,
             eras: ERAS,
             presentEnd: PRESENT_END,
           }),
@@ -644,7 +647,7 @@ describe("MapCanvas", () => {
         seriesList: SERIES,
         loci: LOCI,
         currentWindow: currentWindow({
-          position: 0.5,
+          position: INITIAL_POSITION,
           eras: ERAS,
           presentEnd: PRESENT_END,
         }),
