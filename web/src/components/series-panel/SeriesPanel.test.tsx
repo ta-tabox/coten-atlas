@@ -217,7 +217,7 @@ describe("SeriesPanel", () => {
     expect(screen.getByRole("button", { name: /スパルタ/ })).toBeVisible();
   });
 
-  it("初期表示で、タグのボタンを一覧の上の帯に並べる", () => {
+  it("初期表示で、タグのボタンを一覧の上の一行に並べる", () => {
     render(
       <OpenableSeriesPanel
         sections={SECTIONS}
