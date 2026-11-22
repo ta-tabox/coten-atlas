@@ -5,7 +5,7 @@
  */
 
 import { useSyncExternalStore } from "react";
-import { DESKTOP_MEDIA_QUERY } from "@/lib/map/config";
+import { DESKTOP_MEDIA_QUERY } from "@/components/map/panel-layout";
 
 /** 画面の幅の条件が変わったときに `onChange` を呼ぶ購読を始め、止める関数を返す。 */
 function subscribe(onChange: () => void): () => void {

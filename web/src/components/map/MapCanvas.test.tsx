@@ -25,6 +25,7 @@ import type {
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
+import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
@@ -34,7 +35,6 @@ import {
   BASEMAP_STYLE_URL,
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
-  PANEL_RIGHT_EDGE_PX,
 } from "@/lib/map/config";
 import { SERIES_CIRCLE_LAYER } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";

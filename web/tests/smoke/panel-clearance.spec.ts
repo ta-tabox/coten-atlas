@@ -15,7 +15,8 @@ import {
   screenPointOf,
   viewportOf,
 } from "@scripts/smoke";
-import { INITIAL_VIEW_STATE, PANEL_RIGHT_EDGE_PX } from "@/lib/map/config";
+import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
+import { INITIAL_VIEW_STATE } from "@/lib/map/config";
 
 const CATALOG = path.join(exportRoot(), "../../catalog");
 
