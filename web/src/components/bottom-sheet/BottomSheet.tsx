@@ -166,7 +166,6 @@ export default function BottomSheet({
   }
 
   // 測った値が変わらなければ state を変えないので、描画のたびに測っても再描画を繰り返さない。
-  // biome-ignore lint/correctness/useExhaustiveDependencies: 描画のたびに測るため、依存を並べない。
   useLayoutEffect(measure);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: measure は毎回作り直す関数で、画面の大きさが変わるたびに測り直す。
