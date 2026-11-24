@@ -117,7 +117,7 @@ comment_endpoint+='[^-[:space:]][^[:space:]]*/(comments|replies|pulls|issues)([[
 # ID はシェル変数のことがあるので、`/` 以外の語なら当てる。
 resolve_endpoint='(^|[[:space:]])gh[[:space:]]+api[[:space:]]+'
 resolve_endpoint+='((-X|--method)[[:space:]]+[A-Za-z]+[[:space:]]+)?'
-resolve_endpoint+='[^-[:space:]][^[:space:]]*/comments/[^[:space:]/]+/(resolve|unresolve)([[:space:]]|$)'
+resolve_endpoint+='[^-[:space:]][^[:space:]]*/comments/[^[:space:]/]+/(resolve|unresolve)([[:space:];]|$)'
 
 if grep -qiE "$writes" <<< "$command_line"; then
   if ! grep -qE "$comment_endpoint" <<< "$command_line" \
