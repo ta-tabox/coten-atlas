@@ -283,8 +283,7 @@ export default function MapCanvas({
    *
    * タッチの入力は押した位置の周り 44px 四方、それ以外は押した位置の点だけを調べる。
    * `PointerEvent.pointerType` を持たないクリックはマウスとして扱う。
-   * Chromium の `click` は `pointerType: "touch"` の `PointerEvent` で届くのを確かめた。
-   * WebKit は実機が無く確かめていないので、`pointerType` を持たない端末のタッチは判定が円の大きさに留まる。
+   * `pointerType` を持たない端末のタッチは、判定が円の大きさに留まる。
    */
   function pointsUnder(event: MapLayerMouseEvent): CandidatePoint[] {
     const map = mapRef.current;
