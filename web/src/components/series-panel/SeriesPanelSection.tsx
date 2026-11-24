@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * 一覧パネルの区画 1 つを、開閉のボタンを兼ねた見出しと、説明とシリーズの列で表示する。
+ * 一覧パネルの区画 1 つを、開閉のボタンを兼ねた見出しと、シリーズの列で表示する。
  *
  * 開閉も選択も保持しない。
  * どちらも props で受け取り、見出しの押下は `onToggle`、シリーズの押下は `onSelect` で返す。
@@ -12,34 +12,30 @@ import SeriesPanelItem from "@/components/series-panel/SeriesPanelItem";
 import type { Series } from "@/lib/schema/series";
 
 type SeriesPanelSectionProps = {
+  /** 区画をテストが `data-section` で指すための名前。 */
+  sectionKey: string;
   /** 区画の名前と開閉のボタンの名前を兼ねる見出しの文字。 */
   heading: string;
   /** 見出しの頭に置く、区画の種類を示す記号。 */
   marker: ReactNode;
-  /** 見出しの下に置く、区画に何が並ぶかの説明。 */
-  note: string;
   seriesList: Series[];
   /** `seriesList` が空のときに一覧の代わりに出す文。 */
   emptyNote: string;
-  /**
-   * 区画のうち選択中の見た目で描く行のシリーズの id。
-   * 選択が無ければ null。
-   */
+  /** 選択が無ければ null。 */
   selectedSeriesId: string | null;
   onSelect: (seriesId: string) => void;
-  /** 説明とシリーズの列を表示しているか。 */
   isExpanded: boolean;
   onToggle: () => void;
 };
 
 /**
- * 見出しの下に、`isExpanded` が true のときだけ説明とシリーズの列を表示する。
+ * 見出しの下に、`isExpanded` が true のときだけシリーズの列を表示する。
  * `seriesList` が空なら、シリーズの列の代わりに `emptyNote` を出す。
  */
 export default function SeriesPanelSection({
+  sectionKey,
   heading,
   marker,
-  note,
   seriesList,
   emptyNote,
   selectedSeriesId,
@@ -53,6 +49,7 @@ export default function SeriesPanelSection({
   return (
     <section
       aria-labelledby={headingId}
+      data-section={sectionKey}
       className="shrink-0 rounded-box border border-rule p-1"
     >
       <h3
@@ -84,16 +81,10 @@ export default function SeriesPanelSection({
       </h3>
 
       <div id={bodyId} hidden={!isExpanded} className="pb-1">
-        <p className="px-2 text-[0.75rem] leading-[1.5] text-ink-muted">
-          {note}
-        </p>
-
         {seriesList.length === 0 ? (
-          <p className="mt-1.5 px-2 text-[0.85rem] text-ink-muted">
-            {emptyNote}
-          </p>
+          <p className="px-2 text-[0.85rem] text-ink-muted">{emptyNote}</p>
         ) : (
-          <ul className="mx-2 mt-1.5 flex flex-col divide-y divide-rule">
+          <ul className="mx-2 mt-1 flex flex-col divide-y divide-rule">
             {seriesList.map((series) => (
               <li key={series.id}>
                 <SeriesPanelItem

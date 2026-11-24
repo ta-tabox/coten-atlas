@@ -4,7 +4,7 @@
  * ベースマップのスタイルの取得は、グローバルの `fetch` を差し替えて応答を決める。
  *
  * モックは children を描画しないので、子コンポーネントの有無は MapLibreMap が受け取った `children` とその子孫の要素で判定する。
- * モックは受け取った `ref` に `panTo` だけを持つ地図を入れるので、カメラの移動は `panTo` の呼び出しで判定する。
+ * モックは受け取った `ref` に `panTo` と `easeTo` を持つ地図を入れるので、カメラの移動は `panTo`、視野のずらしは `easeTo` の呼び出しで判定する。
  */
 
 import { act, render } from "@testing-library/react";
@@ -23,11 +23,15 @@ import type {
   MapRef,
 } from "react-map-gl/maplibre";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import BottomSheet from "@/components/bottom-sheet/BottomSheet";
 import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
+import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
+import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
+import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
 import { currentWindow } from "@/lib/era/window";
 import { toJapaneseLabelStyle } from "@/lib/map/basemap-labels";
 import {
@@ -53,14 +57,17 @@ type MockMapProps = MapProps & { ref?: Ref<MapRef> };
 /** MapLibreMap のモックが `ref` に入れる地図の `panTo`。 */
 const panTo = vi.hoisted(() => vi.fn());
 
+/** MapLibreMap のモックが `ref` に入れる地図の `easeTo`。 */
+const easeTo = vi.hoisted(() => vi.fn());
+
 /**
  * `react-map-gl/maplibre` の既定の export と差し替えるモック関数。
- * 受け取った props を記録し、`ref` がオブジェクトなら `panTo` だけを持つ地図を入れて、null を返す。
+ * 受け取った props を記録し、`ref` がオブジェクトなら `panTo` と `easeTo` を持つ地図を入れて、null を返す。
  */
 const map = vi.hoisted(() =>
   vi.fn<(props: MockMapProps) => null>((props) => {
     if (typeof props.ref === "object" && props.ref !== null) {
-      props.ref.current = { panTo } as unknown as MapRef;
+      props.ref.current = { panTo, easeTo } as unknown as MapRef;
     }
 
     return null;
@@ -71,7 +78,8 @@ vi.mock("react-map-gl/maplibre", () => ({ default: map }));
 
 // fetchEpisodes の Promise を解決させない。
 // 解決すると act の外で setEpisodes が走り、props の受け渡しだけを検証するテストが取得の完了待ちになる。
-vi.mock("@/lib/episodes", () => ({
+vi.mock("@/lib/episodes", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/episodes")>()),
   fetchEpisodes: () => new Promise(() => {}),
   episodesForSeries: () => [],
 }));
@@ -122,14 +130,17 @@ const OKANE: Series = {
 const SERIES: SeriesList = [SPARTA, OKANE];
 
 /**
- * 3 区間の時代区分。
- * 古代は 2 番目なので、その中央は era 空間の 0.5 に当たる。
+ * 19 世紀の区間の中央が era 空間の `INITIAL_POSITION` に当たる時代区分。
+ * 19 世紀は末尾の区間なので、`INITIAL_POSITION` は区間を足したときに合わせて直す。
  */
 const ERAS: EraList = [
   { id: "prehistory", label: "先史", start: -10000, end: -800 },
   { id: "ancient", label: "古代", start: -800, end: 550 },
-  { id: "medieval", label: "中世", start: 550, end: 1450 },
+  { id: "medieval", label: "中世", start: 550, end: 1800 },
+  { id: "modern19", label: "19世紀", start: 1800, end: 1900 },
 ];
+
+const INITIAL_POSITION = 0.875;
 
 const PRESENT_END = 2026;
 
@@ -154,6 +165,18 @@ function stubFetch(response: Partial<Response>): void {
   vi.stubGlobal(
     "fetch",
     vi.fn(() => Promise.resolve(response as Response)),
+  );
+}
+
+/** グローバルの `matchMedia` を、デスクトップの幅の条件に当たるかが `matches` のモックに差し替える。 */
+function stubDesktop(matches: boolean): void {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({
+      matches,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    })),
   );
 }
 
@@ -264,6 +287,8 @@ describe("MapCanvas", () => {
   beforeEach(() => {
     map.mockClear();
     panTo.mockClear();
+    easeTo.mockClear();
+    stubDesktop(true);
     stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
   });
 
@@ -306,10 +331,43 @@ describe("MapCanvas", () => {
     expect(map).not.toHaveBeenCalled();
   });
 
-  it("初期表示位置を渡す", async () => {
+  it("デスクトップの幅で一覧パネルが開いていれば、初期の視野の左の padding に一覧パネルの右端までの幅を渡す", async () => {
     await renderMapCanvas();
 
-    expect(lastProps().initialViewState).toEqual(INITIAL_VIEW_STATE);
+    expect(lastProps().initialViewState).toEqual({
+      ...INITIAL_VIEW_STATE,
+      padding: { top: 0, bottom: 0, right: 0, left: PANEL_RIGHT_EDGE_PX },
+    });
+  });
+
+  it("デスクトップの幅でなければ、初期の視野の左の padding を 0 にする", async () => {
+    stubDesktop(false);
+    await renderMapCanvas();
+
+    expect(lastProps().initialViewState).toEqual({
+      ...INITIAL_VIEW_STATE,
+      padding: { top: 0, bottom: 0, right: 0, left: 0 },
+    });
+  });
+
+  it("一覧パネルを閉じると左の padding を 0 へ、開き直すと一覧パネルの右端までの幅へ戻す", async () => {
+    await renderMapCanvas();
+
+    act(() => seriesPanelProps().onOpenChange(false));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        padding: expect.objectContaining({ left: 0 }),
+      }),
+    );
+
+    act(() => seriesPanelProps().onOpenChange(true));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        padding: expect.objectContaining({ left: PANEL_RIGHT_EDGE_PX }),
+      }),
+    );
   });
 
   it("拡大の上限にズーム 10 を渡す", async () => {
@@ -334,6 +392,12 @@ describe("MapCanvas", () => {
     await renderMapCanvas();
 
     expect(lastProps().attributionControl).not.toBe(false);
+  });
+
+  it("出典表記を、幅の狭い地図でもボタンに隠さず全文で出す", async () => {
+    await renderMapCanvas();
+
+    expect(lastProps().attributionControl).toEqual({ compact: false });
   });
 
   it("クリックを拾う相手を代表点のレイヤに限る", async () => {
@@ -381,13 +445,13 @@ describe("MapCanvas", () => {
     expect(childOfType(SeriesDetailCard)).toBeUndefined();
   });
 
-  it("era スライダーは古代の区間の中央から始まる", async () => {
+  it("era スライダーは 19 世紀の区間の中央から始まる", async () => {
     await renderMapCanvas();
 
     expect(eraSliderProps()).toMatchObject({
       eras: ERAS,
       presentEnd: PRESENT_END,
-      position: 0.5,
+      position: INITIAL_POSITION,
     });
   });
 
@@ -397,7 +461,7 @@ describe("MapCanvas", () => {
     expect(childOfType(SeriesLayers)).toMatchObject({
       props: {
         currentWindow: currentWindow({
-          position: 0.5,
+          position: INITIAL_POSITION,
           eras: ERAS,
           presentEnd: PRESENT_END,
         }),
@@ -422,11 +486,11 @@ describe("MapCanvas", () => {
     });
   });
 
-  it("時代区分に古代が無ければ throw する", async () => {
+  it("時代区分に 19 世紀が無ければ throw する", async () => {
     // React は描画中の throw を console.error にも書くので、テストの出力に載せない。
     vi.spyOn(console, "error").mockImplementation(() => {});
 
-    await expect(renderMapCanvas(ERAS.slice(2))).rejects.toThrow("ancient");
+    await expect(renderMapCanvas(ERAS.slice(0, 3))).rejects.toThrow("modern19");
   });
 
   it("スライダーの現在窓で分けた区画を、一覧パネルへ渡す", async () => {
@@ -537,7 +601,7 @@ describe("MapCanvas", () => {
           seriesList: SERIES,
           loci: LOCI,
           currentWindow: currentWindow({
-            position: 0.5,
+            position: INITIAL_POSITION,
             eras: ERAS,
             presentEnd: PRESENT_END,
           }),
@@ -593,7 +657,7 @@ describe("MapCanvas", () => {
         seriesList: SERIES,
         loci: LOCI,
         currentWindow: currentWindow({
-          position: 0.5,
+          position: INITIAL_POSITION,
           eras: ERAS,
           presentEnd: PRESENT_END,
         }),
@@ -621,5 +685,193 @@ describe("MapCanvas", () => {
     act(() => seriesPanelProps().onSelect("okane-no-rekishi"));
 
     expect(seriesPanelProps().selectedTags).toEqual(["経済"]);
+  });
+});
+
+/** 地図の children にある BottomSheet の props を返す。 */
+function bottomSheetProps(): ComponentProps<typeof BottomSheet> {
+  return childPropsOf(BottomSheet);
+}
+
+describe("MapCanvas（スマホの幅）", () => {
+  beforeEach(() => {
+    map.mockClear();
+    stubDesktop(false);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("一覧と詳細カードを 1 枚のシートに置き、一覧パネルと詳細カードの枠を置かない", async () => {
+    await renderMapCanvas();
+
+    expect(childOfType(BottomSheet)).toBeDefined();
+    expect(childOfType(SeriesPanel)).toBeUndefined();
+    expect(childOfType(SeriesDetailCard)).toBeUndefined();
+  });
+
+  it("シートは初期で era の段にして、一覧の見出しを出す", async () => {
+    await renderMapCanvas();
+
+    expect(bottomSheetProps()).toMatchObject({
+      stage: "era",
+      label: "シリーズ一覧",
+    });
+  });
+
+  it("スマホの幅では、era スライダーをシートへ渡し、初期で出す設定にする", async () => {
+    await renderMapCanvas();
+
+    expect(bottomSheetProps().isEraSliderShown).toBe(true);
+    expect(
+      (bottomSheetProps().eraSlider as ReactElement<{ eras: EraList }>).props
+        .eras,
+    ).toBe(ERAS);
+  });
+
+  it("地図の点を押すと、シートを list の段にして詳細カードの中身を置く", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    expect(bottomSheetProps().stage).toBe("list");
+    expect(
+      findElementOfType(bottomSheetProps().children, SeriesDetailBody),
+    ).toBeDefined();
+    expect(
+      findElementOfType(bottomSheetProps().children, SeriesPanelBody),
+    ).toBeUndefined();
+  });
+
+  it("詳細カードを閉じると、シートの段は変えず一覧の中身へ戻る", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    act(() => childPropsOf(SeriesDetailBody).onClose());
+
+    expect(bottomSheetProps().stage).toBe("list");
+    expect(
+      findElementOfType(bottomSheetProps().children, SeriesPanelBody),
+    ).toBeDefined();
+  });
+
+  it("一覧でシリーズを選ぶと、シートを list の段にする", async () => {
+    await renderMapCanvas();
+
+    act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
+
+    expect(bottomSheetProps().stage).toBe("list");
+  });
+});
+
+/**
+ * シートが `list` の段の高さを報告したことにする。
+ * 地図の部品のモックはシートを描かないので、シートが段の変更ごとに渡す高さを、ここで渡す。
+ */
+function reportListHeight(): void {
+  act(() => bottomSheetProps().onTargetHeightChange(400));
+
+  // 高さを報告した余白の同期は、選択の移動の検査の対象でないので、呼び出しの記録から外す。
+  easeTo.mockClear();
+}
+
+describe("MapCanvas（スマホの幅の選択と段）", () => {
+  beforeEach(() => {
+    map.mockClear();
+    panTo.mockClear();
+    easeTo.mockClear();
+    stubDesktop(false);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+    vi.stubGlobal("innerHeight", 800);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("full の段で一覧からシリーズを選ぶと、list の段へ縮む", async () => {
+    await renderMapCanvas();
+
+    act(() => bottomSheetProps().onStageChange("full"));
+    act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
+
+    expect(bottomSheetProps().stage).toBe("list");
+  });
+
+  it("一覧でシリーズを選ぶと、代表点を list の段のシートに隠れない領域の中央へ移す", async () => {
+    await renderMapCanvas();
+    reportListHeight();
+
+    act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        center: SPARTA_COORDINATES,
+        padding: expect.objectContaining({ bottom: 400 }),
+      }),
+    );
+    expect(panTo).not.toHaveBeenCalled();
+  });
+
+  it("地図の点を押すと、代表点を list の段のシートに隠れない領域の中央へ移す", async () => {
+    await renderMapCanvas();
+    reportListHeight();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        center: SPARTA_COORDINATES,
+        padding: expect.objectContaining({ bottom: 400 }),
+      }),
+    );
+  });
+
+  it("選択で list の段へ移った後に、余白だけの移動で選択の移動を打ち切らない", async () => {
+    await renderMapCanvas();
+    reportListHeight();
+
+    act(() => childPropsOf(SeriesPanelBody).onSelect("sparta"));
+
+    expect(easeTo).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("MapCanvas（スマホの幅の余白の追随）", () => {
+  beforeEach(() => {
+    map.mockClear();
+    easeTo.mockClear();
+    stubDesktop(false);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("シートの目標の高さが変わると、段が同じままでも、下端の余白をその高さに合わせる", async () => {
+    await renderMapCanvas();
+
+    act(() => bottomSheetProps().onTargetHeightChange(300));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        padding: expect.objectContaining({ bottom: 300 }),
+      }),
+    );
+
+    act(() => bottomSheetProps().onTargetHeightChange(250));
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        padding: expect.objectContaining({ bottom: 250 }),
+      }),
+    );
   });
 });

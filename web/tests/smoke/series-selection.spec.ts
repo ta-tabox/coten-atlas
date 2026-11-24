@@ -22,7 +22,7 @@ test.beforeEach(async ({ page }, testInfo) => {
     "スマホの幅の一覧パネルを押す手順はまだ無い",
   );
 
-  server = await openExport(page, exportRoot());
+  server = await openExport(page, exportRoot(), { pagePath: "/" });
 });
 
 test.afterEach(() => {

@@ -8,7 +8,7 @@
  * 片方だけ直すと `web/tests/about-readme.test.tsx` が赤になる。
  *
  * 画面の側で全文を持つのはこの 1 枚だけにする。
- * フッタが担うのは公式への導線とこのページへの到達で、表記の全文は持たない。
+ * 画面上端のヘッダーが担うのは公式への導線とこのページへの到達で、表記の全文は持たない。
  *
  * 見出しの `font-bold` とリンクの色・下線は飾りではない。
  * Tailwind の preflight が `h1`〜`h6` の font-size / font-weight と `a` の color / text-decoration を inherit にリセットするので、書かないと素の文と同じ見た目になる。
@@ -18,9 +18,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
 import GitHubIcon from "@/components/icons/GitHubIcon";
+import { OFFICIAL_SITE_URL } from "@/lib/links/official-url";
+import { SITE_TITLE } from "@/lib/site/title";
 
 export const metadata: Metadata = {
-  title: "このサイトについて | coten-atlas",
+  title: `このサイトについて | ${SITE_TITLE.name}`,
 };
 
 /** 出典と引用の範囲・ライセンスの全文を載せた、このサイトについてのページを描く。 */
@@ -73,7 +75,7 @@ export default function AboutPage() {
             番組公式
           </span>
           <a
-            href="https://coten.co.jp/services/cotenradio/"
+            href={OFFICIAL_SITE_URL}
             className="inline-flex items-center gap-1.5 text-blue-700 underline underline-offset-2"
           >
             <ExternalLinkIcon className="mt-[0.4em] size-[1.05em] flex-none self-start" />

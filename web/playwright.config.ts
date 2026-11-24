@@ -34,8 +34,8 @@ export default defineConfig({
     {
       name: "smoke-desktop",
       testDir: "./tests/smoke",
-      // 全画面の地図が入る大きさ。
-      use: { viewport: { width: 1280, height: 800 } },
+      // 一覧パネルが地図の左に開いたままの幅（`md` 以上）で、全画面の地図が入る大きさ。
+      use: { viewport: { width: 1440, height: 900 } },
     },
     {
       name: "smoke-iphone",

@@ -35,6 +35,9 @@ export default function nextConfig(phase: string): NextConfig {
     // static export では next/image の最適化サーバが居ない。
     // 無効化しないとビルドが落ちる。
     images: { unoptimized: true },
+    // ページを `about/index.html` として出す。
+    // 既定の `about.html` は、拡張子なしの `/about` を `.html` へ解決するホストにしか開けないので、どの静的ホストでも開けるようにする。
+    trailingSlash: true,
     basePath: BASE_PATH,
     assetPrefix: BASE_PATH,
     pageExtensions: isDevelopmentServer

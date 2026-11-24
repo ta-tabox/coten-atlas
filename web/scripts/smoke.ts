@@ -15,7 +15,7 @@
  *
  * ここが持つのは機構だけで、判定を回すのは `tests/smoke/` の spec である。
  * ブラウザの寿命も viewport も Playwright の project が持つので、この層は渡された page を使うだけにする。
- * 入口は openExport（配信物を開いたままにする）と observe（配信物を開いて観測を集める）と violationsOf（観測から違反を出す純関数）と listAdminPaths（管理画面の混入を探す）。
+ * 入口は observe（配信物を開いて観測を集める）・openExport（配信物を開いて、操作は spec へ任せる）と violationsOf（観測から違反を出す純関数）と listAdminPaths（管理画面の混入を探す）。
  */
 
 import fs from "node:fs";
@@ -78,13 +78,22 @@ const CONTENT_TYPES: Record<string, string> = {
 const FIXTURE_STYLE = {
   version: 8,
   name: "smoke-fixture",
-  sources: {},
+  // 出典表記は、レイヤが使うソースの `attribution` から出る。
+  // 空の GeoJSON を使う円のレイヤを 1 枚置いて、外部へ出さずに出典表記を地図に出す。
+  sources: {
+    attribution: {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: [] },
+      attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap",
+    },
+  },
   layers: [
     {
       id: "background",
       type: "background",
       paint: { "background-color": "#8aa" },
     },
+    { id: "attribution-user", type: "circle", source: "attribution" },
   ],
 };
 
@@ -253,44 +262,38 @@ function portOf(server: http.Server): number {
   return address.port;
 }
 
+type ExportOpening = { pagePath: string; beforeGoto?: () => void };
+
 /**
- * `root`（`out/` の実体）を BASE_PATH の下へ配信し、`page` で `pagePath` を開いて、配信しているサーバを返す。
- * サーバは呼び手が閉じるまで動き続ける。
+ * `root` を配信して `pagePath` を開き、配信サーバを返す。
+ * 外部への通信はここで止まる。
+ * スタイルだけフィクスチャで応答し、タイル・グリフ・スプライトは中断する。
+ * 返したサーバは呼び出し側が閉じる。
  *
- * `pagePath` は BASE_PATH の下のパス。
- * この層のサーバはディレクトリにしか index.html を補わないので、トップ以外は拡張子まで書く。
+ * `beforeGoto` はページを開く前に呼ぶ。
+ * リスナーは開く前に付けないと最初のリクエストを取りこぼす。
  */
 export async function openExport(
   page: Page,
   root: string,
-  pagePath = "/",
+  { pagePath, beforeGoto = () => {} }: ExportOpening,
 ): Promise<http.Server> {
   const server = await serveExport(root);
 
-  try {
-    // 外部への通信はここで止まる。
-    // スタイルだけフィクスチャで応答し、タイル・グリフ・スプライトは中断する。
-    await page.route(TILE_SERVER_PATTERN, (route) =>
-      route.request().url().includes("/styles/")
-        ? route.fulfill({
-            status: 200,
-            contentType: "application/json",
-            body: JSON.stringify(FIXTURE_STYLE),
-          })
-        : route.abort(),
-    );
+  await page.route(TILE_SERVER_PATTERN, (route) =>
+    route.request().url().includes("/styles/")
+      ? route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(FIXTURE_STYLE),
+        })
+      : route.abort(),
+  );
+  beforeGoto();
 
-    await page.goto(
-      `http://localhost:${portOf(server)}${BASE_PATH}${pagePath}`,
-      {
-        waitUntil: "networkidle",
-      },
-    );
-  } catch (cause) {
-    // 開けなかったサーバを閉じずに投げると、呼び手は閉じる相手を受け取れない。
-    server.close();
-    throw cause;
-  }
+  await page.goto(`http://localhost:${portOf(server)}${BASE_PATH}${pagePath}`, {
+    waitUntil: "networkidle",
+  });
 
   return server;
 }
@@ -299,7 +302,8 @@ export async function openExport(
  * ページを開いて観測を集める。
  * 判定はしない。
  *
- * `pagePath` の書き方は `openExport` が正。
+ * `pagePath` は BASE_PATH の下のパス。
+ * この層のサーバはディレクトリにしか index.html を補わないので、トップ以外は拡張子まで書く。
  */
 export async function observe(
   page: Page,
@@ -309,21 +313,21 @@ export async function observe(
   const failedRequests: string[] = [];
   const consoleErrors: string[] = [];
 
-  // ページを開く前に購読しないと、最初の HTML と JS の応答を取りこぼす。
-  page.on("response", (response) => {
-    if (response.status() >= 400) {
-      failedRequests.push(
-        `${response.status()} ${new URL(response.url()).pathname}`,
-      );
-    }
-  });
-  page.on("console", (message) => {
-    if (message.type() === "error") {
-      consoleErrors.push(message.text());
-    }
-  });
-
-  const server = await openExport(page, root, pagePath);
+  const beforeGoto = () => {
+    page.on("response", (response) => {
+      if (response.status() >= 400) {
+        failedRequests.push(
+          `${response.status()} ${new URL(response.url()).pathname}`,
+        );
+      }
+    });
+    page.on("console", (message) => {
+      if (message.type() === "error") {
+        consoleErrors.push(message.text());
+      }
+    });
+  };
+  const server = await openExport(page, root, { pagePath, beforeGoto });
 
   try {
     const canvasSize = await page.evaluate(() => {
@@ -338,6 +342,105 @@ export async function observe(
   } finally {
     server.close();
   }
+}
+
+/** 画面上の矩形（CSS ピクセル）。 */
+export type Rect = {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+};
+
+/**
+ * 初期表示の一覧パネルと、地図に出ているシリーズの区画に並ぶシリーズの名前。
+ *
+ * 名前の並びは、地図に点が描かれているシリーズと一致する。
+ */
+export type PanelObservation = {
+  /**
+   * 一覧パネルの枠線を含む外形の矩形。
+   * パネルが無ければ null。
+   */
+  panelRect: Rect | null;
+  onMapSeriesTitles: string[];
+};
+
+/**
+ * ページを開いて、初期表示の一覧パネルの矩形と、地図に出ているシリーズの名前を集める。
+ * 判定はしない。
+ */
+export async function observePanel(
+  page: Page,
+  root: string,
+): Promise<PanelObservation> {
+  const server = await openExport(page, root, { pagePath: "/" });
+
+  try {
+    return await page.evaluate(() => {
+      const rect = document
+        .querySelector("[data-series-panel]")
+        ?.getBoundingClientRect();
+
+      return {
+        panelRect: rect
+          ? {
+              left: rect.left,
+              top: rect.top,
+              right: rect.right,
+              bottom: rect.bottom,
+            }
+          : null,
+        onMapSeriesTitles: Array.from(
+          document.querySelectorAll(
+            '[data-section="on-map"] [data-series-title]',
+          ),
+        ).map((title) => title.textContent ?? ""),
+      };
+    });
+  } finally {
+    server.close();
+  }
+}
+
+/** 経度・緯度（度）の点を、`view` の視野で描いた画面上の座標（CSS ピクセル、左上が原点）。 */
+export type ScreenPoint = { x: number; y: number };
+
+/**
+ * `view` の中心と `padding` を持つ `size` の地図に、`point` が描かれる画面上の座標を返す。
+ * Web メルカトルで、MapLibre の既定の 512px のタイルを使う。
+ *
+ * 中心は `padding` を除いた領域の中央に描かれる。
+ */
+export function screenPointOf(
+  point: { longitude: number; latitude: number },
+  view: {
+    longitude: number;
+    latitude: number;
+    zoom: number;
+    paddingLeft: number;
+  },
+  size: Viewport,
+): ScreenPoint {
+  const worldSize = 512 * 2 ** view.zoom;
+  const mercator = (longitude: number, latitude: number) => {
+    const radians = (latitude * Math.PI) / 180;
+
+    return {
+      x: ((longitude + 180) / 360) * worldSize,
+      y:
+        ((1 - Math.log(Math.tan(radians) + 1 / Math.cos(radians)) / Math.PI) /
+          2) *
+        worldSize,
+    };
+  };
+  const center = mercator(view.longitude, view.latitude);
+  const target = mercator(point.longitude, point.latitude);
+
+  return {
+    x: (view.paddingLeft + size.width) / 2 + target.x - center.x,
+    y: size.height / 2 + target.y - center.y,
+  };
 }
 
 /**
