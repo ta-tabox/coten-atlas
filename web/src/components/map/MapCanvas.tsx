@@ -70,7 +70,6 @@ type MapCanvasProps = {
    * 地図のクリックが返すのは `Locus` なので、`seriesId` に一致する `Series` をこの配列から検索する。
    */
   seriesList: SeriesList;
-  /** era スライダーの目盛りに並べる時代区分の全件。 */
   eras: EraList;
   /** `end` が `ERA_END_PRESENT` の era の右端に置く年。 */
   presentEnd: number;
