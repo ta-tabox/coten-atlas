@@ -145,7 +145,11 @@ describe("guard-gh-api.sh", () => {
     ["-X PATCH", "gh api -X PATCH repos/o/r -f name=x"],
     ["--method DELETE", "gh api --method DELETE repos/o/r/git/refs/heads/x"],
     ["secret への到達", "gh api repos/o/r/actions/secrets"],
-    ["既存 PR の書き換え", "gh api repos/o/r/pulls/1 -X PATCH -f state=closed"],
+    ["PR 以外の PATCH", "gh api -X PATCH repos/o/r/issues/1 -f state=closed"],
+    [
+      "PR の下位リソースの PATCH",
+      "gh api -X PATCH repos/o/r/pulls/1/comments/2 -f body=x",
+    ],
     [
       "PR のレビュー依頼など他の POST",
       "gh api repos/o/r/pulls/1/requested_reviewers -f reviewers[]=x",
@@ -172,6 +176,10 @@ describe("guard-gh-api.sh", () => {
     ["gh api でないコマンド", "gh pr view 1"],
     ["PR の作成", "gh api repos/o/r/pulls -f title=x -f head=a -f base=b"],
     ["issue の作成", "gh api repos/o/r/issues -f title=x"],
+    [
+      "PR の書き換え",
+      "gh api -X PATCH repos/o/r/pulls/1 -f base=main -F body=@pr.md",
+    ],
     [
       "ヒアドキュメントの本文にある -X PATCH",
       "cat > pr.md <<'EOF'\ngh api -X PATCH で差し替える\nEOF",
