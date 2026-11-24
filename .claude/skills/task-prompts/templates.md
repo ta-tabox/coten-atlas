@@ -49,13 +49,25 @@ PR の本文とコミットの本文が `.claude/rules/writing.md` の規律を�
 
 ## 人間の指示
 
-| 指示 | すること |
-|---|---|
-| `次へ` | `gh api 'repos/ta-tabox/coten-atlas/pulls?head=ta-tabox:<前の順のブランチ>&state=all'` を 1 回呼び、前の順の PR が在ることだけを確かめる。在れば次の順のサブを立て、セッション ID を一行書いてターンを終える。無ければ無いと一文書いてターンを終える |
-| `マージした #<PR 番号>` | その PR の次の順の PR の base を `gh api -X PATCH repos/ta-tabox/coten-atlas/pulls/<番号> -f base=main` で main へ替える。次の順以降のブランチへ、前から順に main を `git merge --no-edit` し、`web/` で `pnpm check` が緑なら通常の push をする |
-| `直した #<PR 番号>` | その PR のブランチを、次の順のブランチへ `git merge --no-edit` する。さらに後ろの順があれば、同じく一つ前のブランチを merge する。`web/` で `pnpm check` が緑なら通常の push をする |
-| `状況` | 組の PR の番号・base・状態（open・merged）を `gh api` で取得し、表で書く |
+### `次へ`
+- 前の順の PR が在るかを、`gh api 'repos/ta-tabox/coten-atlas/pulls?head=ta-tabox:<前の順のブランチ>&state=all'` を 1 回呼んで確かめる
+- PR が在れば、次の順のサブを立て、セッション ID を一行書いてターンを終える
+- PR が無ければ、無いと一文書いてターンを終える
 
+### `マージした #<PR 番号>`
+- 名指された PR の次の順の PR の base を、`gh api -X PATCH repos/ta-tabox/coten-atlas/pulls/<番号> -f base=main` で main へ替える
+- 次の順以降のブランチへ、前から順に main を `git merge --no-edit` する
+- `web/` で `pnpm check` が緑なら、通常の push をする
+
+### `直した #<PR 番号>`
+- 名指された PR のブランチを、次の順のブランチへ `git merge --no-edit` する
+- さらに後ろの順があれば、一つ前の順のブランチを同じく merge する
+- `web/` で `pnpm check` が緑なら、通常の push をする
+
+### `状況`
+- 組の PR の番号・base・状態（open・merged）を `gh api` で取得し、表で書く
+
+### どの指示でも守ること
 - 衝突したら自分では解かず、`git merge --abort` で戻してから、そのブランチのサブへ `send_message` で「main（または前のブランチ）を取り込んで衝突を解き、push して止まる」と頼む
 - `catalog/episodes.json` の衝突は、サブに `pnpm sync` で書き直させる（あれば）
 - `pnpm check` が赤なら push せず、そのブランチのサブへ同じく頼む
