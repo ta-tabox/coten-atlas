@@ -369,7 +369,7 @@ catalog/
   1. RSS を取得し、guid で episodes.json と差分
   2. フィード全件の season を season-corrections.json・題名の先頭の `【NN-M】`・`itunes:season` の順に決め、series.json 全件の `season` から組んだ season → seriesId の索引と照合して seriesId を割り当てる
   3. Apple Podcasts の lookup API（最新の 200 回）で、guid が一致する回の `links["apple-podcasts"]` を書く
-     それでも URL の無い回は、Search API（そのシリーズの題に ` COTEN RADIO` を付けた語。シリーズに割り当たらない回は番組名と回の種別の語）で探す
+     それでも URL の無い回は、Search API で探す
      どちらの取得に失敗しても警告だけを出し、その分の `links` を触らずに同期を続ける
   4. 結果サマリを stdout へ
      未割当は「規則で確定」（season が決まらない回・番外編・訂正表で外した回）と「シリーズ未作成」に割って数える
