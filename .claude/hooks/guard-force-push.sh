@@ -36,10 +36,29 @@ if ! command -v jq > /dev/null 2>&1; then
   exit 0
 fi
 
+# ヒアドキュメントの本体を取り除く。
+# 本体は別のコマンドへ渡す文章（PR 本文など）で、`git push -f` の語が出ても実行されない。
+# 開始行（`<<'EOF'` を含む行）は残すので、`cat <<'EOF' && git push -f` のような同じ行のコマンドは検査に残る。
+strip_heredocs() {
+  awk '
+    skip { t = $0; sub(/^[ \t]+/, "", t); if (t == tag) skip = 0; next }
+    { print }
+    match($0, /(^|[^<])<<-?[ \t]*["\x27]?[A-Za-z_][A-Za-z0-9_]*/) {
+      s = substr($0, RSTART, RLENGTH); sub(/^[^<]?<<-?[ \t]*["\x27]?/, "", s); tag = s; skip = 1
+    }
+  '
+}
+
 command_line=$(jq -r '.tool_input.command // ""') || {
   ask "フックの入力を読めなかった"
   exit 0
 }
+command_line=$(strip_heredocs <<< "$command_line")
+
+# 引用符の中身を空にした版。`git push` の有無はこちらで見る。
+# コミット本文や `--body` の文章に `git push -f` と書いてあっても、実行される push ではない。
+# 引用の外にある push だけが対象になる（`bash -c "git push -f"` のような引用の中の実行は、権限の allow に前方一致しないので既定の確認が出る）。
+unquoted=$(perl -0pe "s/\"[^\"]*\"/\"\"/g; s/'[^']*'/''/g" <<< "$command_line")
 
 # `git` と `push` が一つのコマンドの中で並んでいるか。
 #
@@ -52,7 +71,7 @@ command_line=$(jq -r '.tool_input.command // ""') || {
 quoted='"[^"]*"'"|'[^']*'"
 git_push='(^|[[:space:]]|[(`{])git([^;|&]|'"$quoted"')*[[:space:]]push([[:space:]]|$|[)`}])'
 
-if ! grep -qE "$git_push" <<< "$command_line"; then
+if ! grep -qE "$git_push" <<< "$unquoted"; then
   exit 0
 fi
 

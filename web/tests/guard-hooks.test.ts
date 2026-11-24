@@ -123,6 +123,18 @@ describe("guard-force-push.sh", () => {
       "値を持つ --force-with-lease と --force-if-includes",
       "git push -u --force-with-lease=stack/a:abc123 --force-if-includes origin HEAD:stack/a",
     ],
+    [
+      "ヒアドキュメントの本文にある git push -f",
+      "cat > pr.md <<'EOF'\n積み直しは git push -f で行う\nEOF",
+    ],
+    [
+      "コミット本文の引用の中にある git push -f",
+      'git commit -m "docs: 説明\n\ngit push -f の例を消す"',
+    ],
+    [
+      "引用した main 以外への --force-with-lease",
+      "git push --force-with-lease origin 'stack/a'",
+    ],
   ])("%s は何も出さない", (_label, command) => {
     expect(decisionOf(hooks.forcePush, command)).toBeUndefined();
   });
@@ -133,9 +145,10 @@ describe("guard-gh-api.sh", () => {
     ["-X PATCH", "gh api -X PATCH repos/o/r -f name=x"],
     ["--method DELETE", "gh api --method DELETE repos/o/r/git/refs/heads/x"],
     ["secret への到達", "gh api repos/o/r/actions/secrets"],
+    ["既存 PR の書き換え", "gh api repos/o/r/pulls/1 -X PATCH -f state=closed"],
     [
-      "フィールドの値に /comments を含む issue の作成",
-      'gh api repos/o/r/issues -f title="see /comments"',
+      "PR のレビュー依頼など他の POST",
+      "gh api repos/o/r/pulls/1/requested_reviewers -f reviewers[]=x",
     ],
     [
       "resolve 以外の mutation",
@@ -157,6 +170,12 @@ describe("guard-gh-api.sh", () => {
       "gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: \"x\"}) { thread { id } } }'",
     ],
     ["gh api でないコマンド", "gh pr view 1"],
+    ["PR の作成", "gh api repos/o/r/pulls -f title=x -f head=a -f base=b"],
+    ["issue の作成", "gh api repos/o/r/issues -f title=x"],
+    [
+      "ヒアドキュメントの本文にある -X PATCH",
+      "cat > pr.md <<'EOF'\ngh api -X PATCH で差し替える\nEOF",
+    ],
   ])("%s は何も出さない", (_label, command) => {
     expect(decisionOf(hooks.ghApi, command)).toBeUndefined();
   });
