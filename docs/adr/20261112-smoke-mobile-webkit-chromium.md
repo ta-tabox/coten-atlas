@@ -1,6 +1,6 @@
 # スモークを、デスクトップの Chromium に加えて、スマホの幅の WebKit と Chromium でも回す（20260828-e2e-offline-smoke を supersede）
 
-- **状態**: 採用
+- **状態**: supersede 済み（→ 20261124-e2e-layer-split-from-smoke）
 - **決定日**: 2026-11-12
 - **関係する ADR**: 20260828-e2e-offline-smoke（これを supersede する）、20260829-playwright-runner（スモークを Playwright で回す）、20260914-pnpm-check-current-form（判定のエントリポイントは `pnpm check` の一本）
 

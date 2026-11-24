@@ -9,12 +9,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
-import {
-  exportRoot,
-  observePanel,
-  screenPointOf,
-  viewportOf,
-} from "@scripts/smoke";
+import { observePanel, screenPointOf } from "@scripts/e2e";
+import { exportRoot, viewportOf } from "@scripts/smoke";
 import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import { INITIAL_VIEW_STATE } from "@/lib/map/config";
 

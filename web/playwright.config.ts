@@ -3,10 +3,11 @@
  *
  * project ごとに走らせる範囲と viewport を分ける。
  * スモークと E2E は深さが違うので、同じ条件で回すと片方の都合がもう片方へ漏れる。
- * スモークが見るのは配信物が自足しているかだけで、実物の `out/` を相手にする。
+ * スモーク（`tests/smoke/`）が見るのは配信物が自足しているかだけで、E2E（`tests/e2e/`）が見るのは画面の操作と配置である。
+ * どちらも実物の `out/` を相手にする。
  *
- * スモークは端末の条件ごとに project を一つ持ち、名前を `smoke-` で始める。
- * `pnpm smoke` は `--project=smoke-*` で名指すので、条件を足せばスモークに入り、操作を伴う E2E の project（`tests/e2e/`）を足してもスモークの範囲は動かない。
+ * 端末の条件（`DEVICES`）ごとに、スモークと E2E の project を一つずつ持ち、名前を `smoke-` と `e2e-` で始める。
+ * `pnpm smoke` は `--project=smoke-*`、`pnpm e2e` は `--project=e2e-*` で名指すので、条件を足せば両方に入り、片方へ spec を足してももう片方の範囲は動かない。
  * 端末の条件ごとのブラウザと viewport はその project の `use` が持ち、spec は `page.viewportSize()` で受け取る。
  *
  * `testMatch` を `*.spec.ts` に絞るのは、既定が `*.test.ts` も拾うから。
@@ -17,7 +18,19 @@
  * 配信は `scripts/smoke.ts` が spec の中で立てる（BASE_PATH の下へ出す必要があり、ポートも OS に選ばせるため）。
  */
 
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices, type Project } from "@playwright/test";
+
+/** 端末の条件の名前と、その条件で開くブラウザと viewport。 */
+const DEVICES: Record<string, Project["use"]> = {
+  // 一覧パネルが地図の左に開いたままの幅（`md` 以上）で、全画面の地図が入る大きさ。
+  desktop: { viewport: { width: 1440, height: 900 } },
+  // iPhone の Safari と同じエンジン（WebKit）で開く。
+  iphone: { ...devices["iPhone 13"] },
+  android: { ...devices["Pixel 7"] },
+};
+
+/** 検査の層の project 名の接頭辞と、その層の spec の置き場。 */
+const LAYERS = { smoke: "./tests/smoke", e2e: "./tests/e2e" };
 
 export default defineConfig({
   testMatch: "**/*.spec.ts",
@@ -30,23 +43,11 @@ export default defineConfig({
   reporter: [["list"]],
 
   // spec は canvas がその条件の viewport の寸法で立つことを判定に使う。
-  projects: [
-    {
-      name: "smoke-desktop",
-      testDir: "./tests/smoke",
-      // 一覧パネルが地図の左に開いたままの幅（`md` 以上）で、全画面の地図が入る大きさ。
-      use: { viewport: { width: 1440, height: 900 } },
-    },
-    {
-      name: "smoke-iphone",
-      testDir: "./tests/smoke",
-      // iPhone の Safari と同じエンジン（WebKit）で開く。
-      use: { ...devices["iPhone 13"] },
-    },
-    {
-      name: "smoke-android",
-      testDir: "./tests/smoke",
-      use: { ...devices["Pixel 7"] },
-    },
-  ],
+  projects: Object.entries(LAYERS).flatMap(([layer, testDir]) =>
+    Object.entries(DEVICES).map(([device, use]) => ({
+      name: `${layer}-${device}`,
+      testDir,
+      use,
+    })),
+  ),
 });
