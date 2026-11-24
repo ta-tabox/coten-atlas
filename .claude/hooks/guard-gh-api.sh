@@ -12,7 +12,7 @@
 # - 読み取り（メソッドを書かず、フィールドも渡さない呼び出し）
 # - コメント・返信・PR・issue の作成（`/comments`・`/replies`・`/pulls`・`/issues` への POST。編集も close もできる）
 # - PR 自体の書き換え（`PATCH …/pulls/N`）
-# - レビュースレッドの resolve / unresolve（GraphQL。互いに戻せる）
+# - レビューコメントの resolve / unresolve（REST の `POST …/comments/ID/resolve` と GraphQL。互いに戻せる）
 #
 # 判定は「戻せない形か」だけで、それ以外は何も言わず settings.json の判定へ委ねる。
 # 迷ったら ask を返す。
@@ -102,7 +102,7 @@ fi
 writes='(^|[[:space:]])(-X|--method)[[:space:]]+POST([[:space:]]|$)'
 writes+='|(^|[[:space:]])(-f|-F|--field|--raw-field|--input)([[:space:]]|=)'
 
-# コメント・返信・PR と issue の作成だけは戻せる側に置く（`gh issue comment`・`gh pr create`・`gh issue create` が allow なのと同じ層）。
+# コメント・返信・PR と issue の作成だけは戻せる操作として確認なしで通す（`gh issue comment`・`gh pr create`・`gh issue create` が allow なのと同じ層）。
 # 作成した PR と issue は close で戻せる。PR 以外を書き換える PATCH は上で ask にしてある。
 #
 # 見るのはエンドポイントの位置だけで、コマンド全体を探さない。
@@ -112,8 +112,16 @@ comment_endpoint='(^|[[:space:]])gh[[:space:]]+api[[:space:]]+'
 comment_endpoint+='((-X|--method)[[:space:]]+[A-Za-z]+[[:space:]]+)?'
 comment_endpoint+='[^-[:space:]][^[:space:]]*/(comments|replies|pulls|issues)([[:space:]]|$)'
 
+# レビューコメントの resolve / unresolve（`…/comments/ID/resolve`）も戻せる操作として確認なしで通す。
+# ID はシェル変数のことがあるので、`/` 以外の語なら当てる。
+resolve_endpoint='(^|[[:space:]])gh[[:space:]]+api[[:space:]]+'
+resolve_endpoint+='((-X|--method)[[:space:]]+[A-Za-z]+[[:space:]]+)?'
+resolve_endpoint+='[^-[:space:]][^[:space:]]*/comments/[^[:space:]/]+/(resolve|unresolve)([[:space:];]|$)'
+
 if grep -qiE "$writes" <<< "$command_line"; then
-  if ! grep -qE "$comment_endpoint" <<< "$command_line" && ! grep -qE "$pr_update" <<< "$command_line"; then
+  if ! grep -qE "$comment_endpoint" <<< "$command_line" \
+    && ! grep -qE "$pr_update" <<< "$command_line" \
+    && ! grep -qE "$resolve_endpoint" <<< "$command_line"; then
     ask "コメント投稿以外の書き込みである。人間の諾否が要る"
   fi
 fi
