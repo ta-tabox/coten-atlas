@@ -40,13 +40,13 @@ if ! command -v jq > /dev/null 2>&1; then
 fi
 
 # ヒアドキュメントの本体を取り除く。
-# 本体は別のコマンドへ渡す文章（PR 本文など）で、`git push -f` の語が出ても実行されない。
+# 本体は別のコマンドへ渡す文章（PR 本文など）で、`gh api -X PATCH` の語が出ても実行されない。
 # 開始行（`<<'EOF'` を含む行）は残すので、`cat <<'EOF' && git push -f` のような同じ行のコマンドは検査に残る。
 strip_heredocs() {
   awk '
     skip { t = $0; sub(/^[ \t]+/, "", t); if (t == tag) skip = 0; next }
     { print }
-    match($0, /(^|[^<])<<-?[ \t]*["\x27]?[A-Za-z_][A-Za-z0-9_]*/) {
+    match($0, /(^|[^<])<<-?[ \t]*["\x27]?[A-Za-z_][^ \t"\x27;|&()<>]*/) {
       s = substr($0, RSTART, RLENGTH); sub(/^[^<]?<<-?[ \t]*["\x27]?/, "", s); tag = s; skip = 1
     }
   '

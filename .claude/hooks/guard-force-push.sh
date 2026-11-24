@@ -43,7 +43,7 @@ strip_heredocs() {
   awk '
     skip { t = $0; sub(/^[ \t]+/, "", t); if (t == tag) skip = 0; next }
     { print }
-    match($0, /(^|[^<])<<-?[ \t]*["\x27]?[A-Za-z_][A-Za-z0-9_]*/) {
+    match($0, /(^|[^<])<<-?[ \t]*["\x27]?[A-Za-z_][^ \t"\x27;|&()<>]*/) {
       s = substr($0, RSTART, RLENGTH); sub(/^[^<]?<<-?[ \t]*["\x27]?/, "", s); tag = s; skip = 1
     }
   '
@@ -57,8 +57,10 @@ command_line=$(strip_heredocs <<< "$command_line")
 
 # 引用符の中身を空にした版。`git push` の有無はこちらで見る。
 # コミット本文や `--body` の文章に `git push -f` と書いてあっても、実行される push ではない。
+# 二重と単一の引用符は 1 回の走査で、先に現れた側から対を取る。
+# 種類ごとに 2 回に分けると、`'a"b'` のような食い違いで対がずれ、後ろにある `git push -f` まで消える。
 # 引用の外にある push だけが対象になる（`bash -c "git push -f"` のような引用の中の実行は、権限の allow に前方一致しないので既定の確認が出る）。
-unquoted=$(perl -0pe "s/\"[^\"]*\"/\"\"/g; s/'[^']*'/''/g" <<< "$command_line")
+unquoted=$(perl -0pe "s/(\"[^\"]*\"|'[^']*')/substr(\$1,0,1).substr(\$1,-1)/ge" <<< "$command_line")
 
 # `git` と `push` が一つのコマンドの中で並んでいるか。
 #

@@ -98,6 +98,14 @@ describe("guard-force-push.sh", () => {
       "git push --force-with-lease origin stack/a :stack/b",
     ],
     ["引用した main", "git push --force-with-lease origin 'main'"],
+    [
+      "二重引用符を含む単一引用の後ろにある -f",
+      "git commit -m 'a\"b' && git push -f origin main \"c\"",
+    ],
+    [
+      "識別子以外の文字を含む終端の後ろにある -f",
+      "cat <<'END-X'\nx\nEND-X\ngit push -f origin main",
+    ],
     ["+ 付きの main", "git push --force-with-lease origin +main"],
   ])("%s を含む push は ask になる", (_label, command) => {
     expect(decisionOf(hooks.forcePush, command)).toBe("ask");
@@ -145,6 +153,10 @@ describe("guard-gh-api.sh", () => {
     ["-X PATCH", "gh api -X PATCH repos/o/r -f name=x"],
     ["--method DELETE", "gh api --method DELETE repos/o/r/git/refs/heads/x"],
     ["secret への到達", "gh api repos/o/r/actions/secrets"],
+    [
+      "フィールドの値に /comments を含む別エンドポイントの書き込み",
+      'gh api repos/o/r/pulls/1/requested_reviewers -f x="/comments"',
+    ],
     ["PR 以外の PATCH", "gh api -X PATCH repos/o/r/issues/1 -f state=closed"],
     [
       "PR の下位リソースの PATCH",
