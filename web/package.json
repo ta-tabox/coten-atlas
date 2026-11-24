@@ -20,7 +20,8 @@
     "build:scripts": "rm -rf dist && tsc -p tsconfig.scripts.json && tsc-alias -p tsconfig.scripts.json",
     "sync": "pnpm build:scripts && node dist/scripts/sync-feed.js",
     "smoke": "playwright test --project=smoke-*",
-    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm smoke"
+    "e2e": "playwright test --project=e2e-*",
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm smoke && pnpm e2e"
   },
   "dependencies": {
     "maplibre-gl": "^6.6.0",

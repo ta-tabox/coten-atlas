@@ -3,7 +3,7 @@
  * 見るのは、段ごとの要素の出入りと、シート・era スライダー・出典表記の矩形の位置関係である。
  *
  * 相手は `next build` が吐いた `out/` の実物なので、`pnpm build` の後でしか回せない。
- * デスクトップの幅ではシートを置かないので、`smoke-desktop` では飛ばす。
+ * デスクトップの幅ではシートを置かないので、`e2e-desktop` では飛ばす。
  */
 
 import { expect, type Locator, type Page, test } from "@playwright/test";

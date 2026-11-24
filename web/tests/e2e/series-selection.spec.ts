@@ -18,7 +18,7 @@ let server: http.Server | undefined;
 test.beforeEach(async ({ page }, testInfo) => {
   // 操作の手順はデスクトップの幅の一覧パネルに合わせてあるので、デスクトップの条件でだけ回す。
   test.skip(
-    testInfo.project.name !== "smoke-desktop",
+    testInfo.project.name !== "e2e-desktop",
     "スマホの幅の一覧パネルを押す手順はまだ無い",
   );
 

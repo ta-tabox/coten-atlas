@@ -2,7 +2,7 @@
  * 画面上端のヘッダーが、どの幅でも、サイト名と副題が見え、一覧パネルと詳細カードとシートに重ならないことを見る。
  *
  * 幅は project の viewport に頼らず `VIEWPORTS` の二つを spec が指す。
- * スマホの条件は `smoke-iphone`・`smoke-android` の project が持つので、ブラウザを増やさず `smoke-desktop` の上で viewport だけを切り替える。
+ * スマホの条件は `e2e-iphone`・`e2e-android` の project が持つので、ブラウザを増やさず `e2e-desktop` の上で viewport だけを切り替える。
  */
 
 import { expect, type Page, test } from "@playwright/test";
@@ -48,7 +48,7 @@ async function rectOf(target: ReturnType<Page["locator"]>) {
 
 test.beforeEach(({ browserName }, testInfo) => {
   test.skip(
-    testInfo.project.name !== "smoke-desktop",
+    testInfo.project.name !== "e2e-desktop",
     `viewport を spec が指すので、project ごとには回さない（${browserName}）`,
   );
 });
