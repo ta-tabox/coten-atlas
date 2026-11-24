@@ -14,12 +14,13 @@
 - **prefix は変更の型**（`feat:` `fix:` `docs:` `refactor:` `chore:` `test:`、部位を添えるなら `feat(web):`）
   プロジェクト名は名乗らない
 - **push・issue の起票・コメント・close は Claude が叩いてよい**（どれも追記か、reopen で戻る）
-  PR の作成とマージは、人間がそう指示したときだけ
+  PR の作成と本文・base の書き換えは、クラウドセッションでは push した後に Claude が訊かずに行う（戻せる。close で消え、本文は編集履歴が残る）
+  マージは、人間がそう指示したときだけ
 - **戻せない操作（force push・履歴の書き換え・ブランチやタグの削除）・`gh pr merge`・`gh release` は、その都度人間に諾否を訊く**
   マージは main への push が本番デプロイや migration を起こしうるので、戻る操作に入れない
   例外は main 以外の名前付きブランチへの `--force-with-lease` で、スタック型 PR の積み直しのために Claude が訊かずに行う
 - 機械の判定は `.claude/settings.json` の `permissions`（`gh repo delete`・`gh repo edit`・`gh secret`・`gh auth` は deny。`gh` を通らない MCP の GitHub ツールもツール名で同じ層に置く）と、コマンド全文を見る `.claude/hooks/guard-force-push.sh`・`guard-gh-api.sh` が持つ
-  `gh api` の読み取り・コメント投稿・レビュースレッドの resolve だけを訊かずに通す形は雛形からの逸脱で、正はこの節
+  `gh api` の読み取り・コメント投稿・PR と issue の作成・PR 自体の書き換え・レビュースレッドの resolve だけを訊かずに通す形は雛形からの逸脱で、正はこの節
   各規則の仕組み上の理由は `docs/HARNESS.md`「権限の規則」が持つ
 
 ## 開発ハーネス（本文は `docs/HARNESS.md`）

@@ -98,6 +98,14 @@ describe("guard-force-push.sh", () => {
       "git push --force-with-lease origin stack/a :stack/b",
     ],
     ["引用した main", "git push --force-with-lease origin 'main'"],
+    [
+      "二重引用符を含む単一引用の後ろにある -f",
+      'git commit -m \'a"b\' && git push -f origin main "c"',
+    ],
+    [
+      "識別子以外の文字を含む終端の後ろにある -f",
+      "cat <<'END-X'\nx\nEND-X\ngit push -f origin main",
+    ],
     ["+ 付きの main", "git push --force-with-lease origin +main"],
   ])("%s を含む push は ask になる", (_label, command) => {
     expect(decisionOf(hooks.forcePush, command)).toBe("ask");
@@ -123,6 +131,18 @@ describe("guard-force-push.sh", () => {
       "値を持つ --force-with-lease と --force-if-includes",
       "git push -u --force-with-lease=stack/a:abc123 --force-if-includes origin HEAD:stack/a",
     ],
+    [
+      "ヒアドキュメントの本文にある git push -f",
+      "cat > pr.md <<'EOF'\n積み直しは git push -f で行う\nEOF",
+    ],
+    [
+      "コミット本文の引用の中にある git push -f",
+      'git commit -m "docs: 説明\n\ngit push -f の例を消す"',
+    ],
+    [
+      "引用した main 以外への --force-with-lease",
+      "git push --force-with-lease origin 'stack/a'",
+    ],
   ])("%s は何も出さない", (_label, command) => {
     expect(decisionOf(hooks.forcePush, command)).toBeUndefined();
   });
@@ -134,8 +154,21 @@ describe("guard-gh-api.sh", () => {
     ["--method DELETE", "gh api --method DELETE repos/o/r/git/refs/heads/x"],
     ["secret への到達", "gh api repos/o/r/actions/secrets"],
     [
-      "フィールドの値に /comments を含む issue の作成",
-      'gh api repos/o/r/issues -f title="see /comments"',
+      "フィールドの値に /comments を含む別エンドポイントの書き込み",
+      'gh api repos/o/r/pulls/1/requested_reviewers -f x="/comments"',
+    ],
+    [
+      "resolve を値に含む別エンドポイントの書き込み",
+      "gh api -X POST repos/o/r/pulls/1/requested_reviewers -f x=comments/2/resolve",
+    ],
+    ["PR 以外の PATCH", "gh api -X PATCH repos/o/r/issues/1 -f state=closed"],
+    [
+      "PR の下位リソースの PATCH",
+      "gh api -X PATCH repos/o/r/pulls/1/comments/2 -f body=x",
+    ],
+    [
+      "PR のレビュー依頼など他の POST",
+      "gh api repos/o/r/pulls/1/requested_reviewers -f reviewers[]=x",
     ],
     [
       "resolve 以外の mutation",
@@ -157,6 +190,28 @@ describe("guard-gh-api.sh", () => {
       "gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: \"x\"}) { thread { id } } }'",
     ],
     ["gh api でないコマンド", "gh pr view 1"],
+    ["PR の作成", "gh api repos/o/r/pulls -f title=x -f head=a -f base=b"],
+    ["issue の作成", "gh api repos/o/r/issues -f title=x"],
+    [
+      "レビューコメントの resolve",
+      "gh api -X POST repos/o/r/pulls/1/ccr/comments/2/resolve -q .resolved",
+    ],
+    [
+      "シェル変数の ID を持つレビューコメントの resolve",
+      "for c in 1 2; do gh api -X POST repos/o/r/pulls/1/ccr/comments/$c/resolve; done",
+    ],
+    [
+      "レビューコメントの unresolve",
+      "gh api -X POST repos/o/r/pulls/1/ccr/comments/2/unresolve",
+    ],
+    [
+      "PR の書き換え",
+      "gh api -X PATCH repos/o/r/pulls/1 -f base=main -F body=@pr.md",
+    ],
+    [
+      "ヒアドキュメントの本文にある -X PATCH",
+      "cat > pr.md <<'EOF'\ngh api -X PATCH で差し替える\nEOF",
+    ],
   ])("%s は何も出さない", (_label, command) => {
     expect(decisionOf(hooks.ghApi, command)).toBeUndefined();
   });
