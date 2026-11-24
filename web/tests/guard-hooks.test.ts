@@ -157,6 +157,10 @@ describe("guard-gh-api.sh", () => {
       "フィールドの値に /comments を含む別エンドポイントの書き込み",
       'gh api repos/o/r/pulls/1/requested_reviewers -f x="/comments"',
     ],
+    [
+      "resolve を値に含む別エンドポイントの書き込み",
+      "gh api -X POST repos/o/r/pulls/1/requested_reviewers -f x=comments/2/resolve",
+    ],
     ["PR 以外の PATCH", "gh api -X PATCH repos/o/r/issues/1 -f state=closed"],
     [
       "PR の下位リソースの PATCH",
