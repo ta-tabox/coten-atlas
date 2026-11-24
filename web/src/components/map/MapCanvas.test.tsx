@@ -28,6 +28,8 @@ import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
 import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
+import SeriesCandidateBody from "@/components/series-candidates/SeriesCandidateBody";
+import SeriesCandidateCard from "@/components/series-candidates/SeriesCandidateCard";
 import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
@@ -61,13 +63,32 @@ const panTo = vi.hoisted(() => vi.fn());
 const easeTo = vi.hoisted(() => vi.fn());
 
 /**
+ * MapLibreMap のモックが `ref` に入れる地図の `queryRenderedFeatures`。
+ * 既定は何も返さず、タッチの判定の範囲に当たる点はテストが `mockReturnValue` で決める。
+ */
+const queryRenderedFeatures = vi.hoisted(() => vi.fn());
+
+/**
+ * MapLibreMap のモックが `ref` に入れる地図の `project`。
+ * 座標をそのまま画面の位置（px）として返し、テストが経度・緯度の値で画面上の距離を決められるようにする。
+ */
+const project = vi.hoisted(() =>
+  vi.fn(([x, y]: [number, number]) => ({ x, y })),
+);
+
+/**
  * `react-map-gl/maplibre` の既定の export と差し替えるモック関数。
- * 受け取った props を記録し、`ref` がオブジェクトなら `panTo` と `easeTo` を持つ地図を入れて、null を返す。
+ * 受け取った props を記録し、`ref` がオブジェクトなら `panTo`・`easeTo`・`queryRenderedFeatures`・`project` を持つ地図を入れて、null を返す。
  */
 const map = vi.hoisted(() =>
   vi.fn<(props: MockMapProps) => null>((props) => {
     if (typeof props.ref === "object" && props.ref !== null) {
-      props.ref.current = { panTo, easeTo } as unknown as MapRef;
+      props.ref.current = {
+        panTo,
+        easeTo,
+        queryRenderedFeatures,
+        project,
+      } as unknown as MapRef;
     }
 
     return null;
@@ -129,6 +150,12 @@ const OKANE: Series = {
 
 const SERIES: SeriesList = [SPARTA, OKANE];
 
+/** スパルタと同じ座標に代表点を持つシリーズ。 */
+const ATHENS: Series = { ...SPARTA, id: "athens", title: "アテネ" };
+
+/** 重なる代表点を持つシリーズを含む、シリーズの全件。 */
+const OVERLAPPING_SERIES: SeriesList = [SPARTA, ATHENS, OKANE];
+
 /**
  * 19 世紀の区間の中央が era 空間の `INITIAL_POSITION` に当たる時代区分。
  * 19 世紀は末尾の区間なので、`INITIAL_POSITION` は区間を足したときに合わせて直す。
@@ -184,12 +211,15 @@ function stubDesktop(matches: boolean): void {
  * `eras` を時代区分に持つ MapCanvas を描画し、ベースマップのスタイルの取得が終わるまで待つ。
  * 取得が終わるまで MapCanvas は地図を描かないので、待たないと MapLibreMap のモックが呼ばれない。
  */
-async function renderMapCanvas(eras: EraList = ERAS): Promise<void> {
+async function renderMapCanvas(
+  eras: EraList = ERAS,
+  seriesList: SeriesList = SERIES,
+): Promise<void> {
   await act(async () => {
     render(
       <MapCanvas
         loci={LOCI}
-        seriesList={SERIES}
+        seriesList={seriesList}
         eras={eras}
         presentEnd={PRESENT_END}
       />,
@@ -269,18 +299,49 @@ function seriesLayersProps(): ComponentProps<typeof SeriesLayers> {
 }
 
 /**
+ * 画面の位置 (`x`, `y`) にある `seriesId` の代表点の feature を作る。
+ * モックの `project` が座標をそのまま画面の位置にする。
+ */
+function featureAt(seriesId: string, x = 0, y = 0) {
+  return {
+    properties: { seriesId },
+    geometry: { type: "Point", coordinates: [x, y] },
+  };
+}
+
+/**
+ * `seriesIds` の代表点を同じ位置に持つ、画面の位置 (`x`, `y`) のクリックのイベントを作る。
+ * `pointerType` を渡すと、`originalEvent` にその入力の種類を持たせる。
+ */
+function clickAt(
+  seriesIds: string[],
+  {
+    x = 0,
+    y = 0,
+    pointerType,
+  }: { x?: number; y?: number; pointerType?: string } = {},
+): MapLayerMouseEvent {
+  return {
+    point: { x, y },
+    features: seriesIds.map((seriesId) => featureAt(seriesId, x, y)),
+    originalEvent: pointerType === undefined ? undefined : { pointerType },
+  } as unknown as MapLayerMouseEvent;
+}
+
+/**
  * `seriesId` を持つ `Locus` を 1 件返すマウスイベントを作る。
- * MapCanvas が読むのは最前面の feature の `seriesId` だけなので、他の欄は埋めない。
+ * MapCanvas が読むのは feature の `seriesId` と座標だけなので、他の欄は埋めない。
  */
 function mouseEventOn(seriesId: string): MapLayerMouseEvent {
-  return {
-    features: [{ properties: { seriesId } }],
-  } as unknown as MapLayerMouseEvent;
+  return clickAt([seriesId]);
 }
 
 /** `Locus` が無い地点のマウスイベントを作る。 */
 function mouseEventOnBlank(): MapLayerMouseEvent {
-  return { features: [] } as unknown as MapLayerMouseEvent;
+  return {
+    point: { x: 0, y: 0 },
+    features: [],
+  } as unknown as MapLayerMouseEvent;
 }
 
 describe("MapCanvas", () => {
@@ -288,6 +349,7 @@ describe("MapCanvas", () => {
     map.mockClear();
     panTo.mockClear();
     easeTo.mockClear();
+    queryRenderedFeatures.mockReset();
     stubDesktop(true);
     stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
   });
@@ -873,5 +935,162 @@ describe("MapCanvas（スマホの幅の余白の追随）", () => {
         padding: expect.objectContaining({ bottom: 250 }),
       }),
     );
+  });
+});
+
+describe("MapCanvas（重なった代表点の選び分け）", () => {
+  beforeEach(() => {
+    map.mockClear();
+    queryRenderedFeatures.mockReset();
+    stubDesktop(true);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("同じ座標の事物を 2 件押すと、候補の一覧に 2 シリーズが並び、選択はまだ変わらない", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+
+    act(() => lastProps().onClick?.(clickAt(["sparta", "athens"])));
+
+    expect(
+      childPropsOf(SeriesCandidateCard).candidates.map(({ id }) => id),
+    ).toEqual(["sparta", "athens"]);
+    expect(childOfType(SeriesDetailCard)).toBeUndefined();
+    expect(seriesLayersProps().selectedSeries).toBeNull();
+  });
+
+  it.each(["sparta", "athens"])(
+    "候補の一覧で %s の行を押すと、そのシリーズを選択して詳細カードを出し、候補の一覧を閉じる",
+    async (seriesId) => {
+      await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+      act(() => lastProps().onClick?.(clickAt(["sparta", "athens"])));
+
+      act(() => childPropsOf(SeriesCandidateCard).onSelect(seriesId));
+
+      expect(childOfType(SeriesCandidateCard)).toBeUndefined();
+      expect(childPropsOf(SeriesDetailCard).series.id).toBe(seriesId);
+    },
+  );
+
+  it("重ならない点を押すと、候補の一覧を出さずにそのまま選択する", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+
+    act(() => lastProps().onClick?.(clickAt(["sparta"])));
+
+    expect(childOfType(SeriesCandidateCard)).toBeUndefined();
+    expect(childPropsOf(SeriesDetailCard).series.id).toBe("sparta");
+  });
+
+  it("基準の点から 12px を超えて離れた点は、判定の範囲に入っていても候補に入れない", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+    const event = clickAt(["sparta"]);
+
+    event.features = [featureAt("sparta"), featureAt("athens", 13, 0)] as never;
+    act(() => lastProps().onClick?.(event));
+
+    expect(childOfType(SeriesCandidateCard)).toBeUndefined();
+    expect(childPropsOf(SeriesDetailCard).series.id).toBe("sparta");
+  });
+
+  it("候補が 0 件のクリックで、候補の一覧を閉じて選択を外す", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+    act(() => lastProps().onClick?.(clickAt(["sparta", "athens"])));
+
+    act(() => lastProps().onClick?.(mouseEventOnBlank()));
+
+    expect(childOfType(SeriesCandidateCard)).toBeUndefined();
+    expect(childOfType(SeriesDetailCard)).toBeUndefined();
+  });
+
+  it("タッチの入力では、点の中心から 20px 離れた位置を押してもその点が選択される", async () => {
+    queryRenderedFeatures.mockReturnValue([featureAt("sparta", 20, 0)]);
+    await renderMapCanvas();
+    const event = clickAt([], { pointerType: "touch" });
+
+    act(() => lastProps().onClick?.(event));
+
+    expect(queryRenderedFeatures).toHaveBeenCalledWith(
+      [
+        [-22, -22],
+        [22, 22],
+      ],
+      { layers: [SERIES_CIRCLE_LAYER.id] },
+    );
+    expect(childPropsOf(SeriesDetailCard).series.id).toBe("sparta");
+  });
+
+  it("マウスの入力では、点の中心から 20px 離れた位置を押しても選択されない", async () => {
+    queryRenderedFeatures.mockReturnValue([featureAt("sparta", 20, 0)]);
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(clickAt([], { pointerType: "mouse" })));
+
+    expect(queryRenderedFeatures).not.toHaveBeenCalled();
+    expect(childOfType(SeriesDetailCard)).toBeUndefined();
+  });
+
+  it("pointerType を持たないクリックは、マウスとして扱う", async () => {
+    queryRenderedFeatures.mockReturnValue([featureAt("sparta", 20, 0)]);
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(clickAt([])));
+
+    expect(queryRenderedFeatures).not.toHaveBeenCalled();
+  });
+
+  it("利用者の操作で地図が動き始めると候補の一覧を閉じ、コードからの移動では閉じない", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+    act(() => lastProps().onClick?.(clickAt(["sparta", "athens"])));
+
+    act(() => lastProps().onMoveStart?.({ originalEvent: undefined } as never));
+
+    expect(childOfType(SeriesCandidateCard)).toBeDefined();
+
+    act(() =>
+      lastProps().onMoveStart?.({
+        originalEvent: new MouseEvent("mousedown"),
+      } as never),
+    );
+
+    expect(childOfType(SeriesCandidateCard)).toBeUndefined();
+  });
+});
+
+describe("MapCanvas（スマホの幅の重なった代表点の選び分け）", () => {
+  beforeEach(() => {
+    map.mockClear();
+    stubDesktop(false);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("同じ座標の事物を押すと、シートを list の段にして、一覧の代わりに候補の一覧を置く", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+
+    act(() => lastProps().onClick?.(clickAt(["sparta", "athens"])));
+
+    expect(bottomSheetProps().stage).toBe("list");
+    expect(
+      childPropsOf(SeriesCandidateBody).candidates.map(({ id }) => id),
+    ).toEqual(["sparta", "athens"]);
+    expect(childOfType(SeriesPanelBody)).toBeUndefined();
+  });
+
+  it("候補の一覧の行を押すと、そのシリーズの詳細カードの中身をシートに置く", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+    act(() => lastProps().onClick?.(clickAt(["sparta", "athens"])));
+
+    act(() => childPropsOf(SeriesCandidateBody).onSelect("athens"));
+
+    expect(childOfType(SeriesCandidateBody)).toBeUndefined();
+    expect(childPropsOf(SeriesDetailBody).series.id).toBe("athens");
   });
 });

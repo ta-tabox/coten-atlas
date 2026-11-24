@@ -7,8 +7,18 @@
  * 画面の複数の部品が読む状態はこのコンポーネントが持ち、子へは props で渡す。
  */
 
-import { useEffect, useRef, useState } from "react";
-import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import type {
+  MapLayerMouseEvent,
+  MapRef,
+  ViewStateChangeEvent,
+} from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import BottomSheet from "@/components/bottom-sheet/BottomSheet";
 import EraSlider from "@/components/era-slider/EraSlider";
@@ -16,6 +26,8 @@ import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
 import { useIsDesktop } from "@/components/map/use-is-desktop";
+import SeriesCandidateBody from "@/components/series-candidates/SeriesCandidateBody";
+import SeriesCandidateCard from "@/components/series-candidates/SeriesCandidateCard";
 import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
@@ -39,6 +51,11 @@ import {
   lociForSeries,
   type MapLocusCollection,
 } from "@/lib/map/loci";
+import {
+  type CandidatePoint,
+  candidateSeriesIdsOf,
+  type ScreenPoint,
+} from "@/lib/map/overlap-candidates";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import { listHeightPx, SHEET_STAGE, type SheetStage } from "@/lib/map/sheet";
 import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
@@ -72,16 +89,16 @@ type MapCanvasProps = {
 };
 
 /**
- * `event` の最前面にある `Locus` の `seriesId` を返す。
- * `Locus` が無い地点をクリックしたときは null を返す。
- *
- * MapLibre は `properties` の値を `any` で返すので、文字列でなければ null にする。
+ * タッチの入力で、押した位置の周りの判定の範囲の一辺の半分（px）。
+ * 一辺 44px は Apple HIG の最小のタップ領域で、見える円（半径 6px）は変えない。
  */
-function selectedSeriesIdOf(event: MapLayerMouseEvent): string | null {
-  const seriesId = event.features?.[0]?.properties.seriesId;
+const TOUCH_HIT_HALF_SIZE_PX = 22;
 
-  return typeof seriesId === "string" ? seriesId : null;
-}
+/** デスクトップの幅で、候補の一覧を押した位置から右下へずらす距離（px）。 */
+const CANDIDATE_CARD_OFFSET_PX = 12;
+
+/** 候補の一覧に当たったときの、押した位置と候補のシリーズ id。 */
+type OverlapCandidates = { seriesIds: string[]; point: ScreenPoint };
 
 /**
  * `state` を `seriesId` に割り当てられたエピソードだけに絞り込んで返す。
@@ -143,6 +160,8 @@ export default function MapCanvas({
   const [sheetTargetHeight, setSheetTargetHeight] = useState(0);
   const isDesktop = useIsDesktop();
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
+  const [overlap, setOverlap] = useState<OverlapCandidates | null>(null);
+  const closeCandidates = useCallback(() => setOverlap(null), []);
 
   // 一覧パネルに隠れる左の幅と、シートに隠れる下の高さを地図の視野から除き、点が隠れない領域に描かれるようにする。
   const paddingLeft = isDesktop && isPanelOpen ? PANEL_RIGHT_EDGE_PX : 0;
@@ -260,11 +279,73 @@ export default function MapCanvas({
   }
 
   /**
-   * 地図のクリックが事物に当たったときは、その事物のシリーズを選ぶ。
+   * 地図のクリックが当たった代表点の、画面上の位置とシリーズを返す。
+   *
+   * タッチの入力は押した位置の周り 44px 四方、それ以外は押した位置の点だけを調べる。
+   * `PointerEvent.pointerType` を持たないクリックはマウスとして扱う。
+   * Chromium の `click` は `pointerType: "touch"` の `PointerEvent` で届くのを確かめた。
+   * WebKit は実機が無く確かめていないので、`pointerType` を持たない端末のタッチは判定が円の大きさに留まる。
+   */
+  function pointsUnder(event: MapLayerMouseEvent): CandidatePoint[] {
+    const map = mapRef.current;
+    const original = event.originalEvent;
+    const isTouch =
+      original !== undefined &&
+      "pointerType" in original &&
+      original.pointerType === "touch";
+    const { x, y } = event.point;
+    const features = isTouch
+      ? map?.queryRenderedFeatures(
+          [
+            [x - TOUCH_HIT_HALF_SIZE_PX, y - TOUCH_HIT_HALF_SIZE_PX],
+            [x + TOUCH_HIT_HALF_SIZE_PX, y + TOUCH_HIT_HALF_SIZE_PX],
+          ],
+          { layers: [SERIES_CIRCLE_LAYER.id] },
+        )
+      : event.features;
+
+    return (features ?? []).flatMap((feature) => {
+      const { seriesId } = feature.properties;
+
+      if (
+        map === null ||
+        typeof seriesId !== "string" ||
+        feature.geometry.type !== "Point"
+      ) {
+        return [];
+      }
+
+      const [longitude, latitude] = feature.geometry.coordinates;
+      const screen = map.project([longitude, latitude]);
+
+      return [{ x: screen.x, y: screen.y, seriesId }];
+    });
+  }
+
+  /**
+   * 地図のクリックが当たった代表点が 1 シリーズなら、そのシリーズを選ぶ。
+   * 2 シリーズ以上が重なっていれば、選択を変えず候補の一覧を出す。
+   * 当たらなければ選択を外す。
    * デスクトップの幅では地図を動かさず、スマホの幅ではシートに隠れない位置へ動かす。
    */
   function selectFromMap(event: MapLayerMouseEvent): void {
-    const seriesId = selectedSeriesIdOf(event);
+    const seriesIds = candidateSeriesIdsOf(event.point, pointsUnder(event));
+
+    if (seriesIds.length >= 2) {
+      setOverlap({ seriesIds, point: event.point });
+
+      if (!isDesktop) {
+        setSheetStage((stage) =>
+          stage === SHEET_STAGE.full ? stage : SHEET_STAGE.list,
+        );
+      }
+
+      return;
+    }
+
+    setOverlap(null);
+
+    const seriesId = seriesIds[0] ?? null;
 
     if (seriesId !== null && !isDesktop) {
       selectAndPan(seriesId);
@@ -275,8 +356,82 @@ export default function MapCanvas({
     select(seriesId);
   }
 
+  /** 候補の一覧の行で選んだシリーズを選択し、候補の一覧を閉じる。 */
+  function selectFromCandidates(seriesId: string): void {
+    setOverlap(null);
+
+    if (isDesktop) {
+      select(seriesId);
+
+      return;
+    }
+
+    selectAndPan(seriesId);
+  }
+
+  /**
+   * 利用者の操作で地図が動き始めたとき、候補の一覧を閉じる。
+   * コードからの移動（余白の調整・選択の移動）では閉じない。
+   */
+  function closeCandidatesOnUserMove(event: ViewStateChangeEvent): void {
+    if (event.originalEvent !== undefined) {
+      closeCandidates();
+    }
+  }
+
+  const candidateSeries = (overlap?.seriesIds ?? []).flatMap((seriesId) => {
+    const found = seriesList.find((series) => series.id === seriesId);
+
+    return found === undefined ? [] : [found];
+  });
+
   if (mapStyle === null) {
     return null;
+  }
+
+  let sheetLabel = "シリーズ一覧";
+
+  if (overlap !== null) {
+    sheetLabel = "重なっているシリーズ";
+  } else if (selectedSeries !== null) {
+    sheetLabel = "シリーズの詳細";
+  }
+
+  let sheetContent: ReactNode;
+
+  if (overlap !== null) {
+    sheetContent = (
+      <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.6]">
+        <SeriesCandidateBody
+          candidates={candidateSeries}
+          onSelect={selectFromCandidates}
+          onClose={closeCandidates}
+        />
+      </div>
+    );
+  } else if (selectedSeries === null) {
+    sheetContent = (
+      <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">
+        <SeriesPanelBody
+          sections={taggedSections}
+          selectedSeriesId={selectedSeriesId}
+          onSelect={selectAndPan}
+          tags={panelTagsOf(taggedSections, selectedTags)}
+          selectedTags={selectedTags}
+          onSelectedTagsChange={setSelectedTags}
+        />
+      </div>
+    );
+  } else {
+    sheetContent = (
+      <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.7]">
+        <SeriesDetailBody
+          series={selectedSeries}
+          episodes={episodesOf(episodes, selectedSeries.id)}
+          onClose={() => setSelectedSeriesId(null)}
+        />
+      </div>
+    );
   }
 
   const eraSlider = (
@@ -305,6 +460,7 @@ export default function MapCanvas({
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={selectFromMap}
+      onMoveStart={closeCandidatesOnUserMove}
       onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
@@ -341,6 +497,21 @@ export default function MapCanvas({
           <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2">
             {eraSlider}
           </div>
+          {overlap !== null && (
+            <div
+              className="absolute z-10"
+              style={{
+                left: `min(${overlap.point.x + CANDIDATE_CARD_OFFSET_PX}px, calc(100vw - 19rem))`,
+                top: `min(${overlap.point.y + CANDIDATE_CARD_OFFSET_PX}px, calc(100dvh - 20rem))`,
+              }}
+            >
+              <SeriesCandidateCard
+                candidates={candidateSeries}
+                onSelect={selectFromCandidates}
+                onClose={closeCandidates}
+              />
+            </div>
+          )}
           {selectedSeries !== null && (
             <div className="absolute top-header right-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-header)-2rem)] max-w-[calc(100vw-2rem)] flex-col">
               <SeriesDetailCard
@@ -357,32 +528,13 @@ export default function MapCanvas({
           <BottomSheet
             stage={sheetStage}
             onStageChange={setSheetStage}
-            label={selectedSeries === null ? "シリーズ一覧" : "シリーズの詳細"}
+            label={sheetLabel}
             eraSlider={eraSlider}
             isEraSliderShown={isEraSliderShown}
             onEraSliderShownChange={setIsEraSliderShown}
             onTargetHeightChange={setSheetTargetHeight}
           >
-            {selectedSeries === null ? (
-              <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">
-                <SeriesPanelBody
-                  sections={taggedSections}
-                  selectedSeriesId={selectedSeriesId}
-                  onSelect={selectAndPan}
-                  tags={panelTagsOf(taggedSections, selectedTags)}
-                  selectedTags={selectedTags}
-                  onSelectedTagsChange={setSelectedTags}
-                />
-              </div>
-            ) : (
-              <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.7]">
-                <SeriesDetailBody
-                  series={selectedSeries}
-                  episodes={episodesOf(episodes, selectedSeries.id)}
-                  onClose={() => setSelectedSeriesId(null)}
-                />
-              </div>
-            )}
+            {sheetContent}
           </BottomSheet>
         </div>
       )}
