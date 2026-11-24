@@ -196,6 +196,7 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 | `registry.npmjs.org`              | 既定のリストにある | mise 本体と依存の取得                                                                             |
 | `cdn.playwright.dev`              | 足す               | smoke テストのブラウザの取得                                                                      |
 | `anchor.fm`                       | 足す               | `pnpm sync` が RSS を取得する（`web/scripts/sync-feed.ts`）                                       |
+| `itunes.apple.com`                | 足す               | `pnpm sync` が Apple Podcasts の回の URL を取得する（`web/scripts/apple-podcasts.ts`）            |
 | `tiles.openfreemap.org`           | 足す               | ベースマップのスタイルとタイル（`web/src/lib/map/config.ts`）。ブラウザで地図を開くときに取得する |
 | `open.spotify.com`・`coten.co.jp` | 足す               | 画面のリンク先。コンテナのブラウザでリンクを押し、遷移先が開くかを確かめるときに取得する          |
 | `mise.run`                        | 足さない           | mise は npm から入れるので要らない                                                                |
