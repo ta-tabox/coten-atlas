@@ -21,7 +21,7 @@ export default function EraJumpButton({
     <button
       type="button"
       onClick={onClick}
-      className="shrink-0 rounded-control border border-rule bg-paper px-2.5 py-1.5 text-[0.75rem] whitespace-nowrap text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
+      className="shrink-0 rounded-control border border-rule bg-paper px-2 py-1.5 text-[0.7rem] whitespace-nowrap text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
     >
       {children}
     </button>
