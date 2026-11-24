@@ -100,7 +100,7 @@ describe("guard-force-push.sh", () => {
     ["引用した main", "git push --force-with-lease origin 'main'"],
     [
       "二重引用符を含む単一引用の後ろにある -f",
-      "git commit -m 'a\"b' && git push -f origin main \"c\"",
+      'git commit -m \'a"b\' && git push -f origin main "c"',
     ],
     [
       "識別子以外の文字を含む終端の後ろにある -f",
