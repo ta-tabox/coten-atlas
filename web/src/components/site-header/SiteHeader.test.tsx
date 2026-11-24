@@ -1,6 +1,6 @@
 /**
  * ヘッダーに載る文言とリンクの先を固定する。
- * 幅ごとの収まりは CSS の担当なので、見るのは Playwright のスモーク（`tests/smoke/site-header.spec.ts`）である。
+ * 幅ごとの収まりは CSS の担当なので、見るのは Playwright の E2E（`tests/e2e/site-header.spec.ts`）である。
  */
 
 import { render, screen } from "@testing-library/react";
