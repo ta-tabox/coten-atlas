@@ -1,12 +1,12 @@
 /**
- * `positionToYear` が返す年を検証する。
+ * `positionToYear` が返す年と、`eraIndexAt` が返す era の添字を検証する。
  *
  * 期待値は `docs/ARCHITECTURE.md` §3 が挙げている実例をそのまま使う。
  * 区間を等幅に並べて中を線形補間するので、区間内の同じ割合を指しても進む年数は区間ごとに違う。
  */
 
 import { describe, expect, it } from "vitest";
-import { positionToYear, presentEndOf } from "@/lib/era/scale";
+import { eraIndexAt, positionToYear, presentEndOf } from "@/lib/era/scale";
 import { ERA_END_PRESENT, parseEras } from "@/lib/schema/era";
 
 /** `docs/ARCHITECTURE.md` §3 が挙げている 7 区分。 */
@@ -70,6 +70,23 @@ describe("positionToYear", () => {
     expect(() =>
       positionToYear({ position: 1, eras: ERAS, presentEnd: 1900 }),
     ).toThrow(/modern20b/);
+  });
+});
+
+describe("eraIndexAt", () => {
+  it("区間の中の位置は、その区間の era の添字を返す", () => {
+    expect(eraIndexAt(positionIn(0, 0.5), ERAS)).toBe(0);
+    expect(eraIndexAt(positionIn(4, 0.5), ERAS)).toBe(4);
+  });
+
+  it("境目の位置は、後ろの era の添字を返す", () => {
+    expect(eraIndexAt(positionIn(2, 0), ERAS)).toBe(2);
+  });
+
+  it("位置が 1 なら最後の era、0..1 の外なら最も近い端の era の添字を返す", () => {
+    expect(eraIndexAt(1, ERAS)).toBe(ERAS.length - 1);
+    expect(eraIndexAt(-0.5, ERAS)).toBe(0);
+    expect(eraIndexAt(1.5, ERAS)).toBe(ERAS.length - 1);
   });
 });
 

@@ -58,6 +58,18 @@ function yearsOf(era: Era, presentEnd: number): EraYears {
 }
 
 /**
+ * `position`（0..1）が `eras` の上で指す era の添字を返す。
+ * 境目は後ろの era に属し、`position` が 1 なら最後の era を返す。
+ * `position` が 0..1 の外なら、最も近い端の era を返す。
+ */
+export function eraIndexAt(position: number, eras: EraList): number {
+  const clamped = Math.min(Math.max(position, 0), 1);
+
+  // `clamped` が 1 のとき添字が `eras.length` になるので、最後の要素へ丸める。
+  return Math.min(Math.floor(clamped * eras.length), eras.length - 1);
+}
+
+/**
  * `position`（0..1）が `eras` の上で指す西暦の年を、整数で返す。
  * `position` が 0 未満なら `eras` の最初の年を、1 を超えるなら最後の年を返す。
  *
@@ -70,9 +82,7 @@ export function positionToYear({
   presentEnd,
 }: EraSpacePosition): number {
   const clamped = Math.min(Math.max(position, 0), 1);
-
-  // `clamped` が 1 のとき添字が `eras.length` になるので、最後の要素へ丸める。
-  const index = Math.min(Math.floor(clamped * eras.length), eras.length - 1);
+  const index = eraIndexAt(clamped, eras);
   const withinEra = clamped * eras.length - index;
   const { start, end } = yearsOf(eras[index], presentEnd);
 
