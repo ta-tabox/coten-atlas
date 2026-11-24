@@ -9,7 +9,7 @@
  * 一覧パネルが開いている間、MapLibre の `padding.left` に渡し、点を描く範囲を一覧パネルの右側に限る。
  *
  * `MapCanvas` が一覧パネルを置く位置（`left-4`）と `SeriesPanel` の幅（18rem）と枠線（左右 1px ずつ）の和で、ルートの文字の大きさが 16px のときの値になる。
- * 一致は `tests/smoke/panel-clearance.spec.ts` が見る。
+ * 一致は `tests/e2e/panel-clearance.spec.ts` が見る。
  */
 export const PANEL_RIGHT_EDGE_PX = 306;
 
