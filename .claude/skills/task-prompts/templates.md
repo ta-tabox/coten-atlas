@@ -11,7 +11,7 @@ skill `task-prompts` の手順 6 が使う。
 本文と全コメントを `gh api repos/ta-tabox/coten-atlas/issues/<N>` と `.../issues/<N>/comments` で読み、本文の「作るもの」「触らないもの」「完了条件」に従う。
 <本文が参照する決定のコメントや ADR のうち、着手に要るもの>も読む。
 
-- 着手の前に `gh api repos/ta-tabox/coten-atlas/issues/<前提の番号> -q .state` で前提の issue が `closed` であることを確かめ、閉じていなければそのことを書いて止まる（あれば）
+- 着手の前に `gh api repos/ta-tabox/coten-atlas/issues/<前提の番号> -q .state` で前提の issue が `closed` であることを確かめ、閉じていなければ閉じていないことを書いて止まる（あれば）
 - `CLAUDE.md`・`.claude/rules/`・`docs/ROADMAP.md` に従い、コードを書く前に skill `coding-standards`・`karpathy-guidelines`・`ponytail` を開く
 - <本文の事実のうち、先に main へ入った PR が変えたもの>（あれば）
 - <本文に無く、着手のときに決めることと、決めた理由を書く先>（あれば）
@@ -33,6 +33,8 @@ push の前に main を fetch し、先に入った PR があれば取り込ん�
 コードは書かず、検証もしない。
 人間が送る指示でだけ動き、指示が無い間はターンを終えたまま待つ。
 
+## 順の表
+
 | 順 | issue | ブランチ | 初めの PR の base | モデル |
 |---|---|---|---|---|
 | 1 | #<A>（<題>） | `<型>/<A>-<短い名前>` | `main` | `<モデル>` |
@@ -43,8 +45,8 @@ Haiku は使わない。
 PR の本文とコミットの本文が `.claude/rules/writing.md` の規律を満たさないと、人間の差し戻しで費用が逆転するからである。
 
 ## 最初にすること
-1. <着手の条件の issue> が `closed` であることを `gh api repos/ta-tabox/coten-atlas/issues/<番号> -q .state` で確かめ、`closed` でなければそのことを一文書いてターンを終える（あれば）
-2. 順 1 のサブを、下の「サブの立て方」で立てる
+1. <着手の条件の issue> が `closed` であることを `gh api repos/ta-tabox/coten-atlas/issues/<番号> -q .state` で確かめ、`closed` でなければ閉じていないことを一文書いてターンを終える（あれば）
+2. 順 1 のサブを、節「サブの立て方」の手順で立てる
 3. 立てたサブのセッション ID とブランチを一行書いて、ターンを終える
 
 ## 人間の指示
@@ -68,13 +70,13 @@ PR の本文とコミットの本文が `.claude/rules/writing.md` の規律を�
 - 組の PR の番号・base・状態（open・merged）を `gh api` で取得し、表で書く
 
 ### どの指示でも守ること
-- 衝突したら自分では解かず、`git merge --abort` で戻してから、そのブランチのサブへ `send_message` で「main（または前のブランチ）を取り込んで衝突を解き、push して止まる」と頼む
+- 衝突したら自分では解かず、`git merge --abort` で戻してから、衝突したブランチを持つサブへ `send_message` で「main（または前のブランチ）を取り込んで衝突を解き、push して止まる」と頼む
 - `catalog/episodes.json` の衝突は、サブに `pnpm sync` で書き直させる（あれば）
-- `pnpm check` が赤なら push せず、そのブランチのサブへ同じく頼む
+- `pnpm check` が赤なら push せず、赤になったブランチを持つサブへ同じく頼む
 - `--force-with-lease` を含む force push と PR のマージはしない
 - 返答は、したことを 1〜3 行で書くだけにする
 - `pnpm check` の出力は、緑なら最後の数行だけを読む
-- 同じサブへ 2 回頼んでも緑にならなければ、そのサブを止め、同じブランチの先端から `claude-opus-5-5` のサブを立て直す
+- 同じサブへ 2 回頼んでも緑にならなければ、頼んだサブを止め、同じブランチの先端から `claude-opus-5-5` のサブを立て直す
 
 ## 順 <最後の順> の着手の条件（あれば）
 <組の外で閉じているべき issue の番号の一覧>がすべて `closed` であること。
@@ -84,12 +86,12 @@ PR の本文とコミットの本文が `.claude/rules/writing.md` の規律を�
 `create_session` を次の値で呼ぶ。
 
 - `source_url` は `https://github.com/ta-tabox/coten-atlas`
-- `source_revision` は、順 1 なら `main`、それ以降は前の順のブランチ
+- `source_revision` は、順 1 なら `main`、順 2 以降は前の順のブランチ
   前の順の PR が既にマージされていれば `main`
-- `outcome_branch` は上の表のブランチ
-- `model` は上の表の値
+- `outcome_branch` は「順の表」の「ブランチ」列の値
+- `model` は「順の表」の「モデル」列の値
 - `effort` と `permission_mode` は渡さない
-- `prompt` は、下の「サブへ渡すプロンプト」の共通部と該当する順の節を 1 つにつないだもの
+- `prompt` は、節「サブへ渡すプロンプト」の「共通部」と、該当する順の節を 1 つにつないだもの
   `<PR の base>` は `source_revision` と同じ値にする
 
 ## サブへ渡すプロンプト
@@ -124,7 +126,7 @@ issue #<N> を実装し、PR を作って止まる。
 ### 順 1（#<A>）
 ````markdown
 - `<N>` は <A>、`<ブランチ>` は `<順 1 のブランチ>`
-- <本文に無く、この issue で守ること・決めること・PR に載せるもの>
+- <本文に無く、#<N> で守ること・決めること・PR に載せるもの>
 - <並行するセッションと重なるファイルと行>（あれば）
 ````
 `````
