@@ -97,6 +97,32 @@ export function findAnchorLocus(
 }
 
 /**
+ * `loci` から、各シリーズの代表点の事物の `name` を、シリーズの `id` を鍵にして集める。
+ * 位置なしのシリーズは鍵を持たない。
+ *
+ * 地図の feature は鍵しか運ばないので、地名は検査済みの `LocusCollection` からここで取り出し、地図を通さずに画面へ渡す。
+ */
+export function anchorNamesOf(
+  loci: LocusCollection,
+  seriesList: SeriesList,
+): Record<string, string> {
+  const nameById = new Map(
+    loci.features.map(({ properties }) => [properties.id, properties.name]),
+  );
+  const names: Record<string, string> = {};
+
+  for (const series of seriesList) {
+    const name = nameById.get(series.anchor);
+
+    if (name !== undefined) {
+      names[series.id] = name;
+    }
+  }
+
+  return names;
+}
+
+/**
  * `loci` から、`seriesId` が `seriesList` のどれかの `id` と一致する事物だけを、`loci` の並び順のまま残して返す。
  *
  * タグで絞り込んだシリーズの点だけを地図に描くために、絞った後のシリーズを `seriesList` に渡して呼ぶ。

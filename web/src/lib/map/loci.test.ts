@@ -6,7 +6,12 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { findAnchorLocus, lociForSeries, toMapLoci } from "@/lib/map/loci";
+import {
+  anchorNamesOf,
+  findAnchorLocus,
+  lociForSeries,
+  toMapLoci,
+} from "@/lib/map/loci";
 import {
   type Locus,
   type LocusCollection,
@@ -169,6 +174,21 @@ describe("findAnchorLocus", () => {
     const loci = toMapLoci(lociOf(MECCA, SPARTA_CITY), SERIES);
 
     expect(findAnchorLocus(loci, SERIES[2])).toBeUndefined();
+  });
+});
+
+describe("anchorNamesOf", () => {
+  it("シリーズの id を鍵に、代表点の事物の name を返す", () => {
+    expect(anchorNamesOf(lociOf(MECCA, SPARTA_CITY), SERIES)).toEqual({
+      sparta: "スパルタ",
+      "sekai-sandai-shukyo": "メッカ",
+    });
+  });
+
+  it("位置なしのシリーズは鍵を持たない", () => {
+    expect(
+      anchorNamesOf(lociOf(MECCA, SPARTA_CITY), SERIES),
+    ).not.toHaveProperty(SERIES[2].id);
   });
 });
 
