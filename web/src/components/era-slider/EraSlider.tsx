@@ -51,7 +51,6 @@ const RANGE_CLASS = [
 ].join(" ");
 
 type EraSliderProps = {
-  /** 目盛りに並べる時代区分の全件。 */
   eras: EraList;
   /** `end` が `ERA_END_PRESENT` の era の右端に置く年。 */
   presentEnd: number;
