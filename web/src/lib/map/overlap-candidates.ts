@@ -15,6 +15,7 @@ export type CandidatePoint = ScreenPoint & { seriesId: string };
  */
 export const CANDIDATE_DISTANCE_PX = 12;
 
+/** 2 点の画面上の距離（px）を返す。 */
 function distanceBetween(a: ScreenPoint, b: ScreenPoint): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
