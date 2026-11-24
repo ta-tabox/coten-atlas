@@ -33,7 +33,7 @@ const FETCH_TIMEOUT_MS = 60_000;
 
 /**
  * Search API の呼び出しの最小の間隔。
- * Search API は 1 分あたり約 20 回で制限に当たることが知られていて、3.5 秒の間隔なら当たらなかった。
+ * Search API は 1 分あたり約 20 回で制限に当たるので、1 回あたり 3 秒より長く空ける。
  */
 const SEARCH_INTERVAL_MS = 3_500;
 
