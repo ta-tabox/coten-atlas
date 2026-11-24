@@ -61,6 +61,11 @@ const PADDING_DURATION_MS = 300;
 type MapCanvasProps = {
   loci: MapLocusCollection;
   /**
+   * シリーズの `id` を鍵にした、代表点の事物の地名。
+   * 位置なしのシリーズの鍵は無い。
+   */
+  anchorNames: Record<string, string>;
+  /**
    * シリーズの全件。
    * 地図のクリックが返すのは `Locus` なので、`seriesId` に一致する `Series` をこの配列から検索する。
    */
@@ -119,6 +124,7 @@ function initialEraPositionOf(eras: EraList): number {
 /** ベースマップの上に、上端のヘッダー・`loci` の代表点・`seriesList` の一覧・`eras` の era スライダー・選択したシリーズの詳細カードを重ねて描く。 */
 export default function MapCanvas({
   loci,
+  anchorNames,
   seriesList,
   eras,
   presentEnd,
@@ -345,6 +351,7 @@ export default function MapCanvas({
             <div className="absolute top-header right-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-header)-2rem)] max-w-[calc(100vw-2rem)] flex-col">
               <SeriesDetailCard
                 series={selectedSeries}
+                placeName={anchorNames[selectedSeries.id] ?? null}
                 episodes={episodesOf(episodes, selectedSeries.id)}
                 onClose={() => setSelectedSeriesId(null)}
               />
@@ -378,6 +385,7 @@ export default function MapCanvas({
               <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.7]">
                 <SeriesDetailBody
                   series={selectedSeries}
+                  placeName={anchorNames[selectedSeries.id] ?? null}
                   episodes={episodesOf(episodes, selectedSeries.id)}
                   onClose={() => setSelectedSeriesId(null)}
                 />

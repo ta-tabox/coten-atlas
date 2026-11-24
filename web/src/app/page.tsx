@@ -13,15 +13,17 @@
 import MapCanvas from "@/components/map/MapCanvas";
 import { loadEras, loadLoci, loadSeries } from "@/lib/catalog-dir";
 import { presentEndOf } from "@/lib/era/scale";
-import { toMapLoci } from "@/lib/map/loci";
+import { anchorNamesOf, toMapLoci } from "@/lib/map/loci";
 
-/** `catalog/` から読んだシリーズ・事物・時代区分とビルドした時点の年を `MapCanvas` へ渡し、地図のトップページを描く。 */
+/** `catalog/` から読んだシリーズ・事物・代表点の地名・時代区分とビルドした時点の年を `MapCanvas` へ渡し、地図のトップページを描く。 */
 export default function Page() {
   const seriesList = loadSeries();
+  const loci = loadLoci();
 
   return (
     <MapCanvas
-      loci={toMapLoci(loadLoci(), seriesList)}
+      loci={toMapLoci(loci, seriesList)}
+      anchorNames={anchorNamesOf(loci, seriesList)}
       seriesList={seriesList}
       eras={loadEras()}
       presentEnd={presentEndOf(new Date())}

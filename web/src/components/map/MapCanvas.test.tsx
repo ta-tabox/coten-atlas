@@ -189,6 +189,7 @@ async function renderMapCanvas(eras: EraList = ERAS): Promise<void> {
     render(
       <MapCanvas
         loci={LOCI}
+        anchorNames={{ sparta: "スパルタ" }}
         seriesList={SERIES}
         eras={eras}
         presentEnd={PRESENT_END}
@@ -322,6 +323,7 @@ describe("MapCanvas", () => {
     render(
       <MapCanvas
         loci={LOCI}
+        anchorNames={{ sparta: "スパルタ" }}
         seriesList={SERIES}
         eras={ERAS}
         presentEnd={PRESENT_END}

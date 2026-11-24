@@ -22,6 +22,12 @@ import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
  */
 export const SERIES_DETAIL_TITLE_ID = "series-detail-title";
 
+/**
+ * 区画を選べないシリーズの `region` の値。
+ * 札に出す地域を持たないので、札を出さない。
+ */
+const REGION_NONE: Series["region"] = "地域なし";
+
 /** エピソードの一覧の代わりに表示する 1 行の className。 */
 const NOTE_CLASS = "mt-2 text-[0.9rem] text-ink-muted";
 
@@ -65,16 +71,82 @@ function EpisodeList({ state }: { state: EpisodesState }) {
   );
 }
 
+/**
+ * 年代と地名を縦線で区切って 1 行に出す。
+ * 年代は `timeRange` が `TIME_RANGE_UNTIMED` のとき、地名は `placeName` が null のとき出さず、両方無ければ行ごと出さない。
+ * 幅に収まらなければ折り返す。
+ */
+function SeriesPlaceLine({
+  series,
+  placeName,
+}: {
+  series: Series;
+  placeName: string | null;
+}) {
+  const parts = [
+    series.timeRange === TIME_RANGE_UNTIMED
+      ? null
+      : formatTimeRange(series.timeRange),
+    placeName,
+  ].filter((part) => part !== null);
+
+  if (parts.length === 0) {
+    return null;
+  }
+
+  return (
+    <p className="mt-1 text-[0.85rem] text-ink-muted">{parts.join("｜")}</p>
+  );
+}
+
+/**
+ * `region` の札を先頭に、`tags` の札を `series.json` の順に並べる。
+ * `region` が `地域なし` のときは `region` の札を出さない。
+ * 札は表示だけで、押せない。
+ */
+function SeriesLabels({ series }: { series: Series }) {
+  const regionLabel = series.region === REGION_NONE ? [] : [series.region];
+
+  return (
+    <ul aria-label="地域とタグ" className="mt-1.5 flex flex-wrap gap-1">
+      {regionLabel.map((region) => (
+        <li
+          key={region}
+          data-label="region"
+          className="rounded-full border border-point bg-paper px-2.5 py-0.5 text-[0.75rem] text-point"
+        >
+          {region}
+        </li>
+      ))}
+      {series.tags.map((tag) => (
+        <li
+          key={tag}
+          data-label="tag"
+          className="rounded-full border border-rule bg-rule/40 px-2.5 py-0.5 text-[0.75rem] text-ink-muted"
+        >
+          {tag}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 type SeriesDetailBodyProps = {
   series: Series;
+  /**
+   * 代表点の事物の地名。
+   * 位置なしのシリーズは null。
+   */
+  placeName: string | null;
   /** `series` に割り当てられたエピソードと、その取得の状態。 */
   episodes: EpisodesState;
   onClose: () => void;
 };
 
-/** `series` の名前・年代の見出しと、`episodes` の状態に応じたエピソードの区画を縦に並べて描く。 */
+/** `series` の名前・年代と地名・札の見出しと、`episodes` の状態に応じたエピソードの区画を縦に並べて描く。 */
 export default function SeriesDetailBody({
   series,
+  placeName,
   episodes,
   onClose,
 }: SeriesDetailBodyProps) {
@@ -89,12 +161,8 @@ export default function SeriesDetailBody({
             {series.title}
           </h2>
 
-          {/* timeRange が TIME_RANGE_UNTIMED のシリーズは年を持たないので、年代の行を出さない。 */}
-          {series.timeRange !== TIME_RANGE_UNTIMED && (
-            <p className="mt-1 text-[0.85rem] text-ink-muted">
-              {formatTimeRange(series.timeRange)}
-            </p>
-          )}
+          <SeriesPlaceLine series={series} placeName={placeName} />
+          <SeriesLabels series={series} />
         </div>
 
         <button
