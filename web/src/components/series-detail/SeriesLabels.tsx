@@ -1,3 +1,8 @@
+/**
+ * 詳細カードの `region` と `tags` の札の行を描く部品を置く。
+ * 札を押したときの絞り込みは持たない。
+ */
+
 import type { Series } from "@/lib/schema/series";
 
 /**

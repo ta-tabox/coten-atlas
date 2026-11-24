@@ -1,3 +1,8 @@
+/**
+ * 詳細カードの年代と代表点の地名の行を描く部品を置く。
+ * 地名の取得は持たず、`placeName` を props で受け取る。
+ */
+
 import { formatTimeRange } from "@/lib/format";
 import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 
