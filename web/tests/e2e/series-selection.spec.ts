@@ -19,7 +19,7 @@ test.beforeEach(async ({ page }, testInfo) => {
   // 操作の手順はデスクトップの幅の一覧パネルに合わせてあるので、デスクトップの条件でだけ回す。
   test.skip(
     testInfo.project.name !== "e2e-desktop",
-    "スマホの幅の一覧パネルを押す手順はまだ無い",
+    "スマホの幅でシートの一覧から選ぶ操作は mobile-sheet.spec.ts が見る",
   );
 
   server = await openExport(page, exportRoot(), { pagePath: "/" });
