@@ -103,7 +103,7 @@ fi
 writes='(^|[[:space:]])(-X|--method)[[:space:]]+POST([[:space:]]|$)'
 writes+='|(^|[[:space:]])(-f|-F|--field|--raw-field|--input)([[:space:]]|=)'
 
-# コメント・返信・PR と issue の作成だけは戻せる側に置く（`gh issue comment`・`gh pr create`・`gh issue create` が allow なのと同じ層）。
+# コメント・返信・PR と issue の作成だけは戻せる操作として確認なしで通す（`gh issue comment`・`gh pr create`・`gh issue create` が allow なのと同じ層）。
 # 作成した PR と issue は close で戻せる。PR 以外を書き換える PATCH は上で ask にしてある。
 #
 # 見るのはエンドポイントの位置だけで、コマンド全体を探さない。
@@ -113,7 +113,7 @@ comment_endpoint='(^|[[:space:]])gh[[:space:]]+api[[:space:]]+'
 comment_endpoint+='((-X|--method)[[:space:]]+[A-Za-z]+[[:space:]]+)?'
 comment_endpoint+='[^-[:space:]][^[:space:]]*/(comments|replies|pulls|issues)([[:space:]]|$)'
 
-# レビューコメントの resolve / unresolve（`…/comments/ID/resolve`）も戻せる側に置く。
+# レビューコメントの resolve / unresolve（`…/comments/ID/resolve`）も戻せる操作として確認なしで通す。
 # ID はシェル変数のことがあるので、`/` 以外の語なら当てる。
 resolve_endpoint='(^|[[:space:]])gh[[:space:]]+api[[:space:]]+'
 resolve_endpoint+='((-X|--method)[[:space:]]+[A-Za-z]+[[:space:]]+)?'
