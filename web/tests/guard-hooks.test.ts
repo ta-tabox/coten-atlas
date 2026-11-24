@@ -157,6 +157,10 @@ describe("guard-gh-api.sh", () => {
       "フィールドの値に /comments を含む別エンドポイントの書き込み",
       'gh api repos/o/r/pulls/1/requested_reviewers -f x="/comments"',
     ],
+    [
+      "resolve を値に含む別エンドポイントの書き込み",
+      "gh api -X POST repos/o/r/pulls/1/requested_reviewers -f x=comments/2/resolve",
+    ],
     ["PR 以外の PATCH", "gh api -X PATCH repos/o/r/issues/1 -f state=closed"],
     [
       "PR の下位リソースの PATCH",
@@ -188,6 +192,18 @@ describe("guard-gh-api.sh", () => {
     ["gh api でないコマンド", "gh pr view 1"],
     ["PR の作成", "gh api repos/o/r/pulls -f title=x -f head=a -f base=b"],
     ["issue の作成", "gh api repos/o/r/issues -f title=x"],
+    [
+      "レビューコメントの resolve",
+      "gh api -X POST repos/o/r/pulls/1/ccr/comments/2/resolve -q .resolved",
+    ],
+    [
+      "シェル変数の ID を持つレビューコメントの resolve",
+      "for c in 1 2; do gh api -X POST repos/o/r/pulls/1/ccr/comments/$c/resolve; done",
+    ],
+    [
+      "レビューコメントの unresolve",
+      "gh api -X POST repos/o/r/pulls/1/ccr/comments/2/unresolve",
+    ],
     [
       "PR の書き換え",
       "gh api -X PATCH repos/o/r/pulls/1 -f base=main -F body=@pr.md",
