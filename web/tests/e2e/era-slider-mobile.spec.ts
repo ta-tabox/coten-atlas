@@ -3,7 +3,7 @@
  * 初期の位置と、帯を終わりの端まで動かした位置の 2 つで見る。
  *
  * 相手は `next build` が吐いた `out/` の実物なので、`pnpm build` の後でしか回せない。
- * デスクトップの幅では era スライダーが別の形なので、`smoke-desktop` では飛ばす。
+ * デスクトップの幅では era スライダーが別の形なので、`e2e-desktop` では飛ばす。
  */
 
 import { expect, type Locator, test } from "@playwright/test";
