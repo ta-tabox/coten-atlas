@@ -12,8 +12,7 @@
 # - 読み取り（メソッドを書かず、フィールドも渡さない呼び出し）
 # - コメント・返信・PR・issue の作成（`/comments`・`/replies`・`/pulls`・`/issues` への POST。編集も close もできる）
 # - PR 自体の書き換え（`PATCH …/pulls/N`）
-# - レビューコメントの resolve / unresolve（`POST …/comments/ID/resolve`。互いに戻せる）
-# - レビュースレッドの resolve / unresolve（GraphQL。互いに戻せる）
+# - レビューコメントの resolve / unresolve（REST の `POST …/comments/ID/resolve` と GraphQL。互いに戻せる）
 #
 # 判定は「戻せない形か」だけで、それ以外は何も言わず settings.json の判定へ委ねる。
 # 迷ったら ask を返す。
