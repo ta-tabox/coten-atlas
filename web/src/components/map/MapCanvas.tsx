@@ -285,6 +285,7 @@ export default function MapCanvas({
       presentEnd={presentEnd}
       position={eraPosition}
       onPositionChange={setEraPosition}
+      isCompact={!isDesktop}
     />
   );
 
