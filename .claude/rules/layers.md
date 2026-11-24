@@ -55,7 +55,9 @@ paths:
 | 境界 | `src/lib/catalog-dir.*`・`src/lib/episodes.*`・`src/lib/admin-api.*`・`scripts/json-file.ts` | 境界の検証・設定の定数・純粋な計算 | `node:fs`・`git`・`fetch` による読み書きと、境界の検証の呼び出し |
 | 描画 | `src/components/**`（直下にはディレクトリだけを置き、フックは扱う機能のディレクトリに `use-*.ts` で置く） | 純粋な計算・境界の検証の型と定数・設定の定数・`src/lib/episodes.*`・`src/lib/admin-api.*`・同じ層 | React の部品とフック |
 | 配線 | `src/app/**`・`scripts/sync-feed.ts` | `src/app/**` は描画・`src/lib/catalog-dir.*`・純粋な計算・境界の検証、`scripts/sync-feed.ts` はフィードの二段・純粋な計算・境界の検証・`scripts/json-file.ts` | 受け取り・呼び出し・出力 |
-| 検査の機構 | `scripts/smoke.ts`・`scripts/e2e.ts`・`scripts/lint-comments.ts` | `scripts/smoke.ts` は設定の定数、`scripts/e2e.ts` は `scripts/smoke.ts`、`scripts/lint-comments.ts` はこのリポジトリのモジュールを import しない | 配信物を開いたままにする `openExport`・配信物を開いて観測を集める `observe` と、観測から違反を出す `violationsOf`・E2E が一覧パネルを観測する `observePanel` と地図の点の画面座標を求める `screenPointOf`・コメントの禁止語の検査 |
+| スモークの機構 | `scripts/smoke.ts` | 設定の定数 | 配信物を開き、観測から違反を出す関数 |
+| E2E の機構 | `scripts/e2e.ts` | `scripts/smoke.ts` | 画面の部品と地図の点の位置を求める関数 |
+| コメントの検査 | `scripts/lint-comments.ts` | なし | コメントの禁止語の検査 |
 
 ## 一つしか無い状態の正
 
