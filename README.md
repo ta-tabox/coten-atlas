@@ -27,12 +27,20 @@
 各項は、いまの形と、理由を持つ ADR へのリンクを並べる。
 リンク先の ADR では、採らなかった案と、決定が覆る条件も読める。
 
-### サーバと DB を持たずに配信する
+### シリーズと地図の点を分け、位置を段階に分けて持つ
 
-Next.js を static export し、GitHub Pages から静的ファイルだけを配信する。
-シリーズと地図の点はビルド時に `catalog/` から読み、エピソード一覧だけをブラウザが同じサイトの JSON から取得する。
+`series.json` は geometry を持たず、地図の点は `loci.geojson` が持ち、点の側が `seriesId` でシリーズを指す。
+いまの段階では、各シリーズが代表点を 1 つ持つか `anchor` に `"unlocated"` を置いて位置なしを宣言し、版図や経路の図形は持たない。
+時代を跨ぐ概念史のシリーズは、`timeRange` に年を書かず `"untimed"` を置いて時期なしを宣言する。
 
-理由は [ADR-20260714-nextjs-static-export（static export）](docs/adr/20260714-nextjs-static-export.md) と [ADR-20260823-github-pages（GitHub Pages での配信）](docs/adr/20260823-github-pages.md) が持つ。
+理由は [ADR-20260902-two-phase-location（位置情報の二段階）](docs/adr/20260902-two-phase-location.md)・[ADR-20261113-locus-display-name（シリーズと事物の分離、事物の表示名）](docs/adr/20261113-locus-display-name.md)・[ADR-20260910-untimed-concept-series（時期なしの概念史シリーズ）](docs/adr/20260910-untimed-concept-series.md) が持つ。
+
+### 歴史の裏どりをコードのレビューと分け、典拠をファイルに残す
+
+`catalog/` の年代と座標は、PR か issue に `@historian` とコメントすると、Web 検索を許した GitHub Actions のワークフローが典拠の URL を添えて裏どりする。
+採った値の典拠は、シリーズごとに `docs/sources/<シリーズ id>.md` へ置く。
+
+理由は [ADR-20260909-history-review-lane（歴史の裏どりのワークフロー）](docs/adr/20260909-history-review-lane.md) と [ADR-20260910-sources-layer（典拠の置き場）](docs/adr/20260910-sources-layer.md) が持つ。
 
 ### RSS から同期する層と、人間がキュレーションする層を分ける
 
@@ -41,19 +49,26 @@ Next.js を static export し、GitHub Pages から静的ファイルだけを�
 
 理由は [ADR-20260904-two-layer-data-without-inbox（データの二層分離）](docs/adr/20260904-two-layer-data-without-inbox.md) が持つ。
 
-### データの編集を公開サイトに載せない
+### エピソードを割り当てる season を、題名の先頭から決める
 
-`catalog/` の手動層はリポジトリのファイルで、変更はコミットで確定し、PR の diff で読む。
-公開サイトは編集の手段・認証・DB を持たない。
+同期は、エピソードを割り当てる season を、訂正表・題名の先頭の `【NN-M】`・`itunes:season` の順に最初に決まったものから取る。
+フィードの `itunes:season` だけでは正しいシリーズへ割り当たらない回があるので、題名の番号と訂正表（`catalog/season-corrections.json`）で補う。
 
-理由は [ADR-20260902-local-only-admin（手元でだけ動く管理画面）](docs/adr/20260902-local-only-admin.md) が持つ。
+理由は [ADR-20260915-season-assignment-precedence（割当に使う season の優先順位）](docs/adr/20260915-season-assignment-precedence.md) が持つ。
 
-### シリーズと地図の点を分け、位置を段階に分けて持つ
+### サーバと DB を持たずに配信する
 
-`series.json` は geometry を持たず、地図の点は `loci.geojson` が持ち、点の側が `seriesId` でシリーズを指す。
-いまの段階では、各シリーズが代表点を 1 つ持つか `anchor` に `"unlocated"` を置いて位置なしを宣言し、版図や経路の図形は持たない。
+Next.js を static export し、GitHub Pages から静的ファイルだけを配信する。
+シリーズと地図の点はビルド時に `catalog/` から読み、エピソード一覧だけをブラウザが同じサイトの JSON から取得する。
 
-理由は [ADR-20260902-two-phase-location（位置情報の二段階）](docs/adr/20260902-two-phase-location.md) と [ADR-20260902-series-and-loci（シリーズと事物の分離）](docs/adr/20260902-series-and-loci.md) が持つ。
+理由は [ADR-20260714-nextjs-static-export（static export）](docs/adr/20260714-nextjs-static-export.md) と [ADR-20260823-github-pages（GitHub Pages での配信）](docs/adr/20260823-github-pages.md) が持つ。
+
+### データの編集を手元の管理画面に限り、公開サイトに載せない
+
+管理画面は公開サイトと同じ Next.js のアプリに、開発サーバでだけ読む拡張子（`page.dev.tsx`）で置き、地図の点をドラッグした座標を `catalog/loci.geojson` へ書く。
+公開サイトは編集の手段・認証・DB を持たず、スモークが成果物に管理画面のファイルが無いことを確かめる。
+
+理由は [ADR-20260902-local-only-admin（手元でだけ動く管理画面）](docs/adr/20260902-local-only-admin.md) と [ADR-20261009-dev-only-page-extensions（開発サーバでだけ読むページの拡張子）](docs/adr/20261009-dev-only-page-extensions.md) が持つ。
 
 ### 時代の近さを、地図の点の濃さで見せる
 
@@ -61,20 +76,6 @@ era スライダーは年でなく時代区分を等幅に並べた数直線の�
 各点は現在窓との重なりが大きいほど濃く描き、濃さの計算は MapLibre の式でなく TypeScript の側が持ち、現在窓と重ならない点は地図に描かない。
 
 理由は [ADR-20260907-era-space-window（現在窓の幅と右端の年）](docs/adr/20260907-era-space-window.md) と [ADR-20260911-era-fade-window-only（点の濃さの渡し方）](docs/adr/20260911-era-fade-window-only.md) が持つ。
-
-### 地図の上の UI を React で書く
-
-一覧パネル・詳細カード・era スライダーは React と Tailwind で書き、地図の上に重ねる。
-MapLibre が出す DOM は canvas と attribution だけで、Popup と built-in control を使わない。
-
-理由は [ADR-20260831-map-dom-boundary（地図の DOM の境界）](docs/adr/20260831-map-dom-boundary.md) が持つ。
-
-### 歴史の裏どりをコードのレビューと分け、典拠をファイルに残す
-
-`catalog/` の年代と座標は、PR か issue に `@historian` とコメントすると、Web 検索を許した GitHub Actions のワークフローが典拠の URL を添えて裏どりする。
-採った値の典拠は、シリーズごとに `docs/sources/<シリーズ id>.md` へ置く。
-
-理由は [ADR-20260909-history-review-lane（歴史の裏どりのワークフロー）](docs/adr/20260909-history-review-lane.md) と [ADR-20260910-sources-layer（典拠の置き場）](docs/adr/20260910-sources-layer.md) が持つ。
 
 ## 検証と開発の進め方
 
