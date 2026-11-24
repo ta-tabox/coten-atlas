@@ -88,7 +88,7 @@ catalog/
       "pubDate": "2026-08-19T21:00:00Z", // ISO 8601。RFC 822（フィードは全件 GMT）からの正規化は同期側
       "season": 66, // 割当に使った season（§5 の手順 2）。決まらない回（番外編・特別編・告知）は null
       "seriesId": "teisei-roma", // season から割当。未割当なら null
-      // 基盤ごとの回の URL。同期は前回の同じ guid の回から引き継ぎ、フィードからは作らない。空なら詳細カードは番組ページを開く
+      // 基盤ごとの回の URL。同期は前回の同じ guid の回から引き継ぎ、Apple Podcasts の分は API から取り直す。フィードからは作らない。空なら詳細カードは番組ページを開く
       "links": {
         "apple-podcasts": "https://podcasts.apple.com/jp/podcast/id1450522865?i=…"
       }
@@ -352,7 +352,7 @@ catalog/
 ## 5. RSS 同期パイプライン
 
 - feedUrl: `https://anchor.fm/s/8c2088c/podcast/rss`
-  Apple Podcasts lookup API `https://itunes.apple.com/lookup?id=1450522865` が返す `feedUrl` の値で、同期は lookup API を経由せずこの URL を直接叩く
+  Apple Podcasts lookup API `https://itunes.apple.com/lookup?id=1450522865` が返す `feedUrl` の値で、RSS の取得は lookup API を経由せずこの URL を直接叩く
 - フィードの形（パーサはこれを前提にしてよい）:
   - `guid` は `isPermaLink="false"` の UUID
     ただし初期の 5 件だけ `anchor.fm` のエピソード URL が入っており、先頭に空白が付く
@@ -368,16 +368,20 @@ catalog/
 - `web/scripts/sync-feed.ts`（`web/package.json` の scripts に `sync` として登録）:
   1. RSS を取得し、guid で episodes.json と差分
   2. フィード全件の season を season-corrections.json・題名の先頭の `【NN-M】`・`itunes:season` の順に決め、series.json 全件の `season` から組んだ season → seriesId の索引と照合して seriesId を割り当てる
-  3. 結果サマリを stdout へ
+  3. Apple Podcasts の lookup API（最新の 200 回）で、guid が一致する回の `links["apple-podcasts"]` を書く
+     それでも URL の無い回は、Search API（そのシリーズの題に ` COTEN RADIO` を付けた語。シリーズに割り当たらない回は番組名と回の種別の語）で探す
+     どちらの取得に失敗しても警告だけを出し、その分の `links` を触らずに同期を続ける
+  4. 結果サマリを stdout へ
      未割当は「規則で確定」（season が決まらない回・番外編・訂正表で外した回）と「シリーズ未作成」に割って数える
-  4. `--existing-issue-titles`（既存の issue の題の入力）と `--survey-issues-out`（書き出し先）を渡したときだけ、「シリーズ未作成」の season のうちシーズン調査の issue がまだ無いものについて、issue の題と本文を JSON のファイルへ書く
-  5. `--report-out`（書き出し先）を渡したときだけ、前回の episodes.json との差（新しい回・割当が変わった回・フィードから消えた回）を、題とシリーズ名の表の Markdown で書く
+     Apple Podcasts の回の URL を持つ回と結べなかった回も数える
+  5. `--existing-issue-titles`（既存の issue の題の入力）と `--survey-issues-out`（書き出し先）を渡したときだけ、「シリーズ未作成」の season のうちシーズン調査の issue がまだ無いものについて、issue の題と本文を JSON のファイルへ書く
+  6. `--report-out`（書き出し先）を渡したときだけ、前回の episodes.json との差（新しい回・割当が変わった回・フィードから消えた回）を、題とシリーズ名の表の Markdown で書く
 - 運用: `.github/workflows/sync.yml` が配信日（月曜と木曜）の夜に `pnpm sync` を走らせる
   `episodes.json` が `syncedAt` の外で変わったら、ブランチ `sync/episodes` から main への PR を開き、取り込むかは人間がマージで決める
   同じ run で、シリーズ未作成の season ごとにシーズン調査の issue を起票する
   起票された issue から `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット
   手を入れる先は手動層の `series.json`・`loci.geojson`・`season-corrections.json` だけで、`episodes.json` は毎回フィードから組み直すので編集しない
-  例外は各回の `links` で、同期は前回の `episodes.json` の同じ guid の回から引き継ぐ
+  例外は各回の `links` で、同期は前回の `episodes.json` の同じ guid の回から引き継ぎ、Apple Podcasts の URL は取得できた回だけ書き換える
   未割当を溜める置き場も持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ
 - 静的サイトなので、実行時に RSS を取得しない。同期は常にビルド前のデータ更新として行う
 
