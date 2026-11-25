@@ -14,25 +14,60 @@ const ROMA: Series = {
   tags: [],
 };
 
+const TEISEI: Series = { ...ROMA, id: "teisei-roma", title: "帝政ローマ" };
+
+/** 枠の外に置く段落と一緒に、2 件の候補を持つ枠を描く。 */
+function renderCard(onSelect = () => {}, onClose = () => {}) {
+  render(
+    <>
+      <p>外</p>
+      <SeriesCandidateCard
+        candidates={[ROMA, TEISEI]}
+        onSelect={onSelect}
+        onClose={onClose}
+      />
+    </>,
+  );
+}
+
 describe("SeriesCandidateCard", () => {
+  it("候補のシリーズごとに、タイトルと年代の行を並べ、見出しを出さない", () => {
+    renderCard();
+
+    expect(
+      screen.getByRole("button", { name: /カエサル/ }).textContent,
+    ).toContain("前100年〜前44年");
+    expect(screen.getByRole("button", { name: /帝政ローマ/ })).toBeDefined();
+    expect(screen.queryByRole("heading")).toBeNull();
+  });
+
+  it("行を押すと、そのシリーズの id で onSelect を呼ぶ", () => {
+    const onSelect = vi.fn();
+    renderCard(onSelect);
+
+    fireEvent.click(screen.getByRole("button", { name: /帝政ローマ/ }));
+
+    expect(onSelect).toHaveBeenCalledWith("teisei-roma");
+  });
+
   it("枠の外を押すと onClose を呼び、枠の中を押しても呼ばない", () => {
     const onClose = vi.fn();
-    render(
-      <>
-        <p>外</p>
-        <SeriesCandidateCard
-          candidates={[ROMA]}
-          onSelect={() => {}}
-          onClose={onClose}
-        />
-      </>,
-    );
+    renderCard(() => {}, onClose);
 
     fireEvent.pointerDown(screen.getByRole("button", { name: /カエサル/ }));
 
     expect(onClose).not.toHaveBeenCalled();
 
     fireEvent.pointerDown(screen.getByText("外"));
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("Escape キーを押すと onClose を呼ぶ", () => {
+    const onClose = vi.fn();
+    renderCard(() => {}, onClose);
+
+    fireEvent.keyDown(document, { key: "Escape" });
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });

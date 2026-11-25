@@ -26,7 +26,6 @@ import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
 import { useIsDesktop } from "@/components/map/use-is-desktop";
-import SeriesCandidateBody from "@/components/series-candidates/SeriesCandidateBody";
 import SeriesCandidateCard from "@/components/series-candidates/SeriesCandidateCard";
 import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
@@ -94,7 +93,7 @@ type MapCanvasProps = {
  */
 const TOUCH_HIT_HALF_SIZE_PX = 22;
 
-/** デスクトップの幅で、候補の一覧を押した位置から右下へずらす距離（px）。 */
+/** 候補の一覧を、押した位置から右下へずらす距離（px）。 */
 const CANDIDATE_CARD_OFFSET_PX = 12;
 
 /** 候補の一覧に当たったときの、押した位置と候補のシリーズ id。 */
@@ -333,12 +332,6 @@ export default function MapCanvas({
     if (seriesIds.length >= 2) {
       setOverlap({ seriesIds, point: event.point });
 
-      if (!isDesktop) {
-        setSheetStage((stage) =>
-          stage === SHEET_STAGE.full ? stage : SHEET_STAGE.list,
-        );
-      }
-
       return;
     }
 
@@ -388,27 +381,9 @@ export default function MapCanvas({
     return null;
   }
 
-  let sheetLabel = "シリーズ一覧";
-
-  if (overlap !== null) {
-    sheetLabel = "重なっているシリーズ";
-  } else if (selectedSeries !== null) {
-    sheetLabel = "シリーズの詳細";
-  }
-
   let sheetContent: ReactNode;
 
-  if (overlap !== null) {
-    sheetContent = (
-      <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.6]">
-        <SeriesCandidateBody
-          candidates={candidateSeries}
-          onSelect={selectFromCandidates}
-          onClose={closeCandidates}
-        />
-      </div>
-    );
-  } else if (selectedSeries === null) {
+  if (selectedSeries === null) {
     sheetContent = (
       <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">
         <SeriesPanelBody
@@ -496,21 +471,6 @@ export default function MapCanvas({
           <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2">
             {eraSlider}
           </div>
-          {overlap !== null && (
-            <div
-              className="absolute z-10"
-              style={{
-                left: `min(${overlap.point.x + CANDIDATE_CARD_OFFSET_PX}px, calc(100vw - 19rem))`,
-                top: `min(${overlap.point.y + CANDIDATE_CARD_OFFSET_PX}px, calc(100dvh - 20rem))`,
-              }}
-            >
-              <SeriesCandidateCard
-                candidates={candidateSeries}
-                onSelect={selectFromCandidates}
-                onClose={closeCandidates}
-              />
-            </div>
-          )}
           {selectedSeries !== null && (
             <div className="absolute top-header right-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-header)-2rem)] max-w-[calc(100vw-2rem)] flex-col">
               <SeriesDetailCard
@@ -527,7 +487,7 @@ export default function MapCanvas({
           <BottomSheet
             stage={sheetStage}
             onStageChange={setSheetStage}
-            label={sheetLabel}
+            label={selectedSeries === null ? "シリーズ一覧" : "シリーズの詳細"}
             eraSlider={eraSlider}
             isEraSliderShown={isEraSliderShown}
             onEraSliderShownChange={setIsEraSliderShown}
@@ -535,6 +495,22 @@ export default function MapCanvas({
           >
             {sheetContent}
           </BottomSheet>
+        </div>
+      )}
+      {/* 候補の一覧は、押した位置の近くに、どの幅でもシートの上へ重ねる。 */}
+      {overlap !== null && (
+        <div
+          className="absolute z-20"
+          style={{
+            left: `min(${overlap.point.x + CANDIDATE_CARD_OFFSET_PX}px, calc(100vw - 19rem))`,
+            top: `min(${overlap.point.y + CANDIDATE_CARD_OFFSET_PX}px, calc(100dvh - 20rem))`,
+          }}
+        >
+          <SeriesCandidateCard
+            candidates={candidateSeries}
+            onSelect={selectFromCandidates}
+            onClose={closeCandidates}
+          />
         </div>
       )}
     </MapLibreMap>

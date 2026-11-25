@@ -28,7 +28,6 @@ import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
 import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
-import SeriesCandidateBody from "@/components/series-candidates/SeriesCandidateBody";
 import SeriesCandidateCard from "@/components/series-candidates/SeriesCandidateCard";
 import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
@@ -1072,25 +1071,25 @@ describe("MapCanvas（スマホの幅の重なった代表点の選び分け）"
     vi.restoreAllMocks();
   });
 
-  it("同じ座標の事物を押すと、シートを list の段にして、一覧の代わりに候補の一覧を置く", async () => {
+  it("同じ座標の事物を押すと、シートの段を変えず、地図の上の候補の一覧に 2 シリーズを並べる", async () => {
     await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+    const stage = bottomSheetProps().stage;
 
     act(() => lastProps().onClick?.(clickAt(["sparta", "athens"])));
 
-    expect(bottomSheetProps().stage).toBe("list");
+    expect(bottomSheetProps().stage).toBe(stage);
     expect(
-      childPropsOf(SeriesCandidateBody).candidates.map(({ id }) => id),
+      childPropsOf(SeriesCandidateCard).candidates.map(({ id }) => id),
     ).toEqual(["sparta", "athens"]);
-    expect(childOfType(SeriesPanelBody)).toBeUndefined();
   });
 
   it("候補の一覧の行を押すと、そのシリーズの詳細カードの中身をシートに置く", async () => {
     await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
     act(() => lastProps().onClick?.(clickAt(["sparta", "athens"])));
 
-    act(() => childPropsOf(SeriesCandidateBody).onSelect("athens"));
+    act(() => childPropsOf(SeriesCandidateCard).onSelect("athens"));
 
-    expect(childOfType(SeriesCandidateBody)).toBeUndefined();
+    expect(childOfType(SeriesCandidateCard)).toBeUndefined();
     expect(childPropsOf(SeriesDetailBody).series.id).toBe("athens");
   });
 });

@@ -70,7 +70,7 @@ paths:
 | era スライダーの位置（`eraPosition`） | `src/components/map/MapCanvas.tsx` | `EraSlider` | `EraSlider`・`SeriesLayers`・`SeriesPanelBody` |
 | タグの絞り込みに使うタグ（`selectedTags`） | `src/components/map/MapCanvas.tsx` | `SeriesPanelBody` | `SeriesLayers`・`SeriesPanelBody` |
 | エピソードの取得の状態（`EpisodesState`） | `src/components/map/MapCanvas.tsx` | `MapCanvas` | `SeriesDetailBody` |
-| 重なった代表点の候補（`overlap`） | `src/components/map/MapCanvas.tsx` | `MapCanvas` | `SeriesCandidateCard`・`SeriesCandidateBody` |
+| 重なった代表点の候補（`overlap`） | `src/components/map/MapCanvas.tsx` | `MapCanvas` | `SeriesCandidateCard` |
 | シートの段（`sheetStage`） | `src/components/map/MapCanvas.tsx` | `MapCanvas`・`BottomSheet` | `BottomSheet` |
 | シートで era スライダーを出すか（`isEraSliderShown`） | `src/components/map/MapCanvas.tsx` | `BottomSheet` | `BottomSheet` |
 | シートの目標の高さ（`sheetTargetHeight`） | `src/components/map/MapCanvas.tsx` | `BottomSheet` | `MapCanvas` |
