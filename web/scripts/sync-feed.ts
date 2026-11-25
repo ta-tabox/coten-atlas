@@ -249,13 +249,14 @@ function warnReassigned(
  * 題名が `【NN-M】` で始まらず、`itunes:season` で割り当てた回を報せる。
  *
  * 題名の書式が変わった回は `itunes:season` で割り当たり続けるので、フィードの番号が誤っていても未割当の数には現れない。
+ * 番号を確かめた回は `catalog/season-corrections.json` に行を足すと、割当が訂正表から決まり、この警告から外れる。
  */
 function warnFeedSeasonAssignments(assignments: Assignment[]): void {
   const fromFeed = assignments.filter(({ key }) => key.source === "feed");
 
   if (fromFeed.length > 0) {
     console.error(
-      `題名が【NN-M】で始まらず、itunes:season で割り当てた回が ${fromFeed.length} 件ある: ${fromFeed
+      `題名が【NN-M】で始まらず、itunes:season で割り当てた回が ${fromFeed.length} 件ある（番号を確かめたら catalog/season-corrections.json に行を足すと、この警告から外れる）: ${fromFeed
         .map(({ item }) => `${item.guid}（${item.title}）`)
         .join(", ")}`,
     );
