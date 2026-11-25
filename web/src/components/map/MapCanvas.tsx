@@ -103,8 +103,11 @@ const TOUCH_HIT_HALF_SIZE_PX = 22;
  */
 const OVERLAP_POINT_OFFSET_PX = 100;
 
-/** 候補の一覧の下の矢印の先を、代表点の中心から上へ離す距離（px）。 */
-const CANDIDATE_ARROW_GAP_PX = 12;
+/**
+ * 候補の一覧の下辺を、代表点の中心から上へ離す距離（px）。
+ * 下辺から突き出す矢印の先（約 9px）が、円（半径 6px）に重ならず、円との間に余白が残る。
+ */
+const CANDIDATE_ARROW_GAP_PX = 22;
 
 /** 重なった代表点へ地図の中心を移すのにかける時間（ミリ秒）。 */
 const OVERLAP_PAN_DURATION_MS = 400;
