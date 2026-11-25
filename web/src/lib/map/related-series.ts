@@ -66,10 +66,7 @@ function closenessOf(origin: Series, other: Series): Closeness {
   };
 }
 
-/**
- * 近い方を前にするとき負の数を返す、`toSorted` の比較関数。
- * 欄を `Closeness` の宣言の順に比べ、前の欄で差が付けば後ろの欄は見ない。
- */
+/** 二つの近さ（`a` と `b`）を比べ、`a` の方が近ければ負の数、`b` の方が近ければ正の数、同じなら 0 を返す。 */
 function compareCloseness(a: Closeness, b: Closeness): number {
   return (
     b.topicTagCount - a.topicTagCount ||
@@ -85,7 +82,7 @@ function compareCloseness(a: Closeness, b: Closeness): number {
  * シリーズの全件（`seriesList`）のうち、選択中のシリーズ（`origin`）に関連するシリーズを、近い順に `RELATED_SERIES_LIMIT` 件まで返す。
  * 関連するシリーズが無ければ空配列を返す。
  *
- * 近さが同じシリーズは `seriesList` の並び順を保つ。
+ * 近さが同じシリーズは `seriesList` の並び順を保つので、同じシリーズを選び直しても関連シリーズ行の並びは入れ替わらない。
  * `origin` 自身は返さない。
  */
 export function relatedSeriesOf(
