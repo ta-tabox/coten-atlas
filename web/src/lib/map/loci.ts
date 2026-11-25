@@ -23,11 +23,14 @@ import {
 
 /**
  * `toMapLoci` が組み、地図の source の各 feature の `properties` に入る、事物 1 件の属性。
- * 鍵の 2 欄はそのまま運び、年の 2 欄は事物かシリーズの `timeRange` から写した値である。
+ * 鍵の 2 欄と `name` はそのまま運び、年の 2 欄は事物かシリーズの `timeRange` から写した値である。
+ * 描画は `name` を読まず、詳細カードが代表点の地名として出す。
+ * 地図のクリックが返す feature からは、`seriesId` 以外を読まない。
  */
 export type MapLocusProperties = {
   id: string;
   seriesId: string;
+  name: string;
   timeStart: number;
   timeEnd: number;
 };
@@ -55,7 +58,7 @@ function toMapLocus(
   locus: Locus,
   seriesById: Map<string, Series>,
 ): MapLocusFeature {
-  const { id, seriesId, timeRange } = locus.properties;
+  const { id, seriesId, name, timeRange } = locus.properties;
   const series = seriesById.get(seriesId);
 
   if (series === undefined) {
@@ -77,6 +80,7 @@ function toMapLocus(
     properties: {
       id,
       seriesId,
+      name,
       timeStart: years.start,
       timeEnd: years.end,
     },
@@ -94,32 +98,6 @@ export function findAnchorLocus(
   series: Series,
 ): MapLocusFeature | undefined {
   return loci.features.find((locus) => locus.properties.id === series.anchor);
-}
-
-/**
- * `loci` から、各シリーズの代表点の事物の `name` を、シリーズの `id` を鍵にして集める。
- * 位置なしのシリーズは鍵を持たない。
- *
- * 地図の feature は鍵しか運ばないので、地名は検査済みの `LocusCollection` からここで取り出し、地図を通さずに画面へ渡す。
- */
-export function anchorNamesOf(
-  loci: LocusCollection,
-  seriesList: SeriesList,
-): Record<string, string> {
-  const nameById = new Map(
-    loci.features.map(({ properties }) => [properties.id, properties.name]),
-  );
-  const names: Record<string, string> = {};
-
-  for (const series of seriesList) {
-    const name = nameById.get(series.anchor);
-
-    if (name !== undefined) {
-      names[series.id] = name;
-    }
-  }
-
-  return names;
 }
 
 /**

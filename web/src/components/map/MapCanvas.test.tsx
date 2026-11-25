@@ -97,6 +97,7 @@ const LOCI: MapLocusCollection = {
       properties: {
         id: "sparta-city",
         seriesId: "sparta",
+        name: "スパルタ",
         timeStart: -900,
         timeEnd: -200,
       },
@@ -189,7 +190,6 @@ async function renderMapCanvas(eras: EraList = ERAS): Promise<void> {
     render(
       <MapCanvas
         loci={LOCI}
-        anchorNames={{ sparta: "スパルタ" }}
         seriesList={SERIES}
         eras={eras}
         presentEnd={PRESENT_END}
@@ -323,7 +323,6 @@ describe("MapCanvas", () => {
     render(
       <MapCanvas
         loci={LOCI}
-        anchorNames={{ sparta: "スパルタ" }}
         seriesList={SERIES}
         eras={ERAS}
         presentEnd={PRESENT_END}

@@ -6,12 +6,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import {
-  anchorNamesOf,
-  findAnchorLocus,
-  lociForSeries,
-  toMapLoci,
-} from "@/lib/map/loci";
+import { findAnchorLocus, lociForSeries, toMapLoci } from "@/lib/map/loci";
 import {
   type Locus,
   type LocusCollection,
@@ -86,12 +81,13 @@ const MECCA: Locus["properties"] = {
 };
 
 describe("toMapLoci", () => {
-  it("properties を鍵の 2 欄と年の 2 欄だけにする", () => {
+  it("properties を鍵の 2 欄・地名・年の 2 欄だけにする", () => {
     const { features } = toMapLoci(lociOf(SPARTA_CITY), SERIES);
 
     expect(features[0].properties).toEqual({
       id: "sparta-city",
       seriesId: "sparta",
+      name: "スパルタ",
       timeStart: -900,
       timeEnd: -200,
     });
@@ -170,25 +166,16 @@ describe("findAnchorLocus", () => {
     expect(findAnchorLocus(loci, SERIES[0])?.properties.id).toBe("sparta-city");
   });
 
+  it("代表点の地名を properties.name に持つ", () => {
+    const loci = toMapLoci(lociOf(MECCA, SPARTA_CITY), SERIES);
+
+    expect(findAnchorLocus(loci, SERIES[0])?.properties.name).toBe("スパルタ");
+  });
+
   it("位置なしのシリーズには undefined を返す", () => {
     const loci = toMapLoci(lociOf(MECCA, SPARTA_CITY), SERIES);
 
     expect(findAnchorLocus(loci, SERIES[2])).toBeUndefined();
-  });
-});
-
-describe("anchorNamesOf", () => {
-  it("シリーズの id を鍵に、代表点の事物の name を返す", () => {
-    expect(anchorNamesOf(lociOf(MECCA, SPARTA_CITY), SERIES)).toEqual({
-      sparta: "スパルタ",
-      "sekai-sandai-shukyo": "メッカ",
-    });
-  });
-
-  it("位置なしのシリーズは鍵を持たない", () => {
-    expect(
-      anchorNamesOf(lociOf(MECCA, SPARTA_CITY), SERIES),
-    ).not.toHaveProperty(SERIES[2].id);
   });
 });
 
