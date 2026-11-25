@@ -60,7 +60,8 @@ describe("SeriesDetailCard", () => {
     );
 
     expect(screen.getByRole("heading", { name: "スパルタ" })).toBeVisible();
-    expect(screen.getByText("前900年〜前200年｜スパルタ")).toBeVisible();
+    expect(screen.getByText("前900年〜前200年")).toBeVisible();
+    expect(screen.getByText("スパルタ", { selector: "span" })).toBeVisible();
   });
 
   it("時期を持たないシリーズは年代の行を出さない", () => {
@@ -98,7 +99,13 @@ describe("SeriesDetailCard", () => {
       />,
     );
 
-    expect(screen.getByText("前900年〜前200年｜スパルタ")).toBeVisible();
+    const row = screen.getByText("前900年〜前200年").closest("p");
+
+    if (row === null) {
+      throw new Error("年代の行が無い");
+    }
+
+    expect(within(row).getByText("スパルタ")).toBeVisible();
   });
 
   it("位置なしのシリーズは地名を出さず、年代だけを出す", () => {

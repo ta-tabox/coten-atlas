@@ -12,10 +12,11 @@
 
 import ListenLinks from "@/components/series-detail/ListenLinks";
 import SeriesLabels from "@/components/series-detail/SeriesLabels";
-import SeriesPeriodAndPlace from "@/components/series-detail/SeriesPeriodAndPlace";
+import SeriesPeriod from "@/components/series-detail/SeriesPeriod";
+import SeriesPlace from "@/components/series-detail/SeriesPlace";
 import YouTubeChannelLink from "@/components/series-detail/YouTubeChannelLink";
 import { EPISODES_KIND, type EpisodesState } from "@/lib/episodes";
-import type { Series } from "@/lib/schema/series";
+import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 
 /**
  * 枠（`SeriesDetailCard` の `aside` か、シート）の `aria-labelledby` が参照する、`h2` の id。
@@ -85,6 +86,12 @@ export default function SeriesDetailBody({
   episodes,
   onClose,
 }: SeriesDetailBodyProps) {
+  const period =
+    series.timeRange === TIME_RANGE_UNTIMED ? null : (
+      <SeriesPeriod timeRange={series.timeRange} />
+    );
+  const place = placeName === null ? null : <SeriesPlace name={placeName} />;
+
   return (
     <>
       <header className="flex items-start gap-3 border-b border-rule pb-3">
@@ -96,7 +103,13 @@ export default function SeriesDetailBody({
             {series.title}
           </h2>
 
-          <SeriesPeriodAndPlace series={series} placeName={placeName} />
+          {/* 年代と地名の間の縦線は、後ろの要素の ::before が持つ。幅に収まらなければ、縦線を地名の先頭に付けたまま折り返す。 */}
+          {(period !== null || place !== null) && (
+            <p className="mt-1 flex flex-wrap text-[0.85rem] text-ink-muted [&>*+*]:before:content-['｜']">
+              {period}
+              {place}
+            </p>
+          )}
           <SeriesLabels series={series} />
         </div>
 
