@@ -7,18 +7,8 @@
  * 画面の複数の部品が読む状態はこのコンポーネントが持ち、子へは props で渡す。
  */
 
-import {
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import type {
-  MapLayerMouseEvent,
-  MapRef,
-  ViewStateChangeEvent,
-} from "react-map-gl/maplibre";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import BottomSheet from "@/components/bottom-sheet/BottomSheet";
 import EraSlider from "@/components/era-slider/EraSlider";
@@ -26,7 +16,8 @@ import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
 import { useIsDesktop } from "@/components/map/use-is-desktop";
-import SeriesCandidateCard from "@/components/series-candidates/SeriesCandidateCard";
+import { useOverlapCandidates } from "@/components/map/use-overlap-candidates";
+import SeriesCandidateOverlay from "@/components/series-candidates/SeriesCandidateOverlay";
 import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
@@ -40,10 +31,6 @@ import {
 } from "@/lib/episodes";
 import { currentWindow } from "@/lib/era/window";
 import {
-  CANDIDATE_CARD_WIDTH_PX,
-  candidateCardLeftOf,
-} from "@/lib/map/candidate-card";
-import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
   PUBLIC_MAP_MAX_ZOOM,
@@ -54,11 +41,6 @@ import {
   lociForSeries,
   type MapLocusCollection,
 } from "@/lib/map/loci";
-import {
-  type CandidatePoint,
-  candidateSeriesIdsOf,
-  type ScreenPoint,
-} from "@/lib/map/overlap-candidates";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import { listHeightPx, SHEET_STAGE, type SheetStage } from "@/lib/map/sheet";
 import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
@@ -90,40 +72,6 @@ type MapCanvasProps = {
   /** `end` が `ERA_END_PRESENT` の era の右端に置く年。 */
   presentEnd: number;
 };
-
-/**
- * タッチの入力で、押した位置の周りの判定の範囲の一辺の半分（px）。
- * 一辺 44px は Apple HIG の最小のタップ領域で、見える円（半径 6px）は変えない。
- */
-const TOUCH_HIT_HALF_SIZE_PX = 22;
-
-/**
- * 重なった代表点を地図の中央から下へずらして置く距離（px）。
- * 代表点の上に出る候補の一覧が、ヘッダーに隠れず、シートの上にも収まる高さを空ける。
- */
-const OVERLAP_POINT_OFFSET_PX = 100;
-
-/**
- * 候補の一覧の下辺を、代表点の中心から上へ離す距離（px）。
- * 下辺から突き出す矢印の先（約 9px）が、円（半径 6px）に重ならず、円との間に余白が残る。
- */
-const CANDIDATE_ARROW_GAP_PX = 22;
-
-/** 重なった代表点へ地図の中心を移すのにかける時間（ミリ秒）。 */
-const OVERLAP_PAN_DURATION_MS = 400;
-
-/**
- * 候補の一覧が指す重なった代表点。
- * `coordinates` は経度と緯度、`anchor` はその画面上の位置で、地図が動くたびに更新する。
- */
-type OverlapCandidates = {
-  seriesIds: string[];
-  coordinates: [number, number];
-  anchor: ScreenPoint;
-};
-
-/** 地図のクリックが当たった代表点の、画面上の位置・シリーズ・経度と緯度。 */
-type PointUnder = CandidatePoint & { coordinates: [number, number] };
 
 /**
  * `state` を `seriesId` に割り当てられたエピソードだけに絞り込んで返す。
@@ -185,8 +133,7 @@ export default function MapCanvas({
   const [sheetTargetHeight, setSheetTargetHeight] = useState(0);
   const isDesktop = useIsDesktop();
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
-  const [overlap, setOverlap] = useState<OverlapCandidates | null>(null);
-  const closeCandidates = useCallback(() => setOverlap(null), []);
+  const overlap = useOverlapCandidates({ mapRef, seriesList });
 
   // 一覧パネルに隠れる左の幅と、シートに隠れる下の高さを地図の視野から除き、点が隠れない領域に描かれるようにする。
   const paddingLeft = isDesktop && isPanelOpen ? PANEL_RIGHT_EDGE_PX : 0;
@@ -304,82 +251,17 @@ export default function MapCanvas({
   }
 
   /**
-   * 地図のクリックが当たった代表点の、画面上の位置とシリーズを返す。
-   *
-   * タッチの入力は押した位置の周り 44px 四方、それ以外は押した位置の点だけを調べる。
-   * `PointerEvent.pointerType` を持たないクリックはマウスとして扱う。
-   * `pointerType` を持たない端末のタッチは、判定が円の大きさに留まる。
-   */
-  function pointsUnder(event: MapLayerMouseEvent): PointUnder[] {
-    const map = mapRef.current;
-    const original = event.originalEvent;
-    const isTouch =
-      original !== undefined &&
-      "pointerType" in original &&
-      original.pointerType === "touch";
-    const { x, y } = event.point;
-    const features = isTouch
-      ? map?.queryRenderedFeatures(
-          [
-            [x - TOUCH_HIT_HALF_SIZE_PX, y - TOUCH_HIT_HALF_SIZE_PX],
-            [x + TOUCH_HIT_HALF_SIZE_PX, y + TOUCH_HIT_HALF_SIZE_PX],
-          ],
-          { layers: [SERIES_CIRCLE_LAYER.id] },
-        )
-      : event.features;
-
-    return (features ?? []).flatMap((feature) => {
-      const { seriesId } = feature.properties;
-
-      if (
-        map === null ||
-        typeof seriesId !== "string" ||
-        feature.geometry.type !== "Point"
-      ) {
-        return [];
-      }
-
-      const [longitude, latitude] = feature.geometry.coordinates;
-      const screen = map.project([longitude, latitude]);
-
-      return [
-        {
-          x: screen.x,
-          y: screen.y,
-          seriesId,
-          coordinates: [longitude, latitude],
-        },
-      ];
-    });
-  }
-
-  /**
    * 地図のクリックが当たった代表点が 1 シリーズなら、そのシリーズを選ぶ。
-   * 2 シリーズ以上が重なっていれば、選択を変えず、重なった点を中央より少し下へ動かして、その上に候補の一覧を出す。
+   * 2 シリーズ以上が重なっていれば、選択を変えず候補の一覧を出す。
    * 当たらなければ選択を外す。
    * デスクトップの幅では地図を動かさず、スマホの幅ではシートに隠れない位置へ動かす。
    */
   function selectFromMap(event: MapLayerMouseEvent): void {
-    const points = pointsUnder(event);
-    const seriesIds = candidateSeriesIdsOf(event.point, points);
-    const nearest = points.find((point) => point.seriesId === seriesIds[0]);
+    const seriesIds = overlap.resolveClick(event);
 
-    if (seriesIds.length >= 2 && nearest !== undefined) {
-      setOverlap({
-        seriesIds,
-        coordinates: nearest.coordinates,
-        anchor: { x: nearest.x, y: nearest.y },
-      });
-      mapRef.current?.easeTo({
-        center: nearest.coordinates,
-        offset: [0, OVERLAP_POINT_OFFSET_PX],
-        duration: OVERLAP_PAN_DURATION_MS,
-      });
-
+    if (seriesIds.length >= 2) {
       return;
     }
-
-    setOverlap(null);
 
     const seriesId = seriesIds[0] ?? null;
 
@@ -394,7 +276,7 @@ export default function MapCanvas({
 
   /** 候補の一覧の行で選んだシリーズを選択し、候補の一覧を閉じる。 */
   function selectFromCandidates(seriesId: string): void {
-    setOverlap(null);
+    overlap.close();
 
     if (isDesktop) {
       select(seriesId);
@@ -405,49 +287,9 @@ export default function MapCanvas({
     selectAndPan(seriesId);
   }
 
-  /**
-   * 利用者の操作で地図が動き始めたとき、候補の一覧を閉じる。
-   * コードからの移動（余白の調整・選択の移動）では閉じない。
-   */
-  function closeCandidatesOnUserMove(event: ViewStateChangeEvent): void {
-    if (event.originalEvent !== undefined) {
-      closeCandidates();
-    }
-  }
-
-  /** 地図が動くたびに、候補の一覧が指す代表点の画面上の位置を取り直す。 */
-  function followOverlapAnchor(): void {
-    const map = mapRef.current;
-
-    if (map === null) {
-      return;
-    }
-
-    setOverlap((current) => {
-      if (current === null) {
-        return null;
-      }
-
-      const { x, y } = map.project(current.coordinates);
-
-      return { ...current, anchor: { x, y } };
-    });
-  }
-
-  const candidateSeries = (overlap?.seriesIds ?? []).flatMap((seriesId) => {
-    const found = seriesList.find((series) => series.id === seriesId);
-
-    return found === undefined ? [] : [found];
-  });
-
   if (mapStyle === null) {
     return null;
   }
-
-  const candidateCardLeft = candidateCardLeftOf(
-    overlap?.anchor.x ?? 0,
-    window.innerWidth,
-  );
 
   let sheetContent: ReactNode;
 
@@ -502,8 +344,8 @@ export default function MapCanvas({
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={selectFromMap}
-      onMoveStart={closeCandidatesOnUserMove}
-      onMove={followOverlapAnchor}
+      onMoveStart={overlap.closeOnUserMove}
+      onMove={overlap.follow}
       onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
@@ -567,22 +409,13 @@ export default function MapCanvas({
         </div>
       )}
       {/* 候補の一覧は、重なった代表点の上に、どの幅でもシートの上へ重ねる。 */}
-      {overlap !== null && (
-        <div
-          className="absolute z-20 -translate-y-full"
-          style={{
-            left: candidateCardLeft,
-            top: overlap.anchor.y - CANDIDATE_ARROW_GAP_PX,
-            width: CANDIDATE_CARD_WIDTH_PX,
-          }}
-        >
-          <SeriesCandidateCard
-            candidates={candidateSeries}
-            arrowLeftPx={overlap.anchor.x - candidateCardLeft}
-            onSelect={selectFromCandidates}
-            onClose={closeCandidates}
-          />
-        </div>
+      {overlap.view !== null && (
+        <SeriesCandidateOverlay
+          candidates={overlap.view.candidates}
+          anchor={overlap.view.anchor}
+          onSelect={selectFromCandidates}
+          onClose={overlap.close}
+        />
       )}
     </MapLibreMap>
   );
