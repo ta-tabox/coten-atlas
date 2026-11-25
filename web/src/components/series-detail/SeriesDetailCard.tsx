@@ -13,6 +13,11 @@ import type { Series } from "@/lib/schema/series";
 
 type SeriesDetailCardProps = {
   series: Series;
+  /**
+   * 代表点の事物の地名。
+   * 位置なしのシリーズは null。
+   */
+  placeName: string | null;
   /** `series` に割り当てられたエピソードと、その取得の状態。 */
   episodes: EpisodesState;
   onClose: () => void;
@@ -24,6 +29,7 @@ type SeriesDetailCardProps = {
  */
 export default function SeriesDetailCard({
   series,
+  placeName,
   episodes,
   onClose,
 }: SeriesDetailCardProps) {
@@ -32,7 +38,12 @@ export default function SeriesDetailCard({
       aria-labelledby={SERIES_DETAIL_TITLE_ID}
       className="flex max-h-[36rem] min-h-0 w-[22rem] max-w-full flex-col overflow-hidden rounded-box border border-rule bg-paper px-5 py-4 font-body leading-[1.7] text-ink shadow-sm"
     >
-      <SeriesDetailBody series={series} episodes={episodes} onClose={onClose} />
+      <SeriesDetailBody
+        series={series}
+        placeName={placeName}
+        episodes={episodes}
+        onClose={onClose}
+      />
     </aside>
   );
 }
