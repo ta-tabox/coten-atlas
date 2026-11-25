@@ -563,6 +563,34 @@ describe("MapCanvas", () => {
     expect(seriesLayersProps().selectedSeries).toBeNull();
   });
 
+  it("選んだシリーズと tags も region も共有しないシリーズは、関連するシリーズとして詳細カードへ渡さない", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+
+    expect(
+      childPropsOf<ComponentProps<typeof SeriesDetailCard>>(SeriesDetailCard)
+        .relatedSeries,
+    ).toEqual([]);
+  });
+
+  it("詳細カードで関連するシリーズを押すと、そのシリーズへ選択が移り、一覧パネルとシリーズのレイヤも同じ id になる", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+    act(() =>
+      childPropsOf<ComponentProps<typeof SeriesDetailCard>>(
+        SeriesDetailCard,
+      ).onSelect("okane-no-rekishi"),
+    );
+
+    expect(childOfType(SeriesDetailCard)).toMatchObject({
+      props: { series: OKANE },
+    });
+    expect(seriesPanelProps().selectedSeriesId).toBe("okane-no-rekishi");
+    expect(seriesLayersProps().selectedSeries?.id).toBe("okane-no-rekishi");
+  });
+
   it("一覧パネルで代表点を持つシリーズを選ぶと、その代表点へ panTo する", async () => {
     await renderMapCanvas();
 

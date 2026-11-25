@@ -39,6 +39,7 @@ import {
   lociForSeries,
   type MapLocusCollection,
 } from "@/lib/map/loci";
+import { relatedSeriesOf } from "@/lib/map/related-series";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import { listHeightPx, SHEET_STAGE, type SheetStage } from "@/lib/map/sheet";
 import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
@@ -354,6 +355,8 @@ export default function MapCanvas({
                 series={selectedSeries}
                 placeName={placeNameOf(loci, selectedSeries)}
                 episodes={episodesOf(episodes, selectedSeries.id)}
+                relatedSeries={relatedSeriesOf(seriesList, selectedSeries)}
+                onSelect={selectAndPan}
                 onClose={() => setSelectedSeriesId(null)}
               />
             </div>
@@ -388,6 +391,8 @@ export default function MapCanvas({
                   series={selectedSeries}
                   placeName={placeNameOf(loci, selectedSeries)}
                   episodes={episodesOf(episodes, selectedSeries.id)}
+                  relatedSeries={relatedSeriesOf(seriesList, selectedSeries)}
+                  onSelect={selectAndPan}
                   onClose={() => setSelectedSeriesId(null)}
                 />
               </div>

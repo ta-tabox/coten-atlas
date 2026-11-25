@@ -38,6 +38,27 @@ const SPARTA: Series = {
   tags: ["集団"],
 };
 
+const TEISEI_ROMA: Series = {
+  ...SPARTA,
+  id: "teisei-roma",
+  title: "帝政ローマ",
+  anchor: "roma",
+  timeRange: { start: -27, end: 476 },
+  season: 66,
+  tags: ["集団", "帝国"],
+};
+
+const OSMAN: Series = {
+  ...SPARTA,
+  id: "osman-teikoku",
+  title: "オスマン帝国",
+  anchor: "istanbul",
+  timeRange: { start: 1299, end: 1922 },
+  region: "西アジア",
+  season: 20,
+  tags: ["集団", "帝国", "戦争"],
+};
+
 const EPISODE_URL = "https://open.spotify.com/episode/0000000000000000000000";
 
 const EPISODES: Episode[] = [
@@ -55,6 +76,8 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -81,6 +104,8 @@ describe("SeriesDetailCard", () => {
         series={okane}
         placeName={null}
         episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -95,6 +120,8 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -114,6 +141,8 @@ describe("SeriesDetailCard", () => {
         series={{ ...SPARTA, anchor: ANCHOR_UNLOCATED }}
         placeName={null}
         episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -132,6 +161,8 @@ describe("SeriesDetailCard", () => {
         }}
         placeName={null}
         episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -145,6 +176,8 @@ describe("SeriesDetailCard", () => {
         series={{ ...SPARTA, tags: ["集団", "戦争"] }}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -162,6 +195,8 @@ describe("SeriesDetailCard", () => {
         series={{ ...SPARTA, region: "地域なし", tags: ["経済", "概念史"] }}
         placeName={null}
         episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -180,6 +215,8 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -196,6 +233,8 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -221,6 +260,8 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -247,6 +288,8 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -270,6 +313,8 @@ describe("SeriesDetailCard", () => {
             episodeOf({ guid: "sparta-2", title: "リンク無しの回", links: {} }),
           ],
         }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -296,6 +341,8 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -317,6 +364,8 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -333,6 +382,8 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loading" }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -346,11 +397,67 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "error" }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
 
     expect(screen.getByText("エピソードの一覧を取れなかった。")).toBeVisible();
+  });
+
+  it("関連するシリーズを、渡された順に押せる名前で並べる", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[TEISEI_ROMA, OSMAN]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const row = within(
+      screen.getByRole("region", { name: "関連するシリーズ" }),
+    );
+
+    expect(
+      row.getAllByRole("button").map((button) => button.textContent),
+    ).toEqual(["帝政ローマ", "オスマン帝国"]);
+  });
+
+  it("関連するシリーズを押すと、そのシリーズの id で onSelect を呼ぶ", () => {
+    const onSelect = vi.fn();
+
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[TEISEI_ROMA, OSMAN]}
+        onSelect={onSelect}
+        onClose={vi.fn()}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "オスマン帝国" }));
+
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith("osman-teikoku");
+  });
+
+  it("関連するシリーズが無ければ、関連するシリーズの行を見出しごと出さない", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByText("関連するシリーズ")).toBeNull();
   });
 
   it("閉じるボタンを押すと onClose を呼ぶ", () => {
@@ -361,6 +468,8 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={onClose}
       />,
     );
