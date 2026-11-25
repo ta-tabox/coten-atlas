@@ -40,6 +40,10 @@ import {
 } from "@/lib/episodes";
 import { currentWindow } from "@/lib/era/window";
 import {
+  CANDIDATE_CARD_WIDTH_PX,
+  candidateCardLeftOf,
+} from "@/lib/map/candidate-card";
+import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
   PUBLIC_MAP_MAX_ZOOM,
@@ -93,11 +97,30 @@ type MapCanvasProps = {
  */
 const TOUCH_HIT_HALF_SIZE_PX = 22;
 
-/** 候補の一覧を、押した位置から右下へずらす距離（px）。 */
-const CANDIDATE_CARD_OFFSET_PX = 12;
+/**
+ * 重なった代表点を地図の中央から下へずらして置く距離（px）。
+ * 代表点の上に出る候補の一覧が、ヘッダーに隠れず、シートの上にも収まる高さを空ける。
+ */
+const OVERLAP_POINT_OFFSET_PX = 100;
 
-/** 候補の一覧に当たったときの、押した位置と候補のシリーズ id。 */
-type OverlapCandidates = { seriesIds: string[]; point: ScreenPoint };
+/** 候補の一覧の下の矢印の先を、代表点の中心から上へ離す距離（px）。 */
+const CANDIDATE_ARROW_GAP_PX = 12;
+
+/** 重なった代表点へ地図の中心を移すのにかける時間（ミリ秒）。 */
+const OVERLAP_PAN_DURATION_MS = 400;
+
+/**
+ * 候補の一覧が指す重なった代表点。
+ * `coordinates` は経度と緯度、`anchor` はその画面上の位置で、地図が動くたびに更新する。
+ */
+type OverlapCandidates = {
+  seriesIds: string[];
+  coordinates: [number, number];
+  anchor: ScreenPoint;
+};
+
+/** 地図のクリックが当たった代表点の、画面上の位置・シリーズ・経度と緯度。 */
+type PointUnder = CandidatePoint & { coordinates: [number, number] };
 
 /**
  * `state` を `seriesId` に割り当てられたエピソードだけに絞り込んで返す。
@@ -284,7 +307,7 @@ export default function MapCanvas({
    * `PointerEvent.pointerType` を持たないクリックはマウスとして扱う。
    * `pointerType` を持たない端末のタッチは、判定が円の大きさに留まる。
    */
-  function pointsUnder(event: MapLayerMouseEvent): CandidatePoint[] {
+  function pointsUnder(event: MapLayerMouseEvent): PointUnder[] {
     const map = mapRef.current;
     const original = event.originalEvent;
     const isTouch =
@@ -316,21 +339,39 @@ export default function MapCanvas({
       const [longitude, latitude] = feature.geometry.coordinates;
       const screen = map.project([longitude, latitude]);
 
-      return [{ x: screen.x, y: screen.y, seriesId }];
+      return [
+        {
+          x: screen.x,
+          y: screen.y,
+          seriesId,
+          coordinates: [longitude, latitude],
+        },
+      ];
     });
   }
 
   /**
    * 地図のクリックが当たった代表点が 1 シリーズなら、そのシリーズを選ぶ。
-   * 2 シリーズ以上が重なっていれば、選択を変えず候補の一覧を出す。
+   * 2 シリーズ以上が重なっていれば、選択を変えず、重なった点を中央より少し下へ動かして、その上に候補の一覧を出す。
    * 当たらなければ選択を外す。
    * デスクトップの幅では地図を動かさず、スマホの幅ではシートに隠れない位置へ動かす。
    */
   function selectFromMap(event: MapLayerMouseEvent): void {
-    const seriesIds = candidateSeriesIdsOf(event.point, pointsUnder(event));
+    const points = pointsUnder(event);
+    const seriesIds = candidateSeriesIdsOf(event.point, points);
+    const nearest = points.find((point) => point.seriesId === seriesIds[0]);
 
-    if (seriesIds.length >= 2) {
-      setOverlap({ seriesIds, point: event.point });
+    if (seriesIds.length >= 2 && nearest !== undefined) {
+      setOverlap({
+        seriesIds,
+        coordinates: nearest.coordinates,
+        anchor: { x: nearest.x, y: nearest.y },
+      });
+      mapRef.current?.easeTo({
+        center: nearest.coordinates,
+        offset: [0, OVERLAP_POINT_OFFSET_PX],
+        duration: OVERLAP_PAN_DURATION_MS,
+      });
 
       return;
     }
@@ -371,6 +412,25 @@ export default function MapCanvas({
     }
   }
 
+  /** 地図が動くたびに、候補の一覧が指す代表点の画面上の位置を取り直す。 */
+  function followOverlapAnchor(): void {
+    const map = mapRef.current;
+
+    if (map === null) {
+      return;
+    }
+
+    setOverlap((current) => {
+      if (current === null) {
+        return null;
+      }
+
+      const { x, y } = map.project(current.coordinates);
+
+      return { ...current, anchor: { x, y } };
+    });
+  }
+
   const candidateSeries = (overlap?.seriesIds ?? []).flatMap((seriesId) => {
     const found = seriesList.find((series) => series.id === seriesId);
 
@@ -380,6 +440,11 @@ export default function MapCanvas({
   if (mapStyle === null) {
     return null;
   }
+
+  const candidateCardLeft = candidateCardLeftOf(
+    overlap?.anchor.x ?? 0,
+    window.innerWidth,
+  );
 
   let sheetContent: ReactNode;
 
@@ -435,6 +500,7 @@ export default function MapCanvas({
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={selectFromMap}
       onMoveStart={closeCandidatesOnUserMove}
+      onMove={followOverlapAnchor}
       onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
@@ -497,17 +563,19 @@ export default function MapCanvas({
           </BottomSheet>
         </div>
       )}
-      {/* 候補の一覧は、押した位置の近くに、どの幅でもシートの上へ重ねる。 */}
+      {/* 候補の一覧は、重なった代表点の上に、どの幅でもシートの上へ重ねる。 */}
       {overlap !== null && (
         <div
-          className="absolute z-20"
+          className="absolute z-20 -translate-y-full"
           style={{
-            left: `min(${overlap.point.x + CANDIDATE_CARD_OFFSET_PX}px, calc(100vw - 19rem))`,
-            top: `min(${overlap.point.y + CANDIDATE_CARD_OFFSET_PX}px, calc(100dvh - 20rem))`,
+            left: candidateCardLeft,
+            top: overlap.anchor.y - CANDIDATE_ARROW_GAP_PX,
+            width: CANDIDATE_CARD_WIDTH_PX,
           }}
         >
           <SeriesCandidateCard
             candidates={candidateSeries}
+            arrowLeftPx={overlap.anchor.x - candidateCardLeft}
             onSelect={selectFromCandidates}
             onClose={closeCandidates}
           />

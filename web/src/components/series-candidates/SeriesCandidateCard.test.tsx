@@ -23,6 +23,7 @@ function renderCard(onSelect = () => {}, onClose = () => {}) {
       <p>外</p>
       <SeriesCandidateCard
         candidates={[ROMA, TEISEI]}
+        arrowLeftPx={100}
         onSelect={onSelect}
         onClose={onClose}
       />
@@ -39,6 +40,14 @@ describe("SeriesCandidateCard", () => {
     ).toContain("前100年〜前44年");
     expect(screen.getByRole("button", { name: /帝政ローマ/ })).toBeDefined();
     expect(screen.queryByRole("heading")).toBeNull();
+  });
+
+  it("矢印を、吹き出しの左端から arrowLeftPx の位置に置く", () => {
+    renderCard();
+
+    const arrow = document.querySelector<HTMLElement>("[data-candidate-arrow]");
+
+    expect(arrow?.style.left).toBe("94px");
   });
 
   it("行を押すと、そのシリーズの id で onSelect を呼ぶ", () => {

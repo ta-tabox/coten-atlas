@@ -984,6 +984,31 @@ describe("MapCanvas（重なった代表点の選び分け）", () => {
     expect(childPropsOf(SeriesDetailCard).series.id).toBe("sparta");
   });
 
+  it("同じ座標の事物を押すと、その事物を地図の中央より少し下へ動かす", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+
+    act(() =>
+      lastProps().onClick?.(clickAt(["sparta", "athens"], { x: 30, y: 40 })),
+    );
+
+    expect(easeTo).toHaveBeenLastCalledWith(
+      expect.objectContaining({ center: [30, 40], offset: [0, 100] }),
+    );
+  });
+
+  it("地図が動くと、候補の一覧の矢印が指す位置を代表点の画面上の位置へ取り直し、左の端で枠がずれても矢印は代表点を指す", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+    act(() =>
+      lastProps().onClick?.(clickAt(["sparta", "athens"], { x: 10, y: 40 })),
+    );
+    const before = childPropsOf(SeriesCandidateCard).arrowLeftPx;
+
+    project.mockReturnValueOnce({ x: 60, y: 80 });
+    act(() => lastProps().onMove?.({} as never));
+
+    expect(childPropsOf(SeriesCandidateCard).arrowLeftPx).toBe(before + 50);
+  });
+
   it("基準の点から 12px を超えて離れた点は、判定の範囲に入っていても候補に入れない", async () => {
     await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
     const event = clickAt(["sparta"]);

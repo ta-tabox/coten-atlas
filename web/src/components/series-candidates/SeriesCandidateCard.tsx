@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * 地図の押した位置で重なった代表点のシリーズを、選び分ける一覧の枠として描く。
- * 見出しも閉じるボタンも持たない。
- * 閉じる操作は、枠の外の押下と Escape キーが担う。
+ * 地図の押した位置で重なった代表点のシリーズを、選び分ける一覧の吹き出しとして描く。
+ * 吹き出しの下の矢印が、重なった代表点を指す。
+ * 見出しも閉じるボタンも持たず、閉じる操作は枠の外の押下と Escape キーが担う。
  *
  * 選択は保持せず、行の押下は `onSelect`、閉じる操作は `onClose` で返す。
  */
@@ -15,18 +15,22 @@ import type { Series } from "@/lib/schema/series";
 type SeriesCandidateCardProps = {
   /** 押した位置に近い順の候補。 */
   candidates: Series[];
+  /** 矢印の先の、吹き出しの左端からの水平位置（px）。 */
+  arrowLeftPx: number;
   onSelect: (seriesId: string) => void;
   onClose: () => void;
 };
 
 /**
- * `candidates` を一覧パネルの行と同じ見た目で、角丸と罫線の枠に並べる。
- * 枠の外を押すか Escape キーを押すと `onClose` を呼ぶ。
+ * `candidates` を一覧パネルの行と同じ見た目で、角丸と罫線の吹き出しに並べる。
+ * 高さは行がおよそ 3 つ入る分までで、それを超える候補は吹き出しの中でスクロールする。
+ * 吹き出しの外を押すか Escape キーを押すと `onClose` を呼ぶ。
  *
- * 枠の外の押下は地図のクリックより先に届くので、地図の上を押したときも選択を変えずに閉じてから、地図のクリックが新しい候補を決める。
+ * 吹き出しの外の押下は地図のクリックより先に届くので、地図の上を押したときも選択を変えずに閉じてから、地図のクリックが新しい候補を決める。
  */
 export default function SeriesCandidateCard({
   candidates,
+  arrowLeftPx,
   onSelect,
   onClose,
 }: SeriesCandidateCardProps) {
@@ -58,9 +62,12 @@ export default function SeriesCandidateCard({
     <aside
       ref={cardRef}
       aria-label="重なっているシリーズ"
-      className="max-h-72 w-72 max-w-full overflow-y-auto rounded-box border border-rule bg-paper py-1 font-body text-ink shadow-sm"
+      className="relative font-body text-ink"
     >
-      <ul data-candidate-list>
+      <ul
+        data-candidate-list
+        className="max-h-48 overflow-y-auto rounded-box border border-rule bg-paper py-1 shadow-sm"
+      >
         {candidates.map((series) => (
           <li key={series.id}>
             <SeriesPanelItem
@@ -71,6 +78,13 @@ export default function SeriesCandidateCard({
           </li>
         ))}
       </ul>
+      {/* 吹き出しの下辺から突き出す矢印は、罫線を持つ二辺だけの菱形の半分で描く。 */}
+      <span
+        aria-hidden="true"
+        data-candidate-arrow
+        style={{ left: arrowLeftPx - 6 }}
+        className="absolute -bottom-1.5 size-3 rotate-45 border-r border-b border-rule bg-paper"
+      />
     </aside>
   );
 }
