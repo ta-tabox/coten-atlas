@@ -52,6 +52,9 @@ export const SERIES_REGIONS = [
   "地域なし",
 ] as const;
 
+/** `SERIES_REGIONS` のうち、区画を一つ選ぶと嘘になるシリーズが置く値。 */
+export const REGION_NONE = "地域なし" satisfies (typeof SERIES_REGIONS)[number];
+
 /**
  * 関連シリーズ行が等値で照合するので、`region` の欄を `SERIES_REGIONS` の閉じた集合に限る。
  */
