@@ -20,8 +20,9 @@ type RelatedSeriesRowProps = {
 };
 
 /**
- * 関連するシリーズ（`relatedSeries`）の名前を、渡された順に、押すと `onSelect` を呼ぶボタンで並べる。
- * 各ボタンは名前の下に、関連とみなした理由の共有したタグを、名前より小さく薄い文字で添える。
+ * 関連するシリーズ（`relatedSeries`）を、渡された順に 1 行に 1 件ずつ、押すと `onSelect` を呼ぶボタンで並べる。
+ * 各行は左に名前、右端に関連とみなした理由の共有したタグを、名前より小さく薄い文字で置く。
+ * 名前が行に収まらなければ末尾を省略し、全文は `title` 属性に残す。
  * `relatedSeries` が空なら、見出しごと何も描かない。
  */
 export default function RelatedSeriesRow({
@@ -44,20 +45,23 @@ export default function RelatedSeriesRow({
         関連するシリーズ
       </h3>
 
-      <ul className="mt-2 flex flex-wrap gap-1.5">
+      <ul className="mt-1 divide-y divide-rule">
         {relatedSeries.map(({ series, sharedTags }) => (
-          <li key={series.id} className="max-w-full">
+          <li key={series.id}>
             <button
               type="button"
               onClick={() => onSelect(series.id)}
-              className="max-w-full rounded-control border border-rule px-3 py-1 text-left leading-snug hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-point"
+              className="flex w-full items-baseline gap-3 px-1 py-1.5 text-left hover:bg-rule/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point"
             >
-              <span className="block text-[0.85rem] text-link">
+              <span
+                title={series.title}
+                className="min-w-0 grow truncate text-[0.85rem] text-link"
+              >
                 {series.title}
               </span>{" "}
               <span
                 data-shared-tags
-                className="block text-[0.7rem] text-ink-muted"
+                className="flex-none text-[0.7rem] text-ink-muted"
               >
                 <span className="sr-only">共有するタグ </span>
                 {sharedTags.join("・")}

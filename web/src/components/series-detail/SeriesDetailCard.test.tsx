@@ -432,7 +432,7 @@ describe("SeriesDetailCard", () => {
     ).toEqual(["帝政ローマ", "オスマン帝国"]);
   });
 
-  it("関連するシリーズの名前の下に、共有したタグを・でつないで添える", () => {
+  it("関連するシリーズの名前の横に、共有したタグを・でつないで添える", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
