@@ -304,13 +304,7 @@ export default function EraSlider({
                 value={Math.round(position * maxStep)}
                 aria-valuetext={windowYears}
                 onChange={(event) => {
-                  const next = Number(event.target.value) / maxStep;
-
-                  if (isZoomed) {
-                    setViewMin(viewMinCenteredOn(next, zoomSpan));
-                  }
-
-                  onPositionChange(next);
+                  onPositionChange(Number(event.target.value) / maxStep);
                 }}
                 className="pointer-events-none absolute inset-0 m-0 size-full opacity-0"
               />

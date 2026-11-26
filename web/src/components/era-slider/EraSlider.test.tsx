@@ -425,6 +425,34 @@ describe("EraSlider", () => {
     ).toBeNull();
   });
 
+  it("拡大中にキーボードで位置を少し動かしても、窓が範囲に収まっているあいだは範囲を動かさない", () => {
+    render(<SliderWithPosition />);
+    zoomIn();
+    const before = firstCellLeftPercent();
+    const slider = screen.getByRole<HTMLInputElement>("slider", {
+      name: "時代",
+    });
+
+    fireEvent.change(slider, {
+      target: { value: String(Number(slider.value) + 1) },
+    });
+
+    expect(firstCellLeftPercent()).toBe(before);
+  });
+
+  it("拡大中にキーボードで位置が範囲の外へ動いたら、窓が入る最小の移動で範囲が追う", () => {
+    render(<SliderWithPosition />);
+    zoomIn();
+    const before = firstCellLeftPercent();
+    const slider = screen.getByRole<HTMLInputElement>("slider", {
+      name: "時代",
+    });
+
+    fireEvent.change(slider, { target: { value: slider.max } });
+
+    expect(firstCellLeftPercent()).toBeLessThan(before);
+  });
+
   it("スライダーを動かすと、値を 0..1 の位置に直して onPositionChange へ渡す", () => {
     const { onPositionChange } = renderAt(0);
     const slider = screen.getByRole<HTMLInputElement>("slider", {
