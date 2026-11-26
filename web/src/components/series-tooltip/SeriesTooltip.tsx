@@ -18,7 +18,7 @@ export default function SeriesTooltip({ series }: SeriesTooltipProps) {
   return (
     <ul
       role="tooltip"
-      className="max-w-64 space-y-1 rounded-control bg-ink px-3 py-1.5 font-body text-paper"
+      className="space-y-1 whitespace-nowrap rounded-control bg-ink px-3 py-1.5 font-body text-paper"
     >
       {series.map((item) => (
         <li key={item.id}>

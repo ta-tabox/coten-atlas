@@ -37,7 +37,7 @@ import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
-import SeriesTooltip from "@/components/series-tooltip/SeriesTooltip";
+import SeriesTooltipOverlay from "@/components/series-tooltip/SeriesTooltipOverlay";
 import { currentWindow } from "@/lib/era/window";
 import { toJapaneseLabelStyle } from "@/lib/map/basemap-labels";
 import {
@@ -1040,9 +1040,9 @@ describe("MapCanvas（代表点へのホバー）", () => {
    * 札が無ければ undefined を返す。
    */
   function tooltipIds(): string[] | undefined {
-    return childOfType(SeriesTooltip) === undefined
+    return childOfType(SeriesTooltipOverlay) === undefined
       ? undefined
-      : childPropsOf(SeriesTooltip).series.map(({ id }) => id);
+      : childPropsOf(SeriesTooltipOverlay).series.map(({ id }) => id);
   }
 
   beforeEach(() => {

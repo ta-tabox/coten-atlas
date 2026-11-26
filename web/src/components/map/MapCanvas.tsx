@@ -23,7 +23,7 @@ import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
-import SeriesTooltip from "@/components/series-tooltip/SeriesTooltip";
+import SeriesTooltipOverlay from "@/components/series-tooltip/SeriesTooltipOverlay";
 import SiteHeader from "@/components/site-header/SiteHeader";
 import {
   EPISODES_KIND,
@@ -61,12 +61,6 @@ const PAN_DURATION_MS = 1200;
 
 /** 一覧パネルの開閉に合わせて地図の視野をずらすのにかける時間（ミリ秒）。 */
 const PADDING_DURATION_MS = 300;
-
-/**
- * ツールチップの下辺を、代表点の中心から上へ離す距離（px）。
- * 円（半径 6px）に重ならない余白を残す。
- */
-const TOOLTIP_GAP_PX = 12;
 
 type MapCanvasProps = {
   loci: MapLocusCollection;
@@ -438,15 +432,10 @@ export default function MapCanvas({
       )}
       {/* ツールチップは代表点の上に置き、候補の一覧が開いている間は出さない。 */}
       {hover.view !== null && overlap.view === null && (
-        <div
-          className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full"
-          style={{
-            left: hover.view.anchor.x,
-            top: hover.view.anchor.y - TOOLTIP_GAP_PX,
-          }}
-        >
-          <SeriesTooltip series={hover.view.series} />
-        </div>
+        <SeriesTooltipOverlay
+          series={hover.view.series}
+          anchor={hover.view.anchor}
+        />
       )}
       {/* 候補の一覧は、重なった代表点の上に、どの幅でもシートの上へ重ねる。 */}
       {overlap.view !== null && (
