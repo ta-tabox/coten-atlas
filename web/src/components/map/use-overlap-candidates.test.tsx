@@ -78,7 +78,7 @@ describe("useOverlapCandidates", () => {
     const { result } = renderOverlapHook();
 
     act(() => {
-      result.current.resolveClick(
+      result.current.openCandidatesAt(
         clickAt([featureAt("sparta", 30, 40), featureAt("athens", 30, 40)], {
           x: 30,
           y: 40,
@@ -100,7 +100,9 @@ describe("useOverlapCandidates", () => {
     let seriesIds: string[] = [];
 
     act(() => {
-      seriesIds = result.current.resolveClick(clickAt([featureAt("sparta")]));
+      seriesIds = result.current.openCandidatesAt(
+        clickAt([featureAt("sparta")]),
+      );
     });
 
     expect(seriesIds).toEqual(["sparta"]);
@@ -112,7 +114,7 @@ describe("useOverlapCandidates", () => {
     const { result } = renderOverlapHook();
 
     act(() => {
-      result.current.resolveClick(
+      result.current.openCandidatesAt(
         clickAt([featureAt("sparta"), featureAt("athens", 13, 0)]),
       );
     });
@@ -123,14 +125,14 @@ describe("useOverlapCandidates", () => {
   it("点に当たらないクリックは、開いている候補の一覧を閉じて、空配列を返す", () => {
     const { result } = renderOverlapHook();
     act(() => {
-      result.current.resolveClick(
+      result.current.openCandidatesAt(
         clickAt([featureAt("sparta"), featureAt("athens")]),
       );
     });
     let seriesIds: string[] = ["x"];
 
     act(() => {
-      seriesIds = result.current.resolveClick(clickAt([]));
+      seriesIds = result.current.openCandidatesAt(clickAt([]));
     });
 
     expect(seriesIds).toEqual([]);
@@ -143,7 +145,7 @@ describe("useOverlapCandidates", () => {
     let seriesIds: string[] = [];
 
     act(() => {
-      seriesIds = result.current.resolveClick(
+      seriesIds = result.current.openCandidatesAt(
         clickAt([], { pointerType: "touch" }),
       );
     });
@@ -166,7 +168,9 @@ describe("useOverlapCandidates", () => {
       let seriesIds: string[] = ["x"];
 
       act(() => {
-        seriesIds = result.current.resolveClick(clickAt([], { pointerType }));
+        seriesIds = result.current.openCandidatesAt(
+          clickAt([], { pointerType }),
+        );
       });
 
       expect(queryRenderedFeatures).not.toHaveBeenCalled();
@@ -177,7 +181,7 @@ describe("useOverlapCandidates", () => {
   it("利用者の操作で地図が動き始めると候補の一覧を閉じ、コードからの移動では閉じない", () => {
     const { result } = renderOverlapHook();
     act(() => {
-      result.current.resolveClick(
+      result.current.openCandidatesAt(
         clickAt([featureAt("sparta"), featureAt("athens")]),
       );
     });
@@ -202,7 +206,7 @@ describe("useOverlapCandidates", () => {
   it("地図が動くと、候補の一覧が指す位置を代表点の画面上の位置へ取り直す", () => {
     const { result } = renderOverlapHook();
     act(() => {
-      result.current.resolveClick(
+      result.current.openCandidatesAt(
         clickAt([featureAt("sparta", 10, 40), featureAt("athens", 10, 40)], {
           x: 10,
           y: 40,
@@ -211,15 +215,30 @@ describe("useOverlapCandidates", () => {
     });
 
     project.mockReturnValueOnce({ x: 60, y: 80 });
-    act(() => result.current.follow());
+    act(() => result.current.updateAnchor());
 
     expect(result.current.view?.anchor).toEqual({ x: 60, y: 80 });
+  });
+
+  it("画面の幅が変わると、開いている候補の一覧を閉じる", () => {
+    const { result } = renderOverlapHook();
+    act(() => {
+      result.current.openCandidatesAt(
+        clickAt([featureAt("sparta"), featureAt("athens")]),
+      );
+    });
+
+    act(() => {
+      window.dispatchEvent(new Event("resize"));
+    });
+
+    expect(result.current.view).toBeNull();
   });
 
   it("close を呼ぶと、候補の一覧を閉じる", () => {
     const { result } = renderOverlapHook();
     act(() => {
-      result.current.resolveClick(
+      result.current.openCandidatesAt(
         clickAt([featureAt("sparta"), featureAt("athens")]),
       );
     });

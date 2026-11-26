@@ -78,7 +78,8 @@ export default function SeriesCandidateCard({
           </li>
         ))}
       </ul>
-      {/* 吹き出しの下辺から突き出す矢印は、罫線を持つ二辺だけの菱形の半分で描く。 */}
+      {/* 吹き出しの下辺から代表点を指す矢印。 */}
+      {/* 矢印の大きさを変えるときは、`SeriesCandidateOverlay` の `CANDIDATE_ARROW_GAP_PX` と、下の `left` で引く矢印の半幅も合わせる。 */}
       <span
         aria-hidden="true"
         data-candidate-arrow

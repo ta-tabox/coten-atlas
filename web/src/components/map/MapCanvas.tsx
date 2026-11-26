@@ -257,7 +257,7 @@ export default function MapCanvas({
    * デスクトップの幅では地図を動かさず、スマホの幅ではシートに隠れない位置へ動かす。
    */
   function selectFromMap(event: MapLayerMouseEvent): void {
-    const seriesIds = overlap.resolveClick(event);
+    const seriesIds = overlap.openCandidatesAt(event);
 
     if (seriesIds.length >= 2) {
       return;
@@ -345,7 +345,7 @@ export default function MapCanvas({
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={selectFromMap}
       onMoveStart={overlap.closeOnUserMove}
-      onMove={overlap.follow}
+      onMove={overlap.updateAnchor}
       onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。

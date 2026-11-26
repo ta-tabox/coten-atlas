@@ -1,8 +1,7 @@
 "use client";
 
 /**
- * 重なった代表点の候補の一覧を、代表点の上に置く位置決めの枠を描く。
- * 一覧の中身は `SeriesCandidateCard` が描く。
+ * 重なった代表点の候補の一覧の吹き出しを、代表点の上に置く位置決めの枠を描く。
  */
 
 import SeriesCandidateCard from "@/components/series-candidates/SeriesCandidateCard";
@@ -15,7 +14,7 @@ import type { Series } from "@/lib/schema/series";
 
 /**
  * 吹き出しの下辺を、代表点の中心から上へ離す距離（px）。
- * 下辺から突き出す矢印の先（約 9px）が、円（半径 6px）に重ならず、円との間に余白が残る。
+ * 下辺から突き出す矢印の先が、円（半径 6px）に重ならず、円との間に余白が残るようにする。
  */
 const CANDIDATE_ARROW_GAP_PX = 22;
 

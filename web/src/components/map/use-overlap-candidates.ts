@@ -2,13 +2,12 @@
 
 /**
  * 地図のクリックで重なった代表点を候補のシリーズに決め、候補の一覧が指す代表点の状態を持つフックを置く。
- * 候補の一覧の描画は `SeriesCandidateOverlay`、候補から選んだ後の選択は `MapCanvas` が持つ。
  *
  * 重なった点を押すと、その点を地図の中央より少し下へ動かす。
  * 候補の一覧が点の上に出ても、ヘッダーに隠れず、スマホの幅のシートにも重ならない高さを空けるためである。
  */
 
-import { type RefObject, useCallback, useState } from "react";
+import { type RefObject, useCallback, useEffect, useState } from "react";
 import type {
   MapLayerMouseEvent,
   MapRef,
@@ -117,13 +116,25 @@ export function useOverlapCandidates({
 }: UseOverlapCandidatesArgs) {
   const [overlap, setOverlap] = useState<OverlapState | null>(null);
   const close = useCallback(() => setOverlap(null), []);
+  const isOpen = overlap !== null;
+
+  // 吹き出しの水平位置は画面の幅から決まるので、幅が変わる回転やリサイズで閉じる。
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    window.addEventListener("resize", close);
+
+    return () => window.removeEventListener("resize", close);
+  }, [isOpen, close]);
 
   /**
    * クリックが当たった代表点のシリーズ id を、押した位置に近い順で返す。
    * 2 件以上なら、候補の一覧を開いて重なった点を中央より少し下へ動かす。
    * 1 件以下なら、開いている候補の一覧を閉じる。
    */
-  function resolveClick(event: MapLayerMouseEvent): string[] {
+  function openCandidatesAt(event: MapLayerMouseEvent): string[] {
     const map = mapRef.current;
     const points = map === null ? [] : pointsUnder(map, event);
     const seriesIds = candidateSeriesIdsOf(event.point, points);
@@ -160,7 +171,7 @@ export function useOverlapCandidates({
   }
 
   /** 地図が動くたびに、候補の一覧が指す代表点の画面上の位置を取り直す。 */
-  function follow(): void {
+  function updateAnchor(): void {
     const map = mapRef.current;
 
     if (map === null) {
@@ -190,5 +201,5 @@ export function useOverlapCandidates({
           anchor: overlap.anchor,
         };
 
-  return { view, resolveClick, close, closeOnUserMove, follow };
+  return { view, openCandidatesAt, close, closeOnUserMove, updateAnchor };
 }
