@@ -28,6 +28,12 @@ type EraYears = {
 };
 
 /**
+ * 矢印キー 1 回で動く幅を決める、era 1 つあたりの目盛りの数。
+ * `<input type="range">` は整数の目盛りで値を持ち、矢印キー 1 回で 1 目盛り進む。
+ */
+export const STEPS_PER_ERA = 100;
+
+/**
  * `presentDate` の西暦年を返す。
  *
  * `end` が `ERA_END_PRESENT` の era の右端に当たる年で、`positionToYear` と `currentWindow` へ渡す。

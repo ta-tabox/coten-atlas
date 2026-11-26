@@ -25,16 +25,10 @@ import {
 } from "react";
 import EraJumpButton from "@/components/era-slider/EraJumpButton";
 import { clientXToPosition, dragToPosition } from "@/lib/era/pointer";
-import { eraIndexAt } from "@/lib/era/scale";
+import { eraIndexAt, STEPS_PER_ERA } from "@/lib/era/scale";
 import { currentWindow, currentWindowPositions } from "@/lib/era/window";
 import { formatTimeRange, formatYearWithoutUnit } from "@/lib/format";
 import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
-
-/**
- * 矢印キー 1 回で動く幅を決める、era 1 つあたりの目盛りの数。
- * `<input type="range">` は整数の目盛りで値を持ち、矢印キー 1 回で 1 目盛り進む。
- */
-const STEPS_PER_ERA = 100;
 
 /** スマホの幅で、画面に一度に見せる era の数。 */
 const VISIBLE_ERA_COUNT = 3;
