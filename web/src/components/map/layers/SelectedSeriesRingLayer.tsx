@@ -12,7 +12,6 @@ import { SERIES_SOURCE_ID } from "@/lib/map/layers/shared";
 import type { MapLocusCollection } from "@/lib/map/loci";
 
 type SelectedSeriesRingLayerProps = {
-  /** 地図へ渡す形に組んだ事物の全件。 */
   loci: MapLocusCollection;
   /** 輪を描く事物を、円が描かれている事物に絞る era スライダーの現在窓。 */
   currentWindow: CurrentWindow;

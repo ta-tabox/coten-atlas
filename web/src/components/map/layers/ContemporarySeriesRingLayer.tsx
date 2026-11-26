@@ -13,7 +13,6 @@ import type { MapLocusCollection } from "@/lib/map/loci";
 import type { Series } from "@/lib/schema/series";
 
 type ContemporarySeriesRingLayerProps = {
-  /** 地図へ渡す形に組んだ事物の全件。 */
   loci: MapLocusCollection;
   /** 縁取る事物を、円が描かれている事物に絞る era スライダーの現在窓。 */
   currentWindow: CurrentWindow;
