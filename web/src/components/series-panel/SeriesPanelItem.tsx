@@ -32,7 +32,7 @@ export default function SeriesPanelItem({
       type="button"
       onClick={() => onSelect(series.id)}
       aria-current={isSelected ? "true" : undefined}
-      className={`relative w-full py-2 pr-1 pl-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point ${isSelected ? "font-bold text-selected" : "hover:bg-rule/40"}`}
+      className={`relative w-full cursor-pointer py-2 pr-1 pl-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point ${isSelected ? "font-bold text-selected" : "hover:bg-rule/40"}`}
     >
       {/* 選択中の行に付ける赤い点は名前の左の余白に置き、名前と年代の頭をそろえたままにする。 */}
       {isSelected && (
