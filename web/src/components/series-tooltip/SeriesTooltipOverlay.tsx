@@ -35,12 +35,17 @@ export default function SeriesTooltipOverlay({
   const [size, setSize] = useState({ width: 0, height: 0 });
 
   // 位置は大きさから決まるので、描画の前に大きさを測って置き直す。
-  // biome-ignore lint/correctness/useExhaustiveDependencies: 大きさは中身のシリーズが変わったときだけ変わる。
+  // biome-ignore lint/correctness/useExhaustiveDependencies: 大きさが変わるのは中身のシリーズが変わったときだけで、同じ大きさなら状態は変わらない。
   useLayoutEffect(() => {
-    setSize({
-      width: ref.current?.offsetWidth ?? 0,
-      height: ref.current?.offsetHeight ?? 0,
-    });
+    const width = ref.current?.offsetWidth ?? 0;
+    const height = ref.current?.offsetHeight ?? 0;
+
+    // 親の描画のたびに別の配列が渡るので、同じ大きさなら状態を変えて再描画させない。
+    setSize((current) =>
+      current.width === width && current.height === height
+        ? current
+        : { width, height },
+    );
   }, [series]);
 
   return (
