@@ -6,7 +6,10 @@
  * 色は currentColor がリンクから継ぐので、ここでは決めない。
  */
 
-/** 外部リンクの矢印を、読み上げの対象から外して描くので、リンクの名前は呼ぶ側が文字で持つ。 */
+/**
+ * 外部リンクの矢印を描く。
+ * `aria-hidden` で隠すので、リンクの名前は呼ぶ側が文字で渡す。
+ */
 export default function ExternalLinkIcon({
   className,
 }: {

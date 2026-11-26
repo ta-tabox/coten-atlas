@@ -10,7 +10,10 @@
  * @see https://developers.google.com/youtube/terms/branding-guidelines API の利用者に当たる規定（マークのリンク先は YouTube のコンテンツ）。
  */
 
-/** YouTube のマークを、読み上げの対象から外して描くので、リンクの名前は呼ぶ側が文字で持つ。 */
+/**
+ * YouTube のマークを描く。
+ * `aria-hidden` で隠すので、リンクの名前は呼ぶ側が文字で渡す。
+ */
 export default function YouTubeIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" aria-hidden="true">

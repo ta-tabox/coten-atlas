@@ -6,7 +6,10 @@
  * 色は currentColor がリンクから継ぐので、ここでは決めない。
  */
 
-/** GitHub のマークを、読み上げの対象から外して描くので、リンクの名前は呼ぶ側が文字で持つ。 */
+/**
+ * GitHub のマークを描く。
+ * `aria-hidden` で隠すので、リンクの名前は呼ぶ側が文字で渡す。
+ */
 export default function GitHubIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
