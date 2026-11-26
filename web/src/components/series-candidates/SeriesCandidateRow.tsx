@@ -1,12 +1,8 @@
 "use client";
 
 /**
- * 候補の一覧の 1 行を、押すとその位置から波が広がり、右端の山形が右へ動くボタンとして描く。
- * ホバーできる端末では、載せると山形が右へ動く。
- *
- * 一覧パネルの行（`SeriesPanelItem`）と違い、地図の上に単独で出る行なので、動きで押せることと押したことを示す。
- * 押した後に一覧を閉じる時機は持たず、`onPress` を受ける側が決める。
- * `onPress` が受けなかった押下には、波も山形の動きも出さない。
+ * 地図の上に出る候補の一覧に並べる、シリーズ 1 件の行を描く部品を置く。
+ * 押した後の処理は持たず、`onPress` を受ける側が決める。
  */
 
 import { type MouseEvent, useState } from "react";
@@ -28,13 +24,12 @@ type RippleOrigin = { x: number; y: number };
 /**
  * `series` の名前と年代を、押すと `onPress` を呼ぶボタンで表示する。
  * `timeRange` が `TIME_RANGE_UNTIMED` のシリーズは年を持たないので、年代の行を出さない。
- *
- * キーボードの操作は押した位置を持たないので、波は行の中央から広げる。
  */
 export default function SeriesCandidateRow({
   series,
   onPress,
 }: SeriesCandidateRowProps) {
+  // TODO: 波と山形の動きはこの部品に直に書いてあるので、#399（サイト全体のアニメーションの見直し）で共通の部品へ抽出する。
   const [ripple, setRipple] = useState<RippleOrigin | null>(null);
 
   function press(event: MouseEvent<HTMLButtonElement>): void {
@@ -44,6 +39,7 @@ export default function SeriesCandidateRow({
 
     const rect = event.currentTarget.getBoundingClientRect();
 
+    // キーボードの押下は位置を持たない（`detail` が 0）ので、波は行の中央から広げる。
     setRipple(
       event.detail === 0
         ? { x: rect.width / 2, y: rect.height / 2 }
