@@ -26,6 +26,7 @@ import {
   useRef,
   useState,
 } from "react";
+import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import HistoryIcon from "@/components/icons/HistoryIcon";
 import {
   fullHeightPx,
@@ -265,13 +266,7 @@ export default function BottomSheet({
       onClick={() => onStageChange(SHEET_STAGE.era)}
       className="flex size-8 items-center justify-center rounded-full text-ink-muted hover:bg-rule/40 hover:text-ink focus-visible:outline-2 focus-visible:outline-point"
     >
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        className="size-5 fill-none stroke-current stroke-2"
-      >
-        <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      <ChevronDownIcon className="size-5" />
     </button>
   );
 
@@ -318,7 +313,7 @@ export default function BottomSheet({
         )}
 
         {stage === SHEET_STAGE.full && (
-          <div className="absolute inset-y-0 right-3 flex items-center gap-2">
+          <div className="absolute inset-y-0 right-3 flex items-center">
             {closeListButton}
           </div>
         )}
