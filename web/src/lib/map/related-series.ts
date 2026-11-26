@@ -2,13 +2,14 @@
  * 詳細カードの関連シリーズ行に並べるシリーズを選ぶ純関数を置く。
  * 行の描画と選択を移す操作は持たず、詳細カードの部品と `MapCanvas` が持つ。
  *
- * 関連とみなすのは、狭いタグ（種別のタグと `BROAD_TOPIC_TAGS` を除いた `tags`）を一つでも共有するシリーズである。
+ * 関連とみなすのは、狭いタグ（種別のタグと `SERIES_BROAD_TOPIC_TAGS` を除いた `tags`）を一つでも共有するシリーズである。
  * 並べる順は、共有する狭いタグの数が多い方を先にし、同じなら年代の中点が近い方を先にする。
  * 例えば吉田松陰（人物・幕末・思想・教育）は、`幕末` を共有する西郷隆盛・高杉晋作・ペリー来航と、`教育` を共有するシリーズを並べ、`思想` だけを共有する伊藤野枝は並べない。
  * `region` を判定に使わない理由と、広いタグを名指しで除く理由は docs/adr/20261126-related-series-narrow-tags.md が持つ。
  */
 
 import {
+  SERIES_BROAD_TOPIC_TAGS,
   SERIES_CATEGORY_TAGS,
   type Series,
   type SeriesList,
@@ -25,23 +26,9 @@ export type RelatedSeries = {
 /** 関連シリーズ行に並べるシリーズの最大の数。 */
 export const RELATED_SERIES_LIMIT = 4;
 
-/**
- * 主題のタグのうち、関連の判定に数えない広いタグ。
- * 共有していても主題が近いと読めないので、一致しても関連とみなさない。
- *
- * 主題のタグを足すときは、`戦争` のように多くのシリーズへ付く語かを判じ、そうならここへも足す。
- */
-const BROAD_TOPIC_TAGS: readonly string[] = [
-  "戦争",
-  "政治",
-  "宗教",
-  "帝国",
-  "思想",
-];
-
 const UNCOUNTED_TAGS: ReadonlySet<string> = new Set([
   ...SERIES_CATEGORY_TAGS,
-  ...BROAD_TOPIC_TAGS,
+  ...SERIES_BROAD_TOPIC_TAGS,
 ]);
 
 /**

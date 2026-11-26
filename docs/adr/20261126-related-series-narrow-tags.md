@@ -23,7 +23,7 @@
 
 並べる件数には上限を置き、関連するシリーズが無ければ行ごと出さない。
 決定時点の広いタグは `戦争`・`政治`・`宗教`・`帝国`・`思想` の 5 語で、上限は 4 件である。
-現況は `web/src/lib/map/related-series.ts` が持つ。
+広いタグの現況は `web/src/lib/schema/series.ts`、上限の現況は `web/src/lib/map/related-series.ts` が持つ。
 
 ## 理由
 
