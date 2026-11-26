@@ -2,7 +2,7 @@
 
 - **状態**: 採用
 - **決定日**: 2026-11-26（#140）
-- **関係する ADR**: 20261126-series-vocabulary-region-as-label（`region` を札の値として理由づけ直す）、20260911-series-vocabulary-without-kind（20261126-series-vocabulary-region-as-label が supersede した）
+- **関係する ADR**: 20261126-series-vocabulary-region-as-label（`region` を地域の表示として理由づけ直す）、20260911-series-vocabulary-without-kind（20261126-series-vocabulary-region-as-label が supersede した）
 
 ## 文脈
 
@@ -45,7 +45,7 @@
 ## 帰結
 
 - 68 件のうち 32 件は関連シリーズが 0 件になり、行を出さない
-- `region` を読む画面は詳細カードの札だけになる。`region` を閉じた集合にする理由は [20261126-series-vocabulary-region-as-label](20261126-series-vocabulary-region-as-label.md) が札の値として持ち直す
+- `region` を読む画面は、詳細カードの地域の表示だけになる。`region` を閉じた集合にする理由は [20261126-series-vocabulary-region-as-label](20261126-series-vocabulary-region-as-label.md) が地域の表示として持ち直す
 - 主題のタグを新しく足すときは、多くのシリーズへ付く語かを判じ、そうなら広いタグの列挙にも足す
 
 ## 覆る条件

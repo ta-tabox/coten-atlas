@@ -201,9 +201,8 @@ catalog/
 - 地図に出すか一覧にだけ出すかは `anchor` だけで決まり、シリーズは描き分けの欄を持たない
   代表点が主題の中心の場所でなく代わりに置いた点（生地など）でも、地図は他のシリーズと同じ規則で描く
   代わりの点であることと選んだ理由は、`docs/sources/<シリーズ id>.md` の「代表点」節が持つ（描き分けない理由は [ADR-20260911-drop-series-kind（`kind` の廃止）](adr/20260911-drop-series-kind.md)）
-- `tags` の消費者は §4「シリーズの近接」（関連シリーズ行と tag 絞り込み）で、`region` の消費者は詳細カードの札である
-  近接のためにスキーマを増やさないので、`tags` が判定の材料になる
-- `region` は陸地を重ならないように割った 12 区画と `地域なし` の 13 値で、区画を一つ選ぶと嘘になるシリーズが `地域なし` を書く（閉じた集合にする理由は [ADR-20261126-series-vocabulary-region-as-label（`region` を札の値とした語彙）](adr/20261126-series-vocabulary-region-as-label.md)）
+- `tags` は関連シリーズ行と tag 絞り込みが判定に使い、`region` は詳細カードが地域として表示する
+- `region` は陸地を重ならないように割った 12 区画と `地域なし` の 13 値で、区画を一つ選ぶと嘘になるシリーズが `地域なし` を書く（閉じた集合にする理由は [ADR-20261126-series-vocabulary-region-as-label（`region` を地域の表示とした語彙）](adr/20261126-series-vocabulary-region-as-label.md)）
   区画の境目の決め方は skill `series-vocabulary` の手順 6 が持つ
   値を足すときは、`web/src/lib/schema/series.ts` の `SERIES_REGIONS` と同じ skill の一覧を両方書き換え、足す理由を新しい ADR に書く
   `tags` は種別（`人物` / `集団` / `出来事` / `概念史` の閉じた集合から最低 1 つ）と主題を合わせて 4 個以内で、`eras.json` の区分と同じ粒度の時代名と地域名を入れない

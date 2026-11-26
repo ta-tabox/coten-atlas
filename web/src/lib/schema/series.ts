@@ -56,7 +56,7 @@ export const SERIES_REGIONS = [
 export const REGION_NONE = "地域なし" satisfies (typeof SERIES_REGIONS)[number];
 
 /**
- * 詳細カードが `region` を札として出すので、表記のゆれで同じ区画が別の札にならないよう `SERIES_REGIONS` の閉じた集合に限る。
+ * 詳細カードが `region` を地域として表示するので、表記のゆれで同じ区画が別の地域に見えないよう `SERIES_REGIONS` の閉じた集合に限る。
  */
 export const seriesRegionSchema = z.enum(SERIES_REGIONS);
 
