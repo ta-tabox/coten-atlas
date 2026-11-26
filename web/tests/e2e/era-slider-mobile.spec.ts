@@ -1,6 +1,6 @@
 /**
  * スマホの幅で、era スライダーの境目の年が互いに重ならず、スライダーが画面の内側に収まることを見る。
- * 初期の位置と、帯を終わりの端まで動かした位置の 2 つで見る。
+ * 全体を映した初期の状態と、拡大して表示範囲を未来の端までずらした状態の 2 つで見る。
  *
  * 相手は `next build` が吐いた `out/` の実物なので、`pnpm build` の後でしか回せない。
  * デスクトップの幅では era スライダーが別の形なので、`e2e-desktop` では飛ばす。
@@ -38,7 +38,7 @@ async function boxesOf(locators: Locator): Promise<Box[]> {
   return boxes;
 }
 
-test("初期表示と帯の終わりで、境目の年が重ならず、era スライダーが画面の内側にある", async ({
+test("初期表示と、拡大して未来の端までずらした状態で、境目の年が重ならず、era スライダーが画面の内側にある", async ({
   page,
 }) => {
   const size = viewportOf(page);
@@ -51,9 +51,20 @@ test("初期表示と帯の終わりで、境目の年が重ならず、era ス�
     const slider = page.getByTestId("era-slider");
     const years = page.getByTestId("era-boundary-year");
 
-    for (const jump of [null, "の終わりへ"]) {
-      if (jump !== null) {
-        await page.getByRole("button", { name: jump }).click();
+    for (const isZoomed of [false, true]) {
+      if (isZoomed) {
+        await page
+          .getByRole("button", { name: "表示範囲を拡大して細かく調整する" })
+          .click();
+
+        const next = page.getByRole("button", {
+          name: "表示範囲を未来の方向へずらす",
+        });
+
+        // 端に着くとボタンが押せなくなる。
+        while (await next.isEnabled()) {
+          await next.click();
+        }
       }
 
       await expect(slider).toBeVisible();
