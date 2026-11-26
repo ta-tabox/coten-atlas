@@ -19,22 +19,31 @@ const TOUCH_HIT_HALF_SIZE_PX = 22;
 type PointUnder = CandidatePoint & { coordinates: [number, number] };
 
 /**
+ * 地図のマウスイベントが、タッチの入力から来たなら true を返す。
+ * `PointerEvent.pointerType` を持たないイベントはマウスとして扱い、false を返す。
+ */
+export function isTouchEvent(event: MapLayerMouseEvent): boolean {
+  const original = event.originalEvent;
+
+  return (
+    original !== undefined &&
+    "pointerType" in original &&
+    original.pointerType === "touch"
+  );
+}
+
+/**
  * 地図のクリックが当たった代表点の、画面上の位置とシリーズを返す。
  *
  * タッチの入力は押した位置の周り 44px 四方、それ以外は押した位置の点だけを調べる。
- * `PointerEvent.pointerType` を持たないクリックはマウスとして扱うので、そのような端末のタッチは判定が円の大きさに留まる。
+ * `isTouchEvent` が false の入力は、そのような端末のタッチも含めて判定が円の大きさに留まる。
  */
 export function pointsUnder(
   map: MapRef,
   event: MapLayerMouseEvent,
 ): PointUnder[] {
-  const original = event.originalEvent;
-  const isTouch =
-    original !== undefined &&
-    "pointerType" in original &&
-    original.pointerType === "touch";
   const { x, y } = event.point;
-  const features = isTouch
+  const features = isTouchEvent(event)
     ? map.queryRenderedFeatures(
         [
           [x - TOUCH_HIT_HALF_SIZE_PX, y - TOUCH_HIT_HALF_SIZE_PX],
