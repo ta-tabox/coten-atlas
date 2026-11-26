@@ -31,6 +31,12 @@ const EDGE_SNAP_PX = 8;
 /** 拡大中に指が端に寄っている間、表示範囲が動く速さ（1 秒あたりの era の区間の数）。 */
 const AUTO_PAN_ERAS_PER_SECOND = 0.8;
 
+/**
+ * 端で指を押したまま、この時間（ms）が過ぎるまでは、表示範囲を送らない。
+ * 位置を選ぶつもりのタップや、押した指の小さな揺れで、範囲が動き出さないようにする。
+ */
+const AUTO_PAN_HOLD_MS = 250;
+
 /** タブの切り替えなどでフレームの間隔が空いても、表示範囲が飛ばないよう、1 フレームで進める時間の上限（秒）。 */
 const MAX_FRAME_SECONDS = 0.05;
 
@@ -48,11 +54,12 @@ type EraTrackGestureParams = {
   onViewMinChange: (viewMin: number) => void;
 };
 
-/** 押している指の ID と、押した位置・いまの位置。 */
+/** 押している指の ID と、押した位置・いまの位置・押した時刻（`performance.now()`、ms）。 */
 type ActivePointer = {
   id: number;
   downX: number;
   lastX: number;
+  downTime: number;
 };
 
 /** トラックの要素へ渡すポインタのハンドラと、押している指がドラッグ中かの値を返す。 */
@@ -149,6 +156,13 @@ export function useEraTrackGesture({
       return;
     }
 
+    if (now - active.downTime < AUTO_PAN_HOLD_MS) {
+      lastFrameTime.current = now;
+      frameId.current = requestAnimationFrame(autoPanStep);
+
+      return;
+    }
+
     const seconds = Math.min(
       MAX_FRAME_SECONDS,
       (now - lastFrameTime.current) / 1000,
@@ -202,6 +216,7 @@ export function useEraTrackGesture({
 
   /**
    * 主ボタン・指・ペンでトラックを押したら、押したポインタを追い始め、押した位置を返す。
+   * 拡大中に端で押したままにすると、`AUTO_PAN_HOLD_MS` の後から表示範囲を送る。
    * 続けて矢印キーで動かせるよう、`<input>` へフォーカスを移し、フォーカスの枠はキーボードで移したときだけ出す。
    *
    * 既定の動作を止めないと、マウスで押した後にフォーカスが `<body>` へ移る。
@@ -217,9 +232,11 @@ export function useEraTrackGesture({
       id: event.pointerId,
       downX: event.clientX,
       lastX: event.clientX,
+      downTime: performance.now(),
     };
     inputRef.current?.focus({ focusVisible: false });
     updateFromClientX(event.clientX);
+    startAutoPanIfNeeded();
   }
 
   /** 押しているポインタが動いたら、動いた先の位置を返し、拡大中に端へ寄っていれば表示範囲の送りを始める。 */

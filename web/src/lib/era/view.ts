@@ -72,6 +72,9 @@ export function panStepOf(eraCount: number): number {
   return PAN_STEP_IN_ERAS / eraCount;
 }
 
+/** 表示範囲の左端が era 空間の端（0 と `1 - span`）に着いたとみなす、誤差の幅。 */
+const EDGE_EPSILON = 1e-9;
+
 /**
  * 拡大した表示範囲の中で選べる位置を、現在窓（位置の前後 `halfWindow`）が範囲からはみ出さない範囲へ丸めて返す。
  * 範囲の端が era 空間の端（0 と 1）に着いているときは、窓が era 空間の外へ丸められるので、その端までは丸めない。
@@ -84,10 +87,11 @@ export function clampPositionToViewWindow(
   view: ViewRange,
   halfWindow: number,
 ): number {
-  const epsilon = 1e-9;
-  const lower = view.min <= epsilon ? 0 : view.min + halfWindow;
+  const lower = view.min <= EDGE_EPSILON ? 0 : view.min + halfWindow;
   const upper =
-    view.min + view.span >= 1 - epsilon ? 1 : view.min + view.span - halfWindow;
+    view.min + view.span >= 1 - EDGE_EPSILON
+      ? 1
+      : view.min + view.span - halfWindow;
 
   return Math.min(Math.max(position, lower), upper);
 }
@@ -122,13 +126,11 @@ export function autoPanDirection({
   edgeRatio,
   view,
 }: AutoPanInput): -1 | 0 | 1 {
-  const margin = 0.0001;
-
-  if (ratio <= edgeRatio && view.min > margin) {
+  if (ratio <= edgeRatio && view.min > EDGE_EPSILON) {
     return -1;
   }
 
-  if (ratio >= 1 - edgeRatio && view.min < 1 - view.span - margin) {
+  if (ratio >= 1 - edgeRatio && view.min < 1 - view.span - EDGE_EPSILON) {
     return 1;
   }
 

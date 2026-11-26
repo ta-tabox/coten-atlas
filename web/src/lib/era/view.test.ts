@@ -130,6 +130,23 @@ describe("autoPanDirection", () => {
     expect(autoPanDirection({ ratio: 0.95, edgeRatio, view })).toBe(1);
   });
 
+  it("端の手前の 0.0001 未満でも、端に着くまで動かし続ける", () => {
+    expect(
+      autoPanDirection({
+        ratio: 0.05,
+        edgeRatio,
+        view: { ...view, min: 0.00005 },
+      }),
+    ).toBe(-1);
+    expect(
+      autoPanDirection({
+        ratio: 0.95,
+        edgeRatio,
+        view: { ...view, min: 1 - SPAN - 0.00005 },
+      }),
+    ).toBe(1);
+  });
+
   it("もう動かせない端では動かさない", () => {
     expect(
       autoPanDirection({ ratio: 0.05, edgeRatio, view: { ...view, min: 0 } }),

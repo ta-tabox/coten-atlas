@@ -441,8 +441,8 @@ describe("EraSlider", () => {
       vi.useRealTimers();
     });
 
-    /** 拡大し、トラックの左端から `ratio` の位置を 1 秒押さえたとき、先頭の era のセルが左へ動いた量（%）を返す。 */
-    function shiftAfterHolding(ratio: number): number {
+    /** 拡大し、トラックの左端から `ratio` の位置を `holdMs` だけ押さえたとき、先頭の era のセルが左へ動いた量（%）を返す。 */
+    function shiftAfterHolding(ratio: number, holdMs = 1000): number {
       vi.useFakeTimers();
       render(<SliderWithPosition />);
       zoomIn();
@@ -451,9 +451,10 @@ describe("EraSlider", () => {
       const clientX = TRACK_LEFT + TRACK_WIDTH * ratio;
 
       fireEvent.pointerDown(track, primaryPointerAt(clientX));
-      fireEvent.pointerMove(track, primaryPointerAt(clientX));
+      // 押した指が 1px 揺れても、送り始めの時刻は変わらない。
+      fireEvent.pointerMove(track, primaryPointerAt(clientX + 1));
       act(() => {
-        vi.advanceTimersByTime(1000);
+        vi.advanceTimersByTime(holdMs);
       });
 
       return before - firstCellLeftPercent();
@@ -464,9 +465,17 @@ describe("EraSlider", () => {
       cleanup();
       const nearEdge = shiftAfterHolding(0.96);
 
-      // 1 秒で 0.8 区間ずれると、2 区間を映す範囲の 40% にあたる。
-      expect(atEdge).toBeCloseTo(40, 0);
+      // 押して 0.25 秒は送らず、残りの 0.75 秒で 0.8 区間 / 秒ずれると、2 区間を映す範囲の 30% にあたる。
+      expect(atEdge).toBeCloseTo(30, 0);
       expect(nearEdge).toBeCloseTo(atEdge, 0);
+    });
+
+    it("端で押してすぐ離すタップでは、表示範囲を送らない", () => {
+      expect(shiftAfterHolding(1, 200)).toBeCloseTo(0, 5);
+    });
+
+    it("端で押したまま動かさなくても、少し待つと表示範囲を送り始める", () => {
+      expect(shiftAfterHolding(1, 600)).toBeGreaterThan(0);
     });
   });
 });
