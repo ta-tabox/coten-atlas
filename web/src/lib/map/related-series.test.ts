@@ -44,112 +44,103 @@ const TAKASUGI = seriesOf({
   tags: ["人物", "幕末", "戦争"],
 });
 
-const GANDHI = seriesOf({
-  id: "gandhi",
-  region: "南アジア",
-  timeRange: { start: 1869, end: 1948 },
-  tags: ["人物", "思想", "宗教", "政治"],
+const ITO_NOE = seriesOf({
+  id: "ito-noe",
+  region: "日本",
+  timeRange: { start: 1895, end: 1923 },
+  tags: ["人物", "性", "思想", "メディア"],
 });
 
-const GOGH = seriesOf({
-  id: "gogh",
-  region: "ヨーロッパ",
-  timeRange: { start: 1853, end: 1890 },
-  tags: ["人物", "美術"],
+const HELEN_KELLER = seriesOf({
+  id: "helen-keller",
+  region: "北アメリカ",
+  timeRange: { start: 1880, end: 1968 },
+  tags: ["人物", "障害", "教育", "福祉"],
 });
 
 describe("relatedSeriesOf", () => {
-  it("tags を共有するシリーズを、主題のタグの一致が多い順に並べ、種別のタグだけの一致は後ろに置く", () => {
-    expect(relatedIdsOf([YOSHIDA, GOGH, GANDHI, TAKASUGI], YOSHIDA)).toEqual([
-      "takasugi-shinsaku",
-      "gandhi",
-      "gogh",
-    ]);
-  });
-
-  it("主題のタグの一致数が同じなら、region が同じシリーズを前に置く", () => {
-    const shoheiko = seriesOf({
-      id: "shoheiko",
+  it("狭いタグを共有するシリーズを、共有する数が多い順に並べる", () => {
+    const shoukasonjuku = seriesOf({
+      id: "shoukasonjuku",
       region: "日本",
-      timeRange: { start: 1790, end: 1871 },
-      tags: ["集団", "教育"],
+      timeRange: { start: 1842, end: 1858 },
+      tags: ["集団", "幕末", "教育"],
     });
 
-    expect(relatedIdsOf([YOSHIDA, GANDHI, shoheiko], YOSHIDA)).toEqual([
-      "shoheiko",
-      "gandhi",
-    ]);
+    expect(
+      relatedIdsOf([TAKASUGI, shoukasonjuku, HELEN_KELLER], YOSHIDA),
+    ).toEqual(["shoukasonjuku", "takasugi-shinsaku", "helen-keller"]);
   });
 
-  it("tags を共有しなくても region が同じシリーズは並べ、近さが同じなら年代の近い方を前に置く", () => {
-    const kofun = seriesOf({
-      id: "kofun",
-      region: "日本",
-      timeRange: { start: 250, end: 600 },
-      tags: ["集団", "美術"],
-    });
-    const hokusai = seriesOf({
-      id: "hokusai",
-      region: "日本",
-      timeRange: { start: 1760, end: 1849 },
-      tags: ["集団", "美術"],
-    });
-
-    expect(relatedIdsOf([kofun, hokusai, GOGH], TAKASUGI)).toEqual([
-      "hokusai",
-      "kofun",
-      "gogh",
-    ]);
-  });
-
-  it(`関連するシリーズが ${RELATED_SERIES_LIMIT} 件を超えても ${RELATED_SERIES_LIMIT} 件までしか返さない`, () => {
-    const japanese = ["a", "b", "c", "d", "e"].map((id) =>
-      seriesOf({
-        id,
-        region: "日本",
-        timeRange: { start: 1800, end: 1850 },
-        tags: ["集団"],
-      }),
-    );
-
-    expect(relatedSeriesOf([YOSHIDA, ...japanese], YOSHIDA)).toHaveLength(
-      RELATED_SERIES_LIMIT,
-    );
-  });
-
-  it("tags も region も他のシリーズと共有しないシリーズには空配列を返す", () => {
-    const okane = seriesOf({
-      id: "okane-no-rekishi",
-      region: "地域なし",
-      timeRange: TIME_RANGE_UNTIMED,
-      tags: ["概念史", "経済"],
-    });
-    const sei = seriesOf({
-      id: "sei-no-rekishi",
-      region: "地域なし",
-      timeRange: TIME_RANGE_UNTIMED,
-      tags: ["人物", "性"],
-    });
-
-    expect(relatedSeriesOf([YOSHIDA, GOGH, okane, sei], okane)).toEqual([]);
-  });
-
-  it("region が地域なしのシリーズどうしは、region の一致として数えない", () => {
+  it("共有する狭いタグの数が同じなら、年代の中点が近いシリーズを前に置き、時期を持たないシリーズを最後に置く", () => {
     const kyoiku = seriesOf({
       id: "kyoiku-no-rekishi",
       region: "地域なし",
       timeRange: TIME_RANGE_UNTIMED,
       tags: ["概念史", "教育"],
     });
-    const okane = seriesOf({
-      id: "okane-no-rekishi",
-      region: "地域なし",
-      timeRange: TIME_RANGE_UNTIMED,
-      tags: ["人物", "経済"],
+    const terakoya = seriesOf({
+      id: "terakoya",
+      region: "日本",
+      timeRange: { start: 1800, end: 1870 },
+      tags: ["集団", "教育"],
     });
 
-    expect(relatedIdsOf([kyoiku, okane, YOSHIDA], kyoiku)).toEqual([
-      "yoshida-shoin",
+    expect(relatedIdsOf([kyoiku, HELEN_KELLER, terakoya], YOSHIDA)).toEqual([
+      "terakoya",
+      "helen-keller",
+      "kyoiku-no-rekishi",
     ]);
+  });
+
+  it("region が同じでも、狭いタグを共有しないシリーズは並べない", () => {
+    const saicho = seriesOf({
+      id: "saicho-to-kukai",
+      region: "日本",
+      timeRange: { start: 767, end: 835 },
+      tags: ["人物", "宗教"],
+    });
+
+    expect(relatedIdsOf([saicho, TAKASUGI], YOSHIDA)).toEqual([
+      "takasugi-shinsaku",
+    ]);
+  });
+
+  it("種別のタグと広いタグだけを共有するシリーズは並べない", () => {
+    expect(relatedIdsOf([ITO_NOE, TAKASUGI], YOSHIDA)).toEqual([
+      "takasugi-shinsaku",
+    ]);
+  });
+
+  it(`関連するシリーズが ${RELATED_SERIES_LIMIT} 件を超えても ${RELATED_SERIES_LIMIT} 件までしか返さない`, () => {
+    const bakumatsu = ["a", "b", "c", "d", "e"].map((id) =>
+      seriesOf({
+        id,
+        region: "日本",
+        timeRange: { start: 1850, end: 1870 },
+        tags: ["人物", "幕末"],
+      }),
+    );
+
+    expect(relatedSeriesOf([YOSHIDA, ...bakumatsu], YOSHIDA)).toHaveLength(
+      RELATED_SERIES_LIMIT,
+    );
+  });
+
+  it("狭いタグを他のシリーズと共有しないシリーズには空配列を返す", () => {
+    const hitler = seriesOf({
+      id: "hitler",
+      region: "ヨーロッパ",
+      timeRange: { start: 1889, end: 1945 },
+      tags: ["人物", "戦争"],
+    });
+    const friedrich = seriesOf({
+      id: "friedrich-daio",
+      region: "ヨーロッパ",
+      timeRange: { start: 1712, end: 1786 },
+      tags: ["人物", "戦争", "思想", "政治"],
+    });
+
+    expect(relatedSeriesOf([hitler, friedrich, YOSHIDA], hitler)).toEqual([]);
   });
 });

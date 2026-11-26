@@ -153,6 +153,7 @@ ADR の外（コード・現況の文書・issue・PR）から指すときは、
 | [20261112-smoke-mobile-webkit-chromium](20261112-smoke-mobile-webkit-chromium.md)           | スモークを、デスクトップの Chromium に加えて、スマホの幅の WebKit と Chromium でも回す（20260828-e2e-offline-smoke を supersede）                                                                     | 2026-11-12 | supersede 済み（→ 20261124-e2e-layer-split-from-smoke）        | —      |
 | [20261113-locus-display-name](20261113-locus-display-name.md)                               | シリーズと事物を分け、事物は表示用の地名を持つ（20260902-series-and-loci を supersede）                                                                                                               | 2026-11-13 | 採用                                                           | —      |
 | [20261124-e2e-layer-split-from-smoke](20261124-e2e-layer-split-from-smoke.md)               | 画面の操作と配置の検査をスモークから分け、E2E の段として `pnpm check` のスモークの後に置く（20261112-smoke-mobile-webkit-chromium を supersede）                                                      | 2026-11-24 | 採用                                                           | —      |
+| [20261126-related-series-narrow-tags](20261126-related-series-narrow-tags.md)               | 関連シリーズ行は狭い主題のタグを共有するシリーズだけを並べ、`region` を判定に使わない                                                                                                                 |
 
 **20260828-e2e-offline-smoke は人間の目視を L5 と呼んでいる。**
 `docs/HARNESS.md`「検証の層構造」は番号を `pnpm check` の連鎖の位置に限り、人間の目視に番号を与えないので、20260828-e2e-offline-smoke の L5 は、いまの L5（E2E）でなく「人間の目視」と読む。

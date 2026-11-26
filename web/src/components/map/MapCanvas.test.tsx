@@ -563,7 +563,7 @@ describe("MapCanvas", () => {
     expect(seriesLayersProps().selectedSeries).toBeNull();
   });
 
-  it("選んだシリーズと tags も region も共有しないシリーズは、関連するシリーズとして詳細カードへ渡さない", async () => {
+  it("選んだシリーズと狭いタグを共有しないシリーズは、関連するシリーズとして詳細カードへ渡さない", async () => {
     await renderMapCanvas();
 
     act(() => lastProps().onClick?.(mouseEventOn("sparta")));
