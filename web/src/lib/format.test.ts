@@ -3,6 +3,7 @@ import {
   formatCoordinates,
   formatTagCondition,
   formatTimeRange,
+  formatTimeRangeWithoutUnit,
   formatYearWithoutUnit,
 } from "@/lib/format";
 
@@ -10,6 +11,20 @@ describe("formatYearWithoutUnit", () => {
   it("紀元前には「前」を付け、紀元は数字だけにして、単位を付けない", () => {
     expect(formatYearWithoutUnit(-800)).toBe("前800");
     expect(formatYearWithoutUnit(550)).toBe("550");
+  });
+});
+
+describe("formatTimeRangeWithoutUnit", () => {
+  it("両端から単位「年」を外し、紀元前の端にだけ「前」を付ける", () => {
+    expect(formatTimeRangeWithoutUnit({ start: -800, end: 550 })).toBe(
+      "前800〜550",
+    );
+  });
+
+  it("同じ年の両端は、その年 1 つだけにする", () => {
+    expect(formatTimeRangeWithoutUnit({ start: -660, end: -660 })).toBe(
+      "前660",
+    );
   });
 });
 
