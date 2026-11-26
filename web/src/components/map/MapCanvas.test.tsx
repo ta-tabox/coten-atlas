@@ -1162,6 +1162,34 @@ describe("MapCanvas（代表点へのホバー）", () => {
     expect(seriesLayersProps().selectedSeries?.id).toBe("sparta");
   });
 
+  /** window に `pointerType` を持つポインターのイベントを送る。 */
+  function firePointer(
+    type: "pointerdown" | "pointermove",
+    pointerType: string,
+  ) {
+    const event = new Event(type, { bubbles: true });
+
+    Object.defineProperty(event, "pointerType", { value: pointerType });
+    act(() => {
+      window.dispatchEvent(event);
+    });
+  }
+
+  it("タッチで押した後に続く、`pointerType` を持たないマウスイベントでは札を出さず、マウスを動かすと出す", async () => {
+    await renderWithFakeTimers();
+    firePointer("pointerdown", "touch");
+
+    act(() => lastProps().onMouseMove?.(moveOn(undefined, "sparta")));
+    wait(TOOLTIP_SHOW_DELAY_MS);
+
+    expect(tooltipIds()).toBeUndefined();
+
+    firePointer("pointermove", "mouse");
+    hoverAndWait("sparta");
+
+    expect(tooltipIds()).toEqual(["sparta"]);
+  });
+
   it("候補の一覧が開いている間は、札を出さない", async () => {
     await renderWithFakeTimers(OVERLAPPING_SERIES);
     hoverAndWait("sparta", "athens");

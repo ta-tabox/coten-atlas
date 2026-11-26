@@ -10,6 +10,9 @@
  * マウスが通り過ぎるだけで札が出続けないよう、代表点に載せてから `TOOLTIP_SHOW_DELAY_MS` 待って出す。
  * 札が出ている間と、消えてから `TOOLTIP_SKIP_WINDOW_MS` 以内は、隣の代表点へ移ったときに待たず出す。
  * 点を見比べる操作で、点ごとに待たされないためである。
+ *
+ * タッチの押下の後にブラウザが送る互換のマウスイベントは `pointerType` を持たないので、地図のイベントだけではタッチと見分けられない。
+ * そこで直近のポインターの入力を window で見て、タッチだった間は札を出さない。
  */
 
 import { type RefObject, useEffect, useRef, useState } from "react";
@@ -72,6 +75,22 @@ export function useHoverTooltip({ mapRef, seriesList }: UseHoverTooltipArgs) {
   const pending = useRef<HoverState | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hiddenAt = useRef<number | null>(null);
+  const lastPointerType = useRef<string>("mouse");
+
+  // タッチの押下のあとに続くマウスイベントを、マウスの移動と取り違えない。
+  useEffect(() => {
+    function remember(event: PointerEvent): void {
+      lastPointerType.current = event.pointerType;
+    }
+
+    window.addEventListener("pointerdown", remember, true);
+    window.addEventListener("pointermove", remember, true);
+
+    return () => {
+      window.removeEventListener("pointerdown", remember, true);
+      window.removeEventListener("pointermove", remember, true);
+    };
+  }, []);
 
   function cancelPending(): void {
     if (timer.current !== null) {
@@ -129,13 +148,15 @@ export function useHoverTooltip({ mapRef, seriesList }: UseHoverTooltipArgs) {
 
   /**
    * マウスの位置の代表点を、ツールチップに出す対象にする。
-   * 代表点が無い位置と、タッチの入力では、ツールチップを消す。
+   * 代表点が無い位置と、タッチの入力の間は、ツールチップを消す。
    * 札が出ていないときは、`TOOLTIP_SHOW_DELAY_MS` 待ってから出す。
    */
   function updateAt(event: MapLayerMouseEvent): void {
     const map = mapRef.current;
     const points =
-      map === null || isTouchEvent(event) ? [] : pointsUnder(map, event);
+      map === null || isTouchEvent(event) || lastPointerType.current === "touch"
+        ? []
+        : pointsUnder(map, event);
     const seriesIds = candidateSeriesIdsOf(event.point, points);
     const nearest = points.find((point) => point.seriesId === seriesIds[0]);
 
