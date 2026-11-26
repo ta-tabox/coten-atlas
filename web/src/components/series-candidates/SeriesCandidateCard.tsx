@@ -67,10 +67,10 @@ export default function SeriesCandidateCard({
       return;
     }
 
-    pendingTimer.current = setTimeout(
-      () => onSelect(seriesId),
-      PRESS_ANIMATION_MS,
-    );
+    pendingTimer.current = setTimeout(() => {
+      pendingTimer.current = null;
+      onSelect(seriesId);
+    }, PRESS_ANIMATION_MS);
   }
 
   useEffect(() => {

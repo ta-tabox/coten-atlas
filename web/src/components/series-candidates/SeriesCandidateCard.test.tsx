@@ -89,7 +89,25 @@ describe("SeriesCandidateCard", () => {
     expect(onSelect).toHaveBeenCalledWith("teisei-roma");
   });
 
-  it("待っている間に枠が閉じると、onSelect を呼ばない", () => {
+  it("待ちが明けて onSelect を呼んだ後は、同じ枠の次の押下も受ける", () => {
+    vi.useFakeTimers();
+
+    const onSelect = vi.fn();
+    renderCard(onSelect);
+
+    fireEvent.click(screen.getByRole("button", { name: /帝政ローマ/ }));
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    fireEvent.click(screen.getByRole("button", { name: /カエサル/ }));
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+
+    expect(onSelect).toHaveBeenNthCalledWith(2, "julius-caesar");
+  });
+
+  it("待っている枠が閉じると、onSelect を呼ばない", () => {
     vi.useFakeTimers();
 
     const onSelect = vi.fn();
