@@ -28,11 +28,16 @@ import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
 import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
+import {
+  TOOLTIP_SHOW_DELAY_MS,
+  TOOLTIP_SKIP_WINDOW_MS,
+} from "@/components/map/use-hover-tooltip";
 import SeriesCandidateOverlay from "@/components/series-candidates/SeriesCandidateOverlay";
 import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
+import SeriesTooltipOverlay from "@/components/series-tooltip/SeriesTooltipOverlay";
 import { currentWindow } from "@/lib/era/window";
 import { toJapaneseLabelStyle } from "@/lib/map/basemap-labels";
 import {
@@ -62,6 +67,12 @@ const panTo = vi.hoisted(() => vi.fn());
 const easeTo = vi.hoisted(() => vi.fn());
 
 /**
+ * MapLibreMap のモックが `ref` に入れる地図の `queryRenderedFeatures`。
+ * タッチの押下が使う範囲の検索の結果を、テストが決める。
+ */
+const queryRenderedFeatures = vi.hoisted(() => vi.fn(() => []));
+
+/**
  * MapLibreMap のモックが `ref` に入れる地図の `project`。
  * 座標をそのまま画面の位置（px）として返し、テストが経度・緯度の値で画面上の距離を決められるようにする。
  */
@@ -71,7 +82,7 @@ const project = vi.hoisted(() =>
 
 /**
  * `react-map-gl/maplibre` の既定の export と差し替えるモック関数。
- * 受け取った props を記録し、`ref` がオブジェクトなら `panTo`・`easeTo`・`project` を持つ地図を入れて、null を返す。
+ * 受け取った props を記録し、`ref` がオブジェクトなら `panTo`・`easeTo`・`project`・`queryRenderedFeatures` を持つ地図を入れて、null を返す。
  */
 const map = vi.hoisted(() =>
   vi.fn<(props: MockMapProps) => null>((props) => {
@@ -80,6 +91,7 @@ const map = vi.hoisted(() =>
         panTo,
         easeTo,
         project,
+        queryRenderedFeatures,
       } as unknown as MapRef;
     }
 
@@ -1055,5 +1067,196 @@ describe("MapCanvas（スマホの幅の重なった代表点の選び分け）"
 
     expect(childOfType(SeriesCandidateOverlay)).toBeUndefined();
     expect(childPropsOf(SeriesDetailBody).series.id).toBe("athens");
+  });
+});
+
+describe("MapCanvas（代表点へのホバー）", () => {
+  /** `pointerType` の入力から来た、`seriesIds` の代表点の上のマウスイベントを作る。 */
+  function moveOn(
+    pointerType: string | undefined,
+    ...seriesIds: string[]
+  ): MapLayerMouseEvent {
+    return {
+      ...mouseEventOn(...seriesIds),
+      originalEvent: pointerType === undefined ? undefined : { pointerType },
+    } as unknown as MapLayerMouseEvent;
+  }
+
+  /** `ms` ミリ秒だけ時間を進める。 */
+  function wait(ms: number): void {
+    act(() => {
+      vi.advanceTimersByTime(ms);
+    });
+  }
+
+  /** マウスを `seriesIds` の代表点にホバーし、ツールチップが出るまでの待ちを明けさせる。 */
+  function hoverAndWait(...seriesIds: string[]): void {
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", ...seriesIds)));
+    wait(TOOLTIP_SHOW_DELAY_MS);
+  }
+
+  /**
+   * 地図の children にあるツールチップが並べているシリーズの id を返す。
+   * ツールチップが無ければ undefined を返す。
+   */
+  function tooltipIds(): string[] | undefined {
+    return childOfType(SeriesTooltipOverlay) === undefined
+      ? undefined
+      : childPropsOf(SeriesTooltipOverlay).series.map(({ id }) => id);
+  }
+
+  beforeEach(() => {
+    map.mockClear();
+    stubDesktop(true);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  // 描画の完了を待つ act は実時間の待ちを使うので、時間を止めるのは描画の後にする。
+  async function renderWithFakeTimers(
+    seriesList: SeriesList = SERIES,
+  ): Promise<void> {
+    await renderMapCanvas(ERAS, seriesList);
+    vi.useFakeTimers();
+  }
+
+  it("マウスを代表点にホバーしても待ちが明けるまではツールチップを出さず、明けるとそのシリーズのツールチップを出し、選択は変えない", async () => {
+    await renderWithFakeTimers();
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+    wait(TOOLTIP_SHOW_DELAY_MS - 1);
+
+    expect(tooltipIds()).toBeUndefined();
+
+    wait(1);
+
+    expect(tooltipIds()).toEqual(["sparta"]);
+    expect(seriesLayersProps().selectedSeries).toBeNull();
+  });
+
+  it("同じ代表点の上でマウスが動き続けても、待ちを延ばさずツールチップを出す", async () => {
+    await renderWithFakeTimers();
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+    wait(TOOLTIP_SHOW_DELAY_MS - 100);
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+    wait(100);
+
+    expect(tooltipIds()).toEqual(["sparta"]);
+  });
+
+  it("待ちが明ける前に代表点から離れると、ツールチップを出さない", async () => {
+    await renderWithFakeTimers();
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+    wait(TOOLTIP_SHOW_DELAY_MS - 1);
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse")));
+    wait(TOOLTIP_SHOW_DELAY_MS);
+
+    expect(tooltipIds()).toBeUndefined();
+  });
+
+  it("ツールチップが出た後に離すと、すぐに消す", async () => {
+    await renderWithFakeTimers();
+    hoverAndWait("sparta");
+
+    act(() => lastProps().onMouseLeave?.(moveOn("mouse")));
+
+    expect(tooltipIds()).toBeUndefined();
+  });
+
+  it("ツールチップが出ている間に別の代表点へ移ると、待たずにそのツールチップへ替える", async () => {
+    await renderWithFakeTimers(OVERLAPPING_SERIES);
+    hoverAndWait("sparta");
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "okane-no-rekishi")));
+
+    expect(tooltipIds()).toEqual(["okane-no-rekishi"]);
+  });
+
+  it("ツールチップが消えてから待たずに出せる時間の内に別の代表点へホバーすると、待たずに出す", async () => {
+    await renderWithFakeTimers();
+    hoverAndWait("sparta");
+    act(() => lastProps().onMouseMove?.(moveOn("mouse")));
+    wait(TOOLTIP_SKIP_WINDOW_MS - 1);
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "okane-no-rekishi")));
+
+    expect(tooltipIds()).toEqual(["okane-no-rekishi"]);
+  });
+
+  it("ツールチップが消えてから待たずに出せる時間を過ぎると、また待ってから出す", async () => {
+    await renderWithFakeTimers();
+    hoverAndWait("sparta");
+    act(() => lastProps().onMouseMove?.(moveOn("mouse")));
+    wait(TOOLTIP_SKIP_WINDOW_MS);
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+
+    expect(tooltipIds()).toBeUndefined();
+  });
+
+  it("重なった代表点にホバーすると、重なったシリーズを全部ツールチップに並べる", async () => {
+    await renderWithFakeTimers(OVERLAPPING_SERIES);
+
+    hoverAndWait("sparta", "athens");
+
+    expect(tooltipIds()).toEqual(["sparta", "athens"]);
+  });
+
+  it("タッチの入力ではツールチップを出さず、押した代表点のシリーズを選択する", async () => {
+    await renderWithFakeTimers();
+    const touched = moveOn("touch", "sparta");
+
+    queryRenderedFeatures.mockReturnValueOnce(touched.features as never);
+    act(() => lastProps().onMouseMove?.(touched));
+    wait(TOOLTIP_SHOW_DELAY_MS);
+    act(() => lastProps().onClick?.(touched));
+
+    expect(tooltipIds()).toBeUndefined();
+    expect(seriesLayersProps().selectedSeries?.id).toBe("sparta");
+  });
+
+  /** window に `pointerType` を持つポインターのイベントを送る。 */
+  function firePointer(
+    type: "pointerdown" | "pointermove",
+    pointerType: string,
+  ) {
+    const event = new Event(type, { bubbles: true });
+
+    Object.defineProperty(event, "pointerType", { value: pointerType });
+    act(() => {
+      window.dispatchEvent(event);
+    });
+  }
+
+  it("タッチで押した後に続く、`pointerType` を持たないマウスイベントではツールチップを出さず、マウスを動かすと出す", async () => {
+    await renderWithFakeTimers();
+    firePointer("pointerdown", "touch");
+
+    act(() => lastProps().onMouseMove?.(moveOn(undefined, "sparta")));
+    wait(TOOLTIP_SHOW_DELAY_MS);
+
+    expect(tooltipIds()).toBeUndefined();
+
+    firePointer("pointermove", "mouse");
+    hoverAndWait("sparta");
+
+    expect(tooltipIds()).toEqual(["sparta"]);
+  });
+
+  it("候補の一覧が開いている間は、ツールチップを出さない", async () => {
+    await renderWithFakeTimers(OVERLAPPING_SERIES);
+    hoverAndWait("sparta", "athens");
+
+    act(() => lastProps().onClick?.(moveOn("mouse", "sparta", "athens")));
+
+    expect(childOfType(SeriesCandidateOverlay)).toBeDefined();
+    expect(tooltipIds()).toBeUndefined();
   });
 });

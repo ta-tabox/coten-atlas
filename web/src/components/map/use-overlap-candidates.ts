@@ -13,19 +13,12 @@ import type {
   MapRef,
   ViewStateChangeEvent,
 } from "react-map-gl/maplibre";
-import { SERIES_CIRCLE_LAYER } from "@/lib/map/layers/shared";
+import { listPointsUnder } from "@/components/map/points-under";
 import {
-  type CandidatePoint,
   candidateSeriesIdsOf,
   type ScreenPoint,
 } from "@/lib/map/overlap-candidates";
 import type { Series, SeriesList } from "@/lib/schema/series";
-
-/**
- * タッチの入力で、押した位置の周りの判定の範囲の一辺の半分（px）。
- * 一辺 44px は Apple HIG の最小のタップ領域で、見える円（半径 6px）は変えない。
- */
-const TOUCH_HIT_HALF_SIZE_PX = 22;
 
 /**
  * 重なった代表点を地図の中央から下へずらして置く距離（px）。
@@ -35,9 +28,6 @@ const OVERLAP_POINT_OFFSET_PX = 100;
 
 /** 重なった代表点へ地図の中心を移すのにかける時間（ミリ秒）。 */
 const OVERLAP_PAN_DURATION_MS = 400;
-
-/** 地図のクリックが当たった代表点の、画面上の位置・シリーズ・経度と緯度。 */
-type PointUnder = CandidatePoint & { coordinates: [number, number] };
 
 /**
  * 候補の一覧が指す重なった代表点。
@@ -61,50 +51,6 @@ type UseOverlapCandidatesArgs = {
   mapRef: RefObject<MapRef | null>;
   seriesList: SeriesList;
 };
-
-/**
- * 地図のクリックが当たった代表点の、画面上の位置とシリーズを返す。
- *
- * タッチの入力は押した位置の周り 44px 四方、それ以外は押した位置の点だけを調べる。
- * `PointerEvent.pointerType` を持たないクリックはマウスとして扱うので、そのような端末のタッチは判定が円の大きさに留まる。
- */
-function pointsUnder(map: MapRef, event: MapLayerMouseEvent): PointUnder[] {
-  const original = event.originalEvent;
-  const isTouch =
-    original !== undefined &&
-    "pointerType" in original &&
-    original.pointerType === "touch";
-  const { x, y } = event.point;
-  const features = isTouch
-    ? map.queryRenderedFeatures(
-        [
-          [x - TOUCH_HIT_HALF_SIZE_PX, y - TOUCH_HIT_HALF_SIZE_PX],
-          [x + TOUCH_HIT_HALF_SIZE_PX, y + TOUCH_HIT_HALF_SIZE_PX],
-        ],
-        { layers: [SERIES_CIRCLE_LAYER.id] },
-      )
-    : event.features;
-
-  return (features ?? []).flatMap((feature) => {
-    const { seriesId } = feature.properties;
-
-    if (typeof seriesId !== "string" || feature.geometry.type !== "Point") {
-      return [];
-    }
-
-    const [longitude, latitude] = feature.geometry.coordinates;
-    const screen = map.project([longitude, latitude]);
-
-    return [
-      {
-        x: screen.x,
-        y: screen.y,
-        seriesId,
-        coordinates: [longitude, latitude],
-      },
-    ];
-  });
-}
 
 /**
  * 重なった代表点の候補の状態を持ち、地図のクリックと移動から更新する。
@@ -136,7 +82,7 @@ export function useOverlapCandidates({
    */
   function openCandidatesAt(event: MapLayerMouseEvent): string[] {
     const map = mapRef.current;
-    const points = map === null ? [] : pointsUnder(map, event);
+    const points = map === null ? [] : listPointsUnder(map, event);
     const seriesIds = candidateSeriesIdsOf(event.point, points);
     const nearest = points.find((point) => point.seriesId === seriesIds[0]);
 

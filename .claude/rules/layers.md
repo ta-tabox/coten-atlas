@@ -20,7 +20,7 @@ paths:
 | 配信した `episodes.json`（ブラウザの fetch） | `src/lib/episodes.ts` の `fetchEpisodes` | 呼ぶ | `EpisodesResult`（`parseEpisodes` を通した `Episode` の配列か、取得の失敗） |
 | ベースマップのスタイル（ブラウザの fetch） | `src/components/map/use-basemap-style.ts` の `useBasemapStyle` | 呼ぶ | 地名を日本語にしたスタイルか、取得に失敗したときの `BASEMAP_STYLE_URL` |
 | 管理画面の保存の API（HTTP） | 受け手は `src/app/admin/api/loci/route.dev.ts`、送り手は `src/lib/admin-api.ts` の `patchLocus` | 送り手だけが呼ぶ | 受け手は `parseLocusPatch` を通した `LocusPatch`、送り手は `parseSaveResult` を通した保存しなかった理由の文の配列 |
-| MapLibre の DOM とイベント | 公開の地図は `src/components/map/MapCanvas.tsx`（source と layer は子の `src/components/map/SeriesLayers.tsx`、押した位置の点の判定は子のフック `src/components/map/use-overlap-candidates.ts`）、管理画面の地図は `src/components/admin/map/**`（ベースマップは `EditorMap.tsx`、編集の機能ごとのレイヤはその子） | 呼ばない | 公開の地図は押した位置の候補の `seriesId` の配列、管理画面の地図はドラッグして離した事物の `LocusPatch` |
+| MapLibre の DOM とイベント | 公開の地図は `src/components/map/MapCanvas.tsx`（source と layer は子の `src/components/map/SeriesLayers.tsx`、押した位置の点の判定は子のフック `src/components/map/use-overlap-candidates.ts`、マウスを載せた点の判定は子のフック `src/components/map/use-hover-tooltip.ts`、どちらの点の取得も `src/components/map/points-under.ts`）、管理画面の地図は `src/components/admin/map/**`（ベースマップは `EditorMap.tsx`、編集の機能ごとのレイヤはその子） | 呼ばない | 公開の地図は押した位置の候補の `seriesId` の配列、管理画面の地図はドラッグして離した事物の `LocusPatch` |
 
 ## 境界の禁止則
 
