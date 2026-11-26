@@ -7,7 +7,7 @@
  * 段（`SheetStage`）と era スライダーを出すかは保持しない。
  * どちらも props で受け取り、取っ手のタップとスワイプが決めた段を `onStageChange`、era スライダーを出す操作を `onEraSliderShownChange` で返す。
  * 取っ手の行だけがタッチを受けるので、地図の上のパンとピンチは地図が受ける。
- * `list` と `full` の段では、取っ手の行の右端の閉じるボタンが、段をいくつ上げていても `era` の段へ一度で戻す。
+ * `full` の段では、取っ手の行の右端の閉じるボタンが、段をいくつ上げていても `era` の段へ一度で戻す。
  *
  * スワイプは、指が `SWIPE_THRESHOLD_PX` を超えて動いた時点で、動いた向きの隣の段へ移す。
  * 開きたい高さまで指を運ばなくても、短い移動で次の段へ届く。
@@ -256,14 +256,14 @@ export default function BottomSheet({
     </button>
   );
 
-  /** シートを `era` の段へ戻すボタンで、下向きの山形は era スライダーの × と取り違えない形にしてある。 */
+  /** `full` の段でだけ出す、シートを `era` の段へ戻すボタンで、下向きの山形は era スライダーの × と取り違えない形にしてある。 */
   const closeListButton = (
     <button
       type="button"
       aria-label="一覧を閉じる"
       onPointerDown={(event) => event.stopPropagation()}
       onClick={() => onStageChange(SHEET_STAGE.era)}
-      className="flex size-9 items-center justify-center rounded-full text-ink-muted hover:bg-rule/40 hover:text-ink focus-visible:outline-2 focus-visible:outline-point"
+      className="flex size-8 items-center justify-center rounded-full text-ink-muted hover:bg-rule/40 hover:text-ink focus-visible:outline-2 focus-visible:outline-point"
     >
       <svg
         aria-hidden="true"
@@ -304,7 +304,7 @@ export default function BottomSheet({
               onStageChange(nextSheetStage(stage));
             }
           }}
-          className="flex min-h-11 w-full items-center justify-center px-4 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point"
+          className="flex min-h-8 w-full items-center justify-center px-4 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-point"
         >
           <span aria-hidden="true" className="h-1 w-10 rounded-full bg-rule" />
           <span className="sr-only">{label}</span>
@@ -312,13 +312,12 @@ export default function BottomSheet({
 
         {/* ボタンは、押しても行のスワイプとタップを始めないよう、ポインタの押下を行へ伝えない。 */}
         {isEraSliderHidden && (
-          <div className="flex items-center justify-between px-3 pb-2">
+          <div className="flex items-center px-3 pb-2">
             {restoreEraSliderButton}
-            {closeListButton}
           </div>
         )}
 
-        {isListShown && !isEraSliderHidden && (
+        {stage === SHEET_STAGE.full && (
           <div className="absolute inset-y-0 right-3 flex items-center gap-2">
             {closeListButton}
           </div>

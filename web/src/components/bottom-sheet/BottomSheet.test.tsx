@@ -249,14 +249,6 @@ describe("BottomSheet の目標の高さ", () => {
 });
 
 describe("BottomSheet の閉じるボタン", () => {
-  it("list の段で押すと、era の段を返す", () => {
-    const { onStageChange } = renderSheet("list");
-
-    fireEvent.click(screen.getByRole("button", { name: "一覧を閉じる" }));
-
-    expect(onStageChange).toHaveBeenCalledExactlyOnceWith("era");
-  });
-
   it("full の段で押すと、段を飛ばして era の段を返す", () => {
     const { onStageChange } = renderSheet("full");
 
@@ -265,19 +257,18 @@ describe("BottomSheet の閉じるボタン", () => {
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("era");
   });
 
-  it("closed と era の段では出さない", () => {
-    renderSheet("closed");
+  it("full の段より低い段では出さない", () => {
+    for (const stage of ["closed", "era", "list"] as const) {
+      renderSheet(stage);
 
-    expect(screen.queryByRole("button", { name: "一覧を閉じる" })).toBeNull();
+      expect(screen.queryByRole("button", { name: "一覧を閉じる" })).toBeNull();
 
-    cleanup();
-    renderSheet("era");
-
-    expect(screen.queryByRole("button", { name: "一覧を閉じる" })).toBeNull();
+      cleanup();
+    }
   });
 
   it("押しても、取っ手のタップとして段を進めない", () => {
-    const { onStageChange } = renderSheet("list");
+    const { onStageChange } = renderSheet("full");
     const button = screen.getByRole("button", { name: "一覧を閉じる" });
 
     fireEvent.pointerDown(button, pointerAt(40));
