@@ -5,7 +5,7 @@
  * どのシリーズを並べるかは決めず、`@/lib/map/related-series` の `relatedSeriesOf` が選んだ結果を受け取る。
  */
 
-import type { Series } from "@/lib/schema/series";
+import type { RelatedSeries } from "@/lib/map/related-series";
 
 /**
  * 行の `section` の `aria-labelledby` が参照する、`h3` の id。
@@ -15,12 +15,13 @@ const RELATED_SERIES_TITLE_ID = "related-series-title";
 
 type RelatedSeriesRowProps = {
   /** 近い順に並べた関連するシリーズ。 */
-  relatedSeries: Series[];
+  relatedSeries: RelatedSeries[];
   onSelect: (seriesId: string) => void;
 };
 
 /**
  * 関連するシリーズ（`relatedSeries`）の名前を、渡された順に、押すと `onSelect` を呼ぶボタンで並べる。
+ * 各ボタンは名前の下に、関連とみなした理由の共有したタグを、名前より小さく薄い文字で添える。
  * `relatedSeries` が空なら、見出しごと何も描かない。
  */
 export default function RelatedSeriesRow({
@@ -44,14 +45,23 @@ export default function RelatedSeriesRow({
       </h3>
 
       <ul className="mt-2 flex flex-wrap gap-1.5">
-        {relatedSeries.map((series) => (
-          <li key={series.id}>
+        {relatedSeries.map(({ series, sharedTags }) => (
+          <li key={series.id} className="max-w-full">
             <button
               type="button"
               onClick={() => onSelect(series.id)}
-              className="rounded-control border border-rule px-3 py-1 text-left text-[0.85rem] text-link hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-point"
+              className="max-w-full rounded-control border border-rule px-3 py-1 text-left leading-snug hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-point"
             >
-              {series.title}
+              <span className="block text-[0.85rem] text-link">
+                {series.title}
+              </span>{" "}
+              <span
+                data-shared-tags
+                className="block text-[0.7rem] text-ink-muted"
+              >
+                <span className="sr-only">共有するタグ </span>
+                {sharedTags.join("・")}
+              </span>
             </button>
           </li>
         ))}

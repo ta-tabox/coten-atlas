@@ -412,7 +412,10 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: [] }}
-        relatedSeries={[TEISEI_ROMA, OSMAN]}
+        relatedSeries={[
+          { series: TEISEI_ROMA, sharedTags: ["帝政"] },
+          { series: OSMAN, sharedTags: ["帝政", "遊牧"] },
+        ]}
         onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
@@ -423,8 +426,29 @@ describe("SeriesDetailCard", () => {
     );
 
     expect(
-      row.getAllByRole("button").map((button) => button.textContent),
+      row
+        .getAllByRole("button")
+        .map((button) => button.querySelector("span")?.textContent),
     ).toEqual(["帝政ローマ", "オスマン帝国"]);
+  });
+
+  it("関連するシリーズの名前の下に、共有したタグを・でつないで添える", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[{ series: OSMAN, sharedTags: ["帝政", "遊牧"] }]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const button = screen.getByRole("button", { name: /オスマン帝国/ });
+
+    expect(button.querySelector("[data-shared-tags]")?.textContent).toBe(
+      "共有するタグ 帝政・遊牧",
+    );
   });
 
   it("関連するシリーズを押すと、そのシリーズの id で onSelect を呼ぶ", () => {
@@ -435,12 +459,15 @@ describe("SeriesDetailCard", () => {
         series={SPARTA}
         placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: [] }}
-        relatedSeries={[TEISEI_ROMA, OSMAN]}
+        relatedSeries={[
+          { series: TEISEI_ROMA, sharedTags: ["帝政"] },
+          { series: OSMAN, sharedTags: ["帝政", "遊牧"] },
+        ]}
         onSelect={onSelect}
         onClose={vi.fn()}
       />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "オスマン帝国" }));
+    fireEvent.click(screen.getByRole("button", { name: /オスマン帝国/ }));
 
     expect(onSelect).toHaveBeenCalledExactlyOnceWith("osman-teikoku");
   });

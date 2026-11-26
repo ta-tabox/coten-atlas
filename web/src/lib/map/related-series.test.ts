@@ -27,7 +27,7 @@ function seriesOf(fixture: SeriesFixture): Series {
 
 /** `seriesList` から `origin` に関連するシリーズの id を、並んだ順に返す。 */
 function relatedIdsOf(seriesList: Series[], origin: Series): string[] {
-  return relatedSeriesOf(seriesList, origin).map((series) => series.id);
+  return relatedSeriesOf(seriesList, origin).map(({ series }) => series.id);
 }
 
 const YOSHIDA = seriesOf({
@@ -70,6 +70,19 @@ describe("relatedSeriesOf", () => {
     expect(
       relatedIdsOf([TAKASUGI, shoukasonjuku, HELEN_KELLER], YOSHIDA),
     ).toEqual(["shoukasonjuku", "takasugi-shinsaku", "helen-keller"]);
+  });
+
+  it("関連するシリーズごとに、共有した狭いタグを起点のシリーズの tags の順で返し、種別のタグと広いタグは含めない", () => {
+    const shoukasonjuku = seriesOf({
+      id: "shoukasonjuku",
+      region: "日本",
+      timeRange: { start: 1842, end: 1858 },
+      tags: ["人物", "教育", "思想", "幕末"],
+    });
+
+    expect(relatedSeriesOf([shoukasonjuku], YOSHIDA)).toEqual([
+      { series: shoukasonjuku, sharedTags: ["幕末", "教育"] },
+    ]);
   });
 
   it("共有する狭いタグの数が同じなら、年代の中点が近いシリーズを前に置き、時期を持たないシリーズを最後に置く", () => {

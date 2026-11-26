@@ -15,6 +15,13 @@ import {
   TIME_RANGE_UNTIMED,
 } from "@/lib/schema/series";
 
+/** `relatedSeriesOf` が返し、関連シリーズ行が 1 件ずつ描く、関連するシリーズと、起点のシリーズと共有した狭いタグ。 */
+export type RelatedSeries = {
+  series: Series;
+  /** 起点のシリーズの `tags` の並び順で、1 個以上。 */
+  sharedTags: string[];
+};
+
 /** 関連シリーズ行に並べるシリーズの最大の数。 */
 export const RELATED_SERIES_LIMIT = 4;
 
@@ -64,15 +71,15 @@ function yearDistanceOf(a: Series, b: Series): number {
   return Math.abs(aYear - bYear);
 }
 
-/** 起点のシリーズ（`origin`）と別のシリーズ（`other`）が共有する狭いタグの数を返す。 */
-function sharedNarrowTagCountOf(origin: Series, other: Series): number {
+/** 起点のシリーズ（`origin`）と別のシリーズ（`other`）が共有する狭いタグを、`origin` の `tags` の並び順で返す。 */
+function sharedNarrowTagsOf(origin: Series, other: Series): string[] {
   return origin.tags.filter(
     (tag) => !UNCOUNTED_TAGS.has(tag) && other.tags.includes(tag),
-  ).length;
+  );
 }
 
 /**
- * シリーズの全件（`seriesList`）のうち、選択中のシリーズ（`origin`）に関連するシリーズを、近い順に `RELATED_SERIES_LIMIT` 件まで返す。
+ * シリーズの全件（`seriesList`）のうち、選択中のシリーズ（`origin`）に関連するシリーズを、共有した狭いタグと組にして、近い順に `RELATED_SERIES_LIMIT` 件まで返す。
  * 関連するシリーズが無ければ空配列を返す。
  *
  * 近さが同じシリーズは `seriesList` の並び順を保つので、同じシリーズを選び直しても関連シリーズ行の並びは入れ替わらない。
@@ -81,24 +88,24 @@ function sharedNarrowTagCountOf(origin: Series, other: Series): number {
 export function relatedSeriesOf(
   seriesList: SeriesList,
   origin: Series,
-): Series[] {
+): RelatedSeries[] {
   const related = seriesList
     .filter((other) => other.id !== origin.id)
     .map((other) => ({
-      other,
-      sharedTagCount: sharedNarrowTagCountOf(origin, other),
+      series: other,
+      sharedTags: sharedNarrowTagsOf(origin, other),
       yearDistance: yearDistanceOf(origin, other),
     }))
-    .filter(({ sharedTagCount }) => sharedTagCount > 0);
+    .filter(({ sharedTags }) => sharedTags.length > 0);
 
   return related
     .toSorted(
       (a, b) =>
-        b.sharedTagCount - a.sharedTagCount ||
+        b.sharedTags.length - a.sharedTags.length ||
         // 両方が時期を持たないと無限大どうしの差が NaN になるので、0 にして並び順を保つ。
         a.yearDistance - b.yearDistance ||
         0,
     )
     .slice(0, RELATED_SERIES_LIMIT)
-    .map(({ other }) => other);
+    .map(({ series, sharedTags }) => ({ series, sharedTags }));
 }

@@ -17,6 +17,7 @@ import SeriesPeriod from "@/components/series-detail/SeriesPeriod";
 import SeriesPlace from "@/components/series-detail/SeriesPlace";
 import YouTubeChannelLink from "@/components/series-detail/YouTubeChannelLink";
 import { EPISODES_KIND, type EpisodesState } from "@/lib/episodes";
+import type { RelatedSeries } from "@/lib/map/related-series";
 import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 
 /**
@@ -77,8 +78,8 @@ type SeriesDetailBodyProps = {
   placeName: string | null;
   /** `series` に割り当てられたエピソードと、その取得の状態。 */
   episodes: EpisodesState;
-  /** `relatedSeriesOf` が近い順に選んだ、`series` に関連するシリーズ。 */
-  relatedSeries: Series[];
+  /** `relatedSeriesOf` が近い順に選んだ、`series` に関連するシリーズと共有したタグ。 */
+  relatedSeries: RelatedSeries[];
   onSelect: (seriesId: string) => void;
   onClose: () => void;
 };
