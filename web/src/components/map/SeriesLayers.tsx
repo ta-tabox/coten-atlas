@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * シリーズを地図の上の見えるものにするレイヤ群。
+ * シリーズの事物を、円と輪のレイヤで地図へ描く部品を置く。
  *
  * source と、地図上の見た目ごとのレイヤの部品（`@/components/map/layers/`）を並べるだけで、地図そのものは持たない。
  * 置く先は `MapCanvas` の子で、react-map-gl は親の地図を context から取得する。
@@ -21,7 +21,6 @@ import type { MapLocusCollection } from "@/lib/map/loci";
 import type { Series } from "@/lib/schema/series";
 
 type SeriesLayersProps = {
-  /** 地図へ渡す形に組んだ事物の全件。 */
   loci: MapLocusCollection;
   /** 円の不透明度を決める、era スライダーの現在窓。 */
   currentWindow: CurrentWindow;

@@ -12,7 +12,7 @@ import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
 import { OFFICIAL_SITE_URL } from "@/lib/links/official-url";
 import { SITE_TITLE } from "@/lib/site/title";
 
-/** ヘッダーを描く。 */
+/** 高さをトークン `--spacing-header` に揃えたヘッダーを描く。 */
 export default function SiteHeader() {
   return (
     <header
