@@ -8,7 +8,11 @@
  */
 
 import { type ReactNode, useEffect, useRef, useState } from "react";
-import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
+import type {
+  MapLayerMouseEvent,
+  MapRef,
+  ViewStateChangeEvent,
+} from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import BottomSheet from "@/components/bottom-sheet/BottomSheet";
 import EraSlider from "@/components/era-slider/EraSlider";
@@ -284,6 +288,24 @@ export default function MapCanvas({
     select(seriesId);
   }
 
+  /** 利用者の操作で地図が動き始めたとき、地図に重ねた候補の一覧とツールチップを閉じる。 */
+  function closeOverlaysOnUserMove(event: ViewStateChangeEvent): void {
+    overlap.closeOnUserMove(event);
+    hover.clearOnUserMove(event);
+  }
+
+  /** 地図が動くたびに、地図に重ねた候補の一覧とツールチップが指す代表点の位置を取り直す。 */
+  function updateOverlayAnchors(): void {
+    overlap.updateAnchor();
+    hover.updateAnchor();
+  }
+
+  /** マウスが代表点から離れたとき、カーソルの形を戻してツールチップを消す。 */
+  function leaveLocus(): void {
+    setIsHoveringLocus(false);
+    hover.clear();
+  }
+
   /** 候補の一覧の行で選んだシリーズを選択し、候補の一覧を閉じる。 */
   function selectFromCandidates(seriesId: string): void {
     overlap.close();
@@ -355,24 +377,15 @@ export default function MapCanvas({
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={selectFromMap}
-      onMoveStart={(event) => {
-        overlap.closeOnUserMove(event);
-        hover.clearOnUserMove(event);
-      }}
-      onMove={() => {
-        overlap.updateAnchor();
-        hover.updateAnchor();
-      }}
+      onMoveStart={closeOverlaysOnUserMove}
+      onMove={updateOverlayAnchors}
       onMouseMove={hover.updateAt}
       onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
       cursor={isHoveringLocus ? "pointer" : undefined}
       onMouseEnter={() => setIsHoveringLocus(true)}
-      onMouseLeave={() => {
-        setIsHoveringLocus(false);
-        hover.clear();
-      }}
+      onMouseLeave={leaveLocus}
     >
       <SeriesLayers
         loci={taggedLoci}
