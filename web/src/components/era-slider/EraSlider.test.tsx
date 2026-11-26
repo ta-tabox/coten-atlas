@@ -363,6 +363,18 @@ describe("EraSlider", () => {
     expect(screen.getByRole("slider", { name: "時代" })).toHaveFocus();
   });
 
+  it("つまみを押しても、トラックと同じく押した横の位置を onPositionChange へ渡す", () => {
+    const { onPositionChange } = renderAt(0);
+    laidOutTrack();
+
+    fireEvent.pointerDown(
+      screen.getByTestId("era-slider-thumb"),
+      primaryPointerAt(450),
+    );
+
+    expect(onPositionChange).toHaveBeenCalledWith(0.5);
+  });
+
   it("スライダーを動かすと、値を 0..1 の位置に直して onPositionChange へ渡す", () => {
     const { onPositionChange } = renderAt(0);
     const slider = screen.getByRole<HTMLInputElement>("slider", {

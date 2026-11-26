@@ -37,7 +37,7 @@ export default function EraSliderPanButton({
       aria-label={label}
       disabled={!isShown || isDisabled}
       onClick={onClick}
-      className={`flex shrink-0 items-center justify-center overflow-hidden border-rule bg-rule/25 text-ink-muted transition-[width,opacity,background-color,color] duration-200 ease-out-expo enabled:hover:bg-point/10 enabled:hover:text-point enabled:active:bg-point/20 disabled:text-ink-muted/40 ${isShown ? `${shownClass} opacity-100` : "pointer-events-none w-0 opacity-0"}`}
+      className={`flex shrink-0 items-center justify-center overflow-hidden border-rule bg-rule/25 text-ink-muted transition-[width,opacity,background-color,color] duration-200 ease-out-expo enabled:cursor-pointer enabled:hover:bg-point/10 enabled:hover:text-point enabled:active:bg-point/20 disabled:text-ink-muted/40 ${isShown ? `${shownClass} opacity-100` : "pointer-events-none w-0 opacity-0"}`}
     >
       {icon}
     </button>
