@@ -7,6 +7,7 @@
 import { describe, expect, it } from "vitest";
 import {
   autoPanDirection,
+  clampPositionToViewWindow,
   FULL_VIEW,
   keepWindowInView,
   panStepOf,
@@ -72,6 +73,33 @@ describe("panViewMinBy", () => {
   it("era 空間の外へは出ない", () => {
     expect(panViewMinBy(0.01, -0.5, SPAN)).toBe(0);
     expect(panViewMinBy(1 - SPAN, 0.5, SPAN)).toBeCloseTo(1 - SPAN);
+  });
+});
+
+describe("clampPositionToViewWindow", () => {
+  const view = { min: 0.3, span: SPAN };
+  const halfWindow = 0.25 / ERA_COUNT;
+
+  it("窓が範囲に収まる位置は、そのまま返す", () => {
+    expect(clampPositionToViewWindow(0.4, view, halfWindow)).toBe(0.4);
+  });
+
+  it("範囲の端を指しても、窓が範囲からはみ出さない位置へ丸める", () => {
+    expect(clampPositionToViewWindow(0.3, view, halfWindow)).toBeCloseTo(
+      0.3 + halfWindow,
+    );
+    expect(clampPositionToViewWindow(0.9, view, halfWindow)).toBeCloseTo(
+      0.3 + SPAN - halfWindow,
+    );
+  });
+
+  it("範囲の端が era 空間の端に着いているときは、その端まで選べる", () => {
+    expect(
+      clampPositionToViewWindow(0, { min: 0, span: SPAN }, halfWindow),
+    ).toBe(0);
+    expect(
+      clampPositionToViewWindow(1, { min: 1 - SPAN, span: SPAN }, halfWindow),
+    ).toBe(1);
   });
 });
 

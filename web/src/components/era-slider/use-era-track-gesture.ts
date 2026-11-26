@@ -15,7 +15,12 @@ import {
   useState,
 } from "react";
 import { clientXToPosition } from "@/lib/era/pointer";
-import { autoPanDirection, clampViewMin, type ViewRange } from "@/lib/era/view";
+import {
+  autoPanDirection,
+  clampPositionToViewWindow,
+  clampViewMin,
+  type ViewRange,
+} from "@/lib/era/view";
 
 /** 押した位置からこの距離（px）を越えて動いたら、押している間の操作をドラッグとみなす。 */
 const DRAG_SLOP_PX = 4;
@@ -24,7 +29,7 @@ const DRAG_SLOP_PX = 4;
 const EDGE_SNAP_PX = 8;
 
 /** 拡大中に指が端に寄っている間、表示範囲が動く速さ（1 秒あたりの era の区間の数）。 */
-const AUTO_PAN_ERAS_PER_SECOND = 0.06;
+const AUTO_PAN_ERAS_PER_SECOND = 0.8;
 
 /** タブの切り替えなどでフレームの間隔が空いても、表示範囲が飛ばないよう、1 フレームで進める時間の上限（秒）。 */
 const MAX_FRAME_SECONDS = 0.05;
@@ -37,8 +42,8 @@ type EraTrackGestureParams = {
   stepCount: number;
   view: ViewRange;
   isZoomed: boolean;
-  /** 指がトラックの端からこの割合（0..1）の内側へ入ると、表示範囲を送り始める。 */
-  edgeRatio: number;
+  /** 現在窓の幅の半分を、era 空間の位置（0..1）の差で表した値。 */
+  windowHalfWidth: number;
   onPositionChange: (position: number) => void;
   onViewMinChange: (viewMin: number) => void;
 };
@@ -58,7 +63,7 @@ export function useEraTrackGesture({
   stepCount,
   view,
   isZoomed,
-  edgeRatio,
+  windowHalfWidth,
   onPositionChange,
   onViewMinChange,
 }: EraTrackGestureParams) {
@@ -87,7 +92,7 @@ export function useEraTrackGesture({
       return undefined;
     }
 
-    return clientXToPosition({
+    const position = clientXToPosition({
       clientX,
       trackLeft: rect.left,
       trackWidth: rect.width,
@@ -95,6 +100,10 @@ export function useEraTrackGesture({
       view: atView,
       edgeSnapPx: latest.current.isZoomed ? 0 : EDGE_SNAP_PX,
     });
+
+    return latest.current.isZoomed
+      ? clampPositionToViewWindow(position, atView, windowHalfWidth)
+      : position;
   }
 
   function updateFromClientX(clientX: number) {
@@ -115,7 +124,7 @@ export function useEraTrackGesture({
 
     return autoPanDirection({
       ratio: (clientX - rect.left) / rect.width,
-      edgeRatio,
+      edgeRatio: windowHalfWidth / latest.current.view.span,
       view: latest.current.view,
     });
   }

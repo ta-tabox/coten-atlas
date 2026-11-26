@@ -6,8 +6,15 @@
  * 幅 700 は 7 つの era の 700 目盛りに合わせてあり、全体を映すトラックでは 1px が 1 目盛りに当たる。
  */
 
-import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+} from "@testing-library/react";
+import { useState } from "react";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import EraSlider from "@/components/era-slider/EraSlider";
 import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
 
@@ -90,6 +97,21 @@ function firstCellLeftPercent(): number {
 /** 拡大のボタンを押す。 */
 function zoomIn() {
   fireEvent.click(screen.getByRole("button", { name: ZOOM_LABEL }));
+}
+
+/** 位置を自分で持ち、押した位置の変更を受けて描き直す EraSlider の入れ物。 */
+function SliderWithPosition() {
+  const [position, setPosition] = useState(2.5 / 7);
+
+  return (
+    <EraSlider
+      eras={ERAS}
+      presentEnd={PRESENT_END}
+      position={position}
+      onPositionChange={setPosition}
+      zoomedEraCount={2}
+    />
+  );
 }
 
 describe("EraSlider", () => {
@@ -412,5 +434,39 @@ describe("EraSlider", () => {
     fireEvent.change(slider, { target: { value: slider.max } });
 
     expect(onPositionChange).toHaveBeenCalledWith(1);
+  });
+
+  describe("拡大中に指をトラックの端で押さえたままにしたとき", () => {
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    /** 拡大し、トラックの左端から `ratio` の位置を 1 秒押さえたとき、先頭の era のセルが左へ動いた量（%）を返す。 */
+    function shiftAfterHolding(ratio: number): number {
+      vi.useFakeTimers();
+      render(<SliderWithPosition />);
+      zoomIn();
+      const track = laidOutTrack();
+      const before = firstCellLeftPercent();
+      const clientX = TRACK_LEFT + TRACK_WIDTH * ratio;
+
+      fireEvent.pointerDown(track, primaryPointerAt(clientX));
+      fireEvent.pointerMove(track, primaryPointerAt(clientX));
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      return before - firstCellLeftPercent();
+    }
+
+    it("端に近くても遠くても、表示範囲を同じ速さで送る", () => {
+      const atEdge = shiftAfterHolding(1);
+      cleanup();
+      const nearEdge = shiftAfterHolding(0.96);
+
+      // 1 秒で 0.8 区間ずれると、2 区間を映す範囲の 40% にあたる。
+      expect(atEdge).toBeCloseTo(40, 0);
+      expect(nearEdge).toBeCloseTo(atEdge, 0);
+    });
   });
 });

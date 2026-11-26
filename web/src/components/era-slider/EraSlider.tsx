@@ -158,7 +158,7 @@ export default function EraSlider({
     stepCount: maxStep,
     view,
     isZoomed,
-    edgeRatio: WINDOW_WIDTH_IN_ERAS / eraCount / 2 / zoomSpan,
+    windowHalfWidth: WINDOW_WIDTH_IN_ERAS / eraCount / 2,
     onPositionChange,
     onViewMinChange: setViewMin,
   });

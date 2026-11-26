@@ -72,6 +72,26 @@ export function panStepOf(eraCount: number): number {
   return PAN_STEP_IN_ERAS / eraCount;
 }
 
+/**
+ * 拡大した表示範囲の中で選べる位置を、現在窓（位置の前後 `halfWindow`）が範囲からはみ出さない範囲へ丸めて返す。
+ * 範囲の端が era 空間の端（0 と 1）に着いているときは、窓が era 空間の外へ丸められるので、その端までは丸めない。
+ *
+ * 指が範囲の端にあるとき、位置を丸めないと窓がはみ出し、`keepWindowInView` がはみ出した分だけ範囲をずらす。
+ * ずらす量が指の端への近さで変わるので、丸めて、範囲をずらす速さを自動送りの一定の速さだけに決めさせる。
+ */
+export function clampPositionToViewWindow(
+  position: number,
+  view: ViewRange,
+  halfWindow: number,
+): number {
+  const epsilon = 1e-9;
+  const lower = view.min <= epsilon ? 0 : view.min + halfWindow;
+  const upper =
+    view.min + view.span >= 1 - epsilon ? 1 : view.min + view.span - halfWindow;
+
+  return Math.min(Math.max(position, lower), upper);
+}
+
 /** 表示範囲の左端を、`delta`（負なら過去へ）だけずらし、era 空間の外へ出ない範囲に丸めて返す。 */
 export function panViewMinBy(min: number, delta: number, span: number): number {
   return clampViewMin(min + delta, span);
