@@ -15,6 +15,7 @@ import EraSlider from "@/components/era-slider/EraSlider";
 import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
+import { useHoverTooltip } from "@/components/map/use-hover-tooltip";
 import { useIsDesktop } from "@/components/map/use-is-desktop";
 import { useOverlapCandidates } from "@/components/map/use-overlap-candidates";
 import SeriesCandidateOverlay from "@/components/series-candidates/SeriesCandidateOverlay";
@@ -22,6 +23,7 @@ import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
+import SeriesTooltip from "@/components/series-tooltip/SeriesTooltip";
 import SiteHeader from "@/components/site-header/SiteHeader";
 import {
   EPISODES_KIND,
@@ -59,6 +61,12 @@ const PAN_DURATION_MS = 1200;
 
 /** 一覧パネルの開閉に合わせて地図の視野をずらすのにかける時間（ミリ秒）。 */
 const PADDING_DURATION_MS = 300;
+
+/**
+ * ツールチップの下辺を、代表点の中心から上へ離す距離（px）。
+ * 円（半径 6px）に重ならない余白を残す。
+ */
+const TOOLTIP_GAP_PX = 12;
 
 type MapCanvasProps = {
   loci: MapLocusCollection;
@@ -141,6 +149,7 @@ export default function MapCanvas({
   const isDesktop = useIsDesktop();
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
   const overlap = useOverlapCandidates({ mapRef, seriesList });
+  const hover = useHoverTooltip({ mapRef, seriesList });
 
   // 一覧パネルに隠れる左の幅と、シートに隠れる下の高さを地図の視野から除き、点が隠れない領域に描かれるようにする。
   const paddingLeft = isDesktop && isPanelOpen ? PANEL_RIGHT_EDGE_PX : 0;
@@ -352,14 +361,24 @@ export default function MapCanvas({
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={selectFromMap}
-      onMoveStart={overlap.closeOnUserMove}
-      onMove={overlap.updateAnchor}
+      onMoveStart={(event) => {
+        overlap.closeOnUserMove(event);
+        hover.clearOnUserMove(event);
+      }}
+      onMove={() => {
+        overlap.updateAnchor();
+        hover.updateAnchor();
+      }}
+      onMouseMove={hover.updateAt}
       onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
       cursor={isHoveringLocus ? "pointer" : undefined}
       onMouseEnter={() => setIsHoveringLocus(true)}
-      onMouseLeave={() => setIsHoveringLocus(false)}
+      onMouseLeave={() => {
+        setIsHoveringLocus(false);
+        hover.clear();
+      }}
     >
       <SeriesLayers
         loci={taggedLoci}
@@ -415,6 +434,18 @@ export default function MapCanvas({
           >
             {sheetContent}
           </BottomSheet>
+        </div>
+      )}
+      {/* ツールチップは代表点の上に置き、候補の一覧が開いている間は出さない。 */}
+      {hover.view !== null && overlap.view === null && (
+        <div
+          className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full"
+          style={{
+            left: hover.view.anchor.x,
+            top: hover.view.anchor.y - TOOLTIP_GAP_PX,
+          }}
+        >
+          <SeriesTooltip series={hover.view.series} />
         </div>
       )}
       {/* 候補の一覧は、重なった代表点の上に、どの幅でもシートの上へ重ねる。 */}

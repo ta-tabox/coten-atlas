@@ -33,6 +33,7 @@ import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
+import SeriesTooltip from "@/components/series-tooltip/SeriesTooltip";
 import { currentWindow } from "@/lib/era/window";
 import { toJapaneseLabelStyle } from "@/lib/map/basemap-labels";
 import {
@@ -62,6 +63,12 @@ const panTo = vi.hoisted(() => vi.fn());
 const easeTo = vi.hoisted(() => vi.fn());
 
 /**
+ * MapLibreMap のモックが `ref` に入れる地図の `queryRenderedFeatures`。
+ * タッチの押下が使う範囲の検索の結果を、テストが決める。
+ */
+const queryRenderedFeatures = vi.hoisted(() => vi.fn(() => []));
+
+/**
  * MapLibreMap のモックが `ref` に入れる地図の `project`。
  * 座標をそのまま画面の位置（px）として返し、テストが経度・緯度の値で画面上の距離を決められるようにする。
  */
@@ -71,7 +78,7 @@ const project = vi.hoisted(() =>
 
 /**
  * `react-map-gl/maplibre` の既定の export と差し替えるモック関数。
- * 受け取った props を記録し、`ref` がオブジェクトなら `panTo`・`easeTo`・`project` を持つ地図を入れて、null を返す。
+ * 受け取った props を記録し、`ref` がオブジェクトなら `panTo`・`easeTo`・`project`・`queryRenderedFeatures` を持つ地図を入れて、null を返す。
  */
 const map = vi.hoisted(() =>
   vi.fn<(props: MockMapProps) => null>((props) => {
@@ -80,6 +87,7 @@ const map = vi.hoisted(() =>
         panTo,
         easeTo,
         project,
+        queryRenderedFeatures,
       } as unknown as MapRef;
     }
 
@@ -995,5 +1003,88 @@ describe("MapCanvas（スマホの幅の重なった代表点の選び分け）"
 
     expect(childOfType(SeriesCandidateOverlay)).toBeUndefined();
     expect(childPropsOf(SeriesDetailBody).series.id).toBe("athens");
+  });
+});
+
+describe("MapCanvas（代表点へのホバー）", () => {
+  /** `pointerType` の入力から来た、`seriesIds` の代表点の上のマウスイベントを作る。 */
+  function moveOn(
+    pointerType: string | undefined,
+    ...seriesIds: string[]
+  ): MapLayerMouseEvent {
+    return {
+      ...mouseEventOn(...seriesIds),
+      originalEvent: pointerType === undefined ? undefined : { pointerType },
+    } as unknown as MapLayerMouseEvent;
+  }
+
+  beforeEach(() => {
+    map.mockClear();
+    stubDesktop(true);
+    stubFetch({ ok: true, json: () => Promise.resolve(BASEMAP_STYLE) });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("マウスを代表点に載せるとそのシリーズのツールチップを出し、離すと消し、選択は変えない", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+
+    expect(childPropsOf(SeriesTooltip).series.map(({ id }) => id)).toEqual([
+      "sparta",
+    ]);
+    expect(seriesLayersProps().selectedSeries).toBeNull();
+
+    act(() => lastProps().onMouseLeave?.(moveOn("mouse")));
+
+    expect(childOfType(SeriesTooltip)).toBeUndefined();
+    expect(seriesLayersProps().selectedSeries).toBeNull();
+  });
+
+  it("代表点の無い位置へマウスが移ると、ツールチップを消す", async () => {
+    await renderMapCanvas();
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse")));
+
+    expect(childOfType(SeriesTooltip)).toBeUndefined();
+  });
+
+  it("重なった代表点に載せると、重なったシリーズを全部ツールチップに並べる", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta", "athens")));
+
+    expect(childPropsOf(SeriesTooltip).series.map(({ id }) => id)).toEqual([
+      "sparta",
+      "athens",
+    ]);
+  });
+
+  it("タッチの入力ではツールチップを出さず、押した代表点のシリーズを選択する", async () => {
+    await renderMapCanvas();
+
+    const touched = moveOn("touch", "sparta");
+
+    queryRenderedFeatures.mockReturnValueOnce(touched.features as never);
+    act(() => lastProps().onMouseMove?.(touched));
+    act(() => lastProps().onClick?.(touched));
+
+    expect(childOfType(SeriesTooltip)).toBeUndefined();
+    expect(seriesLayersProps().selectedSeries?.id).toBe("sparta");
+  });
+
+  it("候補の一覧が開いている間は、ツールチップを出さない", async () => {
+    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta", "athens")));
+
+    act(() => lastProps().onClick?.(moveOn("mouse", "sparta", "athens")));
+
+    expect(childOfType(SeriesCandidateOverlay)).toBeDefined();
+    expect(childOfType(SeriesTooltip)).toBeUndefined();
   });
 });
