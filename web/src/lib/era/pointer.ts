@@ -1,7 +1,6 @@
 /**
  * era スライダーの上のポインタの横の座標を、era 空間の位置（0..1）へ変換する純関数を置く。
- * デスクトップの幅では、トラックの左端から 1/4 の所を指すと位置 0.25 になる（`clientXToPosition`）。
- * スマホの幅では、押した所から帯の幅の 1/10 だけ右へ指を動かすと、位置が 0.1 小さくなる（`dragToPosition`）。
+ * 全体を映すトラックでは、左端から 1/4 の所を指すと位置 0.25 になり、拡大して 2 つの era だけを映すトラックでは、映している範囲の中での割合を全体の位置へ直す。
  *
  * トラックの矩形（左端と幅）とポインタの座標は呼び出し側が DOM から読んで渡し、このモジュールは DOM を読まない。
  * 位置から年や現在窓を求める処理は `scale.ts` と `window.ts` に置く。
@@ -62,35 +61,4 @@ function snapToEdges(
   }
 
   return Math.min(Math.max(x / trackWidth, 0), 1);
-}
-
-/** `dragToPosition` が受け取る、押した時点の位置と指の座標、帯の幅と目盛りの数の組。 */
-export type DragOnBelt = {
-  /** 押した時点の era 空間の位置（0..1）。 */
-  startPosition: number;
-  startClientX: number;
-  clientX: number;
-  /** 画面に見えている幅でなく、帯の全幅（px）。 */
-  beltWidth: number;
-  stepCount: number;
-};
-
-/**
- * 押した位置から指が動いた量だけ帯が逆向きに動いたとみなして、新しい era 空間の位置を `stepCount` の目盛りのうち最も近い目盛りの位置（0..1）で返す。
- * 右へ動かすと位置は小さくなり、0 と 1 は越えない。
- *
- * 押した場所によらず、動かした量だけで位置が決まる。
- * 現在窓を画面の中央に留めて帯を動かす配置で、指と帯が同じ速さで動くようにするために使う。
- */
-export function dragToPosition({
-  startPosition,
-  startClientX,
-  clientX,
-  beltWidth,
-  stepCount,
-}: DragOnBelt): number {
-  const moved = (clientX - startClientX) / beltWidth;
-  const position = Math.min(Math.max(startPosition - moved, 0), 1);
-
-  return Math.round(position * stepCount) / stepCount;
 }
