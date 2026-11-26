@@ -311,7 +311,6 @@ export default function MapCanvas({
     hover.clear();
   }
 
-  /** 候補の一覧の行で選んだシリーズを選択し、候補の一覧を閉じる。 */
   /**
    * 詳細カードの関連シリーズ行で押したシリーズ（`seriesId`）を選び、代表点へ地図の中心を移す。
    * そのシリーズの年が現在窓の外なら、年の中点を指す位置へ era スライダーを動かす。
@@ -335,6 +334,7 @@ export default function MapCanvas({
     selectAndPan(seriesId);
   }
 
+  /** 候補の一覧の行で選んだシリーズを選択し、候補の一覧を閉じる。 */
   function selectFromCandidates(seriesId: string): void {
     overlap.close();
 
