@@ -28,6 +28,10 @@ import EraSlider from "@/components/era-slider/EraSlider";
 import MapCanvas from "@/components/map/MapCanvas";
 import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
+import {
+  TOOLTIP_SHOW_DELAY_MS,
+  TOOLTIP_SKIP_WINDOW_MS,
+} from "@/components/map/use-hover-tooltip";
 import SeriesCandidateOverlay from "@/components/series-candidates/SeriesCandidateOverlay";
 import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
@@ -1018,6 +1022,29 @@ describe("MapCanvas（代表点へのホバー）", () => {
     } as unknown as MapLayerMouseEvent;
   }
 
+  /** `ms` ミリ秒だけ時間を進める。 */
+  function wait(ms: number): void {
+    act(() => {
+      vi.advanceTimersByTime(ms);
+    });
+  }
+
+  /** マウスを `seriesIds` の代表点に載せ、札が出るまでの待ちを明けさせる。 */
+  function hoverAndWait(...seriesIds: string[]): void {
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", ...seriesIds)));
+    wait(TOOLTIP_SHOW_DELAY_MS);
+  }
+
+  /**
+   * 地図の children にある札が並べているシリーズの id を返す。
+   * 札が無ければ undefined を返す。
+   */
+  function tooltipIds(): string[] | undefined {
+    return childOfType(SeriesTooltip) === undefined
+      ? undefined
+      : childPropsOf(SeriesTooltip).series.map(({ id }) => id);
+  }
+
   beforeEach(() => {
     map.mockClear();
     stubDesktop(true);
@@ -1025,66 +1052,123 @@ describe("MapCanvas（代表点へのホバー）", () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
   });
 
-  it("マウスを代表点に載せるとそのシリーズのツールチップを出し、離すと消し、選択は変えない", async () => {
-    await renderMapCanvas();
+  // 描画の完了を待つ act は実時間の待ちを使うので、時間を止めるのは描画の後にする。
+  async function renderWithFakeTimers(
+    seriesList: SeriesList = SERIES,
+  ): Promise<void> {
+    await renderMapCanvas(ERAS, seriesList);
+    vi.useFakeTimers();
+  }
+
+  it("マウスを代表点に載せても待ちが明けるまでは札を出さず、明けるとそのシリーズの札を出し、選択は変えない", async () => {
+    await renderWithFakeTimers();
 
     act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+    wait(TOOLTIP_SHOW_DELAY_MS - 1);
 
-    expect(childPropsOf(SeriesTooltip).series.map(({ id }) => id)).toEqual([
-      "sparta",
-    ]);
+    expect(tooltipIds()).toBeUndefined();
+
+    wait(1);
+
+    expect(tooltipIds()).toEqual(["sparta"]);
     expect(seriesLayersProps().selectedSeries).toBeNull();
+  });
+
+  it("同じ代表点の上でマウスが動き続けても、待ちを延ばさず札を出す", async () => {
+    await renderWithFakeTimers();
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+    wait(TOOLTIP_SHOW_DELAY_MS - 100);
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+    wait(100);
+
+    expect(tooltipIds()).toEqual(["sparta"]);
+  });
+
+  it("待ちが明ける前に代表点から離れると、札を出さない", async () => {
+    await renderWithFakeTimers();
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
+    wait(TOOLTIP_SHOW_DELAY_MS - 1);
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse")));
+    wait(TOOLTIP_SHOW_DELAY_MS);
+
+    expect(tooltipIds()).toBeUndefined();
+  });
+
+  it("札が出た後に離すと、すぐに消す", async () => {
+    await renderWithFakeTimers();
+    hoverAndWait("sparta");
 
     act(() => lastProps().onMouseLeave?.(moveOn("mouse")));
 
-    expect(childOfType(SeriesTooltip)).toBeUndefined();
-    expect(seriesLayersProps().selectedSeries).toBeNull();
+    expect(tooltipIds()).toBeUndefined();
   });
 
-  it("代表点の無い位置へマウスが移ると、ツールチップを消す", async () => {
-    await renderMapCanvas();
+  it("札が出ている間に別の代表点へ移ると、待たずにその札へ替える", async () => {
+    await renderWithFakeTimers(OVERLAPPING_SERIES);
+    hoverAndWait("sparta");
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "okane-no-rekishi")));
+
+    expect(tooltipIds()).toEqual(["okane-no-rekishi"]);
+  });
+
+  it("札が消えてから待たずに出せる時間の内に別の代表点へ載せると、待たずに出す", async () => {
+    await renderWithFakeTimers();
+    hoverAndWait("sparta");
+    act(() => lastProps().onMouseMove?.(moveOn("mouse")));
+    wait(TOOLTIP_SKIP_WINDOW_MS - 1);
+
+    act(() => lastProps().onMouseMove?.(moveOn("mouse", "okane-no-rekishi")));
+
+    expect(tooltipIds()).toEqual(["okane-no-rekishi"]);
+  });
+
+  it("札が消えてから待たずに出せる時間を過ぎると、また待ってから出す", async () => {
+    await renderWithFakeTimers();
+    hoverAndWait("sparta");
+    act(() => lastProps().onMouseMove?.(moveOn("mouse")));
+    wait(TOOLTIP_SKIP_WINDOW_MS);
+
     act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta")));
 
-    act(() => lastProps().onMouseMove?.(moveOn("mouse")));
-
-    expect(childOfType(SeriesTooltip)).toBeUndefined();
+    expect(tooltipIds()).toBeUndefined();
   });
 
-  it("重なった代表点に載せると、重なったシリーズを全部ツールチップに並べる", async () => {
-    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
+  it("重なった代表点に載せると、重なったシリーズを全部札に並べる", async () => {
+    await renderWithFakeTimers(OVERLAPPING_SERIES);
 
-    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta", "athens")));
+    hoverAndWait("sparta", "athens");
 
-    expect(childPropsOf(SeriesTooltip).series.map(({ id }) => id)).toEqual([
-      "sparta",
-      "athens",
-    ]);
+    expect(tooltipIds()).toEqual(["sparta", "athens"]);
   });
 
-  it("タッチの入力ではツールチップを出さず、押した代表点のシリーズを選択する", async () => {
-    await renderMapCanvas();
-
+  it("タッチの入力では札を出さず、押した代表点のシリーズを選択する", async () => {
+    await renderWithFakeTimers();
     const touched = moveOn("touch", "sparta");
 
     queryRenderedFeatures.mockReturnValueOnce(touched.features as never);
     act(() => lastProps().onMouseMove?.(touched));
+    wait(TOOLTIP_SHOW_DELAY_MS);
     act(() => lastProps().onClick?.(touched));
 
-    expect(childOfType(SeriesTooltip)).toBeUndefined();
+    expect(tooltipIds()).toBeUndefined();
     expect(seriesLayersProps().selectedSeries?.id).toBe("sparta");
   });
 
-  it("候補の一覧が開いている間は、ツールチップを出さない", async () => {
-    await renderMapCanvas(ERAS, OVERLAPPING_SERIES);
-    act(() => lastProps().onMouseMove?.(moveOn("mouse", "sparta", "athens")));
+  it("候補の一覧が開いている間は、札を出さない", async () => {
+    await renderWithFakeTimers(OVERLAPPING_SERIES);
+    hoverAndWait("sparta", "athens");
 
     act(() => lastProps().onClick?.(moveOn("mouse", "sparta", "athens")));
 
     expect(childOfType(SeriesCandidateOverlay)).toBeDefined();
-    expect(childOfType(SeriesTooltip)).toBeUndefined();
+    expect(tooltipIds()).toBeUndefined();
   });
 });
