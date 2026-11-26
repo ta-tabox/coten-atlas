@@ -6,7 +6,7 @@
  * 色は currentColor がリンクから継ぐので、ここでは決めない。
  */
 
-/** 外部リンクの矢印を描く。 */
+/** 外部リンクの矢印を、読み上げの対象から外して描くので、リンクの名前は呼ぶ側が文字で持つ。 */
 export default function ExternalLinkIcon({
   className,
 }: {

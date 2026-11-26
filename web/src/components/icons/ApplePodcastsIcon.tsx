@@ -11,7 +11,7 @@
 
 import { useId } from "react";
 
-/** Apple Podcasts のマークを描く。 */
+/** Apple Podcasts のマークを、読み上げの対象から外して描くので、リンクの名前は呼ぶ側が文字で持つ。 */
 export default function ApplePodcastsIcon({
   className,
 }: {
