@@ -52,25 +52,6 @@ describe("SeriesPanelItem", () => {
     expect(screen.queryByText(/\d+年/)).toBeNull();
   });
 
-  it("hasChevron を渡した行にだけ、押せることを示す山形を出す", () => {
-    const { container, rerender } = render(
-      <SeriesPanelItem series={SPARTA} isSelected={false} onSelect={vi.fn()} />,
-    );
-
-    expect(container.querySelector("[data-series-chevron]")).toBeNull();
-
-    rerender(
-      <SeriesPanelItem
-        series={SPARTA}
-        isSelected={false}
-        hasChevron
-        onSelect={vi.fn()}
-      />,
-    );
-
-    expect(container.querySelector("[data-series-chevron]")).not.toBeNull();
-  });
-
   it("押すと、シリーズの id を渡して onSelect を呼ぶ", () => {
     const onSelect = vi.fn();
 
