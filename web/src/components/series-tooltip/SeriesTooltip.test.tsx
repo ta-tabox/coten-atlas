@@ -22,11 +22,11 @@ const OKANE: Series = {
 };
 
 describe("SeriesTooltip", () => {
-  it("タイトルと、一覧パネルと同じ表記の年代を出す", () => {
+  it("タイトルと、単位「年」を付けない年代を出す", () => {
     render(<SeriesTooltip series={[ALEXANDER]} />);
 
     expect(screen.getByRole("tooltip").textContent).toBe(
-      "アレクサンドロス大王前356年〜前323年",
+      "アレクサンドロス大王前356〜前323",
     );
   });
 

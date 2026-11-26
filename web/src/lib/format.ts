@@ -19,6 +19,18 @@ export function formatYear(year: number): string {
 }
 
 /**
+ * `range` を「前800〜550」の形式の、単位「年」を付けない文字列へ整形する。
+ * `start` と `end` が同じ年なら、その年 1 つだけを返す（理由は `formatTimeRange` と同じ）。
+ */
+export function formatTimeRangeWithoutUnit(range: SeriesTimeRange): string {
+  if (range.start === range.end) {
+    return formatYearWithoutUnit(range.start);
+  }
+
+  return `${formatYearWithoutUnit(range.start)}〜${formatYearWithoutUnit(range.end)}`;
+}
+
+/**
  * `range` を「前800年〜550年」の形式の文字列へ整形する。
  * `start` と `end` が同じ年なら、その年 1 つだけを返す。
  *

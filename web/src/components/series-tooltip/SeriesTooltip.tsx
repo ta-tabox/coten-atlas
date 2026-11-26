@@ -3,7 +3,7 @@
  * 押せる要素を持たず、選択も保持しない。
  */
 
-import { formatTimeRange } from "@/lib/format";
+import { formatTimeRangeWithoutUnit } from "@/lib/format";
 import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 
 type SeriesTooltipProps = {
@@ -27,7 +27,7 @@ export default function SeriesTooltip({ series }: SeriesTooltipProps) {
           </span>
           {item.timeRange !== TIME_RANGE_UNTIMED && (
             <span className="block text-[0.7rem] text-rule tabular-nums">
-              {formatTimeRange(item.timeRange)}
+              {formatTimeRangeWithoutUnit(item.timeRange)}
             </span>
           )}
         </li>
