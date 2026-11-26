@@ -1,9 +1,8 @@
 /**
- * スマホの幅で、era スライダーの境目の年が互いに重ならず、スライダーが画面の内側に収まることを見る。
+ * era スライダーの境目の年が互いに重ならず、スライダーが画面の内側に収まることを、どの端末の条件でも見る。
  * 全体を映した初期の状態と、拡大して表示範囲を未来の端までずらした状態の 2 つで見る。
  *
  * 相手は `next build` が吐いた `out/` の実物なので、`pnpm build` の後でしか回せない。
- * デスクトップの幅では era スライダーが別の形なので、`e2e-desktop` では飛ばす。
  */
 
 import { expect, type Locator, test } from "@playwright/test";
@@ -42,8 +41,6 @@ test("初期表示と、拡大して未来の端までずらした状態で、�
   page,
 }) => {
   const size = viewportOf(page);
-
-  test.skip(size.width >= 768, "スマホの幅の形だけを見る");
 
   const server = await openExport(page, exportRoot(), { pagePath: "/" });
 

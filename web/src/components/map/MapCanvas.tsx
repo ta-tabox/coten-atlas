@@ -16,7 +16,6 @@ import type {
 import MapLibreMap from "react-map-gl/maplibre";
 import BottomSheet from "@/components/bottom-sheet/BottomSheet";
 import EraSlider from "@/components/era-slider/EraSlider";
-import EraSliderCompact from "@/components/era-slider/EraSliderCompact";
 import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
@@ -383,20 +382,15 @@ export default function MapCanvas({
     );
   }
 
-  const eraSlider = isDesktop ? (
+  const eraSlider = (
     <EraSlider
       eras={eras}
       presentEnd={presentEnd}
       position={eraPosition}
       onPositionChange={setEraPosition}
-    />
-  ) : (
-    <EraSliderCompact
-      eras={eras}
-      presentEnd={presentEnd}
-      position={eraPosition}
-      onPositionChange={setEraPosition}
-      zoomedEraCount={ZOOMED_ERA_COUNT.mobile}
+      zoomedEraCount={
+        isDesktop ? ZOOMED_ERA_COUNT.desktop : ZOOMED_ERA_COUNT.mobile
+      }
     />
   );
 

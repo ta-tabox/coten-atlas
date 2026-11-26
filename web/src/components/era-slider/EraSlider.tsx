@@ -1,247 +1,373 @@
 "use client";
 
 /**
- * 時代区分を等幅のセルに並べ、現在窓の位置を選ばせる、デスクトップの幅の era スライダーの部品を置く。
- * スマホの幅の形は `EraSliderCompact` が持つ。
+ * 時代区分を 1 本のトラックに並べ、現在窓の位置を選ばせる era スライダーの部品を置く。
+ * 拡大すると、一部の era（`zoomedEraCount` 個）だけがトラックに入り、左右のボタンと指の送りで表示範囲をずらして細かく選べる。
  *
  * 位置を保持しない。
  * 表示するのは props で受け取った `position` で、動かされた位置は `onPositionChange` で返す。
- * 位置から現在窓への変換は `@/lib/era/window` が担当する。
- * 年の数値を「前800年」「550年」の形の文字列にする処理は `@/lib/format` が担当する。
+ * 拡大しているか・表示範囲の左端だけを、この部品が持つ。
+ * 現在窓の求め方は `@/lib/era/window`、表示範囲の求め方は `@/lib/era/view`、指の操作の受け方は `./use-era-track-gesture` が担当する。
  *
- * ポインタ（マウス・指・ペン）の操作はトラックの要素のポインタのイベントで受け、`<input type="range">` はキーボードの操作と読み上げだけを受ける。
- * iOS の Safari では `<input type="range">` のつまみの上から始めたスワイプで値が動かないので、ポインタの操作を `<input>` に任せない。
+ * 現在窓の中心が乗る era は、セルの幅を変えずに背景と太字で強調する。
+ * セルの幅を変えると、指を止めていても下のセルが動き、指の位置と年の対応が崩れる。
+ * `<input type="range">` はキーボードの操作と読み上げだけを受け、画面には出さない。
  *
  * MapLibre の DOM へ入れない理由は docs/adr/20260831-map-dom-boundary.md が正。
  */
 
-import { type PointerEvent as ReactPointerEvent, useRef } from "react";
-import { clientXToPosition } from "@/lib/era/pointer";
-import { STEPS_PER_ERA } from "@/lib/era/scale";
-import { currentWindow, currentWindowPositions } from "@/lib/era/window";
+import { useRef, useState } from "react";
+import EraSliderPanButton from "@/components/era-slider/EraSliderPanButton";
+import { useEraTrackGesture } from "@/components/era-slider/use-era-track-gesture";
+import ChevronsLeftIcon from "@/components/icons/ChevronsLeftIcon";
+import ChevronsRightIcon from "@/components/icons/ChevronsRightIcon";
+import ZoomInIcon from "@/components/icons/ZoomInIcon";
+import ZoomOutIcon from "@/components/icons/ZoomOutIcon";
+import { eraIndexAt, positionToYear, STEPS_PER_ERA } from "@/lib/era/scale";
+import {
+  FULL_VIEW,
+  keepWindowInView,
+  panStepOf,
+  panViewMinBy,
+  type ViewRange,
+  viewMinCenteredOn,
+  viewPercentOf,
+  zoomedSpanOf,
+} from "@/lib/era/view";
+import {
+  currentWindow,
+  currentWindowPositions,
+  WINDOW_WIDTH_IN_ERAS,
+} from "@/lib/era/window";
 import { formatTimeRange, formatYearWithoutUnit } from "@/lib/format";
 import { ERA_END_PRESENT, type EraList } from "@/lib/schema/era";
 
-/**
- * `<label>` の `htmlFor` が参照する、`<input>` の id。
- * 画面に置くスライダーは 1 本なので固定値でよい。
- */
 const SLIDER_ID = "era-slider";
-
-/**
- * era のセルの列の下端の帯に重ねる `<input type="range">` の className。
- * トラックを透明にしてセルの列を見せ、つまみは帯より少し高い細い縦棒にする。
- * セルの era 名はセルの上寄せに置くので、つまみを下端の帯に限ると era 名の文字に重ならない。
- *
- * `<input>` はポインタのイベントを受けず、ポインタの操作は `<input>` を包むトラックの要素が受ける。
- * `range-track:` と `range-thumb:` は、`globals.css` の `@custom-variant` が定義する、トラックとつまみの擬似要素へ当てるバリアントである。
- */
-const RANGE_CLASS = [
-  "pointer-events-none absolute inset-x-0 bottom-0 m-0 h-3 w-full appearance-none bg-transparent",
-  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-point",
-  "range-track:h-full range-track:bg-transparent",
-  "range-thumb:h-5 range-thumb:w-1 range-thumb:appearance-none range-thumb:rounded-full range-thumb:border-0 range-thumb:bg-point",
-  // WebKit はつまみの上端をトラックの上端に揃え、Firefox は上下の中央に置く。
-  // 帯より高いつまみを WebKit でも上下に均等にはみ出させるので、WebKit のつまみだけを上へずらす。
-  "[&::-webkit-slider-thumb]:-mt-1",
-].join(" ");
 
 type EraSliderProps = {
   eras: EraList;
-  /** `end` が `ERA_END_PRESENT` の era の右端に置く年。 */
   presentEnd: number;
-  /** スライダーが指す era 空間の位置（0..1）。 */
   position: number;
-  /** スライダーが動かされたときに、新しい位置（0..1）を渡して呼ぶ。 */
   onPositionChange: (position: number) => void;
+  /** 拡大したときにトラックへ入れる era の数。 */
+  zoomedEraCount: number;
 };
 
-/**
- * `eras` の区間の境目の年を、左端から右端までの順に返す。
- * 最後の区間の `end` が `ERA_END_PRESENT` なら、右端には `presentEnd` を置く。
- */
-function boundaryYearsOf(eras: EraList, presentEnd: number): number[] {
-  const last = eras[eras.length - 1];
-  const rightEnd = last.end === ERA_END_PRESENT ? presentEnd : last.end;
+/** 描く境目の年 1 つと、トラックの上での位置と寄せ方。 */
+type BoundaryLabel = {
+  key: string;
+  year: number;
+  leftPercent: number;
+  alignClass: string;
+};
 
-  return [...eras.map((era) => era.start), rightEnd];
+/** `eras` の `index` 番目の始まりの年を返す。 */
+function startYearOf(eras: EraList, index: number): number {
+  return eras[index].start;
+}
+
+/** `eras` の `index` 番目の終わりの年を返し、終わっていない era なら `presentEnd` を返す。 */
+function endYearOf(eras: EraList, index: number, presentEnd: number): number {
+  const { end } = eras[index];
+
+  return end === ERA_END_PRESENT ? presentEnd : end;
 }
 
 /**
- * `index` 番目の境目の年の文字を、境目の位置に対して揃える className を返す。
- * 両端の年は枠の外へはみ出さないよう内側へ寄せ、それ以外は境目を中心に置く。
+ * 全体を映しているとき、強調した era の始まりと終わりの年を、そのセルの両端に置く境目の年として返す。
+ * 先頭と末尾の era は、枠の外へはみ出さないよう内側へ寄せる。
  */
-function boundaryAlignClassOf(index: number, lastIndex: number): string {
-  if (index === 0) {
-    return "";
-  }
+function emphasizedEraLabelsOf(
+  eras: EraList,
+  emphasizedIndex: number,
+  presentEnd: number,
+): BoundaryLabel[] {
+  const lastIndex = eras.length - 1;
 
-  if (index === lastIndex) {
-    return "-translate-x-full";
-  }
+  return [
+    {
+      key: "start",
+      year: startYearOf(eras, emphasizedIndex),
+      leftPercent: (emphasizedIndex / eras.length) * 100,
+      alignClass: emphasizedIndex === 0 ? "" : "-translate-x-1/2",
+    },
+    {
+      key: "end",
+      year: endYearOf(eras, emphasizedIndex, presentEnd),
+      leftPercent: ((emphasizedIndex + 1) / eras.length) * 100,
+      alignClass:
+        emphasizedIndex === lastIndex
+          ? "-translate-x-full"
+          : "-translate-x-1/2",
+    },
+  ];
+}
 
-  return "-translate-x-1/2";
+/** 拡大しているとき、表示範囲の左端と右端の年を、トラックの両端に置く境目の年として返す。 */
+function viewEdgeLabelsOf(
+  view: ViewRange,
+  eras: EraList,
+  presentEnd: number,
+): BoundaryLabel[] {
+  const yearAt = (position: number) =>
+    positionToYear({ position, eras, presentEnd });
+
+  return [
+    { key: "start", year: yearAt(view.min), leftPercent: 0, alignClass: "" },
+    {
+      key: "end",
+      year: yearAt(view.min + view.span),
+      leftPercent: 100,
+      alignClass: "-translate-x-full",
+    },
+  ];
 }
 
 /**
- * `eras` の区間を等幅のセルに並べ、`position` の周りの現在窓を帯で重ねたスライダー。
- * 現在窓は、年の範囲の文字とセルの上の帯の 2 つで示し、スライダーが指している 1 年は表示しない。
- *
- * 地図に描かれるのは現在窓と重なるシリーズなので、指している 1 年だけを出すと、その年を含まないシリーズが描かれて表示と食い違って見える。
- * キーボードの操作（矢印キー・Home・End・PageUp・PageDown）は `<input type="range">` のブラウザ既定の挙動が担う。
+ * `eras` の区間を 1 本のトラックに等幅で並べ、`position` の周りの現在窓を帯で重ねたスライダー。
+ * 現在窓は、年の範囲の文字とトラックの上の帯の 2 つで示し、`position` が指す 1 点はつまみで示す。
  */
 export default function EraSlider({
   eras,
   presentEnd,
   position,
   onPositionChange,
+  zoomedEraCount,
 }: EraSliderProps) {
-  const maxStep = eras.length * STEPS_PER_ERA;
+  const eraCount = eras.length;
+  const maxStep = eraCount * STEPS_PER_ERA;
+  const zoomSpan = zoomedSpanOf(eraCount, zoomedEraCount);
+  const windowPositions = currentWindowPositions({ position, eras });
   const windowYears = formatTimeRange(
     currentWindow({ position, eras, presentEnd }),
   );
-  const windowPositions = currentWindowPositions({ position, eras });
-  const boundaryYears = boundaryYearsOf(eras, presentEnd);
+  const emphasizedIndex = eraIndexAt(
+    (windowPositions.start + windowPositions.end) / 2,
+    eras,
+  );
+
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [viewMin, setViewMin] = useState(0);
+  const [syncedPosition, setSyncedPosition] = useState(position);
+
+  // キーボードや外部の操作で位置が動いたとき、拡大した表示範囲が現在窓を見失わないよう左端を直す。
+  // 左右のボタンは位置を動かさないので、窓を範囲の外へずらして見ることはできる。
+  if (syncedPosition !== position) {
+    setSyncedPosition(position);
+    setViewMin(keepWindowInView(viewMin, windowPositions, zoomSpan));
+  }
+
+  const view: ViewRange = isZoomed
+    ? { min: viewMin, span: zoomSpan }
+    : FULL_VIEW;
   const inputRef = useRef<HTMLInputElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const { isDragging, trackHandlers } = useEraTrackGesture({
+    trackRef,
+    inputRef,
+    eraCount,
+    stepCount: maxStep,
+    view,
+    isZoomed,
+    edgeRatio: WINDOW_WIDTH_IN_ERAS / eraCount / 2 / zoomSpan,
+    onPositionChange,
+    onViewMinChange: setViewMin,
+  });
 
-  // 押していなければ null。
-  const draggingPointerId = useRef<number | null>(null);
+  const bandLeft = Math.min(
+    Math.max(viewPercentOf(windowPositions.start, view), 0),
+    100,
+  );
+  const bandRight = Math.min(
+    Math.max(viewPercentOf(windowPositions.end, view), 0),
+    100,
+  );
+  const thumbPercent = viewPercentOf(position, view);
+  const isThumbVisible = thumbPercent >= 0 && thumbPercent <= 100;
+  const boundaryLabels = isZoomed
+    ? viewEdgeLabelsOf(view, eras, presentEnd)
+    : emphasizedEraLabelsOf(eras, emphasizedIndex, presentEnd);
 
-  /** `event` のポインタがトラックの上で指す位置を、`onPositionChange` へ渡す。 */
-  function changePositionAt(event: ReactPointerEvent<HTMLDivElement>) {
-    const track = event.currentTarget.getBoundingClientRect();
-
-    onPositionChange(
-      clientXToPosition({
-        clientX: event.clientX,
-        trackLeft: track.left,
-        trackWidth: track.width,
-        stepCount: maxStep,
-      }),
-    );
-  }
-
-  /**
-   * 主ボタン・指・ペンでトラックを押したら、押したポインタを追い始め、押した位置を `onPositionChange` へ渡す。
-   * 続けて矢印キーで動かせるよう、`<input>` へフォーカスを移し、フォーカスの枠はキーボードで移したときだけ出す。
-   *
-   * 既定の動作を止めないと、マウスで押した後にフォーカスが `<body>` へ移る。
-   */
-  function startDragging(event: ReactPointerEvent<HTMLDivElement>) {
-    if (!event.isPrimary || event.button !== 0) {
-      return;
+  function toggleZoom() {
+    if (!isZoomed) {
+      setViewMin(viewMinCenteredOn(position, zoomSpan));
     }
 
-    event.preventDefault();
-    event.currentTarget.setPointerCapture(event.pointerId);
-    draggingPointerId.current = event.pointerId;
-    inputRef.current?.focus({ focusVisible: false });
-    changePositionAt(event);
-  }
-
-  /**
-   * 押しているポインタが動いたら、動いた先の位置を `onPositionChange` へ渡す。
-   * 押していないポインタの移動は無視する。
-   *
-   * 押したときに `setPointerCapture` するので、トラックの外へ出た後の移動もここへ届く。
-   */
-  function continueDragging(event: ReactPointerEvent<HTMLDivElement>) {
-    if (event.pointerId !== draggingPointerId.current) {
-      return;
-    }
-
-    changePositionAt(event);
-  }
-
-  /** 押しているポインタが離れるか、ブラウザがポインタの追跡を打ち切ったら、ポインタを追うのをやめる。 */
-  function stopDragging(event: ReactPointerEvent<HTMLDivElement>) {
-    if (event.pointerId === draggingPointerId.current) {
-      draggingPointerId.current = null;
-    }
+    setIsZoomed(!isZoomed);
   }
 
   return (
     <div
       data-testid="era-slider"
-      className="rounded-box border border-rule bg-paper px-4 pt-2.5 pb-1.5 font-body text-ink shadow-sm"
+      data-dragging={isDragging ? "true" : undefined}
+      className="group rounded-box border border-rule bg-paper p-2.5 font-body text-ink shadow-sm"
     >
       {/* 画面にはスライダーの見出しを出さないが、スクリーンリーダーにはスライダーの名前として読ませる。 */}
       <label htmlFor={SLIDER_ID} className="sr-only">
         時代
       </label>
 
-      {/* スライダーの aria-valuetext が同じ範囲を読み上げるので、スクリーンリーダーには重ねて読ませない。 */}
-      <p
-        aria-hidden="true"
-        className="text-right text-[0.8rem] tracking-[0.02em] text-ink-muted tabular-nums"
-      >
-        {windowYears}
-      </p>
+      <div className="mb-2 flex min-h-6.5 items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-1.5">
+          {/* 右の年の範囲が、トラックの上の青い帯で示す範囲であることを、帯と同じ形の見本で結ぶ。 */}
+          <span
+            aria-hidden="true"
+            className="h-2.75 w-3 shrink-0 rounded-xs border-x-2 border-point bg-point/15"
+          />
+          <span className="text-[0.75rem] whitespace-nowrap text-ink-muted">
+            表示中
+          </span>
+          {/* スライダーの aria-valuetext が同じ範囲を読み上げるので、スクリーンリーダーには重ねて読ませない。 */}
+          <p
+            aria-hidden="true"
+            className="text-[0.8125rem] font-medium whitespace-nowrap text-ink tabular-nums"
+          >
+            {windowYears}
+          </p>
+        </div>
 
-      {/* ブラウザがトラックの上のタッチをスクロールや拡大に使うと pointercancel が届いて位置が止まるので、touch-none でタッチの既定の動作を止める。 */}
-      {/* つまみはセルの列の下端より 4px はみ出して描かれ、`<input>` はポインタのイベントを受けないので、ポインタを受ける範囲を before 擬似要素で下へ 4px 広げる。 */}
-      <div
-        data-testid="era-slider-track"
-        className="relative mt-1.5 cursor-ew-resize touch-none before:absolute before:inset-x-0 before:top-0 before:-bottom-1"
-        onPointerDown={startDragging}
-        onPointerMove={continueDragging}
-        onPointerUp={stopDragging}
-        onPointerCancel={stopDragging}
-      >
-        <ol className="flex h-11 overflow-hidden rounded-control border border-rule">
-          {eras.map((era) => (
-            <li
-              key={era.id}
-              className="flex flex-1 justify-center border-l pt-1 border-rule text-[0.75rem] whitespace-nowrap text-ink-muted first:border-l-0"
-            >
-              {era.label}
-            </li>
-          ))}
-        </ol>
-
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
+        <button
+          type="button"
+          aria-pressed={isZoomed}
+          aria-label="表示範囲を拡大して細かく調整する"
+          onClick={toggleZoom}
+          className="grid size-6.5 shrink-0 place-items-center rounded-full border border-rule bg-rule/25 text-ink-muted transition-colors duration-150 hover:bg-rule/50 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point aria-pressed:border-point/40 aria-pressed:bg-point/10 aria-pressed:text-point"
         >
-          <div
-            data-testid="era-window-band"
-            className="absolute inset-y-0 border-x border-point/50 bg-point/10"
-            // 帯の位置と幅は position に応じて連続に変わるので、Tailwind のユーティリティでなく style で渡す。
-            style={{
-              left: `${windowPositions.start * 100}%`,
-              width: `${(windowPositions.end - windowPositions.start) * 100}%`,
-            }}
+          {isZoomed ? (
+            <ZoomOutIcon className="size-3.5" />
+          ) : (
+            <ZoomInIcon className="size-3.5" />
+          )}
+        </button>
+      </div>
+
+      {/* つまみと境目の年は、枠の外へはみ出して描くので、トラックの枠とは別の層に置く。 */}
+      <div className="relative pb-5.5">
+        <div
+          className={`relative flex h-11.5 items-stretch overflow-hidden rounded-control border bg-paper transition-[border-color,box-shadow] duration-200 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-point ${isZoomed ? "border-point/40 ring-2 ring-point/10" : "border-rule"}`}
+        >
+          <EraSliderPanButton
+            label="表示範囲を過去の方向へずらす"
+            isShown={isZoomed}
+            isDisabled={viewMin <= 0}
+            edge="start"
+            icon={<ChevronsLeftIcon className="size-3" />}
+            onClick={() =>
+              setViewMin(panViewMinBy(viewMin, -panStepOf(eraCount), zoomSpan))
+            }
+          />
+
+          <div className="relative h-full min-w-0 flex-1">
+            {/* ブラウザがトラックの上のタッチをスクロールや拡大に使うと pointercancel が届いて位置が止まるので、touch-none でタッチの既定の動作を止める。 */}
+            <div
+              ref={trackRef}
+              data-testid="era-slider-track"
+              className="relative size-full cursor-pointer touch-none overflow-hidden bg-paper select-none"
+              {...trackHandlers}
+            >
+              <ol className="absolute inset-0 m-0 list-none p-0">
+                {eras.map((era, index) => {
+                  const isEmphasized = index === emphasizedIndex;
+
+                  return (
+                    <li
+                      key={era.id}
+                      data-emphasized={isEmphasized ? "true" : undefined}
+                      // 拡大の範囲に応じて位置と幅が連続に変わるので、Tailwind のユーティリティでなく style で渡す。
+                      style={{
+                        left: `${viewPercentOf(index / eraCount, view)}%`,
+                        width: `${100 / eraCount / view.span}%`,
+                      }}
+                      className={`absolute inset-y-0 flex items-center justify-center overflow-hidden border-r border-rule px-0.5 pb-1.5 whitespace-nowrap transition-[left,width,background-color,color] duration-250 ease-out-expo group-data-[dragging=true]:transition-none ${isZoomed ? "text-[0.75rem]" : "text-[0.6875rem]"} ${isEmphasized ? "bg-rule/50 font-bold text-ink shadow-[inset_0_-2px_0_var(--color-ink-muted)]" : "font-medium text-ink-muted"}`}
+                    >
+                      {era.label}
+                    </li>
+                  );
+                })}
+              </ol>
+
+              <div
+                aria-hidden="true"
+                data-testid="era-window-band"
+                style={{
+                  left: `${bandLeft}%`,
+                  width: `${Math.max(0, bandRight - bandLeft)}%`,
+                }}
+                className="pointer-events-none absolute inset-y-0 z-10 border-x-2 border-point bg-point/15 transition-[left,width] duration-200 ease-out-expo group-data-[dragging=true]:transition-none"
+              />
+
+              {/* 全体を映しているとき、トラックの両端が選べる端であることを示す。拡大するとパンのボタンが端になるので消す。 */}
+              <span
+                aria-hidden="true"
+                className={`pointer-events-none absolute inset-y-1.5 left-[3px] z-10 w-[3px] rounded-full bg-ink-muted/50 transition-opacity duration-150 ${isZoomed ? "opacity-0" : "opacity-100"}`}
+              />
+              <span
+                aria-hidden="true"
+                className={`pointer-events-none absolute inset-y-1.5 right-[3px] z-10 w-[3px] rounded-full bg-ink-muted/50 transition-opacity duration-150 ${isZoomed ? "opacity-0" : "opacity-100"}`}
+              />
+
+              <input
+                ref={inputRef}
+                id={SLIDER_ID}
+                type="range"
+                min={0}
+                max={maxStep}
+                step={1}
+                value={Math.round(position * maxStep)}
+                aria-valuetext={windowYears}
+                onChange={(event) => {
+                  const next = Number(event.target.value) / maxStep;
+
+                  if (isZoomed) {
+                    setViewMin(viewMinCenteredOn(next, zoomSpan));
+                  }
+
+                  onPositionChange(next);
+                }}
+                className="pointer-events-none absolute inset-0 m-0 size-full opacity-0"
+              />
+            </div>
+          </div>
+
+          <EraSliderPanButton
+            label="表示範囲を未来の方向へずらす"
+            isShown={isZoomed}
+            isDisabled={viewMin >= 1 - zoomSpan}
+            edge="end"
+            icon={<ChevronsRightIcon className="size-3" />}
+            onClick={() =>
+              setViewMin(panViewMinBy(viewMin, panStepOf(eraCount), zoomSpan))
+            }
           />
         </div>
 
-        <input
-          ref={inputRef}
-          id={SLIDER_ID}
-          type="range"
-          min={0}
-          max={maxStep}
-          step={1}
-          value={Math.round(position * maxStep)}
-          aria-valuetext={windowYears}
-          onChange={(event) =>
-            onPositionChange(Number(event.target.value) / maxStep)
-          }
-          className={RANGE_CLASS}
-        />
-      </div>
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute top-0 z-20 h-11.5 transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
+        >
+          <div
+            data-testid="era-slider-thumb"
+            style={{ left: `${thumbPercent}%` }}
+            className={`absolute -bottom-1.5 h-3.5 w-2 -translate-x-1/2 rounded-full border-2 border-paper bg-point shadow-sm transition-[left,opacity] duration-200 ease-out-expo group-data-[dragging=true]:transition-none ${isThumbVisible ? "opacity-100" : "opacity-0"}`}
+          />
+        </div>
 
-      {/* 境目の年は era 名のセルと同じ区間を別の形で示すだけなので、スクリーンリーダーには読ませない。 */}
-      <div aria-hidden="true" className="relative mt-1 h-4">
-        {boundaryYears.map((year, index) => (
-          <span
-            key={year}
-            data-testid="era-boundary-year"
-            className={`absolute top-0 text-[0.65rem] whitespace-nowrap text-ink-muted tabular-nums ${boundaryAlignClassOf(index, boundaryYears.length - 1)}`}
-            style={{ left: `${(index / eras.length) * 100}%` }}
-          >
-            {formatYearWithoutUnit(year)}
-          </span>
-        ))}
+        {/* 境目の年は era 名のセルと同じ区間を別の形で示すだけなので、スクリーンリーダーには読ませない。 */}
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute bottom-0 h-3.5 text-[0.625rem] font-semibold text-ink-muted tabular-nums transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
+        >
+          {boundaryLabels.map(({ key, year, leftPercent, alignClass }) => (
+            <span
+              key={key}
+              data-testid="era-boundary-year"
+              style={{ left: `${leftPercent}%` }}
+              className={`absolute bottom-0 leading-none whitespace-nowrap transition-[left,translate] duration-200 ease-out-expo group-data-[dragging=true]:transition-none ${alignClass}`}
+            >
+              {formatYearWithoutUnit(year)}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
