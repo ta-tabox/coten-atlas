@@ -11,7 +11,10 @@
 
 import { useId } from "react";
 
-/** Apple Podcasts のマークを描く。 */
+/**
+ * Apple Podcasts のマークを描く。
+ * `aria-hidden` で隠すので、リンクの名前は呼ぶ側が文字で渡す。
+ */
 export default function ApplePodcastsIcon({
   className,
 }: {

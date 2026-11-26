@@ -88,3 +88,26 @@ export function positionToYear({
 
   return Math.round(start + (end - start) * withinEra);
 }
+
+/**
+ * 西暦の年（`year`）を、`eras` の上の era 空間の位置（0..1）にして返す。
+ * `year` が最初の era より前なら 0 を、最後の era の右端以降なら 1 を返す。
+ *
+ * `positionToYear` の逆の写像で、区間の中は線形に割り振る。
+ */
+export function yearToPosition({
+  year,
+  eras,
+  presentEnd,
+}: Omit<EraSpacePosition, "position"> & { year: number }): number {
+  const index = eras.findIndex((era) => year < yearsOf(era, presentEnd).end);
+
+  if (index === -1) {
+    return 1;
+  }
+
+  const { start, end } = yearsOf(eras[index], presentEnd);
+  const withinEra = Math.max(year - start, 0) / (end - start);
+
+  return (index + withinEra) / eras.length;
+}

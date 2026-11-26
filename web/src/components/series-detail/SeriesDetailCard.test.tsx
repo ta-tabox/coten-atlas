@@ -38,6 +38,27 @@ const SPARTA: Series = {
   tags: ["集団"],
 };
 
+const TEISEI_ROMA: Series = {
+  ...SPARTA,
+  id: "teisei-roma",
+  title: "帝政ローマ",
+  anchor: "roma",
+  timeRange: { start: -27, end: 476 },
+  season: 66,
+  tags: ["集団", "帝国"],
+};
+
+const OSMAN: Series = {
+  ...SPARTA,
+  id: "osman-teikoku",
+  title: "オスマン帝国",
+  anchor: "istanbul",
+  timeRange: { start: 1299, end: 1922 },
+  region: "西アジア",
+  season: 20,
+  tags: ["集団", "帝国", "戦争"],
+};
+
 const EPISODE_URL = "https://open.spotify.com/episode/0000000000000000000000";
 
 const EPISODES: Episode[] = [
@@ -49,17 +70,21 @@ const EPISODES: Episode[] = [
 ];
 
 describe("SeriesDetailCard", () => {
-  it("シリーズ名と整形した年代を出す", () => {
+  it("シリーズ名と、整形した年代と地名を出す", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
 
     expect(screen.getByRole("heading", { name: "スパルタ" })).toBeVisible();
     expect(screen.getByText("前900年〜前200年")).toBeVisible();
+    expect(screen.getByText("スパルタ", { selector: "span" })).toBeVisible();
   });
 
   it("時期を持たないシリーズは年代の行を出さない", () => {
@@ -77,7 +102,10 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={okane}
+        placeName={null}
         episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -86,11 +114,127 @@ describe("SeriesDetailCard", () => {
     expect(screen.queryByText(/\d+年/)).toBeNull();
   });
 
+  it("代表点の地名を、年代と同じ行に縦線で区切って出す", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const row = screen.getByText("前900年〜前200年").closest("p");
+
+    if (row === null) {
+      throw new Error("年代の行が無い");
+    }
+
+    expect(within(row).getByText("スパルタ")).toBeVisible();
+  });
+
+  it("位置なしのシリーズは地名を出さず、年代だけを出す", () => {
+    render(
+      <SeriesDetailCard
+        series={{ ...SPARTA, anchor: ANCHOR_UNLOCATED }}
+        placeName={null}
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("前900年〜前200年")).toBeVisible();
+    expect(screen.queryByText(/｜/)).toBeNull();
+  });
+
+  it("時期も位置も持たないシリーズは、年代と地名の行を出さない", () => {
+    render(
+      <SeriesDetailCard
+        series={{
+          ...SPARTA,
+          anchor: ANCHOR_UNLOCATED,
+          timeRange: TIME_RANGE_UNTIMED,
+        }}
+        placeName={null}
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByText(/年|｜/)).toBeNull();
+  });
+
+  it("region の札を先頭に置き、tags の札を series の順に並べる", () => {
+    render(
+      <SeriesDetailCard
+        series={{ ...SPARTA, tags: ["集団", "戦争"] }}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const labels = within(screen.getByRole("list", { name: "地域とタグ" }));
+
+    expect(
+      labels.getAllByRole("listitem").map((item) => item.textContent),
+    ).toEqual(["ヨーロッパ", "集団", "戦争"]);
+  });
+
+  it("region が地域なしのシリーズは、region の札を出さず tags の札だけを出す", () => {
+    render(
+      <SeriesDetailCard
+        series={{ ...SPARTA, region: "地域なし", tags: ["経済", "概念史"] }}
+        placeName={null}
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const labels = within(screen.getByRole("list", { name: "地域とタグ" }));
+
+    expect(
+      labels.getAllByRole("listitem").map((item) => item.textContent),
+    ).toEqual(["経済", "概念史"]);
+    expect(screen.queryByText("地域なし")).toBeNull();
+  });
+
+  it("region と tags の札は押せる要素でない", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const labels = within(screen.getByRole("list", { name: "地域とタグ" }));
+
+    expect(labels.queryAllByRole("button")).toEqual([]);
+    expect(labels.queryAllByRole("link")).toEqual([]);
+  });
+
   it("各回に配信基盤ごとのリンクが 2 本あり、回を基盤で開く URL を指す", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -114,7 +258,10 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -139,7 +286,10 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -156,12 +306,15 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{
           kind: "loaded",
           episodes: [
             episodeOf({ guid: "sparta-2", title: "リンク無しの回", links: {} }),
           ],
         }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -186,7 +339,10 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -206,7 +362,10 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -221,7 +380,10 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loading" }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -233,12 +395,96 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "error" }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={vi.fn()}
       />,
     );
 
     expect(screen.getByText("エピソードの一覧を取れなかった。")).toBeVisible();
+  });
+
+  it("関連するシリーズを、渡された順に押せる名前で並べる", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[
+          { series: TEISEI_ROMA, sharedTags: ["帝政"] },
+          { series: OSMAN, sharedTags: ["帝政", "遊牧"] },
+        ]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const row = within(
+      screen.getByRole("region", { name: "関連するシリーズ" }),
+    );
+
+    expect(
+      row
+        .getAllByRole("button")
+        .map((button) => button.querySelector("span")?.textContent),
+    ).toEqual(["帝政ローマ", "オスマン帝国"]);
+  });
+
+  it("関連するシリーズの名前の横に、共有したタグを・でつないで添える", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[{ series: OSMAN, sharedTags: ["帝政", "遊牧"] }]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const button = screen.getByRole("button", { name: /オスマン帝国/ });
+
+    expect(button.querySelector("[data-shared-tags]")?.textContent).toBe(
+      "共有するタグ 帝政・遊牧",
+    );
+  });
+
+  it("関連するシリーズを押すと、そのシリーズの id で onSelect を呼ぶ", () => {
+    const onSelect = vi.fn();
+
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[
+          { series: TEISEI_ROMA, sharedTags: ["帝政"] },
+          { series: OSMAN, sharedTags: ["帝政", "遊牧"] },
+        ]}
+        onSelect={onSelect}
+        onClose={vi.fn()}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /オスマン帝国/ }));
+
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith("osman-teikoku");
+  });
+
+  it("関連するシリーズが無ければ、関連するシリーズの行を見出しごと出さない", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByText("関連するシリーズ")).toBeNull();
   });
 
   it("閉じるボタンを押すと onClose を呼ぶ", () => {
@@ -247,7 +493,10 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
+        relatedSeries={[]}
+        onSelect={vi.fn()}
         onClose={onClose}
       />,
     );

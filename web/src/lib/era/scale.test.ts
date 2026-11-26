@@ -1,12 +1,17 @@
 /**
- * `positionToYear` が返す年と、`eraIndexAt` が返す era の添字を検証する。
+ * `positionToYear` が返す年・`eraIndexAt` が返す era の添字・`yearToPosition` が返す位置を検証する。
  *
  * 期待値は `docs/ARCHITECTURE.md` §3 が挙げている実例をそのまま使う。
  * 区間を等幅に並べて中を線形補間するので、区間内の同じ割合を指しても進む年数は区間ごとに違う。
  */
 
 import { describe, expect, it } from "vitest";
-import { eraIndexAt, positionToYear, presentEndOf } from "@/lib/era/scale";
+import {
+  eraIndexAt,
+  positionToYear,
+  presentEndOf,
+  yearToPosition,
+} from "@/lib/era/scale";
 import { ERA_END_PRESENT, parseEras } from "@/lib/schema/era";
 
 /** `docs/ARCHITECTURE.md` §3 が挙げている 7 区分。 */
@@ -87,6 +92,36 @@ describe("eraIndexAt", () => {
     expect(eraIndexAt(1, ERAS)).toBe(ERAS.length - 1);
     expect(eraIndexAt(-0.5, ERAS)).toBe(0);
     expect(eraIndexAt(1.5, ERAS)).toBe(ERAS.length - 1);
+  });
+});
+
+describe("yearToPosition", () => {
+  it("19 世紀の 1840 年は、19 世紀の区間の 4 割の位置を指す", () => {
+    expect(
+      yearToPosition({ year: 1840, eras: ERAS, presentEnd: PRESENT_END }),
+    ).toBeCloseTo(positionIn(4, 0.4));
+  });
+
+  it("positionToYear で求めた年を渡すと、元の位置へ戻る", () => {
+    const position = positionIn(1, 0.25);
+    const year = positionToYear({
+      position,
+      eras: ERAS,
+      presentEnd: PRESENT_END,
+    });
+
+    expect(
+      yearToPosition({ year, eras: ERAS, presentEnd: PRESENT_END }),
+    ).toBeCloseTo(position, 3);
+  });
+
+  it("最初の era より前の年は 0 を、最後の era の右端以降の年は 1 を返す", () => {
+    expect(
+      yearToPosition({ year: -20000, eras: ERAS, presentEnd: PRESENT_END }),
+    ).toBe(0);
+    expect(
+      yearToPosition({ year: 2026, eras: ERAS, presentEnd: PRESENT_END }),
+    ).toBe(1);
   });
 });
 
