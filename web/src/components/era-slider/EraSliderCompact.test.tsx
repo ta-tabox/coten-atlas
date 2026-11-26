@@ -32,7 +32,7 @@ const TRACK_WIDTH = 700;
 const ZOOM_LABEL = "表示範囲を拡大して細かく調整する";
 
 /** `position` を指す EraSliderCompact を描画し、再描画と、位置の変更を受ける関数を返す。 */
-function renderAt(position: number) {
+function renderAt(position: number, zoomedEraCount = 2) {
   const onPositionChange = vi.fn();
   const view = render(
     <EraSliderCompact
@@ -40,6 +40,7 @@ function renderAt(position: number) {
       presentEnd={PRESENT_END}
       position={position}
       onPositionChange={onPositionChange}
+      zoomedEraCount={zoomedEraCount}
     />,
   );
 
@@ -52,6 +53,7 @@ function renderAt(position: number) {
           presentEnd={PRESENT_END}
           position={next}
           onPositionChange={onPositionChange}
+          zoomedEraCount={zoomedEraCount}
         />,
       ),
   };
@@ -145,6 +147,15 @@ describe("EraSliderCompact", () => {
 
     // 位置 4.5/7 を中央に置く範囲は 3.5/7 から 5.5/7 までで、近世の中ほど（1625）と〜WWII の中ほど（1923）に当たる。
     expect(boundaryYearTexts()).toEqual(["1625", "1923"]);
+  });
+
+  it("拡大したときに映す era の数を変えると、表示範囲の幅が変わる", () => {
+    renderAt(MODERN19_CENTER, 3);
+
+    zoomIn();
+
+    // 位置 4.5/7 を中央に置く幅 3/7 の範囲は 3/7 から 6/7 までで、近世の始まり（1450）と戦後の始まり（1945）に当たる。
+    expect(boundaryYearTexts()).toEqual(["1450", "1945"]);
   });
 
   it("拡大のボタンは押した状態を伝え、もう一度押すと全体へ戻る", () => {

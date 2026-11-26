@@ -20,13 +20,14 @@ const ERA_COUNT = 7;
 const SPAN = 2 / ERA_COUNT;
 
 describe("zoomedSpanOf", () => {
-  it("拡大すると 2 つの era 分の幅になる", () => {
-    expect(zoomedSpanOf(ERA_COUNT)).toBeCloseTo(SPAN);
+  it("映す era の数だけの幅になる", () => {
+    expect(zoomedSpanOf(ERA_COUNT, 2)).toBeCloseTo(SPAN);
+    expect(zoomedSpanOf(ERA_COUNT, 3)).toBeCloseTo(3 / 7);
   });
 
-  it("era が 2 つ以下なら、拡大しても全体と同じ幅になる", () => {
-    expect(zoomedSpanOf(2)).toBe(1);
-    expect(zoomedSpanOf(1)).toBe(1);
+  it("era が映す数以下なら、拡大しても全体と同じ幅になる", () => {
+    expect(zoomedSpanOf(2, 2)).toBe(1);
+    expect(zoomedSpanOf(1, 2)).toBe(1);
   });
 });
 

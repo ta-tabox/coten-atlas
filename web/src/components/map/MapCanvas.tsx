@@ -36,6 +36,7 @@ import {
   episodesForSeries,
   fetchEpisodes,
 } from "@/lib/episodes";
+import { ZOOMED_ERA_COUNT } from "@/lib/era/view";
 import { currentWindow, positionShowing } from "@/lib/era/window";
 import {
   INITIAL_VIEW_STATE,
@@ -382,13 +383,20 @@ export default function MapCanvas({
     );
   }
 
-  const EraSliderForWidth = isDesktop ? EraSlider : EraSliderCompact;
-  const eraSlider = (
-    <EraSliderForWidth
+  const eraSlider = isDesktop ? (
+    <EraSlider
       eras={eras}
       presentEnd={presentEnd}
       position={eraPosition}
       onPositionChange={setEraPosition}
+    />
+  ) : (
+    <EraSliderCompact
+      eras={eras}
+      presentEnd={presentEnd}
+      position={eraPosition}
+      onPositionChange={setEraPosition}
+      zoomedEraCount={ZOOMED_ERA_COUNT.mobile}
     />
   );
 

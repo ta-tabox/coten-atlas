@@ -48,6 +48,8 @@ type EraSliderCompactProps = {
   presentEnd: number;
   position: number;
   onPositionChange: (position: number) => void;
+  /** 拡大したときにトラックへ入れる era の数。 */
+  zoomedEraCount: number;
 };
 
 /** 描く境目の年 1 つと、トラックの上での位置と寄せ方。 */
@@ -129,10 +131,11 @@ export default function EraSliderCompact({
   presentEnd,
   position,
   onPositionChange,
+  zoomedEraCount,
 }: EraSliderCompactProps) {
   const eraCount = eras.length;
   const maxStep = eraCount * STEPS_PER_ERA;
-  const zoomSpan = zoomedSpanOf(eraCount);
+  const zoomSpan = zoomedSpanOf(eraCount, zoomedEraCount);
   const windowPositions = currentWindowPositions({ position, eras });
   const windowYears = formatTimeRange(
     currentWindow({ position, eras, presentEnd }),

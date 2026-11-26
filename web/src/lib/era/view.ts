@@ -1,6 +1,6 @@
 /**
  * era スライダーを拡大したときに見せる範囲（表示範囲）を、era 空間の位置（0..1）で扱う純関数を置く。
- * 拡大すると、7 つの era のうち 2 つ分だけがトラックに入り、残りは表示範囲を左右へずらして見る。
+ * 拡大すると、era のうち一部（`ZOOMED_ERA_COUNT`）だけがトラックに入り、残りは表示範囲を左右へずらして見る。
  *
  * 表示範囲の左端は `min`、幅は `span` で持ち、拡大していないときは全体（`FULL_VIEW`）である。
  * 現在窓の求め方は `window.ts`、位置と年の対応は `scale.ts` が持つ。
@@ -17,18 +17,24 @@ export type ViewRange = {
 /** 拡大していないときの表示範囲で、era 空間の全体を指す。 */
 export const FULL_VIEW: ViewRange = { min: 0, span: 1 };
 
-/** 拡大したときに、トラックへ入れる era の数。 */
-export const ZOOM_VISIBLE_ERAS = 2;
+/**
+ * 拡大したときに、トラックへ入れる era の数を、画面の幅の形ごとに持つ。
+ * トラックが広いデスクトップの幅では、広く見せても目盛りが細かいので、スマホの幅より多く入れて前後の era を見せ続ける。
+ */
+export const ZOOMED_ERA_COUNT = { mobile: 2, desktop: 3 } as const;
 
 /** 左右のパンのボタン 1 回で、表示範囲が動く幅を era の区間の数で表した値。 */
 export const PAN_STEP_IN_ERAS = 0.5;
 
 /**
- * 拡大したときの表示範囲の幅を返す。
- * era が `ZOOM_VISIBLE_ERAS` 以下なら全体と同じ 1 を返し、拡大しても範囲は狭まらない。
+ * `visibleEraCount` 個の era を映す表示範囲の幅を返す。
+ * era が `visibleEraCount` 以下なら全体と同じ 1 を返し、拡大しても範囲は狭まらない。
  */
-export function zoomedSpanOf(eraCount: number): number {
-  return Math.min(ZOOM_VISIBLE_ERAS / eraCount, 1);
+export function zoomedSpanOf(
+  eraCount: number,
+  visibleEraCount: number,
+): number {
+  return Math.min(visibleEraCount / eraCount, 1);
 }
 
 /** 左端 `min` を、表示範囲が era 空間の外へ出ない範囲（0 から `1 - span`）へ丸めて返す。 */
