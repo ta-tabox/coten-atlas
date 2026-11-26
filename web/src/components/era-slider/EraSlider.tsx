@@ -17,6 +17,7 @@
  */
 
 import { useRef, useState } from "react";
+import EraSliderIconButton from "@/components/era-slider/EraSliderIconButton";
 import EraSliderPanButton from "@/components/era-slider/EraSliderPanButton";
 import { useEraTrackGesture } from "@/components/era-slider/use-era-track-gesture";
 import ChevronsLeftIcon from "@/components/icons/ChevronsLeftIcon";
@@ -216,29 +217,25 @@ export default function EraSlider({
         </div>
 
         <div className="mr-1 flex shrink-0 items-center gap-1">
-          <button
-            type="button"
-            aria-pressed={isZoomed}
-            aria-label="表示範囲を拡大して細かく調整する"
+          <EraSliderIconButton
+            label="表示範囲を拡大して細かく調整する"
+            isPressed={isZoomed}
             onClick={toggleZoom}
-            className="grid size-6.5 cursor-pointer place-items-center rounded-full border border-rule bg-rule/25 text-ink-muted transition-colors duration-150 hover:bg-rule/50 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point aria-pressed:border-point/40 aria-pressed:bg-point/10 aria-pressed:text-point"
-          >
-            {isZoomed ? (
-              <ZoomOutIcon className="size-3.5" />
-            ) : (
-              <ZoomInIcon className="size-3.5" />
-            )}
-          </button>
+            icon={
+              isZoomed ? (
+                <ZoomOutIcon className="size-3.5" />
+              ) : (
+                <ZoomInIcon className="size-3.5" />
+              )
+            }
+          />
 
           {onClose !== undefined && (
-            <button
-              type="button"
-              aria-label="時代スライダーを閉じる"
+            <EraSliderIconButton
+              label="時代スライダーを閉じる"
               onClick={onClose}
-              className="grid size-6.5 cursor-pointer place-items-center rounded-full text-ink-muted transition-colors duration-150 hover:bg-rule/50 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
-            >
-              <CloseIcon className="size-3.5" />
-            </button>
+              icon={<CloseIcon className="size-3.5" />}
+            />
           )}
         </div>
       </div>
@@ -351,7 +348,7 @@ export default function EraSlider({
           <div
             data-testid="era-slider-thumb"
             style={{ left: `${thumbPercent}%` }}
-            className={`absolute -bottom-1 h-5 w-3 -translate-x-1/2 touch-none rounded-full border-2 border-paper bg-point shadow-md transition-[left,opacity] duration-200 ease-out-expo before:absolute before:-inset-2 before:content-[''] group-data-[dragging=true]:transition-none ${isThumbVisible ? "pointer-events-auto cursor-pointer opacity-100" : "opacity-0"}`}
+            className={`absolute -bottom-1 h-4 w-2.5 -translate-x-1/2 touch-none rounded-full border-2 border-paper bg-point shadow-sm transition-[left,opacity] duration-200 ease-out-expo before:absolute before:-inset-2 before:content-[''] group-data-[dragging=true]:transition-none ${isThumbVisible ? "pointer-events-auto cursor-pointer opacity-100" : "opacity-0"}`}
             {...trackHandlers}
           />
         </div>
