@@ -200,7 +200,7 @@ export default function EraSlider({
     <div
       data-testid="era-slider"
       data-dragging={isDragging ? "true" : undefined}
-      className="group rounded-box border border-rule bg-paper p-2.5 font-body text-ink shadow-sm"
+      className="group rounded-box border border-rule bg-paper p-2.5 font-body text-ink shadow-sm md:px-4 md:py-3"
     >
       {/* 画面にはスライダーの見出しを出さないが、スクリーンリーダーにはスライダーの名前として読ませる。 */}
       <label htmlFor={SLIDER_ID} className="sr-only">
@@ -214,13 +214,13 @@ export default function EraSlider({
             aria-hidden="true"
             className="h-2.75 w-3 shrink-0 rounded-xs border-x-2 border-point bg-point/15"
           />
-          <span className="text-[0.75rem] whitespace-nowrap text-ink-muted">
+          <span className="text-[0.75rem] whitespace-nowrap text-ink-muted md:text-[0.8125rem]">
             表示中
           </span>
           {/* スライダーの aria-valuetext が同じ範囲を読み上げるので、スクリーンリーダーには重ねて読ませない。 */}
           <p
             aria-hidden="true"
-            className="text-[0.8125rem] font-medium whitespace-nowrap text-ink tabular-nums"
+            className="text-[0.8125rem] font-medium whitespace-nowrap text-ink tabular-nums md:text-[0.9375rem]"
           >
             {windowYears}
           </p>
@@ -244,7 +244,7 @@ export default function EraSlider({
       {/* つまみと境目の年は、枠の外へはみ出して描くので、トラックの枠とは別の層に置く。 */}
       <div className="relative pb-5.5">
         <div
-          className={`relative flex h-11.5 items-stretch overflow-hidden rounded-control border bg-paper transition-[border-color,box-shadow] duration-200 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-point ${isZoomed ? "border-point/40 ring-2 ring-point/10" : "border-rule"}`}
+          className={`relative flex h-11.5 items-stretch md:h-12.5 overflow-hidden rounded-control border bg-paper transition-[border-color,box-shadow] duration-200 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-point ${isZoomed ? "border-point/40 ring-2 ring-point/10" : "border-rule"}`}
         >
           <EraSliderPanButton
             label="表示範囲を過去の方向へずらす"
@@ -278,7 +278,7 @@ export default function EraSlider({
                         left: `${viewPercentOf(index / eraCount, view)}%`,
                         width: `${100 / eraCount / view.span}%`,
                       }}
-                      className={`absolute inset-y-0 flex items-center justify-center overflow-hidden border-r border-rule px-0.5 pb-1.5 whitespace-nowrap transition-[left,width,background-color,color] duration-250 ease-out-expo group-data-[dragging=true]:transition-none ${isZoomed ? "text-[0.75rem]" : "text-[0.6875rem]"} ${isEmphasized ? "bg-rule/50 font-bold text-ink shadow-[inset_0_-2px_0_var(--color-ink-muted)]" : "font-medium text-ink-muted"}`}
+                      className={`absolute inset-y-0 flex items-center justify-center overflow-hidden border-r border-rule px-0.5 pb-1.5 whitespace-nowrap transition-[left,width,background-color,color] duration-250 ease-out-expo group-data-[dragging=true]:transition-none ${isZoomed ? "text-[0.75rem] md:text-[0.9375rem]" : "text-[0.6875rem] md:text-[0.875rem]"} ${isEmphasized ? "bg-rule/50 font-bold text-ink shadow-[inset_0_-2px_0_var(--color-ink-muted)]" : "font-medium text-ink-muted"}`}
                     >
                       {era.label}
                     </li>
@@ -343,7 +343,7 @@ export default function EraSlider({
 
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute top-0 z-20 h-11.5 transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
+          className={`pointer-events-none absolute top-0 z-20 h-11.5 md:h-12.5 transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
         >
           <div
             data-testid="era-slider-thumb"
@@ -355,7 +355,7 @@ export default function EraSlider({
         {/* 境目の年は era 名のセルと同じ区間を別の形で示すだけなので、スクリーンリーダーには読ませない。 */}
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute bottom-0 h-3.5 text-[0.625rem] font-semibold text-ink-muted tabular-nums transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
+          className={`pointer-events-none absolute bottom-0 h-3.5 text-[0.625rem] font-semibold md:text-[0.75rem] text-ink-muted tabular-nums transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
         >
           {boundaryLabels.map(({ key, year, leftPercent, alignClass }) => (
             <span
