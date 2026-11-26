@@ -55,22 +55,27 @@ export default function SeriesCandidateCard({
     [],
   );
 
-  /** 待っている行があれば何もせず、無ければ `seriesId` の `onSelect` を、動きを見せてから呼ぶ。 */
-  function selectAfterAnimation(seriesId: string): void {
+  /**
+   * 待っている行があれば何もせず false を返し、無ければ `seriesId` の `onSelect` を、動きを見せてから呼んで true を返す。
+   * 待っている間の別の行の押下を、行の動きに出さないために、受けたかを返す。
+   */
+  function selectAfterAnimation(seriesId: string): boolean {
     if (pendingTimer.current !== null) {
-      return;
+      return false;
     }
 
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
       onSelect(seriesId);
 
-      return;
+      return true;
     }
 
     pendingTimer.current = setTimeout(() => {
       pendingTimer.current = null;
       onSelect(seriesId);
     }, PRESS_ANIMATION_MS);
+
+    return true;
   }
 
   useEffect(() => {

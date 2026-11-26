@@ -89,6 +89,18 @@ describe("SeriesCandidateCard", () => {
     expect(onSelect).toHaveBeenCalledWith("teisei-roma");
   });
 
+  it("待っている間に押した別の行には、波を出さない", () => {
+    vi.useFakeTimers();
+    renderCard();
+
+    fireEvent.click(screen.getByRole("button", { name: /帝政ローマ/ }));
+    fireEvent.click(screen.getByRole("button", { name: /カエサル/ }));
+
+    expect(document.querySelectorAll("[data-candidate-ripple]")).toHaveLength(
+      1,
+    );
+  });
+
   it("待ちが明けて onSelect を呼んだ後は、同じ枠の次の押下も受ける", () => {
     vi.useFakeTimers();
 

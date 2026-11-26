@@ -6,6 +6,7 @@
  *
  * 一覧パネルの行（`SeriesPanelItem`）と違い、地図の上に単独で出る行なので、動きで押せることと押したことを示す。
  * 押した後に一覧を閉じる時機は持たず、`onPress` を受ける側が決める。
+ * `onPress` が受けなかった押下には、波も山形の動きも出さない。
  */
 
 import { type MouseEvent, useState } from "react";
@@ -14,7 +15,8 @@ import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 
 type SeriesCandidateRowProps = {
   series: Series;
-  onPress: (seriesId: string) => void;
+  /** 押下を受けたら true、他の行の押下を待っていて受けなければ false を返す。 */
+  onPress: (seriesId: string) => boolean;
 };
 
 /**
@@ -36,6 +38,10 @@ export default function SeriesCandidateRow({
   const [ripple, setRipple] = useState<RippleOrigin | null>(null);
 
   function press(event: MouseEvent<HTMLButtonElement>): void {
+    if (!onPress(series.id)) {
+      return;
+    }
+
     const rect = event.currentTarget.getBoundingClientRect();
 
     setRipple(
@@ -43,7 +49,6 @@ export default function SeriesCandidateRow({
         ? { x: rect.width / 2, y: rect.height / 2 }
         : { x: event.clientX - rect.left, y: event.clientY - rect.top },
     );
-    onPress(series.id);
   }
 
   return (
