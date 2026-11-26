@@ -26,6 +26,7 @@ import {
   useRef,
   useState,
 } from "react";
+import HistoryIcon from "@/components/icons/HistoryIcon";
 import {
   fullHeightPx,
   listHeightPx,
@@ -50,6 +51,8 @@ type BottomSheetProps = {
   label: string;
   /** `era` の段と、`list` の段で出す設定のときに、取っ手の下へ出す era スライダー。 */
   eraSlider: ReactNode;
+  /** `list` の段で era スライダーを隠しているとき、出し直すボタンに表示する、現在窓の年の範囲の文字。 */
+  eraWindowLabel: string;
   /**
    * `list` の段で era スライダーを出すか。
    * `era` の段では常に出し、`closed` と `full` の段では出さない。
@@ -118,6 +121,7 @@ export default function BottomSheet({
   onStageChange,
   label,
   eraSlider,
+  eraWindowLabel,
   isEraSliderShown,
   onEraSliderShownChange,
   onTargetHeightChange,
@@ -138,6 +142,7 @@ export default function BottomSheet({
   const [isAnimated, setIsAnimated] = useState(false);
 
   const isListShown = stage === SHEET_STAGE.list || stage === SHEET_STAGE.full;
+  const isEraSliderHidden = stage === SHEET_STAGE.list && !isEraSliderShown;
   const isEraShown =
     stage === SHEET_STAGE.era ||
     (stage === SHEET_STAGE.list && isEraSliderShown);
@@ -237,6 +242,39 @@ export default function BottomSheet({
     }
   }
 
+  /** `list` の段で era スライダーを隠している間だけ、取っ手の下の行に出る、スライダーを出し直すボタン。 */
+  const restoreEraSliderButton = (
+    <button
+      type="button"
+      aria-label={`時代を変える（${eraWindowLabel}）`}
+      onPointerDown={(event) => event.stopPropagation()}
+      onClick={() => onEraSliderShownChange(true)}
+      className="flex cursor-pointer items-center gap-1.5 rounded-full bg-point/10 px-3 py-1.5 text-[0.8125rem] font-medium text-point tabular-nums hover:bg-point/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
+    >
+      <HistoryIcon className="size-4" />
+      {eraWindowLabel}
+    </button>
+  );
+
+  /** シートを `era` の段へ戻すボタンで、下向きの山形は era スライダーの × と取り違えない形にしてある。 */
+  const closeListButton = (
+    <button
+      type="button"
+      aria-label="一覧を閉じる"
+      onPointerDown={(event) => event.stopPropagation()}
+      onClick={() => onStageChange(SHEET_STAGE.era)}
+      className="flex size-9 items-center justify-center rounded-full text-ink-muted hover:bg-rule/40 hover:text-ink focus-visible:outline-2 focus-visible:outline-point"
+    >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        className="size-5 fill-none stroke-current stroke-2"
+      >
+        <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </button>
+  );
+
   return (
     <aside
       ref={sheetRef}
@@ -272,40 +310,17 @@ export default function BottomSheet({
           <span className="sr-only">{label}</span>
         </button>
 
-        {/* 右端のボタンは、押しても行のスワイプとタップを始めないよう、ポインタの押下を行へ伝えない。 */}
-        {isListShown && (
-          <div className="absolute inset-y-0 right-3 flex items-center gap-2">
-            {stage === SHEET_STAGE.list && !isEraSliderShown && (
-              <button
-                type="button"
-                onPointerDown={(event) => event.stopPropagation()}
-                onClick={() => onEraSliderShownChange(true)}
-                className="rounded-full border border-rule px-3 py-1.5 text-[0.8rem] text-ink hover:bg-rule/40 focus-visible:outline-2 focus-visible:outline-point"
-              >
-                時代を変える
-              </button>
-            )}
+        {/* ボタンは、押しても行のスワイプとタップを始めないよう、ポインタの押下を行へ伝えない。 */}
+        {isEraSliderHidden && (
+          <div className="flex items-center justify-between px-3 pb-2">
+            {restoreEraSliderButton}
+            {closeListButton}
+          </div>
+        )}
 
-            {/* 下向きの山形は、シートを下へ戻すことを示す。era スライダーの × と取り違えない形にする。 */}
-            <button
-              type="button"
-              aria-label="一覧を閉じる"
-              onPointerDown={(event) => event.stopPropagation()}
-              onClick={() => onStageChange(SHEET_STAGE.era)}
-              className="flex size-9 items-center justify-center rounded-full text-ink-muted hover:bg-rule/40 hover:text-ink focus-visible:outline-2 focus-visible:outline-point"
-            >
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                className="size-5 fill-none stroke-current stroke-2"
-              >
-                <path
-                  d="M6 9l6 6 6-6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
+        {isListShown && !isEraSliderHidden && (
+          <div className="absolute inset-y-0 right-3 flex items-center gap-2">
+            {closeListButton}
           </div>
         )}
       </div>

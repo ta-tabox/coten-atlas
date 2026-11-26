@@ -37,6 +37,7 @@ import {
 } from "@/lib/episodes";
 import { ZOOMED_ERA_COUNT } from "@/lib/era/view";
 import { currentWindow, positionShowing } from "@/lib/era/window";
+import { formatTimeRange } from "@/lib/format";
 import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
@@ -489,6 +490,7 @@ export default function MapCanvas({
             onStageChange={setSheetStage}
             label={selectedSeries === null ? "シリーズ一覧" : "シリーズの詳細"}
             eraSlider={eraSlider}
+            eraWindowLabel={formatTimeRange(eraWindow)}
             isEraSliderShown={isEraSliderShown}
             onEraSliderShownChange={setIsEraSliderShown}
             onTargetHeightChange={setSheetTargetHeight}

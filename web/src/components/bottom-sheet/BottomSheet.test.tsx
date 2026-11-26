@@ -29,6 +29,7 @@ function renderSheet(stage: SheetStage, isEraSliderShown = true) {
       onStageChange={onStageChange}
       label="一覧"
       eraSlider={<p>スライダー</p>}
+      eraWindowLabel="前463年〜213年"
       isEraSliderShown={isEraSliderShown}
       onEraSliderShownChange={onEraSliderShownChange}
       onTargetHeightChange={onTargetHeightChange}
@@ -107,20 +108,28 @@ describe("BottomSheet の era スライダーの出し入れ", () => {
   it("list の段で era スライダーを出していないとき、「時代を変える」ボタンを押すと、出す設定を返す", () => {
     const { onEraSliderShownChange } = renderSheet("list", false);
 
-    fireEvent.click(screen.getByRole("button", { name: "時代を変える" }));
+    fireEvent.click(screen.getByRole("button", { name: /時代を変える/ }));
 
     expect(onEraSliderShownChange).toHaveBeenCalledExactlyOnceWith(true);
+  });
+
+  it("「時代を変える」ボタンに、現在窓の年の範囲を表示する", () => {
+    renderSheet("list", false);
+
+    expect(
+      screen.getByRole("button", { name: /時代を変える/ }),
+    ).toHaveTextContent("前463年〜213年");
   });
 
   it("era スライダーを出しているときは「時代を変える」ボタンを出さない", () => {
     renderSheet("list", true);
 
-    expect(screen.queryByRole("button", { name: "時代を変える" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /時代を変える/ })).toBeNull();
   });
 
   it("「時代を変える」ボタンを押しても、取っ手のタップとして段を移さない", () => {
     const { onStageChange } = renderSheet("list", false);
-    const button = screen.getByRole("button", { name: "時代を変える" });
+    const button = screen.getByRole("button", { name: /時代を変える/ });
 
     fireEvent.pointerDown(button, pointerAt(40));
     fireEvent.pointerUp(button, pointerAt(40));
@@ -131,7 +140,7 @@ describe("BottomSheet の era スライダーの出し入れ", () => {
   it("list 以外の段では、「時代を変える」ボタンを出さない", () => {
     renderSheet("era", false);
 
-    expect(screen.queryByRole("button", { name: "時代を変える" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /時代を変える/ })).toBeNull();
   });
 });
 
