@@ -9,7 +9,7 @@
  * 拡大しているか・表示範囲の左端だけを、この部品が持つ。
  * 現在窓の求め方は `@/lib/era/window`、表示範囲の求め方は `@/lib/era/view`、指の操作の受け方は `./use-era-track-gesture` が担当する。
  *
- * 現在窓の中心が乗る era は、セルの幅を変えずに背景と太字で強調する。
+ * 現在窓の中心が乗る era は、セルの幅を変えずに背景・太字・下線で強調する。
  * セルの幅を変えると、指を止めていても下のセルが動き、指の位置と年の対応が崩れる。
  * `<input type="range">` はキーボードの操作と読み上げだけを受け、画面には出さない。
  *
@@ -51,7 +51,6 @@ type EraSliderProps = {
   presentEnd: number;
   position: number;
   onPositionChange: (position: number) => void;
-  /** 拡大したときにトラックへ入れる era の数。 */
   zoomedEraCount: number;
   /** 閉じる操作を持たせるときだけ渡し、渡すと拡大のボタンの隣に閉じるボタンを置く。 */
   onClose?: () => void;
