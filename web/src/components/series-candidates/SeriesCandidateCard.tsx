@@ -79,7 +79,7 @@ export default function SeriesCandidateCard({
         ))}
       </ul>
       {/* 吹き出しの下辺から代表点を指す矢印。 */}
-      {/* 矢印の大きさを変えるときは、`SeriesCandidateOverlay` の `CANDIDATE_ARROW_GAP_PX` と、下の `left` で引く矢印の半幅も合わせる。 */}
+      {/* 矢印の大きさを変えるときは、`SeriesCandidateOverlay` の `CANDIDATE_ARROW_GAP_PX` と、下の `left` の計算に使う矢印の半幅も合わせる。 */}
       <span
         aria-hidden="true"
         data-candidate-arrow
