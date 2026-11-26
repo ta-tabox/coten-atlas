@@ -18,15 +18,15 @@ export default function SeriesTooltip({ series }: SeriesTooltipProps) {
   return (
     <ul
       role="tooltip"
-      className="max-w-64 rounded-control border border-rule bg-paper px-3 py-2 font-body text-ink shadow-sm"
+      className="max-w-64 space-y-1 rounded-control bg-ink px-3 py-1.5 font-body text-paper"
     >
       {series.map((item) => (
         <li key={item.id}>
-          <span data-series-title className="block text-[0.9rem]">
+          <span data-series-title className="block text-[0.8rem] font-bold">
             {item.title}
           </span>
           {item.timeRange !== TIME_RANGE_UNTIMED && (
-            <span className="block text-[0.75rem] text-ink-muted tabular-nums">
+            <span className="block text-[0.7rem] text-rule tabular-nums">
               {formatTimeRange(item.timeRange)}
             </span>
           )}
