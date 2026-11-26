@@ -104,16 +104,6 @@ describe("BottomSheet の段ごとの表示", () => {
 });
 
 describe("BottomSheet の era スライダーの出し入れ", () => {
-  it("list の段で era スライダーを出しているとき、閉じるボタンを押すと、出さない設定を返す", () => {
-    const { onEraSliderShownChange } = renderSheet("list", true);
-
-    fireEvent.click(
-      screen.getByRole("button", { name: "時代スライダーを閉じる" }),
-    );
-
-    expect(onEraSliderShownChange).toHaveBeenCalledExactlyOnceWith(false);
-  });
-
   it("list の段で era スライダーを出していないとき、「時代を変える」ボタンを押すと、出す設定を返す", () => {
     const { onEraSliderShownChange } = renderSheet("list", false);
 
@@ -122,17 +112,10 @@ describe("BottomSheet の era スライダーの出し入れ", () => {
     expect(onEraSliderShownChange).toHaveBeenCalledExactlyOnceWith(true);
   });
 
-  it("era スライダーを出しているときは「時代を変える」ボタンを出さず、出していないときは閉じるボタンを出さない", () => {
+  it("era スライダーを出しているときは「時代を変える」ボタンを出さない", () => {
     renderSheet("list", true);
 
     expect(screen.queryByRole("button", { name: "時代を変える" })).toBeNull();
-
-    cleanup();
-    renderSheet("list", false);
-
-    expect(
-      screen.queryByRole("button", { name: "時代スライダーを閉じる" }),
-    ).toBeNull();
   });
 
   it("「時代を変える」ボタンを押しても、取っ手のタップとして段を移さない", () => {
@@ -145,13 +128,10 @@ describe("BottomSheet の era スライダーの出し入れ", () => {
     expect(onStageChange).not.toHaveBeenCalled();
   });
 
-  it("list 以外の段では、どちらのボタンも出さない", () => {
+  it("list 以外の段では、「時代を変える」ボタンを出さない", () => {
     renderSheet("era", false);
 
     expect(screen.queryByRole("button", { name: "時代を変える" })).toBeNull();
-    expect(
-      screen.queryByRole("button", { name: "時代スライダーを閉じる" }),
-    ).toBeNull();
   });
 });
 

@@ -21,6 +21,7 @@ import EraSliderPanButton from "@/components/era-slider/EraSliderPanButton";
 import { useEraTrackGesture } from "@/components/era-slider/use-era-track-gesture";
 import ChevronsLeftIcon from "@/components/icons/ChevronsLeftIcon";
 import ChevronsRightIcon from "@/components/icons/ChevronsRightIcon";
+import CloseIcon from "@/components/icons/CloseIcon";
 import ZoomInIcon from "@/components/icons/ZoomInIcon";
 import ZoomOutIcon from "@/components/icons/ZoomOutIcon";
 import { eraIndexAt, positionToYear, STEPS_PER_ERA } from "@/lib/era/scale";
@@ -51,6 +52,8 @@ type EraSliderProps = {
   onPositionChange: (position: number) => void;
   /** 拡大したときにトラックへ入れる era の数。 */
   zoomedEraCount: number;
+  /** 閉じる操作を持たせるときだけ渡し、渡すと拡大のボタンの隣に閉じるボタンを置く。 */
+  onClose?: () => void;
 };
 
 /** 描く境目の年 1 つと、トラックの上での位置と寄せ方。 */
@@ -133,6 +136,7 @@ export default function EraSlider({
   position,
   onPositionChange,
   zoomedEraCount,
+  onClose,
 }: EraSliderProps) {
   const eraCount = eras.length;
   const maxStep = eraCount * STEPS_PER_ERA;
@@ -200,7 +204,7 @@ export default function EraSlider({
     <div
       data-testid="era-slider"
       data-dragging={isDragging ? "true" : undefined}
-      className="group rounded-box border border-rule bg-paper p-2.5 font-body text-ink shadow-sm md:px-4 md:py-3"
+      className="group font-body text-ink"
     >
       {/* 画面にはスライダーの見出しを出さないが、スクリーンリーダーにはスライダーの名前として読ませる。 */}
       <label htmlFor={SLIDER_ID} className="sr-only">
@@ -241,6 +245,17 @@ export default function EraSlider({
               <ZoomInIcon className="size-3.5" />
             )}
           </button>
+
+          {onClose !== undefined && (
+            <button
+              type="button"
+              aria-label="時代スライダーを閉じる"
+              onClick={onClose}
+              className="grid size-6.5 cursor-pointer place-items-center rounded-full text-ink-muted transition-colors duration-150 hover:bg-rule/50 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-point"
+            >
+              <CloseIcon className="size-3.5" />
+            </button>
+          )}
         </div>
       </div>
 

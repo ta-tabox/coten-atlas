@@ -5,7 +5,7 @@
  * 枠は取っ手の行・era スライダーを入れる領域・`children` を入れるスクロールの領域で構成し、`children` の中身は知らない。
  *
  * 段（`SheetStage`）と era スライダーを出すかは保持しない。
- * どちらも props で受け取り、取っ手のタップとスワイプが決めた段を `onStageChange`、era スライダーの出し入れを `onEraSliderShownChange` で返す。
+ * どちらも props で受け取り、取っ手のタップとスワイプが決めた段を `onStageChange`、era スライダーを出す操作を `onEraSliderShownChange` で返す。
  * 取っ手の行だけがタッチを受けるので、地図の上のパンとピンチは地図が受ける。
  * `list` と `full` の段では、取っ手の行の右端の閉じるボタンが、段をいくつ上げていても `era` の段へ一度で戻す。
  *
@@ -322,20 +322,8 @@ export default function BottomSheet({
         }
       >
         <div className="min-h-0 overflow-hidden">
-          <div ref={eraContentRef} className="relative px-4 pb-3">
+          <div ref={eraContentRef} className="px-4 pb-3">
             {eraSlider}
-
-            {/* era スライダーの年の範囲の文字は右寄せなので、空いている左上へ置く。 */}
-            {stage === SHEET_STAGE.list && isEraSliderShown && (
-              <button
-                type="button"
-                aria-label="時代スライダーを閉じる"
-                onClick={() => onEraSliderShownChange(false)}
-                className="absolute top-2 left-7 rounded-control px-1.5 text-[1.1rem] text-ink-muted hover:bg-rule/40 hover:text-ink focus-visible:outline-2 focus-visible:outline-point"
-              >
-                ×
-              </button>
-            )}
           </div>
         </div>
       </div>

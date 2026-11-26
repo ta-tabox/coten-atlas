@@ -375,6 +375,34 @@ describe("EraSlider", () => {
     expect(onPositionChange).toHaveBeenCalledWith(0.5);
   });
 
+  it("閉じる操作を渡すと閉じるボタンを出し、押すと渡した操作を呼ぶ", () => {
+    const onClose = vi.fn();
+    render(
+      <EraSlider
+        eras={ERAS}
+        presentEnd={PRESENT_END}
+        position={0}
+        onPositionChange={() => {}}
+        zoomedEraCount={2}
+        onClose={onClose}
+      />,
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "時代スライダーを閉じる" }),
+    );
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("閉じる操作を渡さなければ、閉じるボタンを出さない", () => {
+    renderAt(0);
+
+    expect(
+      screen.queryByRole("button", { name: "時代スライダーを閉じる" }),
+    ).toBeNull();
+  });
+
   it("スライダーを動かすと、値を 0..1 の位置に直して onPositionChange へ渡す", () => {
     const { onPositionChange } = renderAt(0);
     const slider = screen.getByRole<HTMLInputElement>("slider", {

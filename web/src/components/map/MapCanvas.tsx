@@ -125,6 +125,19 @@ function initialEraPositionOf(eras: EraList): number {
   return (index + 0.5) / eras.length;
 }
 
+/** スマホの幅のシートが `list` の段にいるときだけ、era スライダーを閉じる操作（`close`）を返し、それ以外は undefined を返す。 */
+function eraSliderCloseOf({
+  isDesktop,
+  sheetStage,
+  close,
+}: {
+  isDesktop: boolean;
+  sheetStage: SheetStage;
+  close: () => void;
+}): (() => void) | undefined {
+  return !isDesktop && sheetStage === SHEET_STAGE.list ? close : undefined;
+}
+
 /** ベースマップの上に、上端のヘッダー・`loci` の代表点・`seriesList` の一覧・`eras` の era スライダー・選択したシリーズの詳細カードを重ねて描く。 */
 export default function MapCanvas({
   loci,
@@ -391,6 +404,11 @@ export default function MapCanvas({
       zoomedEraCount={
         isDesktop ? ZOOMED_ERA_COUNT.desktop : ZOOMED_ERA_COUNT.mobile
       }
+      onClose={eraSliderCloseOf({
+        isDesktop,
+        sheetStage,
+        close: () => setIsEraSliderShown(false),
+      })}
     />
   );
 
@@ -447,7 +465,7 @@ export default function MapCanvas({
             />
           </div>
           {/* 包みは左端を left-1/2 で画面の中央に置くので、幅を包みに書かないと、包みの幅は画面の幅の半分を上限に縮む。 */}
-          <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2">
+          <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2 rounded-box border border-rule bg-paper px-4 py-3 shadow-sm">
             {eraSlider}
           </div>
           {selectedSeries !== null && (
