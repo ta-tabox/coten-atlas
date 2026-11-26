@@ -154,6 +154,7 @@ ADR の外（コード・現況の文書・issue・PR）から指すときは、
 | [20261113-locus-display-name](20261113-locus-display-name.md)                               | シリーズと事物を分け、事物は表示用の地名を持つ（20260902-series-and-loci を supersede）                                                                                                               | 2026-11-13 | 採用                                                           | —      |
 | [20261124-e2e-layer-split-from-smoke](20261124-e2e-layer-split-from-smoke.md)               | 画面の操作と配置の検査をスモークから分け、E2E の段として `pnpm check` のスモークの後に置く（20261112-smoke-mobile-webkit-chromium を supersede）                                                      | 2026-11-24 | 採用                                                           | —      |
 | [20261126-related-series-narrow-tags](20261126-related-series-narrow-tags.md)               | 関連シリーズ行は狭い主題のタグを共有するシリーズだけを並べ、`region` を判定に使わない                                                                                                                 |
+| [20261126-series-vocabulary-region-as-label](20261126-series-vocabulary-region-as-label.md) | 手で書く欄の語彙を、`region` を関連シリーズ行の照合に使わない前提で決め直す（20260911-series-vocabulary-without-kind を supersede）                                                                   |
 
 **20260828-e2e-offline-smoke は人間の目視を L5 と呼んでいる。**
 `docs/HARNESS.md`「検証の層構造」は番号を `pnpm check` の連鎖の位置に限り、人間の目視に番号を与えないので、20260828-e2e-offline-smoke の L5 は、いまの L5（E2E）でなく「人間の目視」と読む。
@@ -175,5 +176,5 @@ ADR の外（コード・現況の文書・issue・PR）から指すときは、
 
 **規約7 を足す前に書かれたレコードは、ファイル名・関数名・値の一覧を決定の本体に置いていることがある。**
 規約7（決定はアーキテクチャの水準で書き、個別の実装に関与しない）より前に書かれたので、それらは決定時点の例と読み、現況はコードと現況の文書で確かめる。
-名前・置き場・値域そのものを決めたレコード（20260830-series-rename の呼び名、20260906-catalog-rename・20260906-docs-under-docs・20260906-rules-under-claude の置き場、20260911-series-vocabulary-without-kind の語彙の値域など）では、その名前・置き場・値が決定の本体である。
+名前・置き場・値域そのものを決めたレコード（20260830-series-rename の呼び名、20260906-catalog-rename・20260906-docs-under-docs・20260906-rules-under-claude の置き場、20261126-series-vocabulary-region-as-label の語彙の値域など）では、その名前・置き場・値が決定の本体である。
 字面が現況と違っても決定が動いていなければ、規約4 に従って改訂版は書かない。
