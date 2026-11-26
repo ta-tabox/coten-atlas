@@ -40,6 +40,44 @@ describe("clientXToPosition", () => {
   });
 });
 
+describe("clientXToPosition の拡大した範囲と端の寄せ", () => {
+  const view = { min: 0.4, span: 0.2 };
+
+  it("拡大した範囲の左端・右端を指すと、範囲の端の位置になる", () => {
+    const at = (clientX: number) =>
+      clientXToPosition({
+        clientX,
+        trackLeft: TRACK_LEFT,
+        trackWidth: TRACK_WIDTH,
+        stepCount: STEP_COUNT,
+        view,
+      });
+
+    expect(at(100)).toBe(0.4);
+    expect(at(300)).toBe(0.5);
+    expect(at(500)).toBe(0.6);
+  });
+
+  it("両端から edgeSnapPx 以内を指すと、範囲の端の位置に寄る", () => {
+    const at = (clientX: number) =>
+      clientXToPosition({
+        clientX,
+        trackLeft: TRACK_LEFT,
+        trackWidth: TRACK_WIDTH,
+        stepCount: STEP_COUNT,
+        edgeSnapPx: 8,
+      });
+
+    expect(at(108)).toBe(0);
+    expect(at(492)).toBe(1);
+    expect(at(120)).toBeCloseTo(0.05, 1);
+  });
+
+  it("edgeSnapPx を渡さなければ、端の近くも指した位置のままである", () => {
+    expect(positionAt(104)).toBe(0.01);
+  });
+});
+
 describe("dragToPosition", () => {
   /** 幅 400 の帯で、位置 0.5 を押した場所から `clientX` まで指を動かしたときの位置を返す。 */
   function draggedTo(clientX: number, startPosition = 0.5): number {
