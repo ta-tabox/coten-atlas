@@ -41,6 +41,7 @@ function anchorOf(series: Series): MapLocusFeature {
     properties: {
       id: series.anchor,
       seriesId: series.id,
+      name: series.anchor,
       timeStart: series.timeRange.start,
       timeEnd: series.timeRange.end,
     },

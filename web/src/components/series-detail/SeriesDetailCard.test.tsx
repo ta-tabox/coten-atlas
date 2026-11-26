@@ -49,10 +49,11 @@ const EPISODES: Episode[] = [
 ];
 
 describe("SeriesDetailCard", () => {
-  it("シリーズ名と整形した年代を出す", () => {
+  it("シリーズ名と、整形した年代と地名を出す", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
         onClose={vi.fn()}
       />,
@@ -60,6 +61,7 @@ describe("SeriesDetailCard", () => {
 
     expect(screen.getByRole("heading", { name: "スパルタ" })).toBeVisible();
     expect(screen.getByText("前900年〜前200年")).toBeVisible();
+    expect(screen.getByText("スパルタ", { selector: "span" })).toBeVisible();
   });
 
   it("時期を持たないシリーズは年代の行を出さない", () => {
@@ -77,6 +79,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={okane}
+        placeName={null}
         episodes={{ kind: "loaded", episodes: [] }}
         onClose={vi.fn()}
       />,
@@ -86,10 +89,112 @@ describe("SeriesDetailCard", () => {
     expect(screen.queryByText(/\d+年/)).toBeNull();
   });
 
+  it("代表点の地名を、年代と同じ行に縦線で区切って出す", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const row = screen.getByText("前900年〜前200年").closest("p");
+
+    if (row === null) {
+      throw new Error("年代の行が無い");
+    }
+
+    expect(within(row).getByText("スパルタ")).toBeVisible();
+  });
+
+  it("位置なしのシリーズは地名を出さず、年代だけを出す", () => {
+    render(
+      <SeriesDetailCard
+        series={{ ...SPARTA, anchor: ANCHOR_UNLOCATED }}
+        placeName={null}
+        episodes={{ kind: "loaded", episodes: [] }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("前900年〜前200年")).toBeVisible();
+    expect(screen.queryByText(/｜/)).toBeNull();
+  });
+
+  it("時期も位置も持たないシリーズは、年代と地名の行を出さない", () => {
+    render(
+      <SeriesDetailCard
+        series={{
+          ...SPARTA,
+          anchor: ANCHOR_UNLOCATED,
+          timeRange: TIME_RANGE_UNTIMED,
+        }}
+        placeName={null}
+        episodes={{ kind: "loaded", episodes: [] }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByText(/年|｜/)).toBeNull();
+  });
+
+  it("region の札を先頭に置き、tags の札を series の順に並べる", () => {
+    render(
+      <SeriesDetailCard
+        series={{ ...SPARTA, tags: ["集団", "戦争"] }}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const labels = within(screen.getByRole("list", { name: "地域とタグ" }));
+
+    expect(
+      labels.getAllByRole("listitem").map((item) => item.textContent),
+    ).toEqual(["ヨーロッパ", "集団", "戦争"]);
+  });
+
+  it("region が地域なしのシリーズは、region の札を出さず tags の札だけを出す", () => {
+    render(
+      <SeriesDetailCard
+        series={{ ...SPARTA, region: "地域なし", tags: ["経済", "概念史"] }}
+        placeName={null}
+        episodes={{ kind: "loaded", episodes: [] }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const labels = within(screen.getByRole("list", { name: "地域とタグ" }));
+
+    expect(
+      labels.getAllByRole("listitem").map((item) => item.textContent),
+    ).toEqual(["経済", "概念史"]);
+    expect(screen.queryByText("地域なし")).toBeNull();
+  });
+
+  it("region と tags の札は押せる要素でない", () => {
+    render(
+      <SeriesDetailCard
+        series={SPARTA}
+        placeName="スパルタ"
+        episodes={{ kind: "loaded", episodes: [] }}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const labels = within(screen.getByRole("list", { name: "地域とタグ" }));
+
+    expect(labels.queryAllByRole("button")).toEqual([]);
+    expect(labels.queryAllByRole("link")).toEqual([]);
+  });
+
   it("各回に配信基盤ごとのリンクが 2 本あり、回を基盤で開く URL を指す", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
         onClose={vi.fn()}
       />,
@@ -114,6 +219,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
         onClose={vi.fn()}
       />,
@@ -139,6 +245,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
         onClose={vi.fn()}
       />,
@@ -156,6 +263,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{
           kind: "loaded",
           episodes: [
@@ -186,6 +294,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
         onClose={vi.fn()}
       />,
@@ -206,6 +315,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: [] }}
         onClose={vi.fn()}
       />,
@@ -221,6 +331,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loading" }}
         onClose={vi.fn()}
       />,
@@ -233,6 +344,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "error" }}
         onClose={vi.fn()}
       />,
@@ -247,6 +359,7 @@ describe("SeriesDetailCard", () => {
     render(
       <SeriesDetailCard
         series={SPARTA}
+        placeName="スパルタ"
         episodes={{ kind: "loaded", episodes: EPISODES }}
         onClose={onClose}
       />,

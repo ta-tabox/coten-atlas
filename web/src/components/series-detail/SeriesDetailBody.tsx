@@ -11,9 +11,11 @@
  */
 
 import ListenLinks from "@/components/series-detail/ListenLinks";
+import SeriesLabels from "@/components/series-detail/SeriesLabels";
+import SeriesPeriod from "@/components/series-detail/SeriesPeriod";
+import SeriesPlace from "@/components/series-detail/SeriesPlace";
 import YouTubeChannelLink from "@/components/series-detail/YouTubeChannelLink";
 import { EPISODES_KIND, type EpisodesState } from "@/lib/episodes";
-import { formatTimeRange } from "@/lib/format";
 import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 
 /**
@@ -67,17 +69,29 @@ function EpisodeList({ state }: { state: EpisodesState }) {
 
 type SeriesDetailBodyProps = {
   series: Series;
+  /**
+   * 代表点の事物の地名。
+   * 位置なしのシリーズは null。
+   */
+  placeName: string | null;
   /** `series` に割り当てられたエピソードと、その取得の状態。 */
   episodes: EpisodesState;
   onClose: () => void;
 };
 
-/** `series` の名前・年代の見出しと、`episodes` の状態に応じたエピソードの区画を縦に並べて描く。 */
+/** `series` の名前・年代と地名・札の見出しと、`episodes` の状態に応じたエピソードの区画を縦に並べて描く。 */
 export default function SeriesDetailBody({
   series,
+  placeName,
   episodes,
   onClose,
 }: SeriesDetailBodyProps) {
+  const period =
+    series.timeRange === TIME_RANGE_UNTIMED ? null : (
+      <SeriesPeriod timeRange={series.timeRange} />
+    );
+  const place = placeName === null ? null : <SeriesPlace name={placeName} />;
+
   return (
     <>
       <header className="flex items-start gap-3 border-b border-rule pb-3">
@@ -89,12 +103,14 @@ export default function SeriesDetailBody({
             {series.title}
           </h2>
 
-          {/* timeRange が TIME_RANGE_UNTIMED のシリーズは年を持たないので、年代の行を出さない。 */}
-          {series.timeRange !== TIME_RANGE_UNTIMED && (
-            <p className="mt-1 text-[0.85rem] text-ink-muted">
-              {formatTimeRange(series.timeRange)}
+          {/* 年代と地名の間の縦線は、後ろの要素の ::before が持つ。幅に収まらなければ、縦線を地名の先頭に付けたまま折り返す。 */}
+          {(period !== null || place !== null) && (
+            <p className="mt-1 flex flex-wrap text-[0.85rem] text-ink-muted [&>*+*]:before:content-['｜']">
+              {period}
+              {place}
             </p>
           )}
+          <SeriesLabels series={series} />
         </div>
 
         <button

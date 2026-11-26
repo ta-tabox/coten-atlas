@@ -67,11 +67,18 @@ type MapCanvasProps = {
    * 地図のクリックが返すのは `Locus` なので、`seriesId` に一致する `Series` をこの配列から検索する。
    */
   seriesList: SeriesList;
-  /** era スライダーの目盛りに並べる時代区分の全件。 */
   eras: EraList;
   /** `end` が `ERA_END_PRESENT` の era の右端に置く年。 */
   presentEnd: number;
 };
+
+/**
+ * `series` の代表点の事物の地名を返す。
+ * 位置なしのシリーズには null を返す。
+ */
+function placeNameOf(loci: MapLocusCollection, series: Series): string | null {
+  return findAnchorLocus(loci, series)?.properties.name ?? null;
+}
 
 /**
  * `state` を `seriesId` に割り当てられたエピソードだけに絞り込んで返す。
@@ -311,6 +318,7 @@ export default function MapCanvas({
       <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.7]">
         <SeriesDetailBody
           series={selectedSeries}
+          placeName={placeNameOf(loci, selectedSeries)}
           episodes={episodesOf(episodes, selectedSeries.id)}
           onClose={() => setSelectedSeriesId(null)}
         />
@@ -386,6 +394,7 @@ export default function MapCanvas({
             <div className="absolute top-header right-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-header)-2rem)] max-w-[calc(100vw-2rem)] flex-col">
               <SeriesDetailCard
                 series={selectedSeries}
+                placeName={placeNameOf(loci, selectedSeries)}
                 episodes={episodesOf(episodes, selectedSeries.id)}
                 onClose={() => setSelectedSeriesId(null)}
               />
