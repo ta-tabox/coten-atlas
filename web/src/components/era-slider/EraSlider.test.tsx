@@ -251,13 +251,18 @@ describe("EraSlider", () => {
       name: "表示範囲を未来の方向へずらす",
     });
 
-    expect(screen.getByTestId("era-slider-thumb")).toHaveClass("opacity-100");
+    expect(screen.getByTestId("era-slider-thumb")).toHaveAttribute(
+      "data-visible",
+      "true",
+    );
 
     for (let count = 0; count < 4; count += 1) {
       fireEvent.click(next);
     }
 
-    expect(screen.getByTestId("era-slider-thumb")).toHaveClass("opacity-0");
+    expect(screen.getByTestId("era-slider-thumb")).not.toHaveAttribute(
+      "data-visible",
+    );
     expect(next).toBeDisabled();
   });
 

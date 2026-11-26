@@ -188,6 +188,7 @@ export default function EraSlider({
     <div
       data-testid="era-slider"
       data-dragging={isDragging ? "true" : undefined}
+      data-zoomed={isZoomed ? "true" : undefined}
       className="group font-body text-ink"
     >
       {/* 画面にはスライダーの見出しを出さないが、スクリーンリーダーにはスライダーの名前として読ませる。 */}
@@ -240,9 +241,7 @@ export default function EraSlider({
 
       {/* つまみと境目の年は、枠の外へはみ出して描くので、トラックの枠とは別の層に置く。 */}
       <div className="relative pb-4.5">
-        <div
-          className={`relative flex h-11.5 items-stretch md:h-12.5 overflow-hidden rounded-md border bg-paper transition-[border-color,box-shadow] duration-200 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-point ${isZoomed ? "border-point/40 ring-2 ring-point/10" : "border-rule"}`}
-        >
+        <div className="era-slider-shell">
           <EraSliderPanButton
             label="表示範囲を過去の方向へずらす"
             isShown={isZoomed}
@@ -275,7 +274,7 @@ export default function EraSlider({
                         left: `${viewPercentOf(index / eraCount, view)}%`,
                         width: `${100 / eraCount / view.span}%`,
                       }}
-                      className={`absolute inset-y-0 flex items-center justify-center overflow-hidden border-r border-rule px-0.5 whitespace-nowrap transition-[left,width,background-color,color] duration-250 ease-out-expo group-data-[dragging=true]:transition-none ${isZoomed ? "text-[0.75rem] md:text-[0.9375rem]" : "text-[0.6875rem] md:text-[0.875rem]"} ${isEmphasized ? "bg-rule/50 font-bold text-ink shadow-[inset_0_-2px_0_var(--color-ink-muted)]" : "font-medium text-ink-muted"}`}
+                      className="era-slider-cell"
                     >
                       {era.label}
                     </li>
@@ -333,7 +332,8 @@ export default function EraSlider({
             style={{
               left: `clamp(0.3125rem, ${thumbPercent}%, calc(100% - 0.3125rem))`,
             }}
-            className={`absolute -bottom-1 h-4 w-2.5 -translate-x-1/2 touch-none rounded-full border-2 border-paper bg-point shadow-sm transition-[left,opacity] duration-200 ease-out-expo before:absolute before:-inset-2 before:content-[''] group-data-[dragging=true]:transition-none ${isThumbVisible ? "pointer-events-auto cursor-pointer opacity-100" : "opacity-0"}`}
+            className="era-slider-thumb"
+            data-visible={isThumbVisible ? "true" : undefined}
             {...trackHandlers}
           />
         </div>
