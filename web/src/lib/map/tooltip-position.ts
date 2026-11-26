@@ -23,3 +23,28 @@ export function tooltipLeftOf(
     Math.min(pointX - tooltipWidth / 2, maxLeft),
   );
 }
+
+type TooltipTopArgs = {
+  /** 代表点の垂直位置（px）。 */
+  pointY: number;
+  tooltipHeight: number;
+  /** 代表点とツールチップの間隔（px）。 */
+  gap: number;
+  /** 画面の上端から、ヘッダーなどに隠れて使えない高さ（px）。 */
+  topClearance: number;
+};
+
+/**
+ * ツールチップの上端の位置（px）を求めて返す。
+ * 代表点の上に置き、上端が使えない高さ（`topClearance`）に食い込むときだけ、代表点の下へ置く。
+ */
+export function tooltipTopOf({
+  pointY,
+  tooltipHeight,
+  gap,
+  topClearance,
+}: TooltipTopArgs): number {
+  const above = pointY - gap - tooltipHeight;
+
+  return above < topClearance ? pointY + gap : above;
+}
