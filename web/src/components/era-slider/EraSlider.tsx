@@ -196,9 +196,8 @@ export default function EraSlider({
         時代
       </label>
 
-      {/* 左右の端の太い縦線と左右の端を揃えるため、見本とボタンの外側を 1 単位（4px）内へ寄せる。 */}
       <div className="mb-2 flex min-h-6.5 items-center justify-between gap-2">
-        <div className="ml-1 flex min-w-0 items-baseline gap-1.5">
+        <div className="flex min-w-0 items-baseline gap-1.5">
           {/* 右の年の範囲が、トラックの上の青い帯で示す範囲であることを、帯と同じ形の見本で結ぶ。 */}
           <span
             aria-hidden="true"
@@ -216,7 +215,7 @@ export default function EraSlider({
           </p>
         </div>
 
-        <div className="mr-1 flex shrink-0 items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1">
           <EraSliderIconButton
             label="表示範囲を拡大して細かく調整する"
             isPressed={isZoomed}
@@ -243,7 +242,7 @@ export default function EraSlider({
       {/* つまみと境目の年は、枠の外へはみ出して描くので、トラックの枠とは別の層に置く。 */}
       <div className="relative pb-4.5">
         <div
-          className={`relative flex h-11.5 items-stretch md:h-12.5 overflow-hidden rounded-control border bg-paper transition-[border-color,box-shadow] duration-200 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-point ${isZoomed ? "border-point/40 ring-2 ring-point/10" : "border-rule"}`}
+          className={`relative flex h-11.5 items-stretch md:h-12.5 overflow-hidden rounded-md border bg-paper transition-[border-color,box-shadow] duration-200 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-point ${isZoomed ? "border-point/40 ring-2 ring-point/10" : "border-rule"}`}
         >
           <EraSliderPanButton
             label="表示範囲を過去の方向へずらす"
@@ -295,16 +294,6 @@ export default function EraSlider({
                 className="pointer-events-none absolute inset-y-0 z-10 border-x-2 border-point bg-point/15 transition-[left,width] duration-200 ease-out-expo group-data-[dragging=true]:transition-none"
               />
 
-              {/* 全体を映しているとき、トラックの両端が選べる端であることを示す。拡大するとパンのボタンが端になるので消す。 */}
-              <span
-                aria-hidden="true"
-                className={`pointer-events-none absolute inset-y-1.5 left-[3px] z-10 w-[3px] rounded-full bg-ink-muted/50 transition-opacity duration-150 ${isZoomed ? "opacity-0" : "opacity-100"}`}
-              />
-              <span
-                aria-hidden="true"
-                className={`pointer-events-none absolute inset-y-1.5 right-[3px] z-10 w-[3px] rounded-full bg-ink-muted/50 transition-opacity duration-150 ${isZoomed ? "opacity-0" : "opacity-100"}`}
-              />
-
               <input
                 ref={inputRef}
                 id={SLIDER_ID}
@@ -347,7 +336,10 @@ export default function EraSlider({
           {/* つまみは枠の外へはみ出すので、つまみ自身もトラックと同じポインタの操作を受ける。before 擬似要素は、つまみより広く押せる範囲を足す。 */}
           <div
             data-testid="era-slider-thumb"
-            style={{ left: `${thumbPercent}%` }}
+            // つまみがトラックの両端で枠の外へはみ出さないよう、中心を両端から幅の半分（0.3125rem）より内側に留める。
+            style={{
+              left: `clamp(0.3125rem, ${thumbPercent}%, calc(100% - 0.3125rem))`,
+            }}
             className={`absolute -bottom-1 h-4 w-2.5 -translate-x-1/2 touch-none rounded-full border-2 border-paper bg-point shadow-sm transition-[left,opacity] duration-200 ease-out-expo before:absolute before:-inset-2 before:content-[''] group-data-[dragging=true]:transition-none ${isThumbVisible ? "pointer-events-auto cursor-pointer opacity-100" : "opacity-0"}`}
             {...trackHandlers}
           />
