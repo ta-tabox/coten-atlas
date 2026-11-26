@@ -29,7 +29,7 @@ import {
   episodesForSeries,
   fetchEpisodes,
 } from "@/lib/episodes";
-import { currentWindow } from "@/lib/era/window";
+import { currentWindow, positionShowing } from "@/lib/era/window";
 import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
@@ -46,7 +46,11 @@ import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import { listHeightPx, SHEET_STAGE, type SheetStage } from "@/lib/map/sheet";
 import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
 import type { EraList } from "@/lib/schema/era";
-import type { Series, SeriesList } from "@/lib/schema/series";
+import {
+  type Series,
+  type SeriesList,
+  TIME_RANGE_UNTIMED,
+} from "@/lib/schema/series";
 
 /**
  * 地図を開いたときに、era スライダーが指す era の id。
@@ -283,6 +287,29 @@ export default function MapCanvas({
   }
 
   /** 候補の一覧の行で選んだシリーズを選択し、候補の一覧を閉じる。 */
+  /**
+   * 詳細カードの関連シリーズ行で押したシリーズ（`seriesId`）を選び、代表点へ地図の中心を移す。
+   * そのシリーズの年が現在窓の外なら、年の中点を指す位置へ era スライダーを動かす。
+   *
+   * 一覧パネルと地図は現在窓の中のシリーズしか出さないが、関連シリーズ行は窓の外のシリーズも出すので、スライダーを動かさないと移った先の点が地図に描かれない。
+   */
+  function selectFromRelated(seriesId: string): void {
+    const related = seriesList.find((series) => series.id === seriesId);
+
+    if (related !== undefined && related.timeRange !== TIME_RANGE_UNTIMED) {
+      setEraPosition(
+        positionShowing({
+          timeRange: related.timeRange,
+          position: eraPosition,
+          eras,
+          presentEnd,
+        }),
+      );
+    }
+
+    selectAndPan(seriesId);
+  }
+
   function selectFromCandidates(seriesId: string): void {
     overlap.close();
 
@@ -322,7 +349,7 @@ export default function MapCanvas({
           placeName={placeNameOf(loci, selectedSeries)}
           episodes={episodesOf(episodes, selectedSeries.id)}
           relatedSeries={relatedSeriesOf(seriesList, selectedSeries)}
-          onSelect={selectAndPan}
+          onSelect={selectFromRelated}
           onClose={() => setSelectedSeriesId(null)}
         />
       </div>
@@ -400,7 +427,7 @@ export default function MapCanvas({
                 placeName={placeNameOf(loci, selectedSeries)}
                 episodes={episodesOf(episodes, selectedSeries.id)}
                 relatedSeries={relatedSeriesOf(seriesList, selectedSeries)}
-                onSelect={selectAndPan}
+                onSelect={selectFromRelated}
                 onClose={() => setSelectedSeriesId(null)}
               />
             </div>

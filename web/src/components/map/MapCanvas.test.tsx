@@ -129,6 +129,9 @@ const SPARTA: Series = {
   tags: ["集団"],
 };
 
+/** `SPARTA` の年代の終わりの年。 */
+const SPARTA_END = -200;
+
 /** 位置なしで時期を持たないシリーズ。 */
 const OKANE: Series = {
   ...SPARTA,
@@ -618,6 +621,35 @@ describe("MapCanvas", () => {
     });
     expect(seriesPanelProps().selectedSeriesId).toBe("okane-no-rekishi");
     expect(seriesLayersProps().selectedSeries?.id).toBe("okane-no-rekishi");
+  });
+
+  it("詳細カードで、年が現在窓の外のシリーズを押すと、era スライダーがそのシリーズの年を窓に入れる位置へ動く", async () => {
+    await renderMapCanvas();
+
+    act(() => seriesPanelProps().onSelect("okane-no-rekishi"));
+    act(() =>
+      childPropsOf<ComponentProps<typeof SeriesDetailCard>>(
+        SeriesDetailCard,
+      ).onSelect("sparta"),
+    );
+
+    expect(eraSliderProps().position).not.toBe(INITIAL_POSITION);
+    expect(seriesLayersProps().currentWindow.start).toBeLessThanOrEqual(
+      SPARTA_END,
+    );
+  });
+
+  it("詳細カードで、時期を持たないシリーズを押しても、era スライダーは動かない", async () => {
+    await renderMapCanvas();
+
+    act(() => lastProps().onClick?.(mouseEventOn("sparta")));
+    act(() =>
+      childPropsOf<ComponentProps<typeof SeriesDetailCard>>(
+        SeriesDetailCard,
+      ).onSelect("okane-no-rekishi"),
+    );
+
+    expect(eraSliderProps().position).toBe(INITIAL_POSITION);
   });
 
   it("一覧パネルで代表点を持つシリーズを選ぶと、その代表点へ panTo する", async () => {
