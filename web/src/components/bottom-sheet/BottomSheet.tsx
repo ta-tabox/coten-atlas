@@ -322,7 +322,7 @@ export default function BottomSheet({
         }
       >
         <div className="min-h-0 overflow-hidden">
-          <div ref={eraContentRef} className="px-4 pb-3">
+          <div ref={eraContentRef} className="px-5 pb-3">
             {eraSlider}
           </div>
         </div>
