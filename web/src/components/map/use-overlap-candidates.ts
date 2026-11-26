@@ -13,7 +13,7 @@ import type {
   MapRef,
   ViewStateChangeEvent,
 } from "react-map-gl/maplibre";
-import { pointsUnder } from "@/components/map/points-under";
+import { listPointsUnder } from "@/components/map/points-under";
 import {
   candidateSeriesIdsOf,
   type ScreenPoint,
@@ -82,7 +82,7 @@ export function useOverlapCandidates({
    */
   function openCandidatesAt(event: MapLayerMouseEvent): string[] {
     const map = mapRef.current;
-    const points = map === null ? [] : pointsUnder(map, event);
+    const points = map === null ? [] : listPointsUnder(map, event);
     const seriesIds = candidateSeriesIdsOf(event.point, points);
     const nearest = points.find((point) => point.seriesId === seriesIds[0]);
 

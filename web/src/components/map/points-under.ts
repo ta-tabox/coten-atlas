@@ -38,7 +38,7 @@ export function isTouchEvent(event: MapLayerMouseEvent): boolean {
  * タッチの入力はイベントの位置の周り 44px 四方、それ以外はイベントの位置の点だけを調べる。
  * `isTouchEvent` が false の入力は、そのような端末のタッチも含めて判定が円の大きさに留まる。
  */
-export function pointsUnder(
+export function listPointsUnder(
   map: MapRef,
   event: MapLayerMouseEvent,
 ): PointUnder[] {

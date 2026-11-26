@@ -2,6 +2,7 @@
 
 /**
  * ツールチップを、代表点の上に画面の端からはみ出さない位置へ置く枠を描く。
+ * ツールチップの中身は `SeriesTooltip` が描き、この枠は位置と大きさの測定だけを持つ。
  */
 
 import { useLayoutEffect, useRef, useState } from "react";

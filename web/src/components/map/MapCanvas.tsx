@@ -379,7 +379,7 @@ export default function MapCanvas({
       onClick={selectFromMap}
       onMoveStart={closeOverlaysOnUserMove}
       onMove={updateOverlayAnchors}
-      onMouseMove={hover.updateAt}
+      onMouseMove={hover.showTooltipAt}
       onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
