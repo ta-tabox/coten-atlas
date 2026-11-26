@@ -7,7 +7,7 @@
  * 画面の複数の部品が読む状態はこのコンポーネントが持ち、子へは props で渡す。
  */
 
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import BottomSheet from "@/components/bottom-sheet/BottomSheet";
@@ -16,6 +16,8 @@ import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
 import { useIsDesktop } from "@/components/map/use-is-desktop";
+import { useOverlapCandidates } from "@/components/map/use-overlap-candidates";
+import SeriesCandidateOverlay from "@/components/series-candidates/SeriesCandidateOverlay";
 import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
@@ -70,18 +72,6 @@ type MapCanvasProps = {
   /** `end` が `ERA_END_PRESENT` の era の右端に置く年。 */
   presentEnd: number;
 };
-
-/**
- * `event` の最前面にある `Locus` の `seriesId` を返す。
- * `Locus` が無い地点をクリックしたときは null を返す。
- *
- * MapLibre は `properties` の値を `any` で返すので、文字列でなければ null にする。
- */
-function selectedSeriesIdOf(event: MapLayerMouseEvent): string | null {
-  const seriesId = event.features?.[0]?.properties.seriesId;
-
-  return typeof seriesId === "string" ? seriesId : null;
-}
 
 /**
  * `series` の代表点の事物の地名を返す。
@@ -151,6 +141,7 @@ export default function MapCanvas({
   const [sheetTargetHeight, setSheetTargetHeight] = useState(0);
   const isDesktop = useIsDesktop();
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
+  const overlap = useOverlapCandidates({ mapRef, seriesList });
 
   // 一覧パネルに隠れる左の幅と、シートに隠れる下の高さを地図の視野から除き、点が隠れない領域に描かれるようにする。
   const paddingLeft = isDesktop && isPanelOpen ? PANEL_RIGHT_EDGE_PX : 0;
@@ -268,11 +259,19 @@ export default function MapCanvas({
   }
 
   /**
-   * 地図のクリックが事物に当たったときは、その事物のシリーズを選ぶ。
+   * 地図のクリックが当たった代表点が 1 シリーズなら、そのシリーズを選ぶ。
+   * 2 シリーズ以上が重なっていれば、選択を変えず候補の一覧を出す。
+   * 当たらなければ選択を外す。
    * デスクトップの幅では地図を動かさず、スマホの幅ではシートに隠れない位置へ動かす。
    */
   function selectFromMap(event: MapLayerMouseEvent): void {
-    const seriesId = selectedSeriesIdOf(event);
+    const seriesIds = overlap.openCandidatesAt(event);
+
+    if (seriesIds.length >= 2) {
+      return;
+    }
+
+    const seriesId = seriesIds[0] ?? null;
 
     if (seriesId !== null && !isDesktop) {
       selectAndPan(seriesId);
@@ -283,8 +282,51 @@ export default function MapCanvas({
     select(seriesId);
   }
 
+  /** 候補の一覧の行で選んだシリーズを選択し、候補の一覧を閉じる。 */
+  function selectFromCandidates(seriesId: string): void {
+    overlap.close();
+
+    if (isDesktop) {
+      select(seriesId);
+
+      return;
+    }
+
+    selectAndPan(seriesId);
+  }
+
   if (mapStyle === null) {
     return null;
+  }
+
+  let sheetContent: ReactNode;
+
+  if (selectedSeries === null) {
+    sheetContent = (
+      <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">
+        <SeriesPanelBody
+          sections={taggedSections}
+          selectedSeriesId={selectedSeriesId}
+          onSelect={selectAndPan}
+          tags={panelTagsOf(taggedSections, selectedTags)}
+          selectedTags={selectedTags}
+          onSelectedTagsChange={setSelectedTags}
+        />
+      </div>
+    );
+  } else {
+    sheetContent = (
+      <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.7]">
+        <SeriesDetailBody
+          series={selectedSeries}
+          placeName={placeNameOf(loci, selectedSeries)}
+          episodes={episodesOf(episodes, selectedSeries.id)}
+          relatedSeries={relatedSeriesOf(seriesList, selectedSeries)}
+          onSelect={selectAndPan}
+          onClose={() => setSelectedSeriesId(null)}
+        />
+      </div>
+    );
   }
 
   const eraSlider = (
@@ -313,6 +355,8 @@ export default function MapCanvas({
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={selectFromMap}
+      onMoveStart={overlap.closeOnUserMove}
+      onMove={overlap.updateAnchor}
       onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
@@ -374,31 +418,18 @@ export default function MapCanvas({
             onEraSliderShownChange={setIsEraSliderShown}
             onTargetHeightChange={setSheetTargetHeight}
           >
-            {selectedSeries === null ? (
-              <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">
-                <SeriesPanelBody
-                  sections={taggedSections}
-                  selectedSeriesId={selectedSeriesId}
-                  onSelect={selectAndPan}
-                  tags={panelTagsOf(taggedSections, selectedTags)}
-                  selectedTags={selectedTags}
-                  onSelectedTagsChange={setSelectedTags}
-                />
-              </div>
-            ) : (
-              <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.7]">
-                <SeriesDetailBody
-                  series={selectedSeries}
-                  placeName={placeNameOf(loci, selectedSeries)}
-                  episodes={episodesOf(episodes, selectedSeries.id)}
-                  relatedSeries={relatedSeriesOf(seriesList, selectedSeries)}
-                  onSelect={selectAndPan}
-                  onClose={() => setSelectedSeriesId(null)}
-                />
-              </div>
-            )}
+            {sheetContent}
           </BottomSheet>
         </div>
+      )}
+      {/* 候補の一覧は、重なった代表点の上に、どの幅でもシートの上へ重ねる。 */}
+      {overlap.view !== null && (
+        <SeriesCandidateOverlay
+          candidates={overlap.view.candidates}
+          anchor={overlap.view.anchor}
+          onSelect={selectFromCandidates}
+          onClose={overlap.close}
+        />
       )}
     </MapLibreMap>
   );

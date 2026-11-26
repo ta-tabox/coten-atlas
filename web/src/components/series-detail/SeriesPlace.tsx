@@ -7,7 +7,7 @@ type SeriesPlaceProps = {
   name: string;
 };
 
-/** 代表点の地名 `name` を描く。 */
+/** 代表点の事物の日本語の地名 `name` を、加工せずに描く。 */
 export default function SeriesPlace({ name }: SeriesPlaceProps) {
   return <span>{name}</span>;
 }
