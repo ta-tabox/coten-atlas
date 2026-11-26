@@ -73,6 +73,7 @@ export default function SeriesCandidateCard({
             <SeriesPanelItem
               series={series}
               isSelected={false}
+              hasChevron
               onSelect={onSelect}
             />
           </li>
