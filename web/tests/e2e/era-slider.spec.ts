@@ -91,7 +91,7 @@ test("初期表示と、拡大して未来の端までずらした状態で、�
   }
 });
 
-test("先史を選んだとき、境目の年「前10000」と「前800」が重ならない", async ({
+test("先史を選んだとき、境目の年「前10000」と「前800」が重ならず、画面の内側にある", async ({
   page,
 }) => {
   const server = await openExport(page, exportRoot(), { pagePath: "/" });
@@ -106,9 +106,24 @@ test("先史を選んだとき、境目の年「前10000」と「前800」が重
 
     await expect(years).toHaveText(["前10000", "前800"]);
 
-    const boxes = await boxesOf(years);
+    // 年の位置は 0.2 秒かけて動くので、動き終わって重ならなくなるまで待つ。
+    await expect
+      .poll(
+        async () => {
+          const boxes = await boxesOf(years);
 
-    expect(isOverlapping(boxes[0], boxes[1]), "境目の年の重なり").toBe(false);
+          return isOverlapping(boxes[0], boxes[1]);
+        },
+        { message: "境目の年の重なり" },
+      )
+      .toBe(false);
+
+    const [first, last] = await boxesOf(years);
+
+    expect(first.x, "始まりの年の左端").toBeGreaterThanOrEqual(0);
+    expect(last.x + last.width, "終わりの年の右端").toBeLessThanOrEqual(
+      viewportOf(page).width,
+    );
   } finally {
     server.close();
   }
