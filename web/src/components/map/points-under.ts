@@ -15,7 +15,7 @@ import type { CandidatePoint } from "@/lib/map/overlap-candidates";
  */
 const TOUCH_HIT_HALF_SIZE_PX = 22;
 
-/** 地図のクリックが当たった代表点の、画面上の位置・シリーズ・経度と緯度。 */
+/** 地図のマウスイベントが当たった代表点の、画面上の位置・シリーズ・経度と緯度。 */
 type PointUnder = CandidatePoint & { coordinates: [number, number] };
 
 /**
@@ -33,9 +33,9 @@ export function isTouchEvent(event: MapLayerMouseEvent): boolean {
 }
 
 /**
- * 地図のクリックが当たった代表点の、画面上の位置とシリーズを返す。
+ * 地図のマウスイベントが当たった代表点の、画面上の位置とシリーズを返す。
  *
- * タッチの入力は押した位置の周り 44px 四方、それ以外は押した位置の点だけを調べる。
+ * タッチの入力はイベントの位置の周り 44px 四方、それ以外はイベントの位置の点だけを調べる。
  * `isTouchEvent` が false の入力は、そのような端末のタッチも含めて判定が円の大きさに留まる。
  */
 export function pointsUnder(
