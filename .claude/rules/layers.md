@@ -67,7 +67,7 @@ paths:
 | 状態 | 持つ部品 | 書く部品 | 読む部品 |
 |---|---|---|---|
 | 選択中のシリーズ（`selectedSeriesId`） | `src/components/map/MapCanvas.tsx` | `MapCanvas`・`SeriesPanelBody`・`SeriesDetailBody`・`SeriesDetailCard` | `SeriesLayers`・`SeriesPanelBody`・`SeriesDetailBody`・`SeriesDetailCard` |
-| era スライダーの位置（`eraPosition`） | `src/components/map/MapCanvas.tsx` | `EraSlider` | `EraSlider`・`SeriesLayers`・`SeriesPanelBody` |
+| era スライダーの位置（`eraPosition`） | `src/components/map/MapCanvas.tsx` | `EraSlider`・`MapCanvas` | `EraSlider`・`SeriesLayers`・`SeriesPanelBody` |
 | タグの絞り込みに使うタグ（`selectedTags`） | `src/components/map/MapCanvas.tsx` | `SeriesPanelBody` | `SeriesLayers`・`SeriesPanelBody` |
 | エピソードの取得の状態（`EpisodesState`） | `src/components/map/MapCanvas.tsx` | `MapCanvas` | `SeriesDetailBody` |
 | 重なった代表点の候補（`overlap`） | `src/components/map/use-overlap-candidates.ts` | `MapCanvas` | `SeriesCandidateOverlay` |

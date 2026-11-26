@@ -1,21 +1,22 @@
 "use client";
 
 /**
- * 選ばれたシリーズ 1 件の名前・年代・エピソードの一覧の中身だけを描く。
+ * 選ばれたシリーズ 1 件の詳細カードの中身を描く部品を置く。
  * 外枠は持たない。
  *
- * 取得も絞り込みもしない。
- * 表示するのは props で受け取った `Series` と `EpisodesState` だけで、絞り込みは `@/lib/episodes`、年の整形は `@/lib/format` が担当する。
+ * 取得も絞り込みもせず、props で受け取った値だけを表示する。
  *
  * MapLibre の Popup を使わない理由は docs/adr/20260831-map-dom-boundary.md が正。
  */
 
 import ListenLinks from "@/components/series-detail/ListenLinks";
+import RelatedSeriesRow from "@/components/series-detail/RelatedSeriesRow";
 import SeriesLabels from "@/components/series-detail/SeriesLabels";
 import SeriesPeriod from "@/components/series-detail/SeriesPeriod";
 import SeriesPlace from "@/components/series-detail/SeriesPlace";
 import YouTubeChannelLink from "@/components/series-detail/YouTubeChannelLink";
 import { EPISODES_KIND, type EpisodesState } from "@/lib/episodes";
+import type { RelatedSeries } from "@/lib/map/related-series";
 import { type Series, TIME_RANGE_UNTIMED } from "@/lib/schema/series";
 
 /**
@@ -76,14 +77,19 @@ type SeriesDetailBodyProps = {
   placeName: string | null;
   /** `series` に割り当てられたエピソードと、その取得の状態。 */
   episodes: EpisodesState;
+  /** `relatedSeriesOf` が近い順に選んだ、`series` に関連するシリーズと共有したタグ。 */
+  relatedSeries: RelatedSeries[];
+  onSelect: (seriesId: string) => void;
   onClose: () => void;
 };
 
-/** `series` の名前・年代と地名・札の見出しと、`episodes` の状態に応じたエピソードの区画を縦に並べて描く。 */
+/** `series` の詳細カードの中身を、上から下へ縦に並べて描く。 */
 export default function SeriesDetailBody({
   series,
   placeName,
   episodes,
+  relatedSeries,
+  onSelect,
   onClose,
 }: SeriesDetailBodyProps) {
   const period =
@@ -133,6 +139,8 @@ export default function SeriesDetailBody({
 
         <EpisodeList state={episodes} />
       </section>
+
+      <RelatedSeriesRow relatedSeries={relatedSeries} onSelect={onSelect} />
     </>
   );
 }

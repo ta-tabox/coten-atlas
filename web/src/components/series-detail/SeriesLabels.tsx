@@ -3,13 +3,7 @@
  * 札を押したときの絞り込みは持たない。
  */
 
-import type { Series } from "@/lib/schema/series";
-
-/**
- * 区画を選べないシリーズの `region` の値。
- * 札に出す地域を持たないので、札を出さない。
- */
-const REGION_NONE: Series["region"] = "地域なし";
+import { REGION_NONE, type Series } from "@/lib/schema/series";
 
 /**
  * `region` の札を先頭に、`tags` の札を `series.json` の順に並べる。

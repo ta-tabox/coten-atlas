@@ -1,6 +1,6 @@
 # 手で書く欄の語彙と、代表点・事物の `id`・`id` の語の区切りで候補が割れたときの選び方を、`kind` を除いて決め直す（20260911-series-vocabulary-tiebreaks を supersede）
 
-- **状態**: 採用
+- **状態**: supersede 済み（→ 20261126-series-vocabulary-region-as-label）
 - **決定日**: 2026-09-11（#171・#170・#172・#166・#164・#161）
 - **関係する ADR**: 20260911-series-vocabulary-tiebreaks（これを supersede する）、20260907-series-vocabulary（20260911-series-vocabulary-tiebreaks が supersede した）、20260823-quote-titles-only（引用は題号に限る）、20260829-season-as-assignment-key（割当キーを `itunes:season` にする）、20260911-drop-series-kind（`kind` を廃止する）、20260902-two-phase-location（位置情報の段階分け）、20260902-series-and-loci（シリーズと事物の分離）、20260909-history-review-lane（歴史の裏どりを `@historian` の別レーンに分ける）、20260910-sources-layer（`catalog/` の値の典拠を `docs/sources/` に置く）、20260910-untimed-concept-series（時期なしの概念史のシリーズ）
 
