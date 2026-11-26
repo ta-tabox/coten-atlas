@@ -90,3 +90,26 @@ test("初期表示と、拡大して未来の端までずらした状態で、�
     server.close();
   }
 });
+
+test("先史を選んだとき、境目の年「前10000」と「前800」が重ならない", async ({
+  page,
+}) => {
+  const server = await openExport(page, exportRoot(), { pagePath: "/" });
+
+  try {
+    // 全体を映すトラックの左端から 8px 以内を押すと、位置 0（先史の始まり）を選ぶ。
+    await page
+      .getByTestId("era-slider-track")
+      .click({ position: { x: 4, y: 20 } });
+
+    const years = page.getByTestId("era-boundary-year");
+
+    await expect(years).toHaveText(["前10000", "前800"]);
+
+    const boxes = await boxesOf(years);
+
+    expect(isOverlapping(boxes[0], boxes[1]), "境目の年の重なり").toBe(false);
+  } finally {
+    server.close();
+  }
+});

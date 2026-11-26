@@ -56,12 +56,11 @@ type EraSliderProps = {
   onClose?: () => void;
 };
 
-/** 描く境目の年 1 つと、トラックの上での位置と寄せ方。 */
+/** 描く境目の年 1 つと、トラックの左端から測った、その年を中心に置く位置。 */
 type BoundaryLabel = {
   key: string;
   year: number;
   leftPercent: number;
-  alignClass: string;
 };
 
 /** `eras` の `index` 番目の始まりの年を返す。 */
@@ -76,37 +75,27 @@ function endYearOf(eras: EraList, index: number, presentEnd: number): number {
   return end === ERA_END_PRESENT ? presentEnd : end;
 }
 
-/**
- * 全体を映しているとき、強調した era の始まりと終わりの年を、そのセルの両端に置く境目の年として返す。
- * 先頭と末尾の era は、枠の外へはみ出さないよう内側へ寄せる。
- */
+/** 全体を映しているとき、強調した era の始まりと終わりの年を、そのセルの両端の縦線を中心に置く境目の年として返す。 */
 function emphasizedEraLabelsOf(
   eras: EraList,
   emphasizedIndex: number,
   presentEnd: number,
 ): BoundaryLabel[] {
-  const lastIndex = eras.length - 1;
-
   return [
     {
       key: "start",
       year: startYearOf(eras, emphasizedIndex),
       leftPercent: (emphasizedIndex / eras.length) * 100,
-      alignClass: emphasizedIndex === 0 ? "" : "-translate-x-1/2",
     },
     {
       key: "end",
       year: endYearOf(eras, emphasizedIndex, presentEnd),
       leftPercent: ((emphasizedIndex + 1) / eras.length) * 100,
-      alignClass:
-        emphasizedIndex === lastIndex
-          ? "-translate-x-full"
-          : "-translate-x-1/2",
     },
   ];
 }
 
-/** 拡大しているとき、表示範囲の左端と右端の年を、トラックの両端に置く境目の年として返す。 */
+/** 拡大しているとき、表示範囲の左端と右端の年を、トラックの両端の縦線を中心に置く境目の年として返す。 */
 function viewEdgeLabelsOf(
   view: ViewRange,
   eras: EraList,
@@ -116,13 +105,8 @@ function viewEdgeLabelsOf(
     positionToYear({ position, eras, presentEnd });
 
   return [
-    { key: "start", year: yearAt(view.min), leftPercent: 0, alignClass: "" },
-    {
-      key: "end",
-      year: yearAt(view.min + view.span),
-      leftPercent: 100,
-      alignClass: "-translate-x-full",
-    },
+    { key: "start", year: yearAt(view.min), leftPercent: 0 },
+    { key: "end", year: yearAt(view.min + view.span), leftPercent: 100 },
   ];
 }
 
@@ -375,14 +359,14 @@ export default function EraSlider({
         {/* 境目の年は era 名のセルと同じ区間を別の形で示すだけなので、スクリーンリーダーには読ませない。 */}
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute bottom-0 h-3 text-[0.625rem] font-semibold md:text-[0.75rem] text-ink-muted tabular-nums transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
+          className={`pointer-events-none absolute bottom-0 h-3 text-[0.5625rem] font-medium text-ink-muted/70 tabular-nums md:text-[0.6875rem] transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
         >
-          {boundaryLabels.map(({ key, year, leftPercent, alignClass }) => (
+          {boundaryLabels.map(({ key, year, leftPercent }) => (
             <span
               key={key}
               data-testid="era-boundary-year"
               style={{ left: `${leftPercent}%` }}
-              className={`absolute top-0 leading-none whitespace-nowrap transition-[left,translate] duration-200 ease-out-expo group-data-[dragging=true]:transition-none ${alignClass}`}
+              className="absolute top-0 -translate-x-1/2 leading-none whitespace-nowrap transition-[left] duration-200 ease-out-expo group-data-[dragging=true]:transition-none"
             >
               {formatYearWithoutUnit(year)}
             </span>
