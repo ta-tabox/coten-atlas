@@ -1,11 +1,10 @@
 "use client";
 
 /**
- * 選ばれたシリーズ 1 件の名前・年代・エピソードの一覧・関連するシリーズの中身だけを描く。
+ * 選ばれたシリーズ 1 件の詳細カードの中身を描く部品を置く。
  * 外枠は持たない。
  *
- * 取得も絞り込みもしない。
- * 表示するのは props で受け取った `Series` と `EpisodesState` と関連するシリーズだけで、絞り込みは `@/lib/episodes`、年の整形は `@/lib/format`、関連するシリーズの選び方は `@/lib/map/related-series` が担当する。
+ * 取得も絞り込みもせず、props で受け取った値だけを表示する。
  *
  * MapLibre の Popup を使わない理由は docs/adr/20260831-map-dom-boundary.md が正。
  */
@@ -84,7 +83,7 @@ type SeriesDetailBodyProps = {
   onClose: () => void;
 };
 
-/** `series` の名前・年代と地名・札の見出しと、`episodes` の状態に応じたエピソードの区画と、関連するシリーズの行を縦に並べて描く。 */
+/** `series` の詳細カードの中身を、上から下へ縦に並べて描く。 */
 export default function SeriesDetailBody({
   series,
   placeName,
