@@ -35,7 +35,9 @@ import {
   episodesForSeries,
   fetchEpisodes,
 } from "@/lib/episodes";
+import { ZOOMED_ERA_COUNT } from "@/lib/era/view";
 import { currentWindow, positionShowing } from "@/lib/era/window";
+import { formatTimeRange } from "@/lib/format";
 import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
@@ -122,6 +124,19 @@ function initialEraPositionOf(eras: EraList): number {
   }
 
   return (index + 0.5) / eras.length;
+}
+
+/** スマホの幅のシートが `list` の段にいるときだけ、era スライダーを閉じる操作（`close`）を返し、それ以外は null を返す。 */
+function eraSliderCloseOf({
+  isDesktop,
+  sheetStage,
+  close,
+}: {
+  isDesktop: boolean;
+  sheetStage: SheetStage;
+  close: () => void;
+}): (() => void) | null {
+  return !isDesktop && sheetStage === SHEET_STAGE.list ? close : null;
 }
 
 /** ベースマップの上に、上端のヘッダー・`loci` の代表点・`seriesList` の一覧・`eras` の era スライダー・選択したシリーズの詳細カードを重ねて描く。 */
@@ -387,6 +402,14 @@ export default function MapCanvas({
       presentEnd={presentEnd}
       position={eraPosition}
       onPositionChange={setEraPosition}
+      zoomedEraCount={
+        isDesktop ? ZOOMED_ERA_COUNT.desktop : ZOOMED_ERA_COUNT.mobile
+      }
+      onClose={eraSliderCloseOf({
+        isDesktop,
+        sheetStage,
+        close: () => setIsEraSliderShown(false),
+      })}
     />
   );
 
@@ -443,7 +466,7 @@ export default function MapCanvas({
             />
           </div>
           {/* 包みは左端を left-1/2 で画面の中央に置くので、幅を包みに書かないと、包みの幅は画面の幅の半分を上限に縮む。 */}
-          <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2">
+          <div className="absolute bottom-10 left-1/2 z-10 w-[min(40rem,calc(100vw-2rem))] -translate-x-1/2 rounded-box border border-rule bg-paper px-6 py-3 shadow-sm">
             {eraSlider}
           </div>
           {selectedSeries !== null && (
@@ -467,6 +490,7 @@ export default function MapCanvas({
             onStageChange={setSheetStage}
             label={selectedSeries === null ? "シリーズ一覧" : "シリーズの詳細"}
             eraSlider={eraSlider}
+            eraWindowLabel={formatTimeRange(eraWindow)}
             isEraSliderShown={isEraSliderShown}
             onEraSliderShownChange={setIsEraSliderShown}
             onTargetHeightChange={setSheetTargetHeight}

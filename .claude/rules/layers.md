@@ -72,7 +72,7 @@ paths:
 | エピソードの取得の状態（`EpisodesState`） | `src/components/map/MapCanvas.tsx` | `MapCanvas` | `SeriesDetailBody` |
 | 重なった代表点の候補（`overlap`） | `src/components/map/use-overlap-candidates.ts` | `MapCanvas` | `SeriesCandidateOverlay` |
 | シートの段（`sheetStage`） | `src/components/map/MapCanvas.tsx` | `MapCanvas`・`BottomSheet` | `BottomSheet` |
-| シートで era スライダーを出すか（`isEraSliderShown`） | `src/components/map/MapCanvas.tsx` | `BottomSheet` | `BottomSheet` |
+| シートで era スライダーを出すか（`isEraSliderShown`） | `src/components/map/MapCanvas.tsx` | `MapCanvas`・`BottomSheet` | `BottomSheet` |
 | シートの目標の高さ（`sheetTargetHeight`） | `src/components/map/MapCanvas.tsx` | `BottomSheet` | `MapCanvas` |
 
 ## プロジェクト固有（育てる欄）
