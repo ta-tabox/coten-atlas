@@ -1,6 +1,16 @@
 {
-  "syncedAt": "2026-11-24T03:24:09.414Z",
+  "syncedAt": "2026-11-27T06:13:53.428Z",
   "episodes": [
+    {
+      "guid": "214aa81f-9c7a-49b5-9870-3e5746fda732",
+      "title": "【特別編】同じ考え？全然違うよ！共通の敵でまとまるアメリカ保守派【COTEN RADIO ピーター・ティール編2】",
+      "pubDate": "2026-11-25T21:00:00.000Z",
+      "season": null,
+      "seriesId": null,
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%89%B9%E5%88%A5%E7%B7%A8-%E5%90%8C%E3%81%98%E8%80%83%E3%81%88-%E5%85%A8%E7%84%B6%E9%81%95%E3%81%86%E3%82%88-%E5%85%B1%E9%80%9A%E3%81%AE%E6%95%B5%E3%81%A7%E3%81%BE%E3%81%A8%E3%81%BE%E3%82%8B%E3%82%A2%E3%83%A1%E3%83%AA%E3%82%AB%E4%BF%9D%E5%AE%88%E6%B4%BE-coten-radio-%E3%83%94%E3%83%BC%E3%82%BF%E3%83%BC-%E3%83%86%E3%82%A3%E3%83%BC%E3%83%AB%E7%B7%A82/id1450522865?i=1000804069989&uo=4"
+      }
+    },
     {
       "guid": "e00445dd-947d-43b9-9c2d-360604189e25",
       "title": "【特別編】巨大テックとピーター・ティール 〜道なき道の歩き方〜【COTEN RADIO ピーター・ティール編1】",
@@ -3779,7 +3789,9 @@
       "pubDate": "2022-11-23T21:00:19.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-79-%E3%82%A6%E3%82%AF%E3%83%A9%E3%82%A4%E3%83%8A%E6%88%A6%E4%BA%89%E3%81%AE%E7%8F%BE%E7%8A%B6%E3%81%A8%E4%BB%8A%E5%BE%8C-%E3%83%86%E3%83%AC%E3%83%93%E6%9D%B1%E4%BA%AC%E5%A0%B1%E9%81%93%E5%B1%80-%E8%B1%8A%E5%B3%B6%E6%99%8B%E4%BD%9C%E3%82%AD%E3%83%A3%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AE%E8%A6%96%E7%82%B9-%E5%89%8D%E7%B7%A8/id1450522865?i=1000587311412&uo=4"
+      }
     },
     {
       "guid": "65367590-10de-4cf2-9ccd-bb82961c3a0d",
