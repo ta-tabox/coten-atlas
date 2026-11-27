@@ -30,7 +30,7 @@ function locusOf(
   return {
     type: "Feature",
     geometry: { type: "Point", coordinates: [0, 0] },
-    properties: { id, seriesId: id, timeStart, timeEnd },
+    properties: { id, seriesId: id, name: id, timeStart, timeEnd },
   };
 }
 

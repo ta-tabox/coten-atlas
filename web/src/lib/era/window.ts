@@ -10,7 +10,11 @@
  * 窓の幅・重なり率の分母・重なり率から濃さへの変換を選んだ理由は `docs/adr/20260907-era-space-window.md` が持つ。
  */
 
-import { type EraSpacePosition, positionToYear } from "@/lib/era/scale";
+import {
+  type EraSpacePosition,
+  positionToYear,
+  yearToPosition,
+} from "@/lib/era/scale";
 import type { SeriesTimeRange } from "@/lib/schema/series";
 
 /**
@@ -107,4 +111,28 @@ export function fadeOpacity(ratio: number): number {
   const clamped = Math.min(Math.max(ratio, 0), 1);
 
   return clamped * clamped * (3 - 2 * clamped);
+}
+
+/**
+ * 年の範囲（`timeRange`）が現在窓と重なるなら、スライダーの位置（`position`）をそのまま返す。
+ * 重ならなければ、`timeRange` の中点の年を指す位置を返す。
+ *
+ * 窓の外のシリーズへ選択を移すときに、そのシリーズの点が地図に描かれる位置へスライダーを動かすために呼ぶ。
+ * 窓と重なるときに動かさないのは、近い年代どうしの移動でスライダーを揺らさないためである。
+ */
+export function positionShowing({
+  timeRange,
+  position,
+  eras,
+  presentEnd,
+}: EraSpacePosition & { timeRange: SeriesTimeRange }): number {
+  const window = currentWindow({ position, eras, presentEnd });
+
+  if (overlapRatio(window, timeRange) > 0) {
+    return position;
+  }
+
+  const midYear = (timeRange.start + timeRange.end) / 2;
+
+  return yearToPosition({ year: midYear, eras, presentEnd });
 }

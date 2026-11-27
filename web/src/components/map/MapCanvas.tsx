@@ -7,19 +7,27 @@
  * 画面の複数の部品が読む状態はこのコンポーネントが持ち、子へは props で渡す。
  */
 
-import { useEffect, useRef, useState } from "react";
-import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import type {
+  MapLayerMouseEvent,
+  MapRef,
+  ViewStateChangeEvent,
+} from "react-map-gl/maplibre";
 import MapLibreMap from "react-map-gl/maplibre";
 import BottomSheet from "@/components/bottom-sheet/BottomSheet";
 import EraSlider from "@/components/era-slider/EraSlider";
 import { PANEL_RIGHT_EDGE_PX } from "@/components/map/panel-layout";
 import SeriesLayers from "@/components/map/SeriesLayers";
 import { useBasemapStyle } from "@/components/map/use-basemap-style";
+import { useHoverTooltip } from "@/components/map/use-hover-tooltip";
 import { useIsDesktop } from "@/components/map/use-is-desktop";
+import { useOverlapCandidates } from "@/components/map/use-overlap-candidates";
+import SeriesCandidateOverlay from "@/components/series-candidates/SeriesCandidateOverlay";
 import SeriesDetailBody from "@/components/series-detail/SeriesDetailBody";
 import SeriesDetailCard from "@/components/series-detail/SeriesDetailCard";
 import SeriesPanel from "@/components/series-panel/SeriesPanel";
 import SeriesPanelBody from "@/components/series-panel/SeriesPanelBody";
+import SeriesTooltipOverlay from "@/components/series-tooltip/SeriesTooltipOverlay";
 import SiteHeader from "@/components/site-header/SiteHeader";
 import {
   EPISODES_KIND,
@@ -27,7 +35,7 @@ import {
   episodesForSeries,
   fetchEpisodes,
 } from "@/lib/episodes";
-import { currentWindow } from "@/lib/era/window";
+import { currentWindow, positionShowing } from "@/lib/era/window";
 import {
   INITIAL_VIEW_STATE,
   MAP_WORKER_URL,
@@ -39,11 +47,16 @@ import {
   lociForSeries,
   type MapLocusCollection,
 } from "@/lib/map/loci";
+import { relatedSeriesOf } from "@/lib/map/related-series";
 import { seriesPanelSectionsOf } from "@/lib/map/series-panel";
 import { listHeightPx, SHEET_STAGE, type SheetStage } from "@/lib/map/sheet";
 import { panelTagsOf, taggedSeriesOf } from "@/lib/map/tag-filter";
 import type { EraList } from "@/lib/schema/era";
-import type { Series, SeriesList } from "@/lib/schema/series";
+import {
+  type Series,
+  type SeriesList,
+  TIME_RANGE_UNTIMED,
+} from "@/lib/schema/series";
 
 /**
  * 地図を開いたときに、era スライダーが指す era の id。
@@ -65,22 +78,17 @@ type MapCanvasProps = {
    * 地図のクリックが返すのは `Locus` なので、`seriesId` に一致する `Series` をこの配列から検索する。
    */
   seriesList: SeriesList;
-  /** era スライダーの目盛りに並べる時代区分の全件。 */
   eras: EraList;
   /** `end` が `ERA_END_PRESENT` の era の右端に置く年。 */
   presentEnd: number;
 };
 
 /**
- * `event` の最前面にある `Locus` の `seriesId` を返す。
- * `Locus` が無い地点をクリックしたときは null を返す。
- *
- * MapLibre は `properties` の値を `any` で返すので、文字列でなければ null にする。
+ * `series` の代表点の事物の地名を返す。
+ * 位置なしのシリーズには null を返す。
  */
-function selectedSeriesIdOf(event: MapLayerMouseEvent): string | null {
-  const seriesId = event.features?.[0]?.properties.seriesId;
-
-  return typeof seriesId === "string" ? seriesId : null;
+function placeNameOf(loci: MapLocusCollection, series: Series): string | null {
+  return findAnchorLocus(loci, series)?.properties.name ?? null;
 }
 
 /**
@@ -143,6 +151,8 @@ export default function MapCanvas({
   const [sheetTargetHeight, setSheetTargetHeight] = useState(0);
   const isDesktop = useIsDesktop();
   const [isHoveringLocus, setIsHoveringLocus] = useState(false);
+  const overlap = useOverlapCandidates({ mapRef, seriesList });
+  const hover = useHoverTooltip({ mapRef, seriesList });
 
   // 一覧パネルに隠れる左の幅と、シートに隠れる下の高さを地図の視野から除き、点が隠れない領域に描かれるようにする。
   const paddingLeft = isDesktop && isPanelOpen ? PANEL_RIGHT_EDGE_PX : 0;
@@ -260,11 +270,19 @@ export default function MapCanvas({
   }
 
   /**
-   * 地図のクリックが事物に当たったときは、その事物のシリーズを選ぶ。
+   * 地図のクリックが当たった代表点が 1 シリーズなら、そのシリーズを選ぶ。
+   * 2 シリーズ以上が重なっていれば、選択を変えず候補の一覧を出す。
+   * 当たらなければ選択を外す。
    * デスクトップの幅では地図を動かさず、スマホの幅ではシートに隠れない位置へ動かす。
    */
   function selectFromMap(event: MapLayerMouseEvent): void {
-    const seriesId = selectedSeriesIdOf(event);
+    const seriesIds = overlap.openCandidatesAt(event);
+
+    if (seriesIds.length >= 2) {
+      return;
+    }
+
+    const seriesId = seriesIds[0] ?? null;
 
     if (seriesId !== null && !isDesktop) {
       selectAndPan(seriesId);
@@ -275,8 +293,92 @@ export default function MapCanvas({
     select(seriesId);
   }
 
+  /** 利用者の操作で地図が動き始めたとき、地図に重ねた候補の一覧とツールチップを閉じる。 */
+  function closeOverlaysOnUserMove(event: ViewStateChangeEvent): void {
+    overlap.closeOnUserMove(event);
+    hover.clearOnUserMove(event);
+  }
+
+  /** 地図が動くたびに、地図に重ねた候補の一覧とツールチップが指す代表点の位置を取り直す。 */
+  function updateOverlayAnchors(): void {
+    overlap.updateAnchor();
+    hover.updateAnchor();
+  }
+
+  /** マウスが代表点から離れたとき、カーソルの形を戻してツールチップを消す。 */
+  function leaveLocus(): void {
+    setIsHoveringLocus(false);
+    hover.clear();
+  }
+
+  /**
+   * 詳細カードの関連シリーズ行で押したシリーズ（`seriesId`）を選び、代表点へ地図の中心を移す。
+   * そのシリーズの年が現在窓の外なら、年の中点を指す位置へ era スライダーを動かす。
+   *
+   * 一覧パネルと地図は現在窓の中のシリーズしか出さないが、関連シリーズ行は窓の外のシリーズも出すので、スライダーを動かさないと移った先の点が地図に描かれない。
+   */
+  function selectFromRelated(seriesId: string): void {
+    const related = seriesList.find((series) => series.id === seriesId);
+
+    if (related !== undefined && related.timeRange !== TIME_RANGE_UNTIMED) {
+      setEraPosition(
+        positionShowing({
+          timeRange: related.timeRange,
+          position: eraPosition,
+          eras,
+          presentEnd,
+        }),
+      );
+    }
+
+    selectAndPan(seriesId);
+  }
+
+  /** 候補の一覧の行で選んだシリーズを選択し、候補の一覧を閉じる。 */
+  function selectFromCandidates(seriesId: string): void {
+    overlap.close();
+
+    if (isDesktop) {
+      select(seriesId);
+
+      return;
+    }
+
+    selectAndPan(seriesId);
+  }
+
   if (mapStyle === null) {
     return null;
+  }
+
+  let sheetContent: ReactNode;
+
+  if (selectedSeries === null) {
+    sheetContent = (
+      <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">
+        <SeriesPanelBody
+          sections={taggedSections}
+          selectedSeriesId={selectedSeriesId}
+          onSelect={selectAndPan}
+          tags={panelTagsOf(taggedSections, selectedTags)}
+          selectedTags={selectedTags}
+          onSelectedTagsChange={setSelectedTags}
+        />
+      </div>
+    );
+  } else {
+    sheetContent = (
+      <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.7]">
+        <SeriesDetailBody
+          series={selectedSeries}
+          placeName={placeNameOf(loci, selectedSeries)}
+          episodes={episodesOf(episodes, selectedSeries.id)}
+          relatedSeries={relatedSeriesOf(seriesList, selectedSeries)}
+          onSelect={selectFromRelated}
+          onClose={() => setSelectedSeriesId(null)}
+        />
+      </div>
+    );
   }
 
   const eraSlider = (
@@ -305,12 +407,15 @@ export default function MapCanvas({
       style={{ width: "100%", height: "100dvh" }}
       interactiveLayerIds={[SERIES_CIRCLE_LAYER.id]}
       onClick={selectFromMap}
+      onMoveStart={closeOverlaysOnUserMove}
+      onMove={updateOverlayAnchors}
+      onMouseMove={hover.showTooltipAt}
       onLoad={() => syncPadding(0)}
       // onMouseEnter と onMouseLeave は、interactiveLayerIds のレイヤの Locus に入った時と出た時にだけ呼ばれる。
       // cursor を undefined にすると、react-map-gl は canvas の style.cursor を空にし、MapLibre の既定の grab に戻す。
       cursor={isHoveringLocus ? "pointer" : undefined}
       onMouseEnter={() => setIsHoveringLocus(true)}
-      onMouseLeave={() => setIsHoveringLocus(false)}
+      onMouseLeave={leaveLocus}
     >
       <SeriesLayers
         loci={taggedLoci}
@@ -345,7 +450,10 @@ export default function MapCanvas({
             <div className="absolute top-header right-4 z-10 mt-4 flex max-h-[calc(100dvh-var(--spacing-header)-2rem)] max-w-[calc(100vw-2rem)] flex-col">
               <SeriesDetailCard
                 series={selectedSeries}
+                placeName={placeNameOf(loci, selectedSeries)}
                 episodes={episodesOf(episodes, selectedSeries.id)}
+                relatedSeries={relatedSeriesOf(seriesList, selectedSeries)}
+                onSelect={selectFromRelated}
                 onClose={() => setSelectedSeriesId(null)}
               />
             </div>
@@ -363,28 +471,25 @@ export default function MapCanvas({
             onEraSliderShownChange={setIsEraSliderShown}
             onTargetHeightChange={setSheetTargetHeight}
           >
-            {selectedSeries === null ? (
-              <div className="flex min-h-0 flex-1 flex-col pt-1 leading-[1.6]">
-                <SeriesPanelBody
-                  sections={taggedSections}
-                  selectedSeriesId={selectedSeriesId}
-                  onSelect={selectAndPan}
-                  tags={panelTagsOf(taggedSections, selectedTags)}
-                  selectedTags={selectedTags}
-                  onSelectedTagsChange={setSelectedTags}
-                />
-              </div>
-            ) : (
-              <div className="flex min-h-0 flex-1 flex-col px-5 py-4 leading-[1.7]">
-                <SeriesDetailBody
-                  series={selectedSeries}
-                  episodes={episodesOf(episodes, selectedSeries.id)}
-                  onClose={() => setSelectedSeriesId(null)}
-                />
-              </div>
-            )}
+            {sheetContent}
           </BottomSheet>
         </div>
+      )}
+      {/* ツールチップは代表点の上に置き、候補の一覧が開いている間は出さない。 */}
+      {hover.view !== null && overlap.view === null && (
+        <SeriesTooltipOverlay
+          series={hover.view.series}
+          anchor={hover.view.anchor}
+        />
+      )}
+      {/* 候補の一覧は、重なった代表点の上に、どの幅でもシートの上へ重ねる。 */}
+      {overlap.view !== null && (
+        <SeriesCandidateOverlay
+          candidates={overlap.view.candidates}
+          anchor={overlap.view.anchor}
+          onSelect={selectFromCandidates}
+          onClose={overlap.close}
+        />
       )}
     </MapLibreMap>
   );

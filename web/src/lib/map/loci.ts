@@ -23,11 +23,14 @@ import {
 
 /**
  * `toMapLoci` が組み、地図の source の各 feature の `properties` に入る、事物 1 件の属性。
- * 鍵の 2 欄はそのまま運び、年の 2 欄は事物かシリーズの `timeRange` から写した値である。
+ * 鍵の 2 欄と `name` はそのまま運び、年の 2 欄は事物かシリーズの `timeRange` から写した値である。
+ * 描画は `name` を読まず、詳細カードが代表点の地名として出す。
+ * 地図のクリックが返す feature からは、`seriesId` 以外を読まない。
  */
 export type MapLocusProperties = {
   id: string;
   seriesId: string;
+  name: string;
   timeStart: number;
   timeEnd: number;
 };
@@ -55,7 +58,7 @@ function toMapLocus(
   locus: Locus,
   seriesById: Map<string, Series>,
 ): MapLocusFeature {
-  const { id, seriesId, timeRange } = locus.properties;
+  const { id, seriesId, name, timeRange } = locus.properties;
   const series = seriesById.get(seriesId);
 
   if (series === undefined) {
@@ -77,6 +80,7 @@ function toMapLocus(
     properties: {
       id,
       seriesId,
+      name,
       timeStart: years.start,
       timeEnd: years.end,
     },

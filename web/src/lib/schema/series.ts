@@ -52,8 +52,11 @@ export const SERIES_REGIONS = [
   "地域なし",
 ] as const;
 
+/** `SERIES_REGIONS` のうち、区画を一つ選ぶと嘘になるシリーズが置く値。 */
+export const REGION_NONE = "地域なし" satisfies (typeof SERIES_REGIONS)[number];
+
 /**
- * 関連シリーズ行が等値で照合するので、`region` の欄を `SERIES_REGIONS` の閉じた集合に限る。
+ * 詳細カードが `region` を地域として表示するので、表記のゆれで同じ区画が別の地域に見えないよう `SERIES_REGIONS` の閉じた集合に限る。
  */
 export const seriesRegionSchema = z.enum(SERIES_REGIONS);
 
@@ -66,6 +69,20 @@ export const SERIES_CATEGORY_TAGS = [
   "集団",
   "出来事",
   "概念史",
+] as const;
+
+/**
+ * 主題のタグのうち、多くのシリーズへ付き、共有していても主題が近いと読めない語。
+ * 関連シリーズ行は、この語と種別の一致を関連として数えない。
+ *
+ * 主題の語を新しく足すときは、`戦争` のように多くのシリーズへ付く語かを判じ、そうならここへも足す。
+ */
+export const SERIES_BROAD_TOPIC_TAGS = [
+  "戦争",
+  "政治",
+  "宗教",
+  "帝国",
+  "思想",
 ] as const;
 
 /**

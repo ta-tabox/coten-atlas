@@ -1,12 +1,15 @@
 /**
- * GitHub のマーク。
+ * GitHub のマークを描く部品を置く。
  *
  * 形はサービス側が配っている 24x24 のパスなので、寸法を変えたくなっても d 属性は編集しない。
  * 大きさは className で外から与える。
  * 色は currentColor がリンクから継ぐので、ここでは決めない。
  */
 
-/** GitHub のマークを描く。 */
+/**
+ * GitHub のマークを描く。
+ * `aria-hidden` で隠すので、リンクの名前は呼ぶ側が文字で渡す。
+ */
 export default function GitHubIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
