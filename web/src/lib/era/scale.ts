@@ -28,6 +28,12 @@ type EraYears = {
 };
 
 /**
+ * 矢印キー 1 回で動く幅を決める、era 1 つあたりの目盛りの数。
+ * `<input type="range">` は整数の目盛りで値を持ち、矢印キー 1 回で 1 目盛り進む。
+ */
+export const STEPS_PER_ERA = 100;
+
+/**
  * `presentDate` の西暦年を返す。
  *
  * `end` が `ERA_END_PRESENT` の era の右端に当たる年で、`positionToYear` と `currentWindow` へ渡す。
@@ -58,6 +64,18 @@ function yearsOf(era: Era, presentEnd: number): EraYears {
 }
 
 /**
+ * `position`（0..1）が `eras` の上で指す era の添字を返す。
+ * 境目は後ろの era に属し、`position` が 1 なら最後の era を返す。
+ * `position` が 0..1 の外なら、最も近い端の era を返す。
+ */
+export function eraIndexAt(position: number, eras: EraList): number {
+  const clamped = Math.min(Math.max(position, 0), 1);
+
+  // `clamped` が 1 のとき添字が `eras.length` になるので、最後の要素へ丸める。
+  return Math.min(Math.floor(clamped * eras.length), eras.length - 1);
+}
+
+/**
  * `position`（0..1）が `eras` の上で指す西暦の年を、整数で返す。
  * `position` が 0 未満なら `eras` の最初の年を、1 を超えるなら最後の年を返す。
  *
@@ -70,11 +88,32 @@ export function positionToYear({
   presentEnd,
 }: EraSpacePosition): number {
   const clamped = Math.min(Math.max(position, 0), 1);
-
-  // `clamped` が 1 のとき添字が `eras.length` になるので、最後の要素へ丸める。
-  const index = Math.min(Math.floor(clamped * eras.length), eras.length - 1);
+  const index = eraIndexAt(clamped, eras);
   const withinEra = clamped * eras.length - index;
   const { start, end } = yearsOf(eras[index], presentEnd);
 
   return Math.round(start + (end - start) * withinEra);
+}
+
+/**
+ * 西暦の年（`year`）を、`eras` の上の era 空間の位置（0..1）にして返す。
+ * `year` が最初の era より前なら 0 を、最後の era の右端以降なら 1 を返す。
+ *
+ * `positionToYear` の逆の写像で、区間の中は線形に割り振る。
+ */
+export function yearToPosition({
+  year,
+  eras,
+  presentEnd,
+}: Omit<EraSpacePosition, "position"> & { year: number }): number {
+  const index = eras.findIndex((era) => year < yearsOf(era, presentEnd).end);
+
+  if (index === -1) {
+    return 1;
+  }
+
+  const { start, end } = yearsOf(eras[index], presentEnd);
+  const withinEra = Math.max(year - start, 0) / (end - start);
+
+  return (index + withinEra) / eras.length;
 }

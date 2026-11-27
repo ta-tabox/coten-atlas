@@ -33,6 +33,22 @@
 
   --radius-box: 1.25rem;
   --radius-control: 0.875rem;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-ripple: ripple 0.4s ease-out forwards;
+
+  @keyframes ripple {
+    from {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 1;
+    }
+
+    to {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+    }
+  }
 }
 
 /* `header-link` は、ヘッダーのリンクの見た目を当てる。
@@ -64,6 +80,58 @@
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+  }
+}
+
+/* era スライダーの 3 つの部品は、拡大・強調・ドラッグ中・つまみの表示の組み合わせで見た目が変わり、className に並べると一行で読めないので、状態を `data-*` 属性で指す規則として持つ。
+   `data-zoomed` と `data-dragging` は、スライダーの根の要素が持つ。
+   ドラッグ中は、指に合わせて動く要素の transition を外し、動きが指に遅れないようにする。 */
+@utility era-slider-shell {
+  @apply relative flex h-11.5 items-stretch overflow-hidden rounded-md border border-rule bg-paper transition-[border-color,box-shadow] duration-200;
+  @apply has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-point;
+
+  [data-zoomed="true"] & {
+    @apply border-point/40 ring-2 ring-point/10;
+  }
+}
+
+@utility era-slider-cell {
+  @apply absolute inset-y-0 flex items-center justify-center overflow-hidden border-r border-rule px-0.5 text-[0.6875rem] font-medium whitespace-nowrap text-ink-muted transition-[left,width,background-color,color] duration-250 ease-out-expo;
+
+  /* 最後の era の右には、トラックの枠の罫線があるので、セルの罫線を重ねて二重にしない。 */
+  &:last-child {
+    @apply border-r-0;
+  }
+
+  [data-zoomed="true"] & {
+    @apply text-[0.75rem];
+  }
+
+  &[data-emphasized="true"] {
+    @apply bg-rule/50 font-bold text-ink;
+    box-shadow: inset 0 -2px 0 var(--color-ink-muted);
+  }
+
+  [data-dragging="true"] & {
+    @apply transition-none;
+  }
+}
+
+@utility era-slider-thumb {
+  @apply absolute -bottom-1 h-4 w-2.5 -translate-x-1/2 touch-none rounded-full border-2 border-paper bg-point opacity-0 shadow-sm transition-[left,opacity] duration-200 ease-out-expo;
+
+  /* つまみは小さいので、見える範囲より広く押せるようにする。 */
+  &::before {
+    @apply absolute -inset-2;
+    content: "";
+  }
+
+  &[data-visible="true"] {
+    @apply pointer-events-auto cursor-pointer opacity-100;
+  }
+
+  [data-dragging="true"] & {
+    @apply transition-none;
   }
 }
 

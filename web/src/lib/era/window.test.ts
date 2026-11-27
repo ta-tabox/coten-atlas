@@ -12,6 +12,7 @@ import {
   currentWindowPositions,
   fadeOpacity,
   overlapRatio,
+  positionShowing,
 } from "@/lib/era/window";
 import { ERA_END_PRESENT, parseEras } from "@/lib/schema/era";
 
@@ -123,5 +124,34 @@ describe("fadeOpacity", () => {
   it("0..1 の外を渡したら 0 と 1 を返す", () => {
     expect(fadeOpacity(-1)).toBe(0);
     expect(fadeOpacity(2)).toBe(1);
+  });
+});
+
+describe("positionShowing", () => {
+  /** 19 世紀の区間の真ん中で、現在窓は 1825〜1875 年になる。 */
+  const POSITION_IN_19C = 4.5 / 7;
+
+  it("年の範囲が現在窓と重なれば、スライダーの位置を変えない", () => {
+    expect(
+      positionShowing({
+        timeRange: { start: 1830, end: 1859 },
+        position: POSITION_IN_19C,
+        eras: ERAS,
+        presentEnd: PRESENT_END,
+      }),
+    ).toBe(POSITION_IN_19C);
+  });
+
+  it("年の範囲が現在窓の外なら、その範囲と重なる現在窓を取る位置を返す", () => {
+    const timeRange = { start: 1889, end: 1945 };
+    const position = positionShowing({
+      timeRange,
+      position: POSITION_IN_19C,
+      eras: ERAS,
+      presentEnd: PRESENT_END,
+    });
+
+    expect(position).not.toBe(POSITION_IN_19C);
+    expect(overlapRatio(windowAt(position), timeRange)).toBeGreaterThan(0);
   });
 });

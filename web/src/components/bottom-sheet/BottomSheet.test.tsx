@@ -29,6 +29,7 @@ function renderSheet(stage: SheetStage, isEraSliderShown = true) {
       onStageChange={onStageChange}
       label="一覧"
       eraSlider={<p>スライダー</p>}
+      eraWindowLabel="前463年〜213年"
       isEraSliderShown={isEraSliderShown}
       onEraSliderShownChange={onEraSliderShownChange}
       onTargetHeightChange={onTargetHeightChange}
@@ -104,40 +105,31 @@ describe("BottomSheet の段ごとの表示", () => {
 });
 
 describe("BottomSheet の era スライダーの出し入れ", () => {
-  it("list の段で era スライダーを出しているとき、閉じるボタンを押すと、出さない設定を返す", () => {
-    const { onEraSliderShownChange } = renderSheet("list", true);
-
-    fireEvent.click(
-      screen.getByRole("button", { name: "時代スライダーを閉じる" }),
-    );
-
-    expect(onEraSliderShownChange).toHaveBeenCalledExactlyOnceWith(false);
-  });
-
   it("list の段で era スライダーを出していないとき、「時代を変える」ボタンを押すと、出す設定を返す", () => {
     const { onEraSliderShownChange } = renderSheet("list", false);
 
-    fireEvent.click(screen.getByRole("button", { name: "時代を変える" }));
+    fireEvent.click(screen.getByRole("button", { name: /時代を変える/ }));
 
     expect(onEraSliderShownChange).toHaveBeenCalledExactlyOnceWith(true);
   });
 
-  it("era スライダーを出しているときは「時代を変える」ボタンを出さず、出していないときは閉じるボタンを出さない", () => {
-    renderSheet("list", true);
-
-    expect(screen.queryByRole("button", { name: "時代を変える" })).toBeNull();
-
-    cleanup();
+  it("「時代を変える」ボタンに、現在窓の年の範囲を表示する", () => {
     renderSheet("list", false);
 
     expect(
-      screen.queryByRole("button", { name: "時代スライダーを閉じる" }),
-    ).toBeNull();
+      screen.getByRole("button", { name: /時代を変える/ }),
+    ).toHaveTextContent("前463年〜213年");
+  });
+
+  it("era スライダーを出しているときは「時代を変える」ボタンを出さない", () => {
+    renderSheet("list", true);
+
+    expect(screen.queryByRole("button", { name: /時代を変える/ })).toBeNull();
   });
 
   it("「時代を変える」ボタンを押しても、取っ手のタップとして段を移さない", () => {
     const { onStageChange } = renderSheet("list", false);
-    const button = screen.getByRole("button", { name: "時代を変える" });
+    const button = screen.getByRole("button", { name: /時代を変える/ });
 
     fireEvent.pointerDown(button, pointerAt(40));
     fireEvent.pointerUp(button, pointerAt(40));
@@ -145,13 +137,10 @@ describe("BottomSheet の era スライダーの出し入れ", () => {
     expect(onStageChange).not.toHaveBeenCalled();
   });
 
-  it("list 以外の段では、どちらのボタンも出さない", () => {
+  it("list 以外の段では、「時代を変える」ボタンを出さない", () => {
     renderSheet("era", false);
 
-    expect(screen.queryByRole("button", { name: "時代を変える" })).toBeNull();
-    expect(
-      screen.queryByRole("button", { name: "時代スライダーを閉じる" }),
-    ).toBeNull();
+    expect(screen.queryByRole("button", { name: /時代を変える/ })).toBeNull();
   });
 });
 
@@ -260,14 +249,6 @@ describe("BottomSheet の目標の高さ", () => {
 });
 
 describe("BottomSheet の閉じるボタン", () => {
-  it("list の段で押すと、era の段を返す", () => {
-    const { onStageChange } = renderSheet("list");
-
-    fireEvent.click(screen.getByRole("button", { name: "一覧を閉じる" }));
-
-    expect(onStageChange).toHaveBeenCalledExactlyOnceWith("era");
-  });
-
   it("full の段で押すと、段を飛ばして era の段を返す", () => {
     const { onStageChange } = renderSheet("full");
 
@@ -276,19 +257,18 @@ describe("BottomSheet の閉じるボタン", () => {
     expect(onStageChange).toHaveBeenCalledExactlyOnceWith("era");
   });
 
-  it("closed と era の段では出さない", () => {
-    renderSheet("closed");
+  it("full の段より低い段では出さない", () => {
+    for (const stage of ["closed", "era", "list"] as const) {
+      renderSheet(stage);
 
-    expect(screen.queryByRole("button", { name: "一覧を閉じる" })).toBeNull();
+      expect(screen.queryByRole("button", { name: "一覧を閉じる" })).toBeNull();
 
-    cleanup();
-    renderSheet("era");
-
-    expect(screen.queryByRole("button", { name: "一覧を閉じる" })).toBeNull();
+      cleanup();
+    }
   });
 
   it("押しても、取っ手のタップとして段を進めない", () => {
-    const { onStageChange } = renderSheet("list");
+    const { onStageChange } = renderSheet("full");
     const button = screen.getByRole("button", { name: "一覧を閉じる" });
 
     fireEvent.pointerDown(button, pointerAt(40));
