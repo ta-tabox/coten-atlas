@@ -466,7 +466,7 @@ export default function MapCanvas({
             />
           </div>
           {/* 包みは左端を left-1/2 で画面の中央に置くので、幅を包みに書かないと、包みの幅は画面の幅の半分を上限に縮む。 */}
-          <div className="absolute bottom-10 left-1/2 z-10 w-[min(48rem,calc(100vw-2rem))] -translate-x-1/2 rounded-box border border-rule bg-paper px-5 py-3 shadow-sm">
+          <div className="absolute bottom-10 left-1/2 z-10 w-[min(40rem,calc(100vw-2rem))] -translate-x-1/2 rounded-box border border-rule bg-paper px-6 py-3 shadow-sm">
             {eraSlider}
           </div>
           {selectedSeries !== null && (

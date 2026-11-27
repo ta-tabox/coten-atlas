@@ -87,7 +87,7 @@
    `data-zoomed` と `data-dragging` は、スライダーの根の要素が持つ。
    ドラッグ中は、指に合わせて動く要素の transition を外し、動きが指に遅れないようにする。 */
 @utility era-slider-shell {
-  @apply relative flex h-11.5 items-stretch overflow-hidden rounded-md border border-rule bg-paper transition-[border-color,box-shadow] duration-200 md:h-12.5;
+  @apply relative flex h-11.5 items-stretch overflow-hidden rounded-md border border-rule bg-paper transition-[border-color,box-shadow] duration-200;
   @apply has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-point;
 
   [data-zoomed="true"] & {
@@ -96,7 +96,7 @@
 }
 
 @utility era-slider-cell {
-  @apply absolute inset-y-0 flex items-center justify-center overflow-hidden border-r border-rule px-0.5 text-[0.6875rem] font-medium whitespace-nowrap text-ink-muted transition-[left,width,background-color,color] duration-250 ease-out-expo md:text-[0.875rem];
+  @apply absolute inset-y-0 flex items-center justify-center overflow-hidden border-r border-rule px-0.5 text-[0.6875rem] font-medium whitespace-nowrap text-ink-muted transition-[left,width,background-color,color] duration-250 ease-out-expo;
 
   /* 最後の era の右には、トラックの枠の罫線があるので、セルの罫線を重ねて二重にしない。 */
   &:last-child {
@@ -104,7 +104,7 @@
   }
 
   [data-zoomed="true"] & {
-    @apply text-[0.75rem] md:text-[0.9375rem];
+    @apply text-[0.75rem];
   }
 
   &[data-emphasized="true"] {

@@ -203,13 +203,13 @@ export default function EraSlider({
             aria-hidden="true"
             className="h-2.75 w-3 shrink-0 self-center rounded-xs border-x-2 border-point bg-point/15"
           />
-          <span className="text-[0.75rem] whitespace-nowrap text-ink-muted md:text-[0.8125rem]">
+          <span className="text-[0.75rem] whitespace-nowrap text-ink-muted">
             表示中
           </span>
           {/* スライダーの aria-valuetext が同じ範囲を読み上げるので、スクリーンリーダーには重ねて読ませない。 */}
           <p
             aria-hidden="true"
-            className="text-[0.8125rem] font-medium whitespace-nowrap text-ink tabular-nums md:text-[0.9375rem]"
+            className="text-[0.8125rem] font-medium whitespace-nowrap text-ink tabular-nums"
           >
             {windowYears}
           </p>
@@ -323,7 +323,7 @@ export default function EraSlider({
 
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute top-0 z-20 h-11.5 md:h-12.5 transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
+          className={`pointer-events-none absolute top-0 z-20 h-11.5 transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
         >
           {/* つまみは枠の外へはみ出すので、つまみ自身もトラックと同じポインタの操作を受ける。before 擬似要素は、つまみより広く押せる範囲を足す。 */}
           <div
@@ -341,7 +341,7 @@ export default function EraSlider({
         {/* 境目の年は era 名のセルと同じ区間を別の形で示すだけなので、スクリーンリーダーには読ませない。 */}
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute bottom-0 h-3 text-[0.5625rem] font-medium text-ink-muted/70 tabular-nums md:text-[0.6875rem] transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
+          className={`pointer-events-none absolute bottom-0 h-3 text-[0.5625rem] font-medium text-ink-muted/70 tabular-nums transition-[left,right] duration-200 ease-out-expo ${isZoomed ? "inset-x-6" : "inset-x-0"}`}
         >
           {boundaryLabels.map(({ key, year, leftPercent }) => (
             <span
