@@ -52,8 +52,8 @@ type EraSliderProps = {
   position: number;
   onPositionChange: (position: number) => void;
   zoomedEraCount: number;
-  /** 閉じる操作を持たせるときだけ渡し、渡すと拡大のボタンの隣に閉じるボタンを置く。 */
-  onClose?: () => void;
+  /** 閉じる操作が無ければ null で、あるときだけ拡大のボタンの隣に閉じるボタンを置く。 */
+  onClose: (() => void) | null;
 };
 
 /** 描く境目の年 1 つと、トラックの左端から測った、その年を中心に置く位置。 */
@@ -229,7 +229,7 @@ export default function EraSlider({
             }
           />
 
-          {onClose !== undefined && (
+          {onClose !== null && (
             <EraSliderIconButton
               label="時代スライダーを閉じる"
               onClick={onClose}

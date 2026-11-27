@@ -126,7 +126,7 @@ function initialEraPositionOf(eras: EraList): number {
   return (index + 0.5) / eras.length;
 }
 
-/** スマホの幅のシートが `list` の段にいるときだけ、era スライダーを閉じる操作（`close`）を返し、それ以外は undefined を返す。 */
+/** スマホの幅のシートが `list` の段にいるときだけ、era スライダーを閉じる操作（`close`）を返し、それ以外は null を返す。 */
 function eraSliderCloseOf({
   isDesktop,
   sheetStage,
@@ -135,8 +135,8 @@ function eraSliderCloseOf({
   isDesktop: boolean;
   sheetStage: SheetStage;
   close: () => void;
-}): (() => void) | undefined {
-  return !isDesktop && sheetStage === SHEET_STAGE.list ? close : undefined;
+}): (() => void) | null {
+  return !isDesktop && sheetStage === SHEET_STAGE.list ? close : null;
 }
 
 /** ベースマップの上に、上端のヘッダー・`loci` の代表点・`seriesList` の一覧・`eras` の era スライダー・選択したシリーズの詳細カードを重ねて描く。 */

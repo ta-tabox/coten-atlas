@@ -48,6 +48,7 @@ function renderAt(position: number, zoomedEraCount = 2) {
       position={position}
       onPositionChange={onPositionChange}
       zoomedEraCount={zoomedEraCount}
+      onClose={null}
     />,
   );
 
@@ -61,6 +62,7 @@ function renderAt(position: number, zoomedEraCount = 2) {
           position={next}
           onPositionChange={onPositionChange}
           zoomedEraCount={zoomedEraCount}
+          onClose={null}
         />,
       ),
   };
@@ -110,6 +112,7 @@ function SliderWithPosition() {
       position={position}
       onPositionChange={setPosition}
       zoomedEraCount={2}
+      onClose={null}
     />
   );
 }
