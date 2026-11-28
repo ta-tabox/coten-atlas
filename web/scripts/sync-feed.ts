@@ -7,8 +7,9 @@
  *
  * `episodes.json` はフィードから毎回組み直す。
  * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` と `season-corrections.json` の現状から決め直す。
- * 例外は各回の `links` で、前回の `episodes.json` の同じ guid の回から引き継ぎ、Apple Podcasts の URL は取得できた回だけ書き換える。
- * 引き継ぎの理由は `src/lib/feed/episode.ts` が持ち、Apple Podcasts の取得は `scripts/apple-podcasts.ts` が持つ。
+ * 例外は各回の `links` で、前回の `episodes.json` の同じ guid の回から引き継ぎ、Apple Podcasts の URL は lookup API が返した回だけ書き換える。
+ * 引き継ぎの理由は `src/lib/feed/episode.ts` が持つ。
+ * lookup API が返さない古い回の URL は、`scripts/backfill-apple-podcasts.ts` が Search API で補う。
  * 未割当を溜める置き場も持たない。
  * 前回との差分を取るのは、新着を数えるためと、割当が外れた回と別のシリーズへ移った回を報せるためである。
  *
@@ -31,9 +32,18 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import * as z from "zod";
-import { fetchAppleLookup, fetchAppleSearch } from "@scripts/apple-podcasts";
+import {
+  fetchAppleEpisodesOrWarn,
+  fetchAppleLookup,
+} from "@scripts/apple-podcasts";
+import {
+  assertCatalogDir,
+  EPISODES_FILE,
+  SEASON_CORRECTIONS_FILE,
+  SERIES_FILE,
+} from "@scripts/catalog-files";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
-import { listSearchTerms, withAppleUrls } from "@/lib/feed/apple-links";
+import { withAppleUrls } from "@/lib/feed/apple-links";
 import {
   listUncorrectedSeasonMismatches,
   seasonKeyOf,
@@ -48,7 +58,6 @@ import {
   listUncreatedSeasons,
   listUnreportedSeasons,
 } from "@/lib/feed/uncreated-seasons";
-import type { AppleEpisode } from "@/lib/schema/apple-podcasts";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
 import {
   parseSeasonCorrections,
@@ -68,22 +77,6 @@ const FEED_URL = "https://anchor.fm/s/8c2088c/podcast/rss";
  * 7.2 MB のフィードの取得は 2 秒弱で終わるので、桁が二つ違えば異常と見てよい。
  */
 const FETCH_TIMEOUT_MS = 60_000;
-
-/**
- * データ層の置き場。
- *
- * `pnpm sync` の作業ディレクトリ（`web/`）から辿る。
- * このファイルは `dist/` へ出力してから走るので、`import.meta.url` から辿ると出力先の深さの分だけずれた場所を指す。
- * 実行の入口が `pnpm sync` の一本なので、pnpm が保証する作業ディレクトリの方が動かない。
- */
-const CATALOG_DIR = path.resolve(process.cwd(), "../catalog");
-
-const EPISODES_FILE = path.join(CATALOG_DIR, "episodes.json");
-const SERIES_FILE = path.join(CATALOG_DIR, "series.json");
-const SEASON_CORRECTIONS_FILE = path.join(
-  CATALOG_DIR,
-  "season-corrections.json",
-);
 
 /**
  * RSS を取ってくる。
@@ -291,67 +284,6 @@ function warnSeasonMismatches(
 }
 
 /**
- * Apple Podcasts の回（`label` の取得）を `fetcher` で取得して返す。
- * 取得に失敗したら、標準エラーへ警告を出して空配列を返す。
- *
- * Apple Podcasts は回の URL を足すだけの任意の情報源なので、落ちた日も RSS の同期は通す。
- * 回の `links` は前回の値のまま残り、次の同期が取り直す。
- */
-async function fetchAppleEpisodesOrWarn(
-  label: string,
-  fetcher: () => Promise<AppleEpisode[]>,
-): Promise<AppleEpisode[]> {
-  try {
-    return await fetcher();
-  } catch (error) {
-    console.error(
-      `Apple Podcasts の ${label} を取得できず、links を更新しない: ${error instanceof Error ? error.message : String(error)}`,
-    );
-
-    return [];
-  }
-}
-
-/**
- * 回（`episodes`）の `links["apple-podcasts"]` へ Apple Podcasts の URL を入れて返す。
- * まず lookup API の最新の 200 回で入れ、それでも URL の無い回は Search API の検索語（`listSearchTerms`）で探す。
- */
-async function linkApplePodcasts(
-  episodes: readonly Episode[],
-  series: SeriesList,
-): Promise<Episode[]> {
-  const latest = await fetchAppleEpisodesOrWarn("lookup API", fetchAppleLookup);
-  const looked = withAppleUrls(episodes, latest);
-  const searched: AppleEpisode[] = [];
-
-  for (const term of listSearchTerms(looked, series)) {
-    searched.push(
-      ...(await fetchAppleEpisodesOrWarn(`Search API（${term}）`, () =>
-        fetchAppleSearch(term),
-      )),
-    );
-  }
-
-  return withAppleUrls(looked, searched);
-}
-
-/**
- * `catalog/` を指せていることを確かめる。
- *
- * 作業ディレクトリが違うと、書き出しは黙って別の場所へ `catalog/` を作り、755 件をそこへ置く。
- * `eras.json` は追跡されていて必ず在るので、これが無い場所は `catalog/` ではない。
- */
-function assertCatalogDir(): void {
-  if (fs.existsSync(path.join(CATALOG_DIR, "eras.json"))) {
-    return;
-  }
-
-  throw new Error(
-    `catalog/ が見つからない: ${CATALOG_DIR}（pnpm sync は web/ から走らせる）`,
-  );
-}
-
-/**
  * 数え上げたサマリを標準出力へ書く。
  *
  * 未割当は二つに割る。
@@ -520,9 +452,10 @@ async function main(): Promise<void> {
 
   const added = assignments.filter(({ item }) => !previous.has(item.guid));
 
-  const episodes = await linkApplePodcasts(
+  const latest = await fetchAppleEpisodesOrWarn("lookup API", fetchAppleLookup);
+  const episodes = withAppleUrls(
     assignments.map((assignment) => toEpisode(assignment, previous)),
-    series,
+    latest,
   );
 
   writeJsonFile(EPISODES_FILE, parseEpisodes({ syncedAt, episodes }));

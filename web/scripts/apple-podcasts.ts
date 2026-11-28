@@ -6,8 +6,8 @@
  * lookup API は新しい順に最新の 200 回までしか返さない（`offset` を付けても同じ 200 回が返る）ので、それより前の回は Search API で取る。
  * 回を `links` へ結ぶ処理と、Search API の検索語を決める処理は持たず、`src/lib/feed/apple-links.ts` が持つ。
  *
- * 取得の失敗は throw する。
- * 失敗しても同期を続けるかどうかは呼ぶ側が決める。
+ * 取得の失敗は、`fetchAppleLookup`・`fetchAppleSearch` が throw する。
+ * 失敗しても処理を続ける呼び出し側は、`fetchAppleEpisodesOrWarn` で包む。
  */
 
 import {
@@ -95,4 +95,26 @@ export async function fetchAppleSearch(term: string): Promise<AppleEpisode[]> {
   });
 
   return fetchAppleEpisodes(`${SEARCH_URL}?${query}`);
+}
+
+/**
+ * Apple Podcasts の回（`label` の取得）を `fetcher` で取得して返す。
+ * 取得に失敗したら、標準エラーへ警告を出して空配列を返す。
+ *
+ * Apple Podcasts は回の URL を足すだけの任意の情報源なので、落ちた日も呼び出し側は処理を続けられる。
+ * 回の `links` は前回の値のまま残り、次の実行が取り直す。
+ */
+export async function fetchAppleEpisodesOrWarn(
+  label: string,
+  fetcher: () => Promise<AppleEpisode[]>,
+): Promise<AppleEpisode[]> {
+  try {
+    return await fetcher();
+  } catch (error) {
+    console.error(
+      `Apple Podcasts の ${label} を取得できず、links を更新しない: ${error instanceof Error ? error.message : String(error)}`,
+    );
+
+    return [];
+  }
 }
