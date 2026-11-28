@@ -88,9 +88,10 @@ catalog/
       "pubDate": "2026-08-19T21:00:00Z", // ISO 8601。RFC 822（フィードは全件 GMT）からの正規化は同期側
       "season": 66, // 割当に使った season（§5 の手順 2）。決まらない回（番外編・特別編・告知）は null
       "seriesId": "teisei-roma", // season から割当。未割当なら null
-      // 基盤ごとの回の URL。同期は前回の同じ guid の回から引き継ぎ、Apple Podcasts の分は API から取り直す。フィードからは作らない。空なら詳細カードは番組ページを開く
+      // 基盤ごとの回の URL。同期は前回の同じ guid の回から引き継ぎ、Apple Podcasts と Spotify の分は API から取り直す。フィードからは作らない。空なら詳細カードは番組ページを開く
       "links": {
-        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/id1450522865?i=…"
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/id1450522865?i=…",
+        "spotify": "https://open.spotify.com/episode/…"
       }
     }
   ]
@@ -368,17 +369,20 @@ catalog/
   2. フィード全件の season を season-corrections.json・題名の先頭の `【NN-M】`・`itunes:season` の順に決め、series.json 全件の `season` から組んだ season → seriesId の索引と照合して seriesId を割り当てる
   3. Apple Podcasts の lookup API（最新の 200 回）で、guid が一致する回の `links["apple-podcasts"]` を書く
      取得に失敗したら警告だけを出し、`links` を触らずに同期を続ける
-  4. 結果サマリを stdout へ
+  4. 環境変数に Spotify の認証情報（`docs/HARNESS.md` §5）があれば、Spotify の Web API の全回を取得し、公開日（UTC の日付）と均した題が一致する回の `links["spotify"]` を書く
+     認証情報が無いときと取得に失敗したときは警告だけを出し、`links` を触らずに同期を続ける
+     複数の回に当たる回は結ばず、guid を警告に出す
+  5. 結果サマリを stdout へ
      未割当は「規則で確定」（season が決まらない回・番外編・訂正表で外した回）と「シリーズ未作成」に割って数える
-     Apple Podcasts の回の URL を持つ回と結べなかった回も数える
-  5. `--existing-issue-titles`（既存の issue の題の入力）と `--survey-issues-out`（書き出し先）を渡したときだけ、「シリーズ未作成」の season のうちシーズン調査の issue がまだ無いものについて、issue の題と本文を JSON のファイルへ書く
-  6. `--report-out`（書き出し先）を渡したときだけ、前回の episodes.json との差（新しい回・割当が変わった回・フィードから消えた回）を、題とシリーズ名の表の Markdown で書く
+     Apple Podcasts と Spotify の回の URL を持つ回と結べなかった回も、基盤ごとに数える
+  6. `--existing-issue-titles`（既存の issue の題の入力）と `--survey-issues-out`（書き出し先）を渡したときだけ、「シリーズ未作成」の season のうちシーズン調査の issue がまだ無いものについて、issue の題と本文を JSON のファイルへ書く
+  7. `--report-out`（書き出し先）を渡したときだけ、前回の episodes.json との差（新しい回・割当が変わった回・フィードから消えた回）を、題とシリーズ名の表の Markdown で書く
 - 運用: `.github/workflows/sync.yml` が配信日（月曜と木曜）の夜に `pnpm sync` を走らせる
   `episodes.json` が `syncedAt` の外で変わったら、ブランチ `sync/episodes` から main への PR を開き、取り込むかは人間がマージで決める
   同じ run で、シリーズ未作成の season ごとにシーズン調査の issue を起票する
   起票された issue から `series.json` へシリーズを足し、管理画面で代表点を置くか位置なしにする → コミット
   手を入れる先は手動層の `series.json`・`loci.geojson`・`season-corrections.json` だけで、`episodes.json` は毎回フィードから組み直すので編集しない
-  例外は各回の `links` で、同期は前回の `episodes.json` の同じ guid の回から引き継ぎ、Apple Podcasts の URL は取得できた回だけ書き換える
+  例外は各回の `links` で、同期は前回の `episodes.json` の同じ guid の回から引き継ぎ、Apple Podcasts と Spotify の URL は取得できた回だけ書き換える
   未割当を溜める置き場も持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ
 - `web/scripts/backfill-apple-podcasts.ts`（`pnpm backfill-apple-podcasts`）: 手で回す補完
   lookup API が返さない古い回のうち、`links["apple-podcasts"]` を持たない回を 1 回ずつ題で Search API へ検索し、結果の `guid` が一致した回の URL を書く

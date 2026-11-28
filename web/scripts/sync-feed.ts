@@ -7,7 +7,8 @@
  *
  * `episodes.json` はフィードから毎回組み直す。
  * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` と `season-corrections.json` の現状から決め直す。
- * 例外は各回の `links` で、前回の `episodes.json` の同じ guid の回から引き継ぎ、Apple Podcasts の URL は lookup API が返した回だけ書き換える。
+ * 例外は各回の `links` で、前回の `episodes.json` の同じ guid の回から引き継ぎ、Apple Podcasts の URL は lookup API が返した回だけ、Spotify の URL は公開日と題が一致した回だけ書き換える。
+ * Spotify は環境変数 `SPOTIFY_CLIENT_ID`・`SPOTIFY_CLIENT_SECRET` があるときだけ取得し、無いか取得に失敗したときは標準エラーへ理由を出して前回の値のまま続ける。
  * 引き継ぎの理由は `src/lib/feed/episode.ts` が持つ。
  * lookup API が返さない古い回の URL は、`scripts/backfill-apple-podcasts.ts` が Search API で補う。
  * 未割当を溜める置き場も持たない。
@@ -40,6 +41,7 @@ import {
   SERIES_FILE,
 } from "@scripts/catalog-files";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
+import { fetchSpotifyEpisodes } from "@scripts/spotify";
 import { setAppleUrls } from "@/lib/feed/apple-links";
 import {
   listUncorrectedSeasonMismatches,
@@ -49,6 +51,10 @@ import {
 import { type Assignment, toEpisode } from "@/lib/feed/episode";
 import { parseFeed } from "@/lib/feed/parse";
 import type { FeedItem } from "@/lib/feed/schema";
+import {
+  linkSpotifyEpisodes,
+  readSpotifyCredentials,
+} from "@/lib/feed/spotify-links";
 import { toSurveyIssue } from "@/lib/feed/survey-issue";
 import { formatSyncReport } from "@/lib/feed/sync-report";
 import {
@@ -56,6 +62,7 @@ import {
   listUnreportedSeasons,
 } from "@/lib/feed/uncreated-seasons";
 import { type Episode, parseEpisodes } from "@/lib/schema/episode";
+import type { Platform } from "@/lib/schema/link";
 import {
   parseSeasonCorrections,
   type SeasonCorrectionList,
@@ -307,17 +314,48 @@ function reportSummary(assignments: Assignment[], added: Assignment[]): void {
 }
 
 /**
- * Apple Podcasts の回の URL を持つ回と持たない回の数を標準出力へ書く。
- * 持たない回は、Apple Podcasts のボタンが番組のページを開く回である。
+ * 基盤（`platform`）の回の URL を持つ回と持たない回の数を、基盤の表示名（`label`）を添えて標準出力へ書く。
+ * 持たない回は、その基盤のボタンが番組のページを開く回である。
  */
-function reportAppleSummary(episodes: readonly Episode[]): void {
-  const linked = episodes.filter(
-    ({ links }) => links["apple-podcasts"] !== undefined,
-  );
+function reportLinkSummary(
+  episodes: readonly Episode[],
+  platform: Platform,
+  label: string,
+): void {
+  const linked = episodes.filter(({ links }) => links[platform] !== undefined);
 
   console.log(
-    `Apple Podcasts の回の URL  ${linked.length} 件 / 結べなかった回 ${episodes.length - linked.length} 件`,
+    `${label} の回の URL  ${linked.length} 件 / 結べなかった回 ${episodes.length - linked.length} 件`,
   );
+}
+
+/**
+ * Spotify の回の URL を取得して `episodes` の回へ結ぶ。
+ * 認証情報が無いか取得に失敗したら、標準エラーへ理由を出し、`links` を変えずに返す。
+ * 複数の回に当たって結べなかった回は、標準エラーへ guid を出す。
+ */
+async function linkSpotify(episodes: readonly Episode[]): Promise<Episode[]> {
+  const credentials = readSpotifyCredentials(process.env);
+
+  if (credentials === null) {
+    console.error(
+      "SPOTIFY_CLIENT_ID・SPOTIFY_CLIENT_SECRET が未設定なので、Spotify の links を更新しない（設定は docs/HARNESS.md §5）",
+    );
+  }
+
+  const spotifyEpisodes =
+    credentials === null ? null : await fetchSpotifyEpisodes(credentials);
+  const result = linkSpotifyEpisodes(episodes, spotifyEpisodes);
+
+  if (result.ambiguous.length > 0) {
+    console.error(
+      `Spotify の回が複数に当たり、結ばなかった回が ${result.ambiguous.length} 件ある: ${result.ambiguous
+        .map(({ guid }) => guid)
+        .join(", ")}`,
+    );
+  }
+
+  return result.episodes;
 }
 
 /**
@@ -453,12 +491,14 @@ async function main(): Promise<void> {
     toEpisode(assignment, previous),
   );
   const latestAppleEpisodes = await fetchAppleLookup();
-  const episodes = setAppleUrls(episodesFromFeed, latestAppleEpisodes);
+  const episodesWithApple = setAppleUrls(episodesFromFeed, latestAppleEpisodes);
+  const episodes = await linkSpotify(episodesWithApple);
 
   writeJsonFile(EPISODES_FILE, parseEpisodes({ syncedAt, episodes }));
 
   reportSummary(assignments, added);
-  reportAppleSummary(episodes);
+  reportLinkSummary(episodes, "apple-podcasts", "Apple Podcasts");
+  reportLinkSummary(episodes, "spotify", "Spotify");
 
   if (options.surveyIssue !== null) {
     writeSurveyIssues(assignments, options.surveyIssue);

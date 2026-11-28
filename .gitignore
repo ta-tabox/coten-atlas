@@ -14,6 +14,8 @@ web/public/catalog/
 # dev と build で参照先（`.next/dev/types` と `.next/types`）が書き分けられるので、追跡するとどちらかを回すたびに差分が出る。
 web/next-env.d.ts
 .DS_Store
+# 手元の同期が読む Spotify の認証情報（docs/HARNESS.md §5）。
+web/.env.local
 # 手元の環境だけで意味を持つ指示。公開するファイルから接続を外した残り（docs/adr/20260829-local-only-instructions.md）。
 # 申し送りの NEXT.md はここに在ったが、層ごと畳んだ（docs/adr/20260901-retire-next-md.md）。
 CLAUDE.local.md
