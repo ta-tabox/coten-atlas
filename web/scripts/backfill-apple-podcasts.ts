@@ -16,7 +16,7 @@ import {
   SERIES_FILE,
 } from "@scripts/catalog-files";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
-import { listSearchTerms, withAppleUrls } from "@/lib/feed/apple-links";
+import { listSearchTerms, setAppleUrls } from "@/lib/feed/apple-links";
 import type { AppleEpisode } from "@/lib/schema/apple-podcasts";
 import { parseEpisodes } from "@/lib/schema/episode";
 import { parseSeries } from "@/lib/schema/series";
@@ -46,7 +46,7 @@ async function main(): Promise<void> {
     searched.push(...found);
   }
 
-  const episodes = withAppleUrls(previous.episodes, searched);
+  const episodes = setAppleUrls(previous.episodes, searched);
   const missing = (list: readonly { links: Record<string, string> }[]) =>
     list.filter(({ links }) => links["apple-podcasts"] === undefined).length;
 

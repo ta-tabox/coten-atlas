@@ -25,7 +25,7 @@ const UNASSIGNED_SEARCH_TERMS = [
  * `appleEpisodes` の URL を、同じ guid の回（`episodes`）の `links["apple-podcasts"]` へ入れた配列を返す。
  * 一致する回が無ければ、その回の `links` はそのまま返す。
  */
-export function withAppleUrls(
+export function setAppleUrls(
   episodes: readonly Episode[],
   appleEpisodes: readonly AppleEpisode[],
 ): Episode[] {

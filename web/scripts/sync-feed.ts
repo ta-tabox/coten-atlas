@@ -40,7 +40,7 @@ import {
   SERIES_FILE,
 } from "@scripts/catalog-files";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
-import { withAppleUrls } from "@/lib/feed/apple-links";
+import { setAppleUrls } from "@/lib/feed/apple-links";
 import {
   listUncorrectedSeasonMismatches,
   seasonKeyOf,
@@ -453,7 +453,7 @@ async function main(): Promise<void> {
     toEpisode(assignment, previous),
   );
   const latestAppleEpisodes = await fetchAppleLookup();
-  const episodes = withAppleUrls(episodesFromFeed, latestAppleEpisodes);
+  const episodes = setAppleUrls(episodesFromFeed, latestAppleEpisodes);
 
   writeJsonFile(EPISODES_FILE, parseEpisodes({ syncedAt, episodes }));
 

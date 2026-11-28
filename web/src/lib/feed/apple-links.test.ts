@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { listSearchTerms, withAppleUrls } from "@/lib/feed/apple-links";
+import { listSearchTerms, setAppleUrls } from "@/lib/feed/apple-links";
 import type { Episode } from "@/lib/schema/episode";
 
 const OLD_URL = "https://podcasts.apple.com/jp/podcast/old/id1450522865?i=1";
@@ -21,9 +21,9 @@ function episode(overrides: Partial<Episode>): Episode {
   };
 }
 
-describe("withAppleUrls", () => {
+describe("setAppleUrls", () => {
   it("guid が一致する回の links へ Apple Podcasts の URL を入れる", () => {
-    const result = withAppleUrls(
+    const result = setAppleUrls(
       [episode({ guid: "guid-1" })],
       [{ guid: "guid-1", url: NEW_URL }],
     );
@@ -34,7 +34,7 @@ describe("withAppleUrls", () => {
   it("前後に空白を持つ guid の回も、trim 済みの guid の URL で結ぶ", () => {
     // 初期の 5 件は RSS の guid の前に空白が付く。
     // episodes.json は trim 済みの guid を持つので、API の guid も trim 済みで渡る。
-    const result = withAppleUrls(
+    const result = setAppleUrls(
       [episode({ guid: "https://anchor.fm/coten/episodes/94" })],
       [{ guid: "https://anchor.fm/coten/episodes/94", url: NEW_URL }],
     );
@@ -47,7 +47,7 @@ describe("withAppleUrls", () => {
       guid: "guid-old",
       links: { "apple-podcasts": OLD_URL },
     });
-    const result = withAppleUrls(
+    const result = setAppleUrls(
       [previous, episode({ guid: "guid-none" })],
       [{ guid: "guid-other", url: NEW_URL }],
     );
@@ -59,7 +59,7 @@ describe("withAppleUrls", () => {
   });
 
   it("API が返した URL で前回の URL を置き換える", () => {
-    const result = withAppleUrls(
+    const result = setAppleUrls(
       [episode({ links: { "apple-podcasts": OLD_URL } })],
       [{ guid: "guid-1", url: NEW_URL }],
     );
@@ -68,7 +68,7 @@ describe("withAppleUrls", () => {
   });
 
   it("Apple Podcasts 以外の基盤の links を残す", () => {
-    const result = withAppleUrls(
+    const result = setAppleUrls(
       [episode({ links: { spotify: "https://open.spotify.com/episode/x" } })],
       [{ guid: "guid-1", url: NEW_URL }],
     );
