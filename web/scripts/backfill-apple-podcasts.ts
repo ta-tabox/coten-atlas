@@ -56,7 +56,7 @@ async function main(): Promise<void> {
   );
 
   console.log(
-    `検索 ${targets.length} 回 / 結べなかった回 ${targets.length} 件 → ${listUnlinkedEpisodes(episodes).length} 件`,
+    `URL を持たない回 検索前 ${targets.length} 件 → 検索後 ${listUnlinkedEpisodes(episodes).length} 件`,
   );
 }
 
