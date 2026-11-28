@@ -124,6 +124,24 @@ describe("linkSpotifyEpisodes", () => {
   });
 });
 
+describe("linkSpotifyEpisodes（取得できなかったとき）", () => {
+  it("API の回が null なら、前回の値の links をどの回も変えず、結べなかった回も出さない", () => {
+    const kept = episode({ links: { spotify: URL_B } });
+    const result = linkSpotifyEpisodes([kept, episode({ guid: "g2" })], null);
+
+    expect(result.episodes[0].links).toEqual({ spotify: URL_B });
+    expect(result.episodes[1].links).toEqual({});
+    expect(result.unmatched).toEqual([]);
+    expect(result.ambiguous).toEqual([]);
+  });
+
+  it("API の回が空配列なら、結べなかった回として返す", () => {
+    const result = linkSpotifyEpisodes([episode({})], []);
+
+    expect(result.unmatched).toHaveLength(1);
+  });
+});
+
 describe("readSpotifyCredentials", () => {
   it("2 つの変数が揃っていれば認証情報を返す", () => {
     expect(

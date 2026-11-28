@@ -60,12 +60,17 @@ function groupBy<T>(
  * `spotifyEpisodes` の URL を、公開日と題が一致する回（`episodes`）の `links.spotify` へ入れる。
  * 結べなかった回と複数に当たった回は、`links` を変えずに `unmatched`・`ambiguous` へ分けて返す。
  *
- * 複数に当たった回の URL を選ぶと、別の回の URL を載せるおそれがあるので、結ばない。
+ * `spotifyEpisodes` が null（認証情報が無いか取得に失敗した）なら、どの回の `links` も変えず、`unmatched`・`ambiguous` を空で返す。
+ * 前回の値を残したまま同期を続けるために、null と空配列を区別する。
  */
 export function linkSpotifyEpisodes(
   episodes: readonly Episode[],
-  spotifyEpisodes: readonly SpotifyEpisode[],
+  spotifyEpisodes: readonly SpotifyEpisode[] | null,
 ): SpotifyLinkResult {
+  if (spotifyEpisodes === null) {
+    return { episodes: [...episodes], unmatched: [], ambiguous: [] };
+  }
+
   const spotifyByKey = groupBy(spotifyEpisodes, ({ releaseDate, title }) =>
     keyOf(releaseDate, title),
   );
