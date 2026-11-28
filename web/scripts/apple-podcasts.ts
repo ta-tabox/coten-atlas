@@ -6,8 +6,9 @@
  * lookup API は新しい順に最新の 200 回までしか返さない（`offset` を付けても同じ 200 回が返る）ので、それより前の回は Search API で取る。
  * 回を `links` へ結ぶ処理と、Search API の検索語を決める処理は持たず、`src/lib/feed/apple-links.ts` が持つ。
  *
- * 取得の失敗は、`fetchAppleLookup`・`fetchAppleSearch` が throw する。
- * 失敗しても処理を続ける呼び出し側は、`fetchAppleEpisodesOrWarn` で包む。
+ * 取得に失敗したら、`fetchAppleLookup`・`fetchAppleSearch` は標準エラーへ警告を出して空配列を返す。
+ * Apple Podcasts は回の URL を足すだけの任意の情報源なので、落ちた日も呼び出し側は処理を続けられる。
+ * 回の `links` は前回の値のまま残り、次の実行が取り直す。
  */
 
 import {
@@ -68,15 +69,33 @@ async function fetchAppleEpisodes(url: string): Promise<AppleEpisode[]> {
 }
 
 /**
- * lookup API から、番組の最新の 200 回を取得する。
+ * 取得に失敗した `label` の API を、標準エラーへ警告として書く。
+ * `fetchAppleLookup`・`fetchAppleSearch` が、空配列を返す前に呼ぶ。
  */
-export function fetchAppleLookup(): Promise<AppleEpisode[]> {
-  return fetchAppleEpisodes(LOOKUP_URL);
+function warnFetchFailure(label: string, error: unknown): void {
+  console.error(
+    `Apple Podcasts の ${label} を取得できず、links を更新しない: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
+
+/**
+ * lookup API から、番組の最新の 200 回を取得する。
+ * 取得に失敗したら、警告を出して空配列を返す。
+ */
+export async function fetchAppleLookup(): Promise<AppleEpisode[]> {
+  try {
+    return await fetchAppleEpisodes(LOOKUP_URL);
+  } catch (error) {
+    warnFetchFailure("lookup API", error);
+
+    return [];
+  }
 }
 
 /**
  * Search API から、検索語（`term`）に当たる番組の回を最大 200 回取得する。
  * 前回の呼び出しから `SEARCH_INTERVAL_MS` 空くまで待ってから呼ぶので、続けて呼んでも制限に当たらない。
+ * 取得に失敗したら、警告を出して空配列を返す。
  */
 export async function fetchAppleSearch(term: string): Promise<AppleEpisode[]> {
   const wait = lastSearchStartedAt + SEARCH_INTERVAL_MS - Date.now();
@@ -94,26 +113,10 @@ export async function fetchAppleSearch(term: string): Promise<AppleEpisode[]> {
     term,
   });
 
-  return fetchAppleEpisodes(`${SEARCH_URL}?${query}`);
-}
-
-/**
- * Apple Podcasts の回（`label` の取得）を `fetcher` で取得して返す。
- * 取得に失敗したら、標準エラーへ警告を出して空配列を返す。
- *
- * Apple Podcasts は回の URL を足すだけの任意の情報源なので、落ちた日も呼び出し側は処理を続けられる。
- * 回の `links` は前回の値のまま残り、次の実行が取り直す。
- */
-export async function fetchAppleEpisodesOrWarn(
-  label: string,
-  fetcher: () => Promise<AppleEpisode[]>,
-): Promise<AppleEpisode[]> {
   try {
-    return await fetcher();
+    return await fetchAppleEpisodes(`${SEARCH_URL}?${query}`);
   } catch (error) {
-    console.error(
-      `Apple Podcasts の ${label} を取得できず、links を更新しない: ${error instanceof Error ? error.message : String(error)}`,
-    );
+    warnFetchFailure(`Search API（${term}）`, error);
 
     return [];
   }

@@ -9,10 +9,7 @@
  * 続きは同じコマンドを再び回せば、URL を持たない回に対してだけ検索する。
  */
 
-import {
-  fetchAppleEpisodesOrWarn,
-  fetchAppleSearch,
-} from "@scripts/apple-podcasts";
+import { fetchAppleSearch } from "@scripts/apple-podcasts";
 import {
   assertCatalogDir,
   EPISODES_FILE,
@@ -44,11 +41,9 @@ async function main(): Promise<void> {
   const searched: AppleEpisode[] = [];
 
   for (const term of terms) {
-    searched.push(
-      ...(await fetchAppleEpisodesOrWarn(`Search API（${term}）`, () =>
-        fetchAppleSearch(term),
-      )),
-    );
+    const found = await fetchAppleSearch(term);
+
+    searched.push(...found);
   }
 
   const episodes = withAppleUrls(previous.episodes, searched);

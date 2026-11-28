@@ -32,10 +32,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import * as z from "zod";
-import {
-  fetchAppleEpisodesOrWarn,
-  fetchAppleLookup,
-} from "@scripts/apple-podcasts";
+import { fetchAppleLookup } from "@scripts/apple-podcasts";
 import {
   assertCatalogDir,
   EPISODES_FILE,
@@ -452,11 +449,11 @@ async function main(): Promise<void> {
 
   const added = assignments.filter(({ item }) => !previous.has(item.guid));
 
-  const latest = await fetchAppleEpisodesOrWarn("lookup API", fetchAppleLookup);
-  const episodes = withAppleUrls(
-    assignments.map((assignment) => toEpisode(assignment, previous)),
-    latest,
+  const episodesFromFeed = assignments.map((assignment) =>
+    toEpisode(assignment, previous),
   );
+  const latestAppleEpisodes = await fetchAppleLookup();
+  const episodes = withAppleUrls(episodesFromFeed, latestAppleEpisodes);
 
   writeJsonFile(EPISODES_FILE, parseEpisodes({ syncedAt, episodes }));
 
