@@ -1,5 +1,5 @@
 /**
- * Apple Podcasts の回の URL を `episodes.json` の回へ結ぶ純関数と、Search API の検索語を決める純関数を置く。
+ * Apple Podcasts の回の URL を `episodes.json` の回へ結ぶ純関数と、URL を持たない回を探す純関数を置く。
  * API の取得は持たず、ネットワークを叩くモジュールが持つ。
  *
  * 結ぶ鍵は RSS の `<guid>` である。
@@ -8,18 +8,6 @@
 
 import type { AppleEpisode } from "@/lib/schema/apple-podcasts";
 import type { Episode } from "@/lib/schema/episode";
-import type { Series } from "@/lib/schema/series";
-
-/**
- * シリーズに割り当たらない回（番外編・特別編・告知）を見つけるための Search API の検索語。
- * 回の題がシリーズの題を含まないので、番組名と回の種別で探す。
- */
-const UNASSIGNED_SEARCH_TERMS = [
-  "コテンラジオ",
-  "COTEN RADIO",
-  "COTEN RADIO 番外編",
-  "COTEN RADIO 特別編",
-];
 
 /**
  * `appleEpisodes` の URL を、同じ guid の回（`episodes`）の `links["apple-podcasts"]` へ入れた配列を返す。
@@ -41,32 +29,24 @@ export function setAppleUrls(
 }
 
 /**
- * Apple Podcasts の回の URL をまだ持たない回（`episodes`）を探すための、Search API の検索語を重複なしで返す。
- * シリーズに割り当たった回はシリーズの題（`series` の `title`）に ` COTEN RADIO` を付けた語、割り当たらない回は番組名と回の種別の語で探す。
- *
- * 全回が URL を持つなら空配列を返す。
- * 割り当たった `seriesId` が `series` に無ければ throw する。
+ * Apple Podcasts の回の URL をまだ持たない回を、`episodes` から返す。
+ * 持たない回は、Search API で探す対象になる。
  */
-export function listSearchTerms(
-  episodes: readonly Episode[],
-  series: ReadonlyArray<Pick<Series, "id" | "title">>,
-): string[] {
-  const titleById = new Map(series.map(({ id, title }) => [id, title]));
-  const terms = episodes
-    .filter((episode) => episode.links["apple-podcasts"] === undefined)
-    .flatMap(({ seriesId }) => {
-      if (seriesId === null) {
-        return UNASSIGNED_SEARCH_TERMS;
-      }
+export function listUnlinkedEpisodes(episodes: readonly Episode[]): Episode[] {
+  return episodes.filter(
+    (episode) => episode.links["apple-podcasts"] === undefined,
+  );
+}
 
-      const title = titleById.get(seriesId);
-
-      if (title === undefined) {
-        throw new Error(`seriesId が series に無い: ${seriesId}`);
-      }
-
-      return [`${title} COTEN RADIO`];
-    });
-
-  return [...new Set(terms)];
+/**
+ * Apple Podcasts の回（`appleEpisodes`）のうち、`guid` が一致する 1 回を返す。
+ * 一致する回が無ければ undefined を返す。
+ *
+ * Search API は検索語に近い他の回も返すので、検索した回の URL として使うのは、`guid` が一致した回だけにする。
+ */
+export function findAppleEpisode(
+  appleEpisodes: readonly AppleEpisode[],
+  guid: string,
+): AppleEpisode | undefined {
+  return appleEpisodes.find((appleEpisode) => appleEpisode.guid === guid);
 }

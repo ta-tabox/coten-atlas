@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { listSearchTerms, setAppleUrls } from "@/lib/feed/apple-links";
+import {
+  findAppleEpisode,
+  listUnlinkedEpisodes,
+  setAppleUrls,
+} from "@/lib/feed/apple-links";
 import type { Episode } from "@/lib/schema/episode";
 
 const OLD_URL = "https://podcasts.apple.com/jp/podcast/old/id1450522865?i=1";
@@ -80,50 +84,40 @@ describe("setAppleUrls", () => {
   });
 });
 
-describe("listSearchTerms", () => {
-  const series = [
-    { id: "mongol-shurai", title: "モンゴル帝国襲来" },
-    { id: "sparta", title: "スパルタ" },
+describe("listUnlinkedEpisodes", () => {
+  it("Apple Podcasts の URL を持たない回だけを返す", () => {
+    const linked = episode({
+      guid: "linked",
+      links: { "apple-podcasts": OLD_URL },
+    });
+    const unlinked = episode({ guid: "unlinked" });
+
+    expect(listUnlinkedEpisodes([linked, unlinked])).toEqual([unlinked]);
+  });
+
+  it("Apple Podcasts 以外の基盤の URL だけを持つ回は、持たない回に数える", () => {
+    const spotifyOnly = episode({
+      links: { spotify: "https://open.spotify.com/episode/x" },
+    });
+
+    expect(listUnlinkedEpisodes([spotifyOnly])).toEqual([spotifyOnly]);
+  });
+});
+
+describe("findAppleEpisode", () => {
+  const found = [
+    { guid: "guid-near", url: OLD_URL },
+    { guid: "guid-target", url: NEW_URL },
   ];
 
-  it("URL を持たない回のシリーズの題に COTEN RADIO を付けた語を、重複なしで返す", () => {
-    const terms = listSearchTerms(
-      [
-        episode({ guid: "a", seriesId: "mongol-shurai" }),
-        episode({ guid: "b", seriesId: "mongol-shurai" }),
-        episode({ guid: "c", seriesId: "sparta" }),
-      ],
-      series,
-    );
-
-    expect(terms).toEqual([
-      "モンゴル帝国襲来 COTEN RADIO",
-      "スパルタ COTEN RADIO",
-    ]);
+  it("検索結果の 2 件目以降でも、guid が一致する回を返す", () => {
+    expect(findAppleEpisode(found, "guid-target")).toEqual({
+      guid: "guid-target",
+      url: NEW_URL,
+    });
   });
 
-  it("URL を持つ回のシリーズの語は返さない", () => {
-    const terms = listSearchTerms(
-      [episode({ links: { "apple-podcasts": OLD_URL } })],
-      series,
-    );
-
-    expect(terms).toEqual([]);
-  });
-
-  it("シリーズに割り当たらない回が URL を持たなければ、番組名と回の種別の語を返す", () => {
-    const terms = listSearchTerms(
-      [episode({ season: null, seriesId: null })],
-      series,
-    );
-
-    expect(terms).toContain("COTEN RADIO 特別編");
-    expect(terms).toContain("コテンラジオ");
-  });
-
-  it("割り当たった seriesId が series に無ければ throw する", () => {
-    expect(() =>
-      listSearchTerms([episode({ seriesId: "unknown" })], series),
-    ).toThrow("seriesId が series に無い: unknown");
+  it("guid が一致する回が無ければ undefined を返す", () => {
+    expect(findAppleEpisode(found, "guid-other")).toBeUndefined();
   });
 });
