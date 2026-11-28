@@ -3,8 +3,6 @@
  * ネットワークを叩く境界で、応答は `parseSpotifyToken`・`parseSpotifyEpisodesPage` を通した `SpotifyEpisode` の配列にして返す。
  * 回を `links` へ結ぶ処理と、認証情報を環境変数から読む処理は持たず、`src/lib/feed/spotify-links.ts` が持つ。
  *
- * 認証は Client Credentials フローで、トークンは 1 回の取得に 1 つだけ取る。
- * 回の一覧は `limit=50` で `next` をたどる（`limit=1` では回の URL が返らない）。
  * 取得に失敗したら、標準エラーへ警告を出して null を返す。
  * Spotify は回の URL を足すだけの任意の情報源なので、呼び出し側は処理を続けられ、回の `links` は前回の値のまま残る。
  */
@@ -22,7 +20,7 @@ const TOKEN_URL = "https://accounts.spotify.com/api/token";
 
 /**
  * 回の一覧の最初のページの URL。
- * `market` を付けないと 404 になる事例が報告されている。
+ * `market` と `limit=50` を外さない。
  */
 const FIRST_PAGE_URL = `https://api.spotify.com/v1/shows/${SHOW_ID}/episodes?market=JP&limit=50`;
 
