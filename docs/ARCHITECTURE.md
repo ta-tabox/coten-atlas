@@ -381,7 +381,7 @@ catalog/
   例外は各回の `links` で、同期は前回の `episodes.json` の同じ guid の回から引き継ぎ、Apple Podcasts の URL は取得できた回だけ書き換える
   未割当を溜める置き場も持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ
 - `web/scripts/backfill-apple-podcasts.ts`（`pnpm backfill-apple-podcasts`）: 手で回す補完
-  lookup API が返さない古い回のうち、`links["apple-podcasts"]` を持たない回だけを Search API で探して書く
+  lookup API が返さない古い回のうち、`links["apple-podcasts"]` を持たない回を 1 回ずつ題で Search API へ検索し、結果の `guid` が一致した回の URL を書く
   定期実行の同期には入れない
 - 静的サイトなので、実行時に RSS を取得しない。同期は常にビルド前のデータ更新として行う
 
