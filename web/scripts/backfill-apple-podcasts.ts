@@ -18,6 +18,7 @@ import {
   listUnlinkedEpisodes,
   setAppleUrls,
 } from "@/lib/feed/apple-links";
+import type { AppleEpisode } from "@/lib/schema/apple-podcasts";
 import { parseEpisodes } from "@/lib/schema/episode";
 
 /**
@@ -36,16 +37,18 @@ async function main(): Promise<void> {
     return;
   }
 
-  let episodes = previous.episodes;
+  const matchedEpisodes: AppleEpisode[] = [];
 
   for (const target of targets) {
     const found = await fetchAppleSearch(target.title);
     const matched = findAppleEpisode(found, target.guid);
 
     if (matched !== undefined) {
-      episodes = setAppleUrls(episodes, [matched]);
+      matchedEpisodes.push(matched);
     }
   }
+
+  const episodes = setAppleUrls(previous.episodes, matchedEpisodes);
 
   writeJsonFile(
     EPISODES_FILE,
