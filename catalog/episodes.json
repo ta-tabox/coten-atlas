@@ -2067,7 +2067,9 @@
       "pubDate": "2024-09-25T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-109-%E4%BC%9A%E8%A9%B1%E3%81%A3%E3%81%A6%E3%83%9E%E3%82%B8%E3%82%80%E3%81%9A%E3%81%84-%E7%9B%AE%E3%81%AB%E3%81%AF%E8%A6%8B%E3%81%88%E3%81%AA%E3%81%84-%E8%AA%9E%E3%82%8C%E3%81%AA%E3%81%84-%E3%81%A8-%E8%AA%9E%E3%82%89%E3%81%AA%E3%81%84-%E3%81%AE%E5%A3%81/id1450522865?i=1000670712399&uo=4"
+      }
     },
     {
       "guid": "5bd1421f-140a-4738-b5e1-d8f68f1c1642",
@@ -2075,7 +2077,9 @@
       "pubDate": "2024-09-22T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-108-%E8%A1%97%E3%81%A7%E5%A3%B0%E3%82%92%E6%8E%9B%E3%81%91%E3%82%89%E3%82%8C%E3%81%9F-%E6%9C%89%E5%90%8D%E4%BA%BA-%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%A3%E3%81%9F%E5%83%95%E3%81%9F%E3%81%A1%E3%81%AE%E6%9C%AC%E9%9F%B3/id1450522865?i=1000670329063&uo=4"
+      }
     },
     {
       "guid": "b5551586-0df0-428b-893d-c2165df4a072",
@@ -2233,7 +2237,9 @@
       "pubDate": "2024-07-24T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E6%8E%A1%E7%94%A8%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E3%81%8A%E7%9F%A5%E3%82%89%E3%81%9B-%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E3%83%81%E3%83%BC%E3%83%A0-gutenberg-%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E5%96%8B%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F/id1450522865?i=1000663255126&uo=4"
+      }
     },
     {
       "guid": "1083dd13-ed38-4762-857b-55258cabb61f",
@@ -2301,7 +2307,9 @@
       "pubDate": "2024-06-27T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-107-%E5%A4%A7%E5%85%AC%E9%96%8B-%E3%82%B3%E3%83%86%E3%83%B3%E3%83%A9%E3%82%B8%E3%82%AA%E3%81%AE%E8%88%9E%E5%8F%B0%E8%A3%8F-%E4%BD%9C%E3%82%8A%E6%89%8B%E3%81%8C%E8%AA%9E%E3%82%8B%E5%8F%B0%E6%9C%AC%E5%88%B6%E4%BD%9C%E3%81%AE%E5%85%A8%E8%B2%8C-%E3%82%B2%E3%82%B9%E3%83%88-%E8%A5%BF%E8%B0%B7%E5%89%9B%E5%8F%B2-%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEcoten/id1450522865?i=1000660479911&uo=4"
+      }
     },
     {
       "guid": "c3d0d985-9849-46a6-8e13-98d62f0394a1",
@@ -2309,7 +2317,9 @@
       "pubDate": "2024-06-26T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-106-%E8%A6%8B%E3%81%9F%E3%81%84-%E8%AA%AD%E3%81%BF%E3%81%9F%E3%81%84-%E8%AA%9E%E3%82%8A%E3%81%9F%E3%81%84-%E5%83%95%E3%82%89%E3%82%92%E9%AD%85%E4%BA%86%E3%81%99%E3%82%8B%E7%8F%A0%E7%8E%89%E3%81%AE%E3%82%B3%E3%83%B3%E3%83%86%E3%83%B3%E3%83%84%E9%9B%91%E8%AB%87/id1450522865?i=1000660362813&uo=4"
+      }
     },
     {
       "guid": "8e0b69e1-081d-4b29-924e-59b51a3db328",
@@ -2317,7 +2327,9 @@
       "pubDate": "2024-06-23T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-105-%E7%9A%86%E6%A7%98%E3%81%AB%E6%84%9F%E8%AC%9D%E3%81%A8%E3%83%AA%E3%82%B9%E3%83%9A%E3%82%AF%E3%83%88%E3%82%92%E8%BE%BC%E3%82%81%E3%81%A6-%E3%83%AA%E3%82%B9%E3%83%8A%E3%83%BC%E3%81%8B%E3%82%89%E3%81%AE%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E7%B4%B9%E4%BB%8B/id1450522865?i=1000659982834&uo=4"
+      }
     },
     {
       "guid": "568671f6-422e-462d-baf7-edca5fa8485e",
@@ -2485,7 +2497,9 @@
       "pubDate": "2024-04-14T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-104-%E5%85%A8%E5%9B%BD%E3%81%A7%E5%86%8D%E7%8F%BE%E4%B8%8D%E5%8F%AF-%E3%81%84%E3%81%84%E3%81%8B%E3%81%ADpalette%E3%81%AB%E5%AD%A6%E3%81%B6%E5%9C%9F%E5%9C%B0%E3%81%9D%E3%82%8C%E3%81%9E%E3%82%8C%E3%81%AE%E3%83%A6%E3%83%8B%E3%83%BC%E3%82%AF%E3%81%AA%E9%80%B2%E5%8C%96-%E3%82%B2%E3%82%B9%E3%83%88-%E9%9D%92%E6%9F%B3%E8%80%83%E5%93%89/id1450522865?i=1000652417191&uo=4"
+      }
     },
     {
       "guid": "64507925-cbeb-4d75-94d7-0b19264078ea",
@@ -2493,7 +2507,9 @@
       "pubDate": "2024-04-10T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-103-%E3%81%BF%E3%82%93%E3%81%AA%E3%81%8C%E3%81%BF%E3%82%93%E3%81%AA%E4%B8%BB%E4%BA%BA%E5%85%AC-%E3%81%84%E3%81%84%E3%81%8B%E3%81%ADpalette%E3%82%92%E5%BC%95%E3%81%8D%E7%B6%99%E3%81%8E%E3%81%97%E7%94%B7%E3%81%AE%E9%87%8E%E6%9C%9B-%E3%82%B2%E3%82%B9%E3%83%88-%E9%9D%92%E6%9F%B3%E8%80%83%E5%93%89-%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEbook/id1450522865?i=1000652068235&uo=4"
+      }
     },
     {
       "guid": "64730787-ec6e-4ebc-a46a-cf36faea7c3a",
@@ -2501,7 +2517,9 @@
       "pubDate": "2024-04-07T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E4%B8%8B%E5%93%81%E6%B3%A8%E6%84%8F-%E7%95%AA%E5%A4%96%E7%B7%A8-102-%E3%83%96%E3%83%AB%E3%83%BC%E3%82%B9%E8%B6%B3%E3%82%8A%E3%81%A6%E3%82%8B-%E7%94%B0%E5%B7%9D%E3%81%8C%E8%82%B2%E3%82%80-%E3%83%88%E3%82%AC%E3%83%AA-%E3%81%A8%E3%81%84%E3%81%86%E5%90%8D%E3%81%AE%E3%83%A4%E3%83%B3%E3%82%AD%E3%83%BC%E9%80%B2%E5%8C%96%E5%AD%A6-%E3%82%B2%E3%82%B9%E3%83%88-%E9%9D%92%E6%9F%B3%E8%80%83%E5%93%89/id1450522865?i=1000651703057&uo=4"
+      }
     },
     {
       "guid": "fe372242-24e2-4404-9c72-1979bccd5444",
@@ -2569,7 +2587,9 @@
       "pubDate": "2024-03-06T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-101-%E6%96%B0%E5%A4%A7%E7%B5%B1%E9%A0%98%E3%81%AE%E6%89%8B%E8%85%95%E3%81%AF%E3%81%84%E3%81%8B%E3%81%8C-%E3%82%B1%E3%83%9E%E3%83%AB%E6%B2%A1%E5%BE%8C%E3%81%AE%E3%83%88%E3%83%AB%E3%82%B3%E3%81%8C%E6%8A%B1%E3%81%88%E3%82%8B%E8%AB%B8%E5%95%8F%E9%A1%8C/id1450522865?i=1000648265194&uo=4"
+      }
     },
     {
       "guid": "3fe2c7b4-0fc6-4d75-ab3d-9d80e3816f68",
@@ -2717,7 +2737,9 @@
       "pubDate": "2024-01-14T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-100-%E5%8D%83%E5%B9%B4%E3%81%AE%E7%B6%99%E6%89%BF-%E5%A4%89%E3%82%8F%E3%82%8B%E6%99%82%E4%BB%A3%E3%81%A8%E5%A4%89%E3%82%8F%E3%82%89%E3%81%AC%E4%BF%A1%E4%BB%B0-%E3%82%B2%E3%82%B9%E3%83%88-%E5%A4%AA%E5%AE%B0%E5%BA%9C%E5%A4%A9%E6%BA%80%E5%AE%AE-%E7%AC%AC40%E4%BB%A3%E5%AE%AE%E5%8F%B8-%E8%A5%BF%E9%AB%98%E8%BE%BB-%E4%BF%A1%E5%AE%8F%E3%81%95%E3%82%93-%E5%BE%8C%E7%B7%A8/id1450522865?i=1000641626384&uo=4"
+      }
     },
     {
       "guid": "7d00e8ca-4f9b-4ce2-b8a8-addd9bf2c677",
@@ -2725,7 +2747,9 @@
       "pubDate": "2024-01-10T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-99-%E5%8D%83%E5%B9%B4%E3%81%AE%E7%B6%99%E6%89%BF-%E5%A4%89%E3%82%8F%E3%82%8B%E6%99%82%E4%BB%A3%E3%81%A8%E5%A4%89%E3%82%8F%E3%82%89%E3%81%AC%E4%BF%A1%E4%BB%B0-%E3%82%B2%E3%82%B9%E3%83%88-%E5%A4%AA%E5%AE%B0%E5%BA%9C%E5%A4%A9%E6%BA%80%E5%AE%AE-%E7%AC%AC40%E4%BB%A3%E5%AE%AE%E5%8F%B8-%E8%A5%BF%E9%AB%98%E8%BE%BB-%E4%BF%A1%E5%AE%8F%E3%81%95%E3%82%93-%E4%B8%AD%E7%B7%A8/id1450522865?i=1000641223853&uo=4"
+      }
     },
     {
       "guid": "98cea78d-db45-4f32-8903-70de619bb05f",
@@ -2733,7 +2757,9 @@
       "pubDate": "2024-01-07T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-98-%E5%8D%83%E5%B9%B4%E3%81%AE%E7%B6%99%E6%89%BF-%E5%A4%89%E3%82%8F%E3%82%8B%E6%99%82%E4%BB%A3%E3%81%A8%E5%A4%89%E3%82%8F%E3%82%89%E3%81%AC%E4%BF%A1%E4%BB%B0-%E3%82%B2%E3%82%B9%E3%83%88-%E5%A4%AA%E5%AE%B0%E5%BA%9C%E5%A4%A9%E6%BA%80%E5%AE%AE-%E7%AC%AC40%E4%BB%A3%E5%AE%AE%E5%8F%B8-%E8%A5%BF%E9%AB%98%E8%BE%BB-%E4%BF%A1%E5%AE%8F%E3%81%95%E3%82%93-%E5%89%8D%E7%B7%A8/id1450522865?i=1000640830602&uo=4"
+      }
     },
     {
       "guid": "bd0903e1-587a-4c0c-b35b-3c28eb99583b",
@@ -2741,7 +2767,9 @@
       "pubDate": "2023-12-24T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-97-%E3%81%88%E3%81%A3-%E3%82%A2%E3%83%AC%E3%82%82%E4%BB%8A%E5%B9%B4%E3%81%A0%E3%81%A3%E3%81%91-2023%E5%B9%B4%E3%81%AE%E3%82%B3%E3%83%86%E3%83%B3%E3%83%A9%E3%82%B8%E3%82%AA%E3%82%92%E6%8C%AF%E3%82%8A%E8%BF%94%E3%82%8D%E3%81%86/id1450522865?i=1000639611010&uo=4"
+      }
     },
     {
       "guid": "b1caca36-6746-4981-9b45-c5d980c68c26",
@@ -2909,7 +2937,9 @@
       "pubDate": "2023-10-18T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-96-%E5%87%BA%E9%9B%B2%E7%99%BA-%E3%82%B3%E3%83%9F%E3%83%A5%E3%83%8B%E3%83%86%E3%82%A3%E3%83%8A%E3%83%BC%E3%82%B9%E3%81%A3%E3%81%A6%E4%BD%95-%E3%82%B2%E3%82%B9%E3%83%88-%E7%9F%A2%E7%94%B0%E6%98%8E%E5%AD%90-community-nurse-company-%E5%BE%8C%E7%B7%A8/id1450522865?i=1000631786788&uo=4"
+      }
     },
     {
       "guid": "0a784346-0fef-49c9-87dd-ff4cd13c0f51",
@@ -2917,7 +2947,9 @@
       "pubDate": "2023-10-15T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-95-%E5%87%BA%E9%9B%B2%E7%99%BA-%E3%82%B3%E3%83%9F%E3%83%A5%E3%83%8B%E3%83%86%E3%82%A3%E3%83%8A%E3%83%BC%E3%82%B9%E3%81%A3%E3%81%A6%E4%BD%95-%E3%82%B2%E3%82%B9%E3%83%88-%E7%9F%A2%E7%94%B0%E6%98%8E%E5%AD%90-community-nurse-company-%E4%B8%AD%E7%B7%A8/id1450522865?i=1000631399922&uo=4"
+      }
     },
     {
       "guid": "0017421e-81b6-4918-964b-4d58317f2088",
@@ -2925,7 +2957,9 @@
       "pubDate": "2023-10-11T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-94-%E5%87%BA%E9%9B%B2%E7%99%BA-%E3%82%B3%E3%83%9F%E3%83%A5%E3%83%8B%E3%83%86%E3%82%A3%E3%83%8A%E3%83%BC%E3%82%B9%E3%81%A3%E3%81%A6%E4%BD%95-%E3%82%B2%E3%82%B9%E3%83%88-%E7%9F%A2%E7%94%B0%E6%98%8E%E5%AD%90-community-nurse-company-%E5%89%8D%E7%B7%A8/id1450522865?i=1000631012008&uo=4"
+      }
     },
     {
       "guid": "21519ffa-8aee-4d76-b9db-e9fe0a003b3b",
@@ -3003,7 +3037,9 @@
       "pubDate": "2023-09-17T21:18:41.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E5%91%8A%E7%9F%A5-coten-radio%E3%82%B7%E3%83%AB%E3%83%90%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%BC%E3%82%AF%E3%81%8A%E4%BC%91%E3%81%BF%E3%81%AE%E3%81%8A%E7%9F%A5%E3%82%89%E3%81%9B/id1450522865?i=1000628183396&uo=4"
+      }
     },
     {
       "guid": "c3d3e987-5f16-41ec-b7b7-3da3b3ba6400",
@@ -3071,7 +3107,9 @@
       "pubDate": "2023-08-25T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E5%91%8A%E7%9F%A5-coten%E6%8E%A1%E7%94%A8%E6%83%85%E5%A0%B1-%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2-%E3%83%87%E3%83%BC%E3%82%BF%E3%83%9E%E3%83%8D%E3%83%BC%E3%82%B8%E3%83%A3%E3%83%BC/id1450522865?i=1000625714417&uo=4"
+      }
     },
     {
       "guid": "6c2d7691-b716-49ac-a4db-efedcf6b1460",
@@ -3279,7 +3317,9 @@
       "pubDate": "2023-06-07T21:00:35.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-88-%E5%BD%93%E4%BA%8B%E8%80%85%E3%81%A8%E3%81%97%E3%81%A6%E3%81%AE%E3%82%A6%E3%82%AF%E3%83%A9%E3%82%A4%E3%83%8A%E6%88%A6%E4%BA%89-%E3%82%B2%E3%82%B9%E3%83%88-%E7%89%A7%E9%87%8E%E5%AF%9B-%E3%83%9C%E3%83%AA%E3%82%B9-%E3%82%A2%E3%83%95%E3%82%A1%E3%83%8A%E3%82%BB%E3%83%95-sami-japan-%E5%BE%8C%E7%B7%A8/id1450522865?i=1000616065381&uo=4"
+      }
     },
     {
       "guid": "55a2f4ba-335c-4cc0-b4b4-02a60f993945",
@@ -3287,7 +3327,9 @@
       "pubDate": "2023-06-07T21:00:06.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E5%91%8A%E7%9F%A5-crew%E3%82%B5%E3%82%A4%E3%83%88%E3%83%AA%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%A2%E3%83%AB%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/id1450522865?i=1000616065411&uo=4"
+      }
     },
     {
       "guid": "2bb64789-2b2d-425c-a489-3543ab62f443",
@@ -3295,7 +3337,9 @@
       "pubDate": "2023-06-04T21:00:10.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-87-%E5%BD%93%E4%BA%8B%E8%80%85%E3%81%A8%E3%81%97%E3%81%A6%E3%81%AE%E3%82%A6%E3%82%AF%E3%83%A9%E3%82%A4%E3%83%8A%E6%88%A6%E4%BA%89-%E3%82%B2%E3%82%B9%E3%83%88-%E7%89%A7%E9%87%8E%E5%AF%9B-%E3%83%9C%E3%83%AA%E3%82%B9-%E3%82%A2%E3%83%95%E3%82%A1%E3%83%8A%E3%82%BB%E3%83%95-sami-japan-%E4%B8%AD%E7%B7%A8/id1450522865?i=1000615632491&uo=4"
+      }
     },
     {
       "guid": "1af3a782-ab27-4b60-8eba-2fb7a12f91d6",
@@ -3303,7 +3347,9 @@
       "pubDate": "2023-05-31T21:00:42.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-86-%E5%BD%93%E4%BA%8B%E8%80%85%E3%81%A8%E3%81%97%E3%81%A6%E3%81%AE%E3%82%A6%E3%82%AF%E3%83%A9%E3%82%A4%E3%83%8A%E6%88%A6%E4%BA%89-%E3%82%B2%E3%82%B9%E3%83%88-%E7%89%A7%E9%87%8E%E5%AF%9B-%E3%83%9C%E3%83%AA%E3%82%B9-%E3%82%A2%E3%83%95%E3%82%A1%E3%83%8A%E3%82%BB%E3%83%95-sami-japan-%E5%89%8D%E7%B7%A8/id1450522865?i=1000615201652&uo=4"
+      }
     },
     {
       "guid": "d82c351c-4c08-404f-b78c-366f49ab5935",
@@ -3781,7 +3827,9 @@
       "pubDate": "2022-11-23T21:00:48.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-80-%E3%82%A6%E3%82%AF%E3%83%A9%E3%82%A4%E3%83%8A%E6%88%A6%E4%BA%89%E3%81%AE%E7%8F%BE%E7%8A%B6%E3%81%A8%E4%BB%8A%E5%BE%8C-%E3%83%86%E3%83%AC%E3%83%93%E6%9D%B1%E4%BA%AC%E5%A0%B1%E9%81%93%E5%B1%80-%E8%B1%8A%E5%B3%B6%E6%99%8B%E4%BD%9C%E3%82%AD%E3%83%A3%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AE%E8%A6%96%E7%82%B9-%E5%BE%8C%E7%B7%A8/id1450522865?i=1000587311349&uo=4"
+      }
     },
     {
       "guid": "4d5d0d78-d9b8-4703-b3fd-f3e1047454df",
@@ -3809,7 +3857,9 @@
       "pubDate": "2022-11-18T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%95%AA%E5%A4%96%E7%B7%A8-78-%E7%A5%9Dacc%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%97%E3%83%AA%E5%8F%97%E8%B3%9E-%E7%87%83%E3%81%88%E3%82%8B%E5%BA%83%E5%91%8A%E9%9F%B3%E6%A5%BD%E3%83%97%E3%83%AD%E3%83%87%E3%83%A5%E3%83%BC%E3%82%B5%E3%83%BC-%E6%A8%8B%E5%8F%A3%E5%A4%AA%E9%99%BD%E3%81%AB%E8%81%9E%E3%81%8F%E3%82%B3%E3%83%86%E3%83%B3%E3%83%A9%E3%82%B8%E3%82%AA%E3%81%A8%E5%BA%83%E5%91%8A%E3%82%A2%E3%83%AF%E3%83%BC%E3%83%89/id1450522865?i=1000586754513&uo=4"
+      }
     },
     {
       "guid": "117cfa54-87a7-4ce0-b696-78c8ce5bce10",
@@ -5697,7 +5747,9 @@
       "pubDate": "2021-02-04T21:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E5%91%8A%E7%9F%A5-spotify%E3%82%AA%E3%83%AA%E3%82%B7-%E3%83%8A%E3%83%AB%E9%85%8D%E4%BF%A1%E9%96%8B%E5%A7%8B/id1450522865?i=1000507757366&uo=4"
+      }
     },
     {
       "guid": "8766ed70-aba6-45bb-bdaa-86fa4a4a523b",
@@ -5815,7 +5867,9 @@
       "pubDate": "2020-12-16T11:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%B7%8A%E6%80%A5%E5%91%8A%E7%9F%A5-%E3%82%B3%E3%83%86%E3%83%B3%E3%83%A9%E3%82%B8%E3%82%AA%E5%BF%98%E5%B9%B4%E4%BC%9A2020live%E9%85%8D%E4%BF%A1%E6%B1%BA%E5%AE%9A-coten-radio/id1450522865?i=1000502574683&uo=4"
+      }
     },
     {
       "guid": "2378cc3c-8cdb-438f-bd1d-e38d66771e55",
@@ -6113,7 +6167,9 @@
       "pubDate": "2020-09-03T16:28:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E5%91%8A%E7%9F%A5-%E7%89%B9%E5%85%B8%E3%82%B3%E3%83%B3%E3%83%86%E3%83%B3%E3%83%84%E4%BB%98%E3%81%8D%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88%E3%83%97%E3%83%A9%E3%83%B3-%E9%96%8B%E5%A7%8B-coten-radio/id1450522865?i=1000490069577&uo=4"
+      }
     },
     {
       "guid": "5b19631c-8ab9-4f54-968e-e7cec5997170",
@@ -6531,7 +6587,9 @@
       "pubDate": "2020-04-14T10:14:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/%E7%B7%8A%E6%80%A5%E5%91%8A%E7%9F%A5-4-16-20-00-%E3%82%B3%E3%83%86%E3%83%B3%E3%83%A9%E3%82%B8%E3%82%AA%E7%94%9F%E9%85%8D%E4%BF%A1-%E7%A5%9D-w%E5%8F%97%E8%B3%9E/id1450522865?i=1000471434570&uo=4"
+      }
     },
     {
       "guid": "ccfadd50-9ac9-41a4-b3cb-b0cde8e90eab",
@@ -6889,7 +6947,9 @@
       "pubDate": "2019-12-13T02:58:12.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/youtube%E3%83%A9%E3%82%A4%E3%83%96%E9%85%8D%E4%BF%A1-%E3%82%B3%E3%83%86%E3%83%B3%E3%83%A9%E3%82%B8%E3%82%AA%E5%BF%98%E5%B9%B4%E4%BC%9A2019-%E3%81%93%E3%81%86%E3%81%97%E3%81%A6%E5%83%95%E3%82%89%E3%81%AF%E5%87%BA%E4%BC%9A%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%A3%E3%81%9F/id1450522865?i=1000459469393&uo=4"
+      }
     },
     {
       "guid": "e22ef583-b8ed-19e3-7939-2d6d7a25e03e",
@@ -7187,7 +7247,9 @@
       "pubDate": "2019-09-02T09:00:00.000Z",
       "season": null,
       "seriesId": null,
-      "links": {}
+      "links": {
+        "apple-podcasts": "https://podcasts.apple.com/jp/podcast/10%E4%B8%87%E5%86%8D%E7%94%9F%E8%A8%98%E5%BF%B5-%E5%B9%BB%E3%81%AE%E3%83%87%E3%83%A2%E7%89%88-%E9%9F%93%E9%9D%9E%E5%AD%90-%E9%83%A8%E4%B8%8B%E3%81%8C%E4%B8%8A%E5%8F%B8%E3%81%AB%E6%9C%AC%E9%9F%B3%E3%82%92%E7%9B%B8%E8%AB%87%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84%E3%81%A8%E3%81%8D%E3%81%A9%E3%81%86%E3%81%99%E3%82%8C%E3%81%B0%E3%81%84%E3%81%84-coten-radio/id1450522865?i=1000448355069&uo=4"
+      }
     },
     {
       "guid": "f81cefac-3060-e295-594f-c9ab0ac1de3a",
