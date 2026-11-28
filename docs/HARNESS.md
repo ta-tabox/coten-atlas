@@ -191,42 +191,45 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 リモートのコンテナは外向き通信が許可制で、許可するドメインはクラウド環境のネットワーク設定が持つ。
 設定は「カスタム」で既定のリストを含め、下の表の「足す」の行を加える。
 
-| 先                                | 許可               | 使う場面                                                                                                           |
-| --------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------ |
-| `registry.npmjs.org`              | 既定のリストにある | mise 本体と依存の取得                                                                                              |
-| `cdn.playwright.dev`              | 足す               | smoke テストのブラウザの取得                                                                                       |
-| `anchor.fm`                       | 足す               | `pnpm sync` が RSS を取得する（`web/scripts/sync-feed.ts`）                                                        |
-| `itunes.apple.com`                | 足す               | `pnpm sync` が lookup API で、`pnpm backfill-apple-podcasts` が Search API で Apple Podcasts の回の URL を取得する |
-| `tiles.openfreemap.org`           | 足す               | ベースマップのスタイルとタイル（`web/src/lib/map/config.ts`）。ブラウザで地図を開くときに取得する                  |
-| `open.spotify.com`・`coten.co.jp` | 足す               | 画面のリンク先。コンテナのブラウザでリンクを押し、遷移先が開くかを確かめるときに取得する                           |
-| `mise.run`                        | 足さない           | mise は npm から入れるので要らない                                                                                 |
-| `mise-versions.jdx.dev`           | 足さない           | 届かなくても `mise install` は別の経路で版の一覧を取得する                                                         |
+| 先                                        | 許可               | 使う場面                                                                                                           |
+| ----------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `registry.npmjs.org`                      | 既定のリストにある | mise 本体と依存の取得                                                                                              |
+| `cdn.playwright.dev`                      | 足す               | smoke テストのブラウザの取得                                                                                       |
+| `anchor.fm`                               | 足す               | `pnpm sync` が RSS を取得する（`web/scripts/sync-feed.ts`）                                                        |
+| `itunes.apple.com`                        | 足す               | `pnpm sync` が lookup API で、`pnpm backfill-apple-podcasts` が Search API で Apple Podcasts の回の URL を取得する |
+| `accounts.spotify.com`・`api.spotify.com` | 足す               | `pnpm sync` が Spotify の Web API で回の URL を取得する（`web/scripts/spotify.ts`）                                |
+| `tiles.openfreemap.org`                   | 足す               | ベースマップのスタイルとタイル（`web/src/lib/map/config.ts`）。ブラウザで地図を開くときに取得する                  |
+| `open.spotify.com`・`coten.co.jp`         | 足す               | 画面のリンク先。コンテナのブラウザでリンクを押し、遷移先が開くかを確かめるときに取得する                           |
+| `mise.run`                                | 足さない           | mise は npm から入れるので要らない                                                                                 |
+| `mise-versions.jdx.dev`                   | 足さない           | 届かなくても `mise install` は別の経路で版の一覧を取得する                                                         |
 
 ## 5. 設定の置き場
 
-| 置き場                                 | 持つもの                                                                                                 |
-| -------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `.claude/settings.json`                | 権限（`permissions`。各規則の理由は下の「権限の規則」）・PreToolUse と `SessionStart` の配線             |
-| `.claude/hooks/session-start.sh`       | 実行環境を見分けて準備のスクリプトを呼ぶ順                                                               |
-| `scripts/cloud-session.sh`             | リモートのセッションごとの準備のうちクラウドでだけ要る分（名義と mise の検査・shims の PATH の受け渡し） |
-| `scripts/cloud-snapshot.sh`            | リモートのスナップショットに残す準備（mise の版・ランタイム・依存・smoke テストのブラウザ）              |
-| `scripts/setup.sh`                     | どの実行環境でも要る環境準備（§3「揃えるもの」）                                                         |
-| `web/pnpm-workspace.yaml`              | pnpm の store の置き場（`storeDir`）                                                                     |
-| `.claude/hooks/guard-force-push.sh`    | force push 系を ask へ回す PreToolUse フック                                                             |
-| `.claude/hooks/guard-gh-api.sh`        | `gh api` の戻せない書き込みを ask へ回す PreToolUse フック                                               |
-| `.githooks/commit-msg`                 | コミット本文の禁止語を commit の前で止める git フック                                                    |
-| `.githooks/pre-commit`                 | ステージした追加行の禁止語を、コミットを止めずに報告する git フック                                      |
-| `scripts/lint-vocabulary.sh`           | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る                                                |
-| `.github/workflows/lint-pr-body.yml`   | PR 本文の禁止語を CI で報告する                                                                          |
-| `scripts/diff-coding-standards.sh`     | 規約の写しと共有の雛形の差を、手で走らせて報告する                                                       |
-| `.vocabulary/banned.tsv`               | 禁止語の検査が読む、`.claude/rules/writing.md` の表の写し                                                |
-| `.vocabulary/allow`                    | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語）                                |
-| クラウド環境の環境変数欄               | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義）                                       |
-| クラウド環境のセットアップスクリプト欄 | `bash /home/user/coten-atlas/scripts/cloud-snapshot.sh` の一行                                           |
-| クラウド環境のネットワーク設定         | 許可ドメイン（§4）                                                                                       |
-| `.claude/skills/`                      | 同梱の規約 skill。外部由来のものの出所は各 skill の `SOURCE.md` が持つ                                   |
-| `mise.toml`（ルート）                  | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む                                         |
-| `web/package.json`                     | `pnpm check` を含む scripts                                                                              |
+| 置き場                                 | 持つもの                                                                                                  |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `.claude/settings.json`                | 権限（`permissions`。各規則の理由は下の「権限の規則」）・PreToolUse と `SessionStart` の配線              |
+| `.claude/hooks/session-start.sh`       | 実行環境を見分けて準備のスクリプトを呼ぶ順                                                                |
+| `scripts/cloud-session.sh`             | リモートのセッションごとの準備のうちクラウドでだけ要る分（名義と mise の検査・shims の PATH の受け渡し）  |
+| `scripts/cloud-snapshot.sh`            | リモートのスナップショットに残す準備（mise の版・ランタイム・依存・smoke テストのブラウザ）               |
+| `scripts/setup.sh`                     | どの実行環境でも要る環境準備（§3「揃えるもの」）                                                          |
+| `web/pnpm-workspace.yaml`              | pnpm の store の置き場（`storeDir`）                                                                      |
+| `.claude/hooks/guard-force-push.sh`    | force push 系を ask へ回す PreToolUse フック                                                              |
+| `.claude/hooks/guard-gh-api.sh`        | `gh api` の戻せない書き込みを ask へ回す PreToolUse フック                                                |
+| `.githooks/commit-msg`                 | コミット本文の禁止語を commit の前で止める git フック                                                     |
+| `.githooks/pre-commit`                 | ステージした追加行の禁止語を、コミットを止めずに報告する git フック                                       |
+| `scripts/lint-vocabulary.sh`           | 禁止語の検査器。git の追加行・コミット本文・PR 本文を見る                                                 |
+| `.github/workflows/lint-pr-body.yml`   | PR 本文の禁止語を CI で報告する                                                                           |
+| `scripts/diff-coding-standards.sh`     | 規約の写しと共有の雛形の差を、手で走らせて報告する                                                        |
+| `.vocabulary/banned.tsv`               | 禁止語の検査が読む、`.claude/rules/writing.md` の表の写し                                                 |
+| `.vocabulary/allow`                    | このリポジトリが定義して使う名前で、禁止語の検査から外すもの（1 行 1 語）                                 |
+| クラウド環境の環境変数欄               | `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL`（リポジトリに置けない名義）                                        |
+| クラウド環境のセットアップスクリプト欄 | `bash /home/user/coten-atlas/scripts/cloud-snapshot.sh` の一行                                            |
+| クラウド環境のネットワーク設定         | 許可ドメイン（§4）                                                                                        |
+| `.claude/skills/`                      | 同梱の規約 skill。外部由来のものの出所は各 skill の `SOURCE.md` が持つ                                    |
+| `mise.toml`（ルート）                  | `[tools]` のみ。ランタイム版の固定。`mise-action` もルートで読む                                          |
+| `web/package.json`                     | `pnpm check` を含む scripts                                                                               |
+| `web/.env.local`（git に入れない）     | 手元の `pnpm sync` が読む Spotify の認証情報（下の「Spotify の認証情報」）                                |
+| リポジトリの Actions の secrets        | 定期実行の同期が読む Spotify の認証情報（`.github/workflows/sync.yml` の job `sync` の「Sync feed」の段） |
 
 リモートで効かせたい設定はリポジトリに置く。
 クラウド環境の設定画面には、名義のようにリポジトリへ置けないものと、リポジトリのスクリプトを呼ぶ一行と許可ドメインだけを置く。
@@ -234,6 +237,17 @@ pnpm の既定の store は OS と版で変わるので、本体と worktree が
 
 `.githooks/` のフックは git の既定の `.git/hooks/` に無いので、クローンごとに `git config core.hooksPath .githooks` で有効にする。
 どの実行環境でも `scripts/setup.sh` がこの設定を入れる。
+
+### Spotify の認証情報
+
+`pnpm sync` は、環境変数 `SPOTIFY_CLIENT_ID` と `SPOTIFY_CLIENT_SECRET`（Spotify for Developers のアプリの client id と client secret）が両方あるときだけ、Spotify の回の URL を取得する。
+どちらかが無いか取得に失敗したときは、標準エラーへ理由を出し、`links` の Spotify の URL を前回の値のまま同期を続ける。
+
+| 実行する場所         | 渡し方                                                                                                                                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 手元                 | `web/.env.local` に 2 つの変数を書く（`pnpm sync` が読み、`.gitignore` が git から外す）                                                                                                                |
+| 定期実行の同期       | Settings → Secrets and variables → Actions に、同名の secret を 2 つ置く                                                                                                                                |
+| クラウドのセッション | 環境の Network secrets に `accounts.spotify.com`（Basic）を保存し、2 つの変数へ仮の値と `NODE_USE_ENV_PROXY=1` を渡して走らせる（Node の fetch はプロキシを既定で使わず、プロキシが仮の値を置き換える） |
 
 ### 権限の規則
 

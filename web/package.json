@@ -18,7 +18,7 @@
     "test:watch": "vitest",
     "validate:catalog": "vitest run tests/catalog.test.ts",
     "build:scripts": "rm -rf dist && tsc -p tsconfig.scripts.json && tsc-alias -p tsconfig.scripts.json",
-    "sync": "pnpm build:scripts && node dist/scripts/sync-feed.js",
+    "sync": "pnpm build:scripts && node --env-file-if-exists=.env.local dist/scripts/sync-feed.js",
     "backfill-apple-podcasts": "pnpm build:scripts && node dist/scripts/backfill-apple-podcasts.js",
     "smoke": "playwright test --project=smoke-*",
     "e2e": "playwright test --project=e2e-*",
