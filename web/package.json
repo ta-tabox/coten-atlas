@@ -19,6 +19,7 @@
     "validate:catalog": "vitest run tests/catalog.test.ts",
     "build:scripts": "rm -rf dist && tsc -p tsconfig.scripts.json && tsc-alias -p tsconfig.scripts.json",
     "sync": "pnpm build:scripts && node dist/scripts/sync-feed.js",
+    "backfill-apple-podcasts": "pnpm build:scripts && node dist/scripts/backfill-apple-podcasts.js",
     "smoke": "playwright test --project=smoke-*",
     "e2e": "playwright test --project=e2e-*",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm smoke && pnpm e2e"

@@ -7,7 +7,9 @@
  *
  * `episodes.json` はフィードから毎回組み直す。
  * 自動層なので人手の加筆を前提にせず、シリーズの割当も `series.json` と `season-corrections.json` の現状から決め直す。
- * 例外は各回の `links` で、前回の `episodes.json` の同じ guid の回から引き継ぐ（理由は `src/lib/feed/episode.ts` が持つ）。
+ * 例外は各回の `links` で、前回の `episodes.json` の同じ guid の回から引き継ぎ、Apple Podcasts の URL は lookup API が返した回だけ書き換える。
+ * 引き継ぎの理由は `src/lib/feed/episode.ts` が持つ。
+ * lookup API が返さない古い回の URL は、`scripts/backfill-apple-podcasts.ts` が Search API で補う。
  * 未割当を溜める置き場も持たない。
  * 前回との差分を取るのは、新着を数えるためと、割当が外れた回と別のシリーズへ移った回を報せるためである。
  *
@@ -30,7 +32,15 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import * as z from "zod";
+import { fetchAppleLookup } from "@scripts/apple-podcasts";
+import {
+  assertCatalogDir,
+  EPISODES_FILE,
+  SEASON_CORRECTIONS_FILE,
+  SERIES_FILE,
+} from "@scripts/catalog-files";
 import { readJsonFile, writeJsonFile } from "@scripts/json-file";
+import { setAppleUrls } from "@/lib/feed/apple-links";
 import {
   listUncorrectedSeasonMismatches,
   seasonKeyOf,
@@ -64,22 +74,6 @@ const FEED_URL = "https://anchor.fm/s/8c2088c/podcast/rss";
  * 7.2 MB のフィードの取得は 2 秒弱で終わるので、桁が二つ違えば異常と見てよい。
  */
 const FETCH_TIMEOUT_MS = 60_000;
-
-/**
- * データ層の置き場。
- *
- * `pnpm sync` の作業ディレクトリ（`web/`）から辿る。
- * このファイルは `dist/` へ出力してから走るので、`import.meta.url` から辿ると出力先の深さの分だけずれた場所を指す。
- * 実行の入口が `pnpm sync` の一本なので、pnpm が保証する作業ディレクトリの方が動かない。
- */
-const CATALOG_DIR = path.resolve(process.cwd(), "../catalog");
-
-const EPISODES_FILE = path.join(CATALOG_DIR, "episodes.json");
-const SERIES_FILE = path.join(CATALOG_DIR, "series.json");
-const SEASON_CORRECTIONS_FILE = path.join(
-  CATALOG_DIR,
-  "season-corrections.json",
-);
 
 /**
  * RSS を取ってくる。
@@ -287,22 +281,6 @@ function warnSeasonMismatches(
 }
 
 /**
- * `catalog/` を指せていることを確かめる。
- *
- * 作業ディレクトリが違うと、書き出しは黙って別の場所へ `catalog/` を作り、755 件をそこへ置く。
- * `eras.json` は追跡されていて必ず在るので、これが無い場所は `catalog/` ではない。
- */
-function assertCatalogDir(): void {
-  if (fs.existsSync(path.join(CATALOG_DIR, "eras.json"))) {
-    return;
-  }
-
-  throw new Error(
-    `catalog/ が見つからない: ${CATALOG_DIR}（pnpm sync は web/ から走らせる）`,
-  );
-}
-
-/**
  * 数え上げたサマリを標準出力へ書く。
  *
  * 未割当は二つに割る。
@@ -325,6 +303,20 @@ function reportSummary(assignments: Assignment[], added: Assignment[]): void {
   );
   console.log(
     `  シリーズ未作成  ${awaitingEpisodeCount} 件（season ${uncreated.length} 件）`,
+  );
+}
+
+/**
+ * Apple Podcasts の回の URL を持つ回と持たない回の数を標準出力へ書く。
+ * 持たない回は、Apple Podcasts のボタンが番組のページを開く回である。
+ */
+function reportAppleSummary(episodes: readonly Episode[]): void {
+  const linked = episodes.filter(
+    ({ links }) => links["apple-podcasts"] !== undefined,
+  );
+
+  console.log(
+    `Apple Podcasts の回の URL  ${linked.length} 件 / 結べなかった回 ${episodes.length - linked.length} 件`,
   );
 }
 
@@ -457,17 +449,16 @@ async function main(): Promise<void> {
 
   const added = assignments.filter(({ item }) => !previous.has(item.guid));
 
-  writeJsonFile(
-    EPISODES_FILE,
-    parseEpisodes({
-      syncedAt,
-      episodes: assignments.map((assignment) =>
-        toEpisode(assignment, previous),
-      ),
-    }),
+  const episodesFromFeed = assignments.map((assignment) =>
+    toEpisode(assignment, previous),
   );
+  const latestAppleEpisodes = await fetchAppleLookup();
+  const episodes = setAppleUrls(episodesFromFeed, latestAppleEpisodes);
+
+  writeJsonFile(EPISODES_FILE, parseEpisodes({ syncedAt, episodes }));
 
   reportSummary(assignments, added);
+  reportAppleSummary(episodes);
 
   if (options.surveyIssue !== null) {
     writeSurveyIssues(assignments, options.surveyIssue);
