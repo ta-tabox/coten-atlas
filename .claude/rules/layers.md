@@ -15,7 +15,7 @@ paths:
 
 | 境界 | 閉じるモジュール | fetch を呼ぶか | 他のモジュールが受け取るもの |
 |---|---|---|---|
-| `catalog/` のファイル | アプリのビルドと管理画面は `src/lib/catalog-dir.ts`（読みは `loadSeries`・`loadLoci`・`loadEras`、最後のコミットの版の読みは `loadCommittedLoci`、書きは `saveLoci`）、同期は `scripts/sync-feed.ts`（JSON の構文の検査は `scripts/json-file.ts`） | 呼ばない | スキーマを通した `SeriesList`・`LocusCollection`・`EraList`・`EpisodeCollection`・`SeasonCorrectionList` |
+| `catalog/` のファイル | アプリのビルドと管理画面は `src/lib/catalog-dir.ts`（読みは `loadSeries`・`loadLoci`・`loadEras`、最後のコミットの版の読みは `loadCommittedLoci`、書きは `saveLoci`）、同期は `scripts/sync-feed.ts` と `scripts/backfill-apple-podcasts.ts`（`catalog/` のパスは `scripts/catalog-files.ts`、JSON の構文の検査は `scripts/json-file.ts`） | 呼ばない | スキーマを通した `SeriesList`・`LocusCollection`・`EraList`・`EpisodeCollection`・`SeasonCorrectionList` |
 | RSS（ネットワーク） | `scripts/sync-feed.ts` の `fetchFeed` | 呼ぶ | XML の文字列。`src/lib/feed/parse.ts` の `parseFeed` が検査済みの `FeedItem` の配列にする |
 | Apple Podcasts の API（ネットワーク） | `scripts/apple-podcasts.ts` の `fetchAppleLookup`・`fetchAppleSearch` | 呼ぶ | `src/lib/schema/apple-podcasts.ts` の `parseAppleResponse` を通した `AppleEpisode` の配列 |
 | 配信した `episodes.json`（ブラウザの fetch） | `src/lib/episodes.ts` の `fetchEpisodes` | 呼ぶ | `EpisodesResult`（`parseEpisodes` を通した `Episode` の配列か、取得の失敗） |
@@ -53,9 +53,9 @@ paths:
 | フィードの二段 | `src/lib/feed/parse.*`（XML の表記を均す）・`src/lib/feed/schema.*`（値の規則）・`src/lib/feed/__fixtures__/**` | `src/lib/feed/` の中だけ | 均した記録と、検査済みの `FeedItem` |
 | 設定の定数 | `src/lib/base-path.*`・`src/lib/map/config.ts` | `src/lib/base-path.*` | 公開先のパスの接頭辞 `BASE_PATH`・ベースマップと worker の URL・地図の初期位置 |
 | 純粋な計算 | `src/lib/catalog-editor/**`・`src/lib/era/**`・`src/lib/map/**`・`src/lib/links/**`・`src/lib/site/**`・`src/lib/feed/apple-links.*`・`src/lib/feed/assign.*`・`src/lib/feed/episode.*`・`src/lib/feed/uncreated-seasons.*`・`src/lib/feed/survey-issue.*`・`src/lib/feed/sync-report.*`・`src/lib/format.*` | 境界の検証の型と定数・`src/lib/feed/schema.ts` の型・同じ層 | 関数とテスト |
-| 境界 | `src/lib/catalog-dir.*`・`src/lib/episodes.*`・`src/lib/admin-api.*`・`scripts/json-file.ts`・`scripts/apple-podcasts.ts` | 境界の検証・設定の定数・純粋な計算 | `node:fs`・`git`・`fetch` による読み書きと、境界の検証の呼び出し |
+| 境界 | `src/lib/catalog-dir.*`・`src/lib/episodes.*`・`src/lib/admin-api.*`・`scripts/json-file.ts`・`scripts/catalog-files.ts`・`scripts/apple-podcasts.ts` | 境界の検証・設定の定数・純粋な計算 | `node:fs`・`git`・`fetch` による読み書きと、境界の検証の呼び出し |
 | 描画 | `src/components/**`（直下にはディレクトリだけを置き、フックは扱う機能のディレクトリに `use-*.ts` で置く） | 純粋な計算・境界の検証の型と定数・設定の定数・`src/lib/episodes.*`・`src/lib/admin-api.*`・同じ層 | React の部品とフック |
-| 配線 | `src/app/**`・`scripts/sync-feed.ts` | `src/app/**` は描画・`src/lib/catalog-dir.*`・純粋な計算・境界の検証、`scripts/sync-feed.ts` はフィードの二段・純粋な計算・境界の検証・`scripts/json-file.ts`・`scripts/apple-podcasts.ts` | 受け取り・呼び出し・出力 |
+| 配線 | `src/app/**`・`scripts/sync-feed.ts`・`scripts/backfill-apple-podcasts.ts` | `src/app/**` は描画・`src/lib/catalog-dir.*`・純粋な計算・境界の検証、`scripts/sync-feed.ts` と `scripts/backfill-apple-podcasts.ts` はフィードの二段・純粋な計算・境界の検証・`scripts/json-file.ts`・`scripts/catalog-files.ts`・`scripts/apple-podcasts.ts` | 受け取り・呼び出し・出力 |
 | スモークの機構 | `scripts/smoke.ts` | 設定の定数 | 配信物を開き、観測から違反を出す関数 |
 | E2E の機構 | `scripts/e2e.ts` | `scripts/smoke.ts` | 画面の部品と地図の点の位置を求める関数 |
 | コメントの検査 | `scripts/lint-comments.ts` | なし | コメントの禁止語の検査 |

@@ -367,8 +367,7 @@ catalog/
   1. RSS を取得し、guid で episodes.json と差分
   2. フィード全件の season を season-corrections.json・題名の先頭の `【NN-M】`・`itunes:season` の順に決め、series.json 全件の `season` から組んだ season → seriesId の索引と照合して seriesId を割り当てる
   3. Apple Podcasts の lookup API（最新の 200 回）で、guid が一致する回の `links["apple-podcasts"]` を書く
-     それでも URL の無い回は、Search API で探す
-     どちらの取得に失敗しても警告だけを出し、その分の `links` を触らずに同期を続ける
+     取得に失敗したら警告だけを出し、`links` を触らずに同期を続ける
   4. 結果サマリを stdout へ
      未割当は「規則で確定」（season が決まらない回・番外編・訂正表で外した回）と「シリーズ未作成」に割って数える
      Apple Podcasts の回の URL を持つ回と結べなかった回も数える
@@ -381,6 +380,9 @@ catalog/
   手を入れる先は手動層の `series.json`・`loci.geojson`・`season-corrections.json` だけで、`episodes.json` は毎回フィードから組み直すので編集しない
   例外は各回の `links` で、同期は前回の `episodes.json` の同じ guid の回から引き継ぎ、Apple Podcasts の URL は取得できた回だけ書き換える
   未割当を溜める置き場も持たず、いま何が未割当かは `episodes.json` の `seriesId` が持つ
+- `web/scripts/backfill-apple-podcasts.ts`（`pnpm backfill-apple-podcasts`）: 手で回す補完
+  lookup API が返さない古い回のうち、`links["apple-podcasts"]` を持たない回だけを Search API で探して書く
+  定期実行の同期には入れない
 - 静的サイトなので、実行時に RSS を取得しない。同期は常にビルド前のデータ更新として行う
 
 ## 6. ディレクトリ構造
